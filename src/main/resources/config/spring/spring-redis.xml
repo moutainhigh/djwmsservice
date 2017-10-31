@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+    <!-- Activates annotation-based bean configuration -->
+
+    <context:annotation-config/>
+    <!-- Scans for application @Components to deploy -->
+
+    <context:property-placeholder location="classpath:config/properties/*.properties"/>
+
+    <bean class="org.apache.commons.pool2.impl.GenericObjectPoolConfig"
+          id="poolConfig"></bean>
+
+    <bean class="redis.clients.jedis.JedisCluster" id="jedis">
+        <constructor-arg>
+            <set>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${d1.host}"/>
+                    <constructor-arg name="port" value="${d1.port}"/>
+                </bean>
+
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${d2.host}"/>
+                    <constructor-arg name="port" value="${d2.port}"/>
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${d3.host}"/>
+                    <constructor-arg name="port" value="${d3.port}"/>
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${d4.host}"/>
+                    <constructor-arg name="port" value="${d4.port}"/>
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${d5.host}"/>
+                    <constructor-arg name="port" value="${d5.port}"/>
+                </bean>
+                <bean class="redis.clients.jedis.HostAndPort">
+                    <constructor-arg name="host" value="${d6.host}"/>
+                    <constructor-arg name="port" value="${d6.port}"/>
+                </bean>
+            </set>
+        </constructor-arg>
+        <constructor-arg name="connectionTimeout" value="2000"/>
+        <constructor-arg name="soTimeout" value="2000"/>
+        <constructor-arg name="maxAttempts" value="5"/>
+        <constructor-arg name="password" value="crmredis"/>
+        <constructor-arg name="poolConfig" ref="poolConfig"/>
+    </bean>
+
+
+</beans>
