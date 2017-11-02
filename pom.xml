@@ -32,8 +32,25 @@
             <id>alimaven</id>
             <name>aliyun maven</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -43,6 +60,9 @@
         <org.springframework-version>4.3.8.RELEASE</org.springframework-version>
         <org.aspectj-version>1.8.10</org.aspectj-version>
         <org.slf4j-version>1.7.24</org.slf4j-version>
+        <project.web.name>/djwmsservice</project.web.name>
+        <log4j.version>2.8.2</log4j.version>
+        <jackson.version>2.8.6</jackson.version>
     </properties>
 
     <dependencies>
@@ -203,24 +223,24 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jcl</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
 
         <!--解析json -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.8.6</version>
+            <version>${jackson.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
@@ -231,7 +251,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.8.6</version>
+            <version>${jackson.version}</version>
         </dependency>
 
 
@@ -376,6 +396,15 @@
                 </configuration>
             </plugin>
 
+            <!-- 跳过单元测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -397,8 +426,20 @@
                 <version>9.4.5.v20170502</version>
                 <configuration>
                     <webApp>
-                        <contextPath>/djbalanceserver</contextPath>
+                        <contextPath>${project.web.name}</contextPath>
                     </webApp>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>${project.web.name}</path>
+                    <charset>UTF-8</charset>
+                    <port>8080</port>
+                    <uriEncoding>UTF-8</uriEncoding>
                 </configuration>
             </plugin>
 
@@ -441,6 +482,6 @@
             </testResource>
         </testResources>
 
-        <finalName>djwms-service</finalName>
+        <finalName>${project.artifactId}</finalName>
     </build>
 </project>
