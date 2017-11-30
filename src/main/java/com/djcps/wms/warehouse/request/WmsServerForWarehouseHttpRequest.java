@@ -1,9 +1,7 @@
 package com.djcps.wms.warehouse.request;
 
-import java.util.Map;
 
 import com.djcps.wms.commons.config.ParamsConfig;
-
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -11,14 +9,19 @@ import retrofit2.http.POST;
 import rpc.plugin.http.HTTPResponse;
 import rpc.plugin.http.RPCClientFields;
 
+/**
+ * 仓库管理http请求接口
+ * @company:djwms
+ * @author:zdx
+ * @date:2017年11月30日
+ */
 @RPCClientFields(urlfield = "WMS_SERVER", urlbean = ParamsConfig.class)
 public interface WmsServerForWarehouseHttpRequest {
 	
 	/**
-	 * @title:仓库管理新增
-	 * @description:
+	 * 仓库管理新增http请求接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -27,10 +30,9 @@ public interface WmsServerForWarehouseHttpRequest {
 	public HTTPResponse add(@Body RequestBody json);
 	
 	/**
-	 * @title:仓库管理修改
-	 * @description:
+	 * 仓库管理修改http请求接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -39,10 +41,9 @@ public interface WmsServerForWarehouseHttpRequest {
 	public HTTPResponse modify(@Body RequestBody json);
 	
 	/**
-	 * @title:仓库管理删除
-	 * @description:
+	 * 仓库管理删除http请求接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -51,10 +52,9 @@ public interface WmsServerForWarehouseHttpRequest {
 	public HTTPResponse delete(@Body RequestBody json);
 	
 	/**
-	 * @title:仓库管理获取所有仓库(带分页)
-	 * @description:
+	 * 获取所有仓库http请求接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -63,10 +63,9 @@ public interface WmsServerForWarehouseHttpRequest {
 	public HTTPResponse getAllList(@Body RequestBody json);
 	
 	/**
-	 * @title:根据仓库属性模糊查询获取仓库
-	 * @description:
+	 * 根据仓库属性模糊查询获取仓库http请求接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -75,22 +74,20 @@ public interface WmsServerForWarehouseHttpRequest {
 	public HTTPResponse getWarehouseByAttribute(@Body RequestBody json);
 	
 	/**
-	 * @title:根据仓库唯一id查询获取仓库
-	 * @description:
+	 * 根据仓库唯一id查询获取仓库http请求接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
-	 * @date:2017年11月29日
+	 * @date:2017年11月24日
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/getById.do")
 	public HTTPResponse getWarehouseById(@Body RequestBody json);
 	
 	/**
-	 * @title:启用仓库
-	 * @description:
+	 * 启用仓库
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月29日
 	 */
@@ -99,10 +96,9 @@ public interface WmsServerForWarehouseHttpRequest {
 	public HTTPResponse enable(@Body RequestBody json);
 	
 	/**
-	 * @title:禁用仓库
-	 * @description:
+	 * 禁用仓库
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月29日
 	 */

@@ -11,21 +11,25 @@ import com.djcps.wms.commons.msg.MsgInterface;
  */
 public enum SysMsgEnum implements MsgInterface {
     
+    /**
+     * 操作成功
+     */
     OPS_SUCCESS(880001, "操作成功"),
     
+    /**
+     * 操作失败
+     */
     OPS_FAILURE(880002, "操作失败"),
     
+    /**
+     * 系统异常，服务器报错
+     */
     SYS_EXCEPTION(880003, "系统异常,请稍后在试"),
     
-    NOT_LOGIN(880004, "抱歉，您还未登录，或token已过期，请登录后再试"),
-    
-    OPS_ILLEGAL(880005, "非法操作，系统已记录您的ip，并已通知系统管理员"),
-    
-    NOT_AUTH(880006, "抱歉，您暂无权限访问，请联系相关人员"),
-    
-    UNKNOW(880007, "未知错误"),
-    
-    PARAMS_ERROR(880009, "参数错误");
+    /**
+     * token过去或未登入
+     */
+    NOT_LOGIN(880004, "抱歉，您还未登录，或token已过期，请登录后再试");
     
     private int code;
     

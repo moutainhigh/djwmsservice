@@ -9,13 +9,18 @@ import retrofit2.http.POST;
 import rpc.plugin.http.HTTPResponse;
 import rpc.plugin.http.RPCClientFields;
 
+/**
+ * 供应商http请求接口
+ * @company:djwms
+ * @author:zdx
+ * @date:2017年11月30日
+ */
 @RPCClientFields(urlfield = "WMS_SERVER", urlbean = ParamsConfig.class)
 public interface WmsServerForProviderHttpRequest {
 	/**
-	 * @title:供应商新增
-	 * @description:
+	 * 供应商新增http接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -24,10 +29,9 @@ public interface WmsServerForProviderHttpRequest {
 	public HTTPResponse add(@Body RequestBody json);
 	
 	/**
-	 * @title:供应商修改
-	 * @description:
+	 * 供应商修改http接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -36,10 +40,9 @@ public interface WmsServerForProviderHttpRequest {
 	public HTTPResponse modify(@Body RequestBody json);
 	
 	/**
-	 * @title:供应商删除
-	 * @description:
+	 * 供应商删除http接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -48,10 +51,9 @@ public interface WmsServerForProviderHttpRequest {
 	public HTTPResponse delete(@Body RequestBody json);
 	
 	/**
-	 * @title:获取所有供应商信息(带分页)
-	 * @description:
+	 * 获取所有供应商信息http接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */
@@ -60,10 +62,9 @@ public interface WmsServerForProviderHttpRequest {
 	public HTTPResponse getAllList(@Body RequestBody json);
 	
 	/**
-	 * @title:根据供应商属性模糊查询获取供应商信息(带分页)
-	 * @description:
+	 * 根据供应商属性模糊查询获取供应商信息http接口
 	 * @param json
-	 * @return
+	 * @return HTTPResponse
 	 * @author:zdx
 	 * @date:2017年11月24日
 	 */

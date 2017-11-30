@@ -18,6 +18,13 @@ import com.djcps.wms.provider.model.UpdateProviderVO;
 import com.djcps.wms.provider.server.ProviderServer;
 import com.google.gson.Gson;
 
+/**
+ * 供应商业务层实现类
+ * @description:
+ * @company:djwms
+ * @author:zdx
+ * @date:2017年11月30日
+ */
 @Service
 public class ProviderServiceImpl implements ProviderService {
 	

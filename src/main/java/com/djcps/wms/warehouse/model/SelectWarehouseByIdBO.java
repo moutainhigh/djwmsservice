@@ -22,12 +22,6 @@ public class SelectWarehouseByIdBO extends BaseParam implements Serializable{
 	 */
 	@NotBlank
 	private String id;
-	
-	/**
-	 *合作方id
-	 */
-	@NotBlank
-	private String partnerId;
 
 	public String getId() {
 		return id;
@@ -37,18 +31,9 @@ public class SelectWarehouseByIdBO extends BaseParam implements Serializable{
 		this.id = id;
 	}
 
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
-
 	@Override
 	public String toString() {
-		return "SelectByIdBean [id=" + id + ", partnerId=" + partnerId + "]";
+		return "SelectWarehouseByIdBO [id=" + id + "]";
 	}
-	
 
 }

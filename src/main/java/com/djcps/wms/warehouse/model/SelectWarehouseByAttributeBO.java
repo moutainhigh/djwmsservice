@@ -15,7 +15,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class SelectWarehouseByAttributeBO extends BaseParam implements Serializable{
+public class SelectWarehouseByAttributeBO extends BaseListParam implements Serializable{
 	
 	private static final long serialVersionUID = -5753645244313461096L;
 
@@ -38,34 +38,6 @@ public class SelectWarehouseByAttributeBO extends BaseParam implements Serializa
 	 * 启用,禁用
 	 */
 	private String effect;
-	
-	/**
-	 * 页码
-	 */
-	@NotBlank
-	private String pageNo;
-	
-	/**
-	 * 行数
-	 */
-	@NotBlank
-	private String pageSize;
-
-	public String getPageNo() {
-		return pageNo;
-	}
-
-	public void setPageNo(String pageNo) {
-		this.pageNo = pageNo;
-	}
-
-	public String getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(String pageSize) {
-		this.pageSize = pageSize;
-	}
 
 	public String getWarehouseId() {
 		return warehouseId;
@@ -102,7 +74,8 @@ public class SelectWarehouseByAttributeBO extends BaseParam implements Serializa
 	@Override
 	public String toString() {
 		return "SelectWarehouseByAttributeBO [warehouseId=" + warehouseId + ", name=" + name + ", type=" + type
-				+ ", effect=" + effect + ", pageNo=" + pageNo + ", pageSize=" + pageSize + "]";
+				+ ", effect=" + effect + "]";
 	}
+
 
 }

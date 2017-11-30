@@ -18,7 +18,7 @@ public class SelectLoadingTableByIdBO extends BaseParam implements Serializable{
 	private static final long serialVersionUID = 631699184714543761L;
 	
 	/**
-	 * 装车台编号
+	 * 唯一标识
 	 */
 	@NotBlank
 	private String id;

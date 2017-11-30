@@ -1,10 +1,8 @@
 package com.djcps.wms.warehouse.model;
 
 import java.io.Serializable;
-
 import org.hibernate.validator.constraints.NotBlank;
-
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
 
 /**
  * @title:启用禁用装车台对象
@@ -13,7 +11,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class IsUseWarehouseBO extends BaseParam implements Serializable{
+public class IsUseWarehouseBO extends BaseUpdateAndDeleteBo implements Serializable{
 
 	private static final long serialVersionUID = -7664247947519185744L;
 
@@ -22,24 +20,6 @@ public class IsUseWarehouseBO extends BaseParam implements Serializable{
 	 */
 	@NotBlank
 	private String id;
-	
-	/**
-	 *合作方id
-	 */
-	@NotBlank
-	private String partnerId;
-	
-	/**
-	 * 操作人id
-	 */
-	@NotBlank
-	private String operatorId;
-	
-	/**
-	 * 操作人名称
-	 */
-	@NotBlank
-	private String operator;
 
 	public String getId() {
 		return id;
@@ -49,34 +29,9 @@ public class IsUseWarehouseBO extends BaseParam implements Serializable{
 		this.id = id;
 	}
 
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
-
-	public String getOperatorId() {
-		return operatorId;
-	}
-
-	public void setOperatorId(String operatorId) {
-		this.operatorId = operatorId;
-	}
-
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
-
 	@Override
 	public String toString() {
-		return "IsUseBean [id=" + id + ", partnerId=" + partnerId + ", operatorId=" + operatorId + ", operator="
-				+ operator + "]";
+		return "IsUseWarehouseBO [id=" + id + "]";
 	}
-
+	
 }

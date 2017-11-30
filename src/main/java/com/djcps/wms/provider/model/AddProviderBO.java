@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.djcps.wms.commons.base.BaseAddBo;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.base.BaseParam;
 
@@ -14,28 +15,10 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class AddProviderBO extends BaseParam implements Serializable{
+public class AddProviderBO extends BaseAddBo implements Serializable{
 
 	private static final long serialVersionUID = -8646374385462545970L;
 
-	/**
-	 * 合作方id
-	 */
-	@NotBlank
-	private String partnerId;
-	
-	/**
-	 * 合作方名称 
-	 */
-	@NotBlank
-	private String partnerName;
-	
-	/**
-	 * 合作方区域
-	 */
-	@NotBlank
-	private String partnerArea;
-	
 	/**
 	 * 供应商编码
 	 */
@@ -124,40 +107,6 @@ public class AddProviderBO extends BaseParam implements Serializable{
 	 * 备注,50个字
 	 */
 	private String remark;
-	
-	/**
-	 * 操作人id
-	 */
-	private String operatorId;
-	
-	/**
-	 * 操作人
-	 */
-	private String operator;
-
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
-
-	public String getPartnerName() {
-		return partnerName;
-	}
-
-	public void setPartnerName(String partnerName) {
-		this.partnerName = partnerName;
-	}
-
-	public String getPartnerArea() {
-		return partnerArea;
-	}
-
-	public void setPartnerArea(String partnerArea) {
-		this.partnerArea = partnerArea;
-	}
 
 	public String getProviderId() {
 		return providerId;
@@ -295,30 +244,13 @@ public class AddProviderBO extends BaseParam implements Serializable{
 		this.remark = remark;
 	}
 
-	public String getOperatorId() {
-		return operatorId;
-	}
-
-	public void setOperatorId(String operatorId) {
-		this.operatorId = operatorId;
-	}
-
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
-
 	@Override
 	public String toString() {
-		return "AddProviderBO [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea=" + partnerArea
-				+ ", providerId=" + providerId + ", name=" + name + ", shortName=" + shortName + ", webUrl=" + webUrl
-				+ ", provinceName=" + provinceName + ", provinceCode=" + provinceCode + ", cityName=" + cityName
-				+ ", cityCode=" + cityCode + ", areaName=" + areaName + ", areaCode=" + areaCode + ", address="
-				+ address + ", contacts=" + contacts + ", tel=" + tel + ", phone=" + phone + ", fax=" + fax + ", email="
-				+ email + ", remark=" + remark + ", operatorId=" + operatorId + ", operator=" + operator + "]";
+		return "AddProviderBO [providerId=" + providerId + ", name=" + name + ", shortName=" + shortName + ", webUrl="
+				+ webUrl + ", provinceName=" + provinceName + ", provinceCode=" + provinceCode + ", cityName="
+				+ cityName + ", cityCode=" + cityCode + ", areaName=" + areaName + ", areaCode=" + areaCode
+				+ ", address=" + address + ", contacts=" + contacts + ", tel=" + tel + ", phone=" + phone + ", fax="
+				+ fax + ", email=" + email + ", remark=" + remark + "]";
 	}
 	
 }

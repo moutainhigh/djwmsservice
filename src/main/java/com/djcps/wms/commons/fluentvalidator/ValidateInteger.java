@@ -18,11 +18,20 @@ import com.djcps.wms.commons.msg.MsgInterface;
  */
 public class ValidateInteger extends ValidatorHandler<Integer> implements Validator<Integer> {
 	
-		//最小值
+		
+		/**
+		 * 最小值 
+		 */
 		private Integer mixStringLength;
-		//最大值
+		
+		/**
+		 * 最大值 
+		 */
 		private Integer maxStringLength;
-		//表示返回的错误信息
+		
+		/**
+		 * 错误信息
+		 */
 		private MsgInterface error;
 		
 		public ValidateInteger(MsgInterface error){

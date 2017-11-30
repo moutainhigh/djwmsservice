@@ -1,45 +1,49 @@
-package com.djcps.wms.commons.model;
+package com.djcps.wms.commons.base;
+
+import java.io.Serializable;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 合作方对象
+ * @title:新增基础对象
+ * @description:需要新增的对象,需要继承此对象
  * @company:djwms
  * @author:zdx
  * @date:2017年11月30日
  */
-public class PartnerInfoBean {
+public class BaseAddBo extends BaseParam implements Serializable{
 	
+	private static final long serialVersionUID = -185610484814897617L;
+
 	/**
-	 * 合作方id
+	 *合作方id
 	 */
-	private String partnerId; 
+	@NotBlank
+	private String partnerId;
 	
 	/**
 	 * 合作方名称
 	 */
+	@NotBlank
 	private String partnerName;
 	
 	/**
-	 * 合作方区域
+	 * 合作方所在区域
 	 */
+	@NotBlank
 	private String partnerArea;
 	
 	/**
 	 * 操作人id
 	 */
+	@NotBlank
 	private String operatorId;
 	
 	/**
 	 * 操作人名称
 	 */
+	@NotBlank
 	private String operator;
-	
-	public PartnerInfoBean(){
-		this.partnerId = "100"; 
-		this.partnerName = "东经科技";
-		this.partnerArea = "3303";
-		this.operatorId = "100";
-		this.operator = "admin";
-	}
 
 	public String getPartnerId() {
 		return partnerId;
@@ -83,7 +87,8 @@ public class PartnerInfoBean {
 
 	@Override
 	public String toString() {
-		return "PartnerInfoBean [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea="
-				+ partnerArea + ", operatorId=" + operatorId + ", operator=" + operator + "]";
+		return "BaseAddBo [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea=" + partnerArea
+				+ ", operatorId=" + operatorId + ", operator=" + operator + "]";
 	}
+	
 }

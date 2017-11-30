@@ -17,20 +17,20 @@ public class ParamsConfig {
      */
     public static String WMS_SERVER = "";
 
-	public static String getMESSAGE_SERVER() {
+	public static String getMessageServer() {
 		return MESSAGE_SERVER;
 	}
 
-	public static void setMESSAGE_SERVER(String mESSAGE_SERVER) {
-		MESSAGE_SERVER = mESSAGE_SERVER;
+	public static void setMessageServer(String messageServer) {
+		MESSAGE_SERVER = messageServer;
 	}
 
-	public static String getWMS_SERVER() {
+	public static String getWmsServer() {
 		return WMS_SERVER;
 	}
 
-	public static void setWMS_SERVER(String wMS_SERVER) {
-		WMS_SERVER = wMS_SERVER;
+	public static void setWmsServer(String wmsServer) {
+		WMS_SERVER = wmsServer;
 	}
-    
+
 }

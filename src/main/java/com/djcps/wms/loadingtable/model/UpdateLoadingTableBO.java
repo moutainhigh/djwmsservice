@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
 
 /**
  * @title:修改装车台对象
@@ -15,28 +16,14 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class UpdateLoadingTableBO extends BaseParam implements Serializable{
+public class UpdateLoadingTableBO extends BaseUpdateAndDeleteBo implements Serializable{
 	
 	private static final long serialVersionUID = 8863360524886335013L;
-
-	/**
-	 *合作方id
-	 */
-	@NotBlank
-	private String partnerId;
 	
 	/**
-	 * 合作方名称
+	 * 唯一标识字段
 	 */
-	@NotBlank
-	private String partnerName;
-	
-	/**
-	 * 合作方所在区域
-	 */
-	@NotBlank
-	private String partnerArea;
-	
+	private String id;
 	/**
 	 * 装车台名称
 	 */
@@ -51,50 +38,6 @@ public class UpdateLoadingTableBO extends BaseParam implements Serializable{
 	 * 装车台可用该车辆规格数组
 	 */
 	private String specs;
-	
-	/**
-	 * 装车台禁用状态
-	 */
-	private String effect;
-	
-	/**
-	 * 删除状态
-	 */
-	private String delete;
-	
-	/**
-	 * 操作人id
-	 */
-	private String operatorId; 
-	
-	/**
-	 * 操作人
-	 */
-	private String operator;
-
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
-
-	public String getPartnerName() {
-		return partnerName;
-	}
-
-	public void setPartnerName(String partnerName) {
-		this.partnerName = partnerName;
-	}
-
-	public String getPartnerArea() {
-		return partnerArea;
-	}
-
-	public void setPartnerArea(String partnerArea) {
-		this.partnerArea = partnerArea;
-	}
 
 	public String getName() {
 		return name;
@@ -120,43 +63,17 @@ public class UpdateLoadingTableBO extends BaseParam implements Serializable{
 		this.specs = specs;
 	}
 
-	public String getEffect() {
-		return effect;
+	public String getId() {
+		return id;
 	}
 
-	public void setEffect(String effect) {
-		this.effect = effect;
-	}
-
-	public String getDelete() {
-		return delete;
-	}
-
-	public void setDelete(String delete) {
-		this.delete = delete;
-	}
-
-	public String getOperatorId() {
-		return operatorId;
-	}
-
-	public void setOperatorId(String operatorId) {
-		this.operatorId = operatorId;
-	}
-
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@Override
 	public String toString() {
-		return "UpdateLoadingTableBO [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea="
-				+ partnerArea + ", name=" + name + ", state=" + state + ", specs=" + specs + ", effect=" + effect
-				+ ", delete=" + delete + ", operatorId=" + operatorId + ", operator=" + operator + "]";
+		return "UpdateLoadingTableBO [id=" + id + ", name=" + name + ", state=" + state + ", specs=" + specs + "]";
 	}
-	
+
 }

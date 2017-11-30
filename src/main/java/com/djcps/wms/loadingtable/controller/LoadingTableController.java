@@ -172,14 +172,6 @@ public class LoadingTableController {
 		try {
 			logger.debug("json : " + json);
 			BaseListParam baseListParam  = gson.fromJson(json, BaseListParam.class);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(baseListParam,
-							new HibernateSupportedValidator<BaseListParam>()
-							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
 			return loadingTableService.getAllList(baseListParam);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -232,14 +224,6 @@ public class LoadingTableController {
 		try {
 			logger.debug("json : " + json);
 			SelectLoadingTableByAttributeBO loadingTable  = gson.fromJson(json, SelectLoadingTableByAttributeBO.class);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(loadingTable,
-							new HibernateSupportedValidator<SelectLoadingTableByAttributeBO>()
-									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
 			return loadingTableService.getLoadingTableByAttribute(loadingTable);
 		} catch (Exception e) {
 			e.printStackTrace();

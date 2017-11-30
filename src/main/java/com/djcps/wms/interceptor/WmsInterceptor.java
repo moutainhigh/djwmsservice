@@ -14,7 +14,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.djcps.wms.commons.base.RedisClient;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
-import com.djcps.wms.interceptor.enums.InterceptorEnums;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -78,21 +77,21 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	 * @author:zdx
 	 * @date:2017年11月13日
 	 */
-	private void responseMsg(InterceptorEnums msg, HttpServletResponse response) {
-        logger.info(msg.getMsg());
-        if (!response.isCommitted()) {
-            Map<String, Object> result = (MsgTemplate.failureMsg(msg));
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                String json = mapper.writeValueAsString(result);
-                if (!response.isCommitted()){
-                	response.setContentType("application/json; charset=utf-8");
-                    response.setCharacterEncoding("utf-8");
-                    response.getWriter().print(json);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//	private void responseMsg(InterceptorEnums msg, HttpServletResponse response) {
+//        logger.info(msg.getMsg());
+//        if (!response.isCommitted()) {
+//            Map<String, Object> result = (MsgTemplate.failureMsg(msg));
+//            ObjectMapper mapper = new ObjectMapper();
+//            try {
+//                String json = mapper.writeValueAsString(result);
+//                if (!response.isCommitted()){
+//                	response.setContentType("application/json; charset=utf-8");
+//                    response.setCharacterEncoding("utf-8");
+//                    response.getWriter().print(json);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }

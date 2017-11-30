@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.djcps.wms.commons.base.BaseAddBo;
 import com.djcps.wms.commons.base.BaseParam;
 
 /**
@@ -13,27 +14,9 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class AddWarehouseBO extends BaseParam implements Serializable{
+public class AddWarehouseBO extends BaseAddBo implements Serializable{
 
 	private static final long serialVersionUID = -3191296476292183363L;
-	
-	/**
-	 *合作方id
-	 */
-	@NotBlank
-	private String partnerId;
-	
-	/**
-	 * 合作方名称
-	 */
-	@NotBlank
-	private String partnerName;
-	
-	/**
-	 * 合作方所在区域
-	 */
-	@NotBlank
-	private String partnerArea;
 	
 	/**
 	 * 仓库编码
@@ -54,11 +37,6 @@ public class AddWarehouseBO extends BaseParam implements Serializable{
 	private String type;
 	
 	/**
-	 * 仓库状态 1.使用中  2.已暂停
-	 */
-	private String state;
-	
-	/**
 	 * 联系人,最多10个字
 	 */
 	private String contacts;
@@ -77,45 +55,6 @@ public class AddWarehouseBO extends BaseParam implements Serializable{
 	 * 备注,最多50个字
 	 */
 	private String remark;
-	
-	/**
-	 * 是否删除 1.未删除  2.已删除
-	 */
-	private String delete;
-	
-	/**
-	 * 操作人id
-	 */
-	private String operatorId;
-	
-	/**
-	 * 操作人
-	 */
-	private String operator;
-
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
-
-	public String getPartnerName() {
-		return partnerName;
-	}
-
-	public void setPartnerName(String partnerName) {
-		this.partnerName = partnerName;
-	}
-
-	public String getPartnerArea() {
-		return partnerArea;
-	}
-
-	public void setPartnerArea(String partnerArea) {
-		this.partnerArea = partnerArea;
-	}
 
 	public String getWarehouseId() {
 		return warehouseId;
@@ -139,14 +78,6 @@ public class AddWarehouseBO extends BaseParam implements Serializable{
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
 	}
 
 	public String getContacts() {
@@ -181,36 +112,11 @@ public class AddWarehouseBO extends BaseParam implements Serializable{
 		this.remark = remark;
 	}
 
-	public String getDelete() {
-		return delete;
-	}
-
-	public void setDelete(String delete) {
-		this.delete = delete;
-	}
-
-	public String getOperatorId() {
-		return operatorId;
-	}
-
-	public void setOperatorId(String operatorId) {
-		this.operatorId = operatorId;
-	}
-
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
-
 	@Override
 	public String toString() {
-		return "AddWarehouseBO [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea="
-				+ partnerArea + ", warehouseId=" + warehouseId + ", name=" + name + ", type=" + type + ", state="
-				+ state + ", contacts=" + contacts + ", tel=" + tel + ", phone=" + phone + ", remark=" + remark
-				+ ", delete=" + delete + ", operatorId=" + operatorId + ", operator=" + operator + "]";
+		return "AddWarehouseBO [warehouseId=" + warehouseId + ", name=" + name + ", type=" + type + ", contacts="
+				+ contacts + ", tel=" + tel + ", phone=" + phone + ", remark=" + remark + "]";
 	}
 
+	
 }
