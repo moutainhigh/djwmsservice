@@ -1,6 +1,5 @@
 package com.djcps.wms.loadingtable.controller;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +32,6 @@ import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
 import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
 import com.djcps.wms.loadingtable.service.LoadingTableService;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 /**
  * @title:装车台控制层

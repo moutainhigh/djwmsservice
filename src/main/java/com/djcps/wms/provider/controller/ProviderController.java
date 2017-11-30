@@ -167,14 +167,6 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			BaseListParam param = gson.fromJson(json, BaseListParam.class);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(param,
-							new HibernateSupportedValidator<BaseListParam>()
-									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
 			return providerService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -197,14 +189,6 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			SelectProviderByAttributeBO param = gson.fromJson(json, SelectProviderByAttributeBO.class);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(param,
-							new HibernateSupportedValidator<SelectProviderByAttributeBO>()
-									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
 			return providerService.getProviderByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();

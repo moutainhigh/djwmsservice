@@ -231,14 +231,6 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			BaseListParam param = gson.fromJson(json, BaseListParam.class);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(param,
-							new HibernateSupportedValidator<BaseListParam>()
-									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
 			return warehouseService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -261,8 +253,6 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			SelectWarehouseByIdBO param = gson.fromJson(json, SelectWarehouseByIdBO.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
-			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<SelectWarehouseByIdBO>()
@@ -293,16 +283,6 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			SelectWarehouseByAttributeBO param = gson.fromJson(json, SelectWarehouseByAttributeBO.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
-			BeanUtils.copyProperties(partnerInfoBean,param);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(param,
-							new HibernateSupportedValidator<SelectWarehouseByAttributeBO>()
-									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
 			return warehouseService.getWarehouseByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();
