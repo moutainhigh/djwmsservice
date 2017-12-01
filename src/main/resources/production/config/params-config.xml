@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="paramsConfig" class="com.djcps.wms.commons.config.ParamsConfig">
+        <!-- 统一消息推送服务-->
+        <property name="messageServer" value="http://101.37.172.181/djmsgpushserver/" />
+    </bean>
+
+</beans>
