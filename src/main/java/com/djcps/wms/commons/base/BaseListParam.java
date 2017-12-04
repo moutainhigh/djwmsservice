@@ -2,6 +2,10 @@ package com.djcps.wms.commons.base;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * 该类为 分页 参数类
  * @author chengw
@@ -13,10 +17,10 @@ public class BaseListParam extends BaseParam implements Serializable{
     private static final long serialVersionUID = 1;
     
     private Integer pageSize;
-
+    
     private Integer pageNo;
 
-    public Integer getPageNum(){
+	public Integer getPageNum(){
         return getPageNo() * getPageSize();
     }
 
