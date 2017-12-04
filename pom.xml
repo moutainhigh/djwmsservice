@@ -13,6 +13,33 @@
         <url>http://www.djcps.com</url>
     </organization>
 
+    <profiles>
+        <profile>
+            <!-- 开发环境 -->
+            <id>dev</id>
+            <properties>
+                <environment>dev</environment>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault><!-- 默认激活该profile节点 -->
+            </activation>
+        </profile>
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <environment>test</environment>
+            </properties>
+
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>production</id>
+            <properties>
+                <environment>production</environment>
+            </properties>
+        </profile>
+    </profiles>
 
     <developers>
         <developer>
@@ -346,7 +373,7 @@
         <dependency>
             <groupId>rpc.plugin</groupId>
             <artifactId>djhttprpc</artifactId>
-            <version>1.03</version>
+            <version>1.04</version>
         </dependency>
 
         <!-- xstream  XML Bean 转换 -->
@@ -455,12 +482,15 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.conf</include>
-
-                </includes>
+                <excludes>
+                    <exclude>dev/**</exclude>
+                    <exclude>test/**</exclude>
+                    <exclude>production/**</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources/${environment}</directory>
             </resource>
         </resources>
 

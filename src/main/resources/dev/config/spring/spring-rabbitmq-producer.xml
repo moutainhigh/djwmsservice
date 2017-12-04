@@ -10,7 +10,7 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- Activates annotation-based bean configuration -->
-    <!--<context:annotation-config/>-->
+    <!--<context:annotation-dev.config/>-->
     <tx:annotation-driven transaction-manager="rabbitTxManage"/>
     <!-- Scans for application @Components to deploy -->
     <!--<context:component-scan base-package="com.djcps.djserver.**.mq"/>-->
@@ -48,12 +48,12 @@
     <!-- 定义direct exchange：交换器,路由器 durable:持久化 auto-delete:当所有绑定队列都不再使用时，是否自动删除该交换机
         绑定queueTest -->
     <rabbit:direct-exchange name="exchangeBalance" durable="true" auto-delete="false" auto-declare="true">
-        <rabbit:bindings>
-            <rabbit:binding queue="message.server.balance.test" key="queueTestBalanceServerKey"/>
-            <rabbit:binding queue="message.server.balance.frozen" key="queueFrozenBalanceServerKey"/>
-            <rabbit:binding queue="message.server.balance.update" key="queueUpdateBalanceServerKey"/>
-            <rabbit:binding queue="message.balance.mall.confirm" key="queueConfirmBalanceMallKey" />
-        </rabbit:bindings>
+        <!--<rabbit:bindings>-->
+            <!--<rabbit:binding queue="message.server.balance.test" key="queueTestBalanceServerKey"/>-->
+            <!--<rabbit:binding queue="message.server.balance.frozen" key="queueFrozenBalanceServerKey"/>-->
+            <!--<rabbit:binding queue="message.server.balance.update" key="queueUpdateBalanceServerKey"/>-->
+            <!--<rabbit:binding queue="message.balance.mall.confirm" key="queueConfirmBalanceMallKey" />-->
+        <!--</rabbit:bindings>-->
     </rabbit:direct-exchange>
 
     <!--<rabbit:queue name="message.crm.balance.update" durable="true" auto-delete="false"-->

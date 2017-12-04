@@ -1,4 +1,4 @@
-package com.djcps.wms.interceptor;
+package com.djcps.wms.commons.interceptor;
 
 import java.io.IOException;
 import java.util.Map;
