@@ -71,4 +71,38 @@ public interface WmsServerForProviderHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("provider/search.do")
 	public HTTPResponse getProviderByAttribute(@Body RequestBody json);
+	
+	
+	/**
+	 * 获取所有城市的列表
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月4日
+	 */
+	@Headers("content-type:application/json")
+	@POST("provider/search.do")
+	public HTTPResponse getProvinceAllList(@Body RequestBody rb);
+	
+	/**
+	 * 根据省份获取所有的城市列表
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月4日
+	 */
+	@Headers("content-type:application/json")
+	@POST("provider/search.do")
+	public HTTPResponse getCityListByProvince(@Body RequestBody rb);
+	
+	/**
+	 * 根据城市获取所有区的列表
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月4日
+	 */
+	@Headers("content-type:application/json")
+	@POST("provider/search.do")
+	public HTTPResponse getAreaListByCity(@Body RequestBody rb);
 }

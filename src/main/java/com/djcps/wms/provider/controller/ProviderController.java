@@ -20,12 +20,14 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateInteger;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
+import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBean;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEmum;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
+import com.djcps.wms.provider.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
 import com.djcps.wms.provider.model.UpdateProviderVO;
 import com.djcps.wms.provider.service.ProviderService;
@@ -71,8 +73,24 @@ public class ProviderController {
 					.on(param,
 							new HibernateSupportedValidator<AddProviderBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
-					.on(param.getShortName().length(),new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//名称30个字
+					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
+					//简称10个字
+					.on(param.getShortName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//备注50个字
+					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					//网站地址50个字
+					.on(param.getWebUrl().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					//联系人10个字
+					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//固定电话15个字
+					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					//手机11个字
+					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,11))
+					//传真15个字
+					.on(param.getFax().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					//邮箱30个字
+					.on(param.getEmail().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -106,8 +124,24 @@ public class ProviderController {
 					.on(param,
 							new HibernateSupportedValidator<UpdateProviderVO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
-					.on(param.getShortName().length(),new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//名称30个字
+					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
+					//简称10个字
+					.on(param.getShortName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//备注50个字
+					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					//网站地址50个字
+					.on(param.getWebUrl().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					//联系人10个字
+					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//固定电话15个字
+					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					//手机11个字
+					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,11))
+					//传真15个字
+					.on(param.getFax().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					//邮箱30个字
+					.on(param.getEmail().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -190,6 +224,73 @@ public class ProviderController {
 			logger.debug("json : " + json);
 			SelectProviderByAttributeBO param = gson.fromJson(json, SelectProviderByAttributeBO.class);
 			return providerService.getProviderByAttribute(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 获取所有的城市列表
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月4日
+	 */
+	@RequestMapping(value = "/getProvinceAllList", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getProvinceAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			ProvinceCityAreaCodeBo param = gson.fromJson(json, ProvinceCityAreaCodeBo.class);
+			param.setCode("0");
+			return providerService.getProvinceAllList(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据省份获取所有的城市列表
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月4日
+	 */
+	@RequestMapping(value = "/getCityListByProvince", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getCityListByProvince(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			ProvinceCityAreaCodeBo param = gson.fromJson(json, ProvinceCityAreaCodeBo.class);
+			return providerService.getCityListByProvince(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据城市获取所有的区域列表
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月4日
+	 */
+	@RequestMapping(value = "/getAreaListByCity", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getAreaListByCity(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			ProvinceCityAreaCodeBo param = gson.fromJson(json, ProvinceCityAreaCodeBo.class);
+			return providerService.getAreaListByCity(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

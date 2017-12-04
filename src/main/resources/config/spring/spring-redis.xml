@@ -14,6 +14,7 @@
     <bean class="org.apache.commons.pool2.impl.GenericObjectPoolConfig"
           id="poolConfig"></bean>
 
+	<bean class="com.djcps.wms.commons.base.RedisClientCluster" id="redisClientCluster"></bean>
     <bean class="redis.clients.jedis.JedisCluster" id="jedis">
         <constructor-arg>
             <set>

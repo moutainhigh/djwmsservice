@@ -20,7 +20,8 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateInteger;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
+import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBean;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEmum;
@@ -71,7 +72,15 @@ public class WarehouseController {
 					.on(param,
 							new HibernateSupportedValidator<AddWarehouseBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//联系人8个字符
+					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,8))
+					//备注50个字符
+					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					//手机以1开头的11位数字
+					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,11))
+					//固定电话最多15个字，只可输入数字或-
+					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -105,7 +114,15 @@ public class WarehouseController {
 					.on(param,
 							new HibernateSupportedValidator<UpdateWarehouseBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//联系人10个字符
+					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					//备注50个字符
+					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					//手机以1开头的11位数字
+					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,11))
+					//固定电话最多15个字，只可输入数字或-
+					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -290,4 +307,29 @@ public class WarehouseController {
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
+	
+	/**
+	 * 获取所有仓库类型
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月1日
+	 */
+	@RequestMapping(value = "/getWarehouseType", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getWarehouseType(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			String str = partnerInfoBean.getPartnerId();
+			//该方法查询只需要传合作方id即可
+			String partnerId = "{\"partnerId\":"+str+"}";
+			return warehouseService.getWarehouseType(partnerId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
 }

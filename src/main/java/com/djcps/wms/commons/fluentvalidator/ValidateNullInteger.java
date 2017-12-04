@@ -16,7 +16,7 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class ValidateInteger extends ValidatorHandler<Integer> implements Validator<Integer> {
+public class ValidateNullInteger extends ValidatorHandler<Integer> implements Validator<Integer> {
 	
 		
 		/**
@@ -34,19 +34,19 @@ public class ValidateInteger extends ValidatorHandler<Integer> implements Valida
 		 */
 		private MsgInterface error;
 		
-		public ValidateInteger(MsgInterface error){
+		public ValidateNullInteger(MsgInterface error){
 			this.maxStringLength = Integer.MAX_VALUE;
 			this.mixStringLength = 1;
 			this.error = error;
 		}
 		
-		public ValidateInteger(MsgInterface error,Integer maxStringLength){
+		public ValidateNullInteger(MsgInterface error,Integer maxStringLength){
 			this.maxStringLength = maxStringLength;
 			this.mixStringLength = 1;
 			this.error = error;
 		}
 		
-		public ValidateInteger(MsgInterface error,Integer mixStringLength,Integer maxStringLength){
+		public ValidateNullInteger(MsgInterface error,Integer mixStringLength,Integer maxStringLength){
 			this.maxStringLength = maxStringLength;
 			this.mixStringLength = mixStringLength;
 			this.error = error;
@@ -57,13 +57,11 @@ public class ValidateInteger extends ValidatorHandler<Integer> implements Valida
 		 */
 		@Override
 		public boolean validate(ValidatorContext context, Integer str) {
-			if(ObjectUtils.isEmpty(str)){
-				context.addErrorMsg(error.getMsg());
-				return false;
-			}
-			if(str< mixStringLength || str > maxStringLength){
-				context.addErrorMsg(error.getMsg());
-				return false;
+			if(!ObjectUtils.isEmpty(str)){
+				if(str > maxStringLength){
+					context.addErrorMsg(error.getMsg());
+					return false;
+				}
 			}
 			return true;
 		}

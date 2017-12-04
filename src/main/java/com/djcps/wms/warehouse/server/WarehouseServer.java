@@ -121,6 +121,16 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult getWarehouseType(String partnerId) {
+		//将请求参数转化为requestbody格式
+//		String json = gson.toJson(partnerId);
+		System.out.println("---http请求参数转化为json格式---:"+partnerId);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),partnerId);
+		//调用借口获取信息
+		HTTPResponse http = warehouseHttpRequest.getWarehouseType(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -141,4 +151,5 @@ public class WarehouseServer {
 		}
 		return result;
 	}
+
 }

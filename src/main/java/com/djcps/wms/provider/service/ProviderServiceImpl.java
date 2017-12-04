@@ -13,6 +13,7 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.provider.controller.ProviderController;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
+import com.djcps.wms.provider.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
 import com.djcps.wms.provider.model.UpdateProviderVO;
 import com.djcps.wms.provider.server.ProviderServer;
@@ -62,6 +63,24 @@ public class ProviderServiceImpl implements ProviderService {
 	@Override
 	public Map<String, Object> getProviderByAttribute(SelectProviderByAttributeBO selectVagueBean) throws Exception{
 		HttpResult result = providerServer.getProviderByAttribute(selectVagueBean);
+		return MsgTemplate.customMsg(result);
+	}
+
+	@Override
+	public Map<String, Object> getProvinceAllList(ProvinceCityAreaCodeBo param) {
+		HttpResult result = providerServer.getProvinceAllList(param);
+		return MsgTemplate.customMsg(result);
+	}
+
+	@Override
+	public Map<String, Object> getCityListByProvince(ProvinceCityAreaCodeBo param) {
+		HttpResult result = providerServer.getCityListByProvince(param);
+		return MsgTemplate.customMsg(result);
+	}
+
+	@Override
+	public Map<String, Object> getAreaListByCity(ProvinceCityAreaCodeBo param) {
+		HttpResult result = providerServer.getAreaListByCity(param);
 		return MsgTemplate.customMsg(result);
 	}
 	

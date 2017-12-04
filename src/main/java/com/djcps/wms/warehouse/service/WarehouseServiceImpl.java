@@ -152,4 +152,10 @@ public class WarehouseServiceImpl implements WarehouseService {
 		return MsgTemplate.customMsg(result);
 	}
 
+	@Override
+	public Map<String, Object> getWarehouseType(String partnerId) {
+		HttpResult result = warehouseServer.getWarehouseType(partnerId);
+		return MsgTemplate.customMsg(result);
+	}
+
 }

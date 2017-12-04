@@ -16,6 +16,11 @@ public class ParamsConfig {
      * 仓库管理服务
      */
     public static String WMS_SERVER = "";
+    
+    /**
+     * 地址服务
+     */
+    public static String ADDRESS_SERVER = "";
 
 	public static String getMessageServer() {
 		return MESSAGE_SERVER;
@@ -31,6 +36,14 @@ public class ParamsConfig {
 
 	public static void setWmsServer(String wmsServer) {
 		WMS_SERVER = wmsServer;
+	}
+
+	public static String getAddressServer() {
+		return ADDRESS_SERVER;
+	}
+
+	public static void setAddressServer(String addressServer) {
+		ADDRESS_SERVER = addressServer;
 	}
 
 }

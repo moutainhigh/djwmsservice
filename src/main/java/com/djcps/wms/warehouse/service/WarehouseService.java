@@ -97,4 +97,13 @@ public interface WarehouseService {
 	 * @date:2017年11月30日
 	 */
 	Map<String, Object> disable(IsUseWarehouseBO isUseBean) throws Exception;
+
+	/**
+	 * 获取所有仓库类型
+	 * @description:
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月1日
+	 */
+	Map<String, Object> getWarehouseType(String partnerId);
 }

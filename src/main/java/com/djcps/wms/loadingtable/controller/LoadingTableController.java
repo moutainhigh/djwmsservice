@@ -20,7 +20,7 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateInteger;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBean;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEmum;
@@ -74,7 +74,7 @@ public class LoadingTableController {
 							new HibernateSupportedValidator<AddLoadingTableBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(loadingTable.getName().length(),
-							new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+							new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -109,7 +109,7 @@ public class LoadingTableController {
 							new HibernateSupportedValidator<UpdateLoadingTableBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(loadingTable.getName().length(),
-							new ValidateInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+							new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);

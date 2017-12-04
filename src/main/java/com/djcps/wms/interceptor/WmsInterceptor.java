@@ -16,6 +16,8 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import redis.clients.jedis.Jedis;
+
 /**
  * @title:wms权限控制拦截器
  * @description:
@@ -33,7 +35,8 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object handler) throws Exception {
-//		String url = request.getRequestURI();
+		String url = request.getRequestURI();
+		System.err.println(url);
 //		System.out.println("---------------------访问URL：" + url + "　请求方式：" + request.getMethod()
 //		+ "---------------");
 //		//用户登录地址过滤,login表示登录，common表示公共url,不需要登录即可请求
@@ -65,7 +68,6 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 //				return this.poClient(response, "109");
 //			}
 //		}
-		
 		return true;
 	}
 	

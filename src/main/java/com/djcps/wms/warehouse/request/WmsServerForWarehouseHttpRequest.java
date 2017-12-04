@@ -105,5 +105,16 @@ public interface WmsServerForWarehouseHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("warehouse/disable.do")
 	public HTTPResponse disable(@Body RequestBody json);
+
+	/**
+	 * 获取仓库类型
+	 * @param json
+	 * @return HTTPResponse
+	 * @author:zdx
+	 * @date:2017年11月29日
+	 */
+	@Headers("content-type:application/json")
+	@POST("warehouse/builtType.do")
+	public HTTPResponse getWarehouseType(@Body RequestBody json);
 	
 }
