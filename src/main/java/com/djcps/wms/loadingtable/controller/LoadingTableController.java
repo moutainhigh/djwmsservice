@@ -23,7 +23,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBean;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEmum;
+import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
 import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
 import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
@@ -74,7 +74,7 @@ public class LoadingTableController {
 							new HibernateSupportedValidator<AddLoadingTableBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(loadingTable.getName().length(),
-							new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -109,7 +109,7 @@ public class LoadingTableController {
 							new HibernateSupportedValidator<UpdateLoadingTableBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(loadingTable.getName().length(),
-							new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);

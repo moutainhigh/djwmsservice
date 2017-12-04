@@ -9,7 +9,7 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @author:zdx
  * @date:2017年11月30日
  */
-public enum LoadingTableMsgEmum implements MsgInterface{
+public enum LoadingTableMsgEnum implements MsgInterface{
 	
 	/**
 	 * 字符长度不符合标准
@@ -20,7 +20,7 @@ public enum LoadingTableMsgEmum implements MsgInterface{
     
     private String msg;
 
-    LoadingTableMsgEmum(int code, String msg) {
+    LoadingTableMsgEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }

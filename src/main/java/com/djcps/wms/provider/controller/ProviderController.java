@@ -24,7 +24,7 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBean;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEmum;
+import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
 import com.djcps.wms.provider.model.ProvinceCityAreaCodeBo;
@@ -74,23 +74,23 @@ public class ProviderController {
 							new HibernateSupportedValidator<AddProviderBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//名称30个字
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
+					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
 					//简称10个字
-					.on(param.getShortName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					.on(param.getShortName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字
-					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//网站地址50个字
-					.on(param.getWebUrl().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					.on(param.getWebUrl().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//联系人10个字
-					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//固定电话15个字
-					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					//手机11个字
-					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,11))
+					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
 					//传真15个字
-					.on(param.getFax().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					.on(param.getFax().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					//邮箱30个字
-					.on(param.getEmail().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
+					.on(param.getEmail().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -125,23 +125,23 @@ public class ProviderController {
 							new HibernateSupportedValidator<UpdateProviderVO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//名称30个字
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
+					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
 					//简称10个字
-					.on(param.getShortName().length(),new ValidateNotNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					.on(param.getShortName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字
-					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//网站地址50个字
-					.on(param.getWebUrl().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,50))
+					.on(param.getWebUrl().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//联系人10个字
-					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,10))
+					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//固定电话15个字
-					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					//手机11个字
-					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,11))
+					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
 					//传真15个字
-					.on(param.getFax().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,15))
+					.on(param.getFax().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					//邮箱30个字
-					.on(param.getEmail().length(),new ValidateNullInteger(LoadingTableMsgEmum.LENGTH_BEYOND,30))
+					.on(param.getEmail().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
