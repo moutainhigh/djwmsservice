@@ -6,7 +6,9 @@
 
     <bean id="paramsConfig" class="com.djcps.wms.commons.config.ParamsConfig">
         <!-- 统一消息推送服务-->
-        <property name="messageServer" value="http://101.37.172.181/djmsgpushserver/" />
+        <!-- <property value="http://101.37.172.181/djmsgpushserver/" name="messageServer"/> -->
+        <property value="http://192.168.12.71:8080/djwmsserver/" name="wmsServer"/>
+        <property value="http://172.16.0.30:8080/" name="addressServer"/>
     </bean>
 
 </beans>

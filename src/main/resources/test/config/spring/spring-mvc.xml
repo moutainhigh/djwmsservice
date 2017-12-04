@@ -57,7 +57,7 @@
 		<mvc:interceptor>
 			<!-- 匹配的是url路径， 如果不配置或/**,将拦截所有的Controller -->
 			<mvc:mapping path="/**"/>
-			<bean class="com.djcps.wms.interceptor.WmsInterceptor"></bean>
+			<bean class="com.djcps.wms.commons.interceptor.WmsInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>

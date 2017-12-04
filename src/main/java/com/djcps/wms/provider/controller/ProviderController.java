@@ -244,7 +244,8 @@ public class ProviderController {
 	public Map<String, Object> getProvinceAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			ProvinceCityAreaCodeBo param = gson.fromJson(json, ProvinceCityAreaCodeBo.class);
+			ProvinceCityAreaCodeBo param = new ProvinceCityAreaCodeBo();
+//			ProvinceCityAreaCodeBo param = gson.fromJson(json, ProvinceCityAreaCodeBo.class);
 			param.setCode("0");
 			return providerService.getProvinceAllList(param);
 		} catch (Exception e) {
