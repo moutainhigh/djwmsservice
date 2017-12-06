@@ -10,7 +10,13 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
     <!-- 启动SpringMVC的注解功能 -->
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <bean class="com.djcps.wms.commons.aop.inneruser.aspect.InnerUserResolver"/>
+            <bean class="com.djcps.wms.commons.aop.inneruser.aspect.InnerUserTokenResolver"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
     <!-- 自动扫描该包 -->
     <context:component-scan base-package="com.djcps.wms"/>
     <context:component-scan base-package="com.djcps.health" />

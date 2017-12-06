@@ -5,8 +5,23 @@
 
 
     <bean id="paramsConfig" class="com.djcps.wms.commons.config.ParamsConfig">
+        <!-- 参数-->
+        <!-- 内部用户token -->
+        <property name="innerUserCookieName" value="token" />
+        <!-- cookie超时 30分钟-->
+        <property name="cookieTimeout" value="1800" />
+        <!-- 内部用户退出回调地址-->
+        <property name="innerUserLoginUrl" value="http://192.168.10.170" />
+
+        <!-- 服务 -->
         <!-- 统一消息推送服务-->
-        <property name="messageServer" value="http://101.37.172.181/djmsgpushserver/" />
+        <property name="messageServer" value="http://192.168.10.200/djmsgpushserver/" />
+        <!-- 仓储服务 -->
+        <property name="wmsServer" value="http://192.168.12.71:8080/djwmsserver/" />
+        <!-- 地址服务 -->
+        <property name="addressServer"  value="http://192.168.10.200/djaddressserver"/>
+        <!-- 内部用户服务 -->
+        <property name="innerUserServer" value="http://192.168.10.200/djauth/" />
     </bean>
 
 </beans>
