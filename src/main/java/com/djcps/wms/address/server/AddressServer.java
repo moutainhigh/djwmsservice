@@ -1,10 +1,11 @@
-package com.djcps.wms.provider.server;
+package com.djcps.wms.address.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.wms.address.request.AddressServerHttpRequest;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.provider.model.AddProviderBO;
@@ -19,72 +20,59 @@ import com.google.gson.Gson;
 import rpc.plugin.http.HTTPResponse;
 
 /**
- * @title:供应商服务
+ * @title:地址服务
  * @description:
  * @company:djwms
  * @author:zdx
  * @date:2017年11月23日
  */
 @Component
-public class ProviderServer {
+public class AddressServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProviderServer.class);	
+	private static final Logger logger = LoggerFactory.getLogger(AddressServer.class);	
 	
 	private Gson gson = new Gson();
 	
 	@Autowired
-	private WmsServerForProviderHttpRequest providerHttpRequest;
-	
-	public HttpResult add(AddProviderBO addBean)throws Exception{
-        //将请求参数转化为requestbody格式
-        String json = gson.toJson(addBean);
-        System.out.println("---http请求参数转化为json格式---:"+json);
-        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        //调用借口获取信息
-        HTTPResponse http = providerHttpRequest.add(rb);
-        //校验请求是否成功
-        return verifyHttpResult(http);
-    }
-	
-	public HttpResult modify(UpdateProviderVO updateBean)throws Exception{
+	private AddressServerHttpRequest addressServerHttpRequest;
+
+	public HttpResult getProvinceAllList(ProvinceCityAreaCodeBo param) {
 		//将请求参数转化为requestbody格式
-		String json = gson.toJson(updateBean);
+		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
-		HTTPResponse http = providerHttpRequest.modify(rb);
-		//校验请求是否成功
+		HTTPResponse http = addressServerHttpRequest.getProvinceAllList(rb);
+		return verifyHttpResult(http);
+	}
+
+	public HttpResult getCityListByProvince(ProvinceCityAreaCodeBo param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = addressServerHttpRequest.getCityListByProvince(rb);
+		return verifyHttpResult(http);
+	}
+
+	public HttpResult getAreaListByCity(ProvinceCityAreaCodeBo param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = addressServerHttpRequest.getAreaListByCity(rb);
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult delete(DeleteProviderBO deleteBean)throws Exception{
+	public HttpResult getStreeListByArea(ProvinceCityAreaCodeBo param) {
 		//将请求参数转化为requestbody格式
-		String json = gson.toJson(deleteBean);
+		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
-		HTTPResponse http = providerHttpRequest.delete(rb);
-		//校验请求是否成功
-		return verifyHttpResult(http);
-	}
-	
-	public HttpResult getAllList(BaseListParam baseListParam)throws Exception{
-		//将请求参数转化为requestbody格式
-		String json = gson.toJson(baseListParam);
-		System.out.println("---http请求参数转化为json格式---:"+json);
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-		//调用借口获取信息
-		HTTPResponse http = providerHttpRequest.getAllList(rb);
-		return verifyHttpResult(http);
-	}
-	
-	public HttpResult getProviderByAttribute(SelectProviderByAttributeBO selectVagueBean)throws Exception{
-		//将请求参数转化为requestbody格式
-		String json = gson.toJson(selectVagueBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-		//调用借口获取信息
-		HTTPResponse http = providerHttpRequest.getProviderByAttribute(rb);
+		HTTPResponse http = addressServerHttpRequest.getStreeListByArea(rb);
 		return verifyHttpResult(http);
 	}
 	

@@ -66,34 +66,4 @@ public interface ProviderService {
 	 */
 	Map<String, Object> getProviderByAttribute(SelectProviderByAttributeBO selectVagueBean) throws Exception;
 
-	/**
-	 * 获取所有的省
-	 * @description:
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2017年12月4日
-	 */
-	Map<String, Object> getProvinceAllList(ProvinceCityAreaCodeBo param);
-	
-	/**
-	 * 根据省份获取所有的城市
-	 * @description:
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2017年12月4日
-	 */
-	Map<String, Object> getCityListByProvince(ProvinceCityAreaCodeBo param);
-	
-	
-	/**
-	 * 根据城市获取所有的区
-	 * @description:
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2017年12月4日
-	 */
-	Map<String, Object> getAreaListByCity(ProvinceCityAreaCodeBo param);
 }

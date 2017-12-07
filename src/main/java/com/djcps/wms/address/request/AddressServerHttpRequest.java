@@ -1,4 +1,4 @@
-package com.djcps.wms.provider.request;
+package com.djcps.wms.address.request;
 
 import com.djcps.wms.commons.config.ParamsConfig;
 
@@ -50,4 +50,15 @@ public interface AddressServerHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allArea/findAllArea.do")
 	public HTTPResponse getAreaListByCity(@Body RequestBody rb);
+	
+	/**
+	 * 根据区获取所有的街道
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月4日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allArea/findAllStreet.do")
+	public HTTPResponse getStreeListByArea(@Body RequestBody rb);
 }
