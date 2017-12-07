@@ -69,5 +69,15 @@
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
 
+    <!--Redis 内部统一登录用户信息、内部URL权限-->
+    <bean id="userJedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
+        <constructor-arg name="host" value="${redis.user.host}"/>
+        <constructor-arg name="port" value="${redis.user.port}" type="int"/>
+        <constructor-arg name="timeout" value="${redis.user.timeout}" type="int"/>
+        <constructor-arg name="password" value="${redis.user.password}"/>
+        <constructor-arg name="database" value="${redis.userJedisPool.database}"/>
+    </bean>
+
 
 </beans>

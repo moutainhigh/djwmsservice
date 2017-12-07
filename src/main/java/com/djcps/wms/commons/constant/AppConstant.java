@@ -10,8 +10,13 @@ public class AppConstant {
     public static final String DEFAULT_VERSION = "1.0";
 
     /**
-     * 团购业务系统
+     * WMS业务系统
      */
     public static final String WMS = "WMS";
+
+    /**
+     * 内部用户登录标识码
+     */
+    public static final String LOGIN_TYPE = "DJWMS";
 
 }

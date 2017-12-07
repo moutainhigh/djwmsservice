@@ -6,6 +6,20 @@ package com.djcps.wms.commons.config;
  */
 public class ParamsConfig {
 
+	/**
+	 * 内部用户token
+	 */
+	public static String INNER_USER_COOKIE_NAME = "";
+
+	/**
+	 * Cookie超时
+	 */
+	public static int COOKIE_TIMEOUT;
+
+	/**
+	 * 内部用户登出
+	 */
+	public static String INNER_USER_LOGIN_URL = "";
 
     /**
      * 统一消息推送服务url
@@ -22,28 +36,36 @@ public class ParamsConfig {
      */
     public static String ADDRESS_SERVER = "";
 
-	public static String getMessageServer() {
-		return MESSAGE_SERVER;
-	}
+	/**
+	 * 内部用户服务
+	 */
+	public static String INNER_USER_SERVER = "";
 
 	public static void setMessageServer(String messageServer) {
 		MESSAGE_SERVER = messageServer;
-	}
-
-	public static String getWmsServer() {
-		return WMS_SERVER;
 	}
 
 	public static void setWmsServer(String wmsServer) {
 		WMS_SERVER = wmsServer;
 	}
 
-	public static String getAddressServer() {
-		return ADDRESS_SERVER;
-	}
-
 	public static void setAddressServer(String addressServer) {
 		ADDRESS_SERVER = addressServer;
 	}
 
+	public static void setInnerUserCookieName(String innerUserCookieName) {
+		INNER_USER_COOKIE_NAME = innerUserCookieName;
+	}
+
+	public static void setCookieTimeout(int cookieTimeout) {
+		COOKIE_TIMEOUT = cookieTimeout;
+	}
+
+	public static void setInnerUserLoginUrl(String innerUserLoginUrl) {
+		INNER_USER_LOGIN_URL = innerUserLoginUrl;
+	}
+
+	public static void setInnerUserServer(String innerUserServer) {
+		INNER_USER_SERVER = innerUserServer;
+	}
 }
