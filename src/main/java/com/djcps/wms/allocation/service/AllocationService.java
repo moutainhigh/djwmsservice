@@ -3,14 +3,10 @@ package com.djcps.wms.allocation.service;
 
 import java.util.Map;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.allocation.model.AddAllocation;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.base.BaseParam;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
+import com.djcps.wms.commons.model.PartnerInfoBean;
+
 
 /**
  * 混合配货业务层
@@ -37,7 +33,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2017年12月8日
 	 */
-	Map<String, Object> getChooseAllocation();
+	Map<String, Object> getChooseAllocation(PartnerInfoBean partnern);
 
 	/**
 	 * 保存已选择的混合配货

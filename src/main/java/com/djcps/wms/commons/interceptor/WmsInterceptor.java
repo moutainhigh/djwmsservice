@@ -1,6 +1,8 @@
 package com.djcps.wms.commons.interceptor;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,12 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.djcps.wms.commons.base.RedisClient;
+import com.djcps.wms.commons.base.RedisClientCluster;
+import com.djcps.wms.commons.contant.RedisPrefixContant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
+import com.djcps.wms.sysurl.model.SysUrlPo;
+import com.djcps.wms.sysurl.service.SysUrlService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import redis.clients.jedis.Jedis;
 
@@ -30,29 +39,48 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	private static final Logger logger = LoggerFactory.getLogger(WmsInterceptor.class);
 	
 	@Autowired
-	private RedisClient jedis;
+	RedisClientCluster redisClientCluster;
+	
+	@Autowired 
+	private SysUrlService sysUrlService;
+	
+	private Gson gson = new Gson();
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object handler) throws Exception {
+		//url状态,0:失效,1:生效(默认)
+		int effect = 0;
+		//0:需要用户登录(默认),1:不需要登录
+		int loginType = 1;
+		//路径的用户类型,0:未知(默认,代表都可以访问),1:本部才可以使用的路径,2:合作方使用的路径
+		int userType = 0;
 		String url = request.getRequestURI();
-		System.err.println(url);
-//		System.out.println("---------------------访问URL：" + url + "　请求方式：" + request.getMethod()
-//		+ "---------------");
-//		//用户登录地址过滤,login表示登录，common表示公共url,不需要登录即可请求
-//		if (url.matches(".*login.wms") || url.matches(".*Common.wms")) {
-//			return true;
-//		}
-//		
-//		//获取token认证
-//		String token = CookiesUtil.getCookieByName(request, "token");
-//		
-//		// 用户token 是否过期 或者不存在
-//		if (token == null) {
-//			responseMsg(InterceptorEnums.NOT_LOGIN,response);
+		System.err.println("---访问URL:"+url+",请求方式:"+request.getMethod());
+		String contextPath = request.getContextPath();
+		//删除下文根路径获取RequestMappingUrl
+		url = url.substring(contextPath.length());
+		//字符串分割去除.do
+		url = url.substring(0, url.indexOf("."));
+		//获取token认证
+		String token = CookiesUtil.getCookieByName(request, "token");
+		// 用户token 是否过期 或者不存在
+//		if (ObjectUtils.isEmpty(token)) {
+//			responseMsg(SysMsgEnum.NOT_LOGIN, response);
 //			return false;
 //		}
-//		
+//		String json = redisClientCluster.get(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+url);
+//		SysUrlPo sysUrl = gson.fromJson(json,SysUrlPo.class);
+//		//url失效
+//		if(sysUrl.getEffect() == effect){
+//			responseMsg(SysMsgEnum.URL_EXPIRE, response);
+//			return false;
+//		}
+//		//不需要登录
+//		if(sysUrl.getLoginType() == loginType){
+//			return true;
+//		}
+		
 //		//web端和app端请求用户控制
 //		String version = request.getParameter("version");
 //		if (version == null){
@@ -79,21 +107,27 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	 * @author:zdx
 	 * @date:2017年11月13日
 	 */
-//	private void responseMsg(InterceptorEnums msg, HttpServletResponse response) {
-//        logger.info(msg.getMsg());
-//        if (!response.isCommitted()) {
-//            Map<String, Object> result = (MsgTemplate.failureMsg(msg));
-//            ObjectMapper mapper = new ObjectMapper();
-//            try {
-//                String json = mapper.writeValueAsString(result);
-//                if (!response.isCommitted()){
-//                	response.setContentType("application/json; charset=utf-8");
-//                    response.setCharacterEncoding("utf-8");
-//                    response.getWriter().print(json);
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
+	private void responseMsg(SysMsgEnum msg, HttpServletResponse response) {
+        logger.info(msg.getMsg());
+        PrintWriter printWriter = null;
+        if (!response.isCommitted()) {
+            Map<String, Object> result = (MsgTemplate.failureMsg(msg));
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String json = mapper.writeValueAsString(result);
+                if (!response.isCommitted()){
+                	response.setContentType("application/json; charset=utf-8");
+                    response.setCharacterEncoding("utf-8");
+                    printWriter = response.getWriter();
+                    printWriter.print(json);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally{
+            	if(printWriter!=null){
+            		printWriter.close();
+            	}
+            }
+        }
+    }
 }

@@ -89,7 +89,8 @@ public class AllocationController {
 	public Map<String, Object> getChooseAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			return allocationService.getChooseAllocation();
+			PartnerInfoBean  partnern = new PartnerInfoBean();
+			return allocationService.getChooseAllocation(partnern);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

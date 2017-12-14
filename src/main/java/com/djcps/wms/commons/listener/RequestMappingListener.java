@@ -19,9 +19,12 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import com.djcps.wms.commons.base.RedisClientCluster;
+import com.djcps.wms.commons.contant.RedisPrefixContant;
 import com.djcps.wms.sysurl.model.SysUrlPo;
 import com.djcps.wms.sysurl.service.SysUrlService;
 import com.djcps.wms.warehouse.controller.WarehouseController;
+import com.google.gson.Gson;
 
 /**
  * 扫描并存入数据库url监听器
@@ -39,7 +42,12 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 	@Autowired 
 	private SysUrlService sysUrlService;
 	
+	@Autowired
+	RedisClientCluster redisClientCluster;
+	
 	private static final Logger logger = LoggerFactory.getLogger(RequestMappingListener.class);
+	
+	private Gson gson = new Gson();
 	
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -66,9 +74,16 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 				    		sysUrl.setName(name);
 				    	}
 				    	sysUrlList.add(sysUrl);
+				    	
 				    }
 				}
 				sysUrlService.batchReplaceSysUrlDao(sysUrlList);
+			}
+			List<SysUrlPo> allSysUrl = sysUrlService.getALLSysUrl();
+			if(!ObjectUtils.isEmpty(allSysUrl)){
+				for (SysUrlPo sysUrlPo : allSysUrl) {
+					redisClientCluster.set(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
+				}
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
