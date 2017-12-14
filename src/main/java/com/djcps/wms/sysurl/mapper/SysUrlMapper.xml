@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.djcps.wms.sysurl.dao.SysUrlDao">
+
+	<resultMap type="com.djcps.wms.sysurl.model.SysUrlPo" id="sysUrl">
+		<result column="fid" property="id"/>
+		<result column="fname" property="name"/>
+		<result column="furl" property="url"/>
+		<result column="feffect" property="effect"/>
+		<result column="fusertype" property="userType"/>
+	</resultMap>
+	
+	<insert id="batchInsertSysUrlDao">
+		insert into t_wms_sys_url(fid,fname,furl) values
+		<foreach collection="list" separator="," item="item">
+			(#{item.id},#{item.name},#{item.url})
+		</foreach>
+	</insert>
+	
+	<select id="getALLSysUrl" resultMap="sysUrl">
+		select fid,fname,furl,flogintype,feffect,fusertype from t_wms_sys_url
+	</select>
+	
+	<insert id="batchReplaceSysUrlDao">
+		REPLACE into t_wms_sys_url(fid,fname,furl) values
+		<foreach collection="list" separator="," item="item">
+			(#{item.id},#{item.name},#{item.url})
+		</foreach>
+	</insert>
+</mapper>

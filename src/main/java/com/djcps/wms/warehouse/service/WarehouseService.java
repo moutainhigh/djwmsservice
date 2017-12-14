@@ -3,12 +3,12 @@ package com.djcps.wms.warehouse.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.warehouse.model.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.UpdateWarehouseBO;
-import com.djcps.wms.warehouse.model.IsUseWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
+import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 
 
 /**
@@ -26,7 +26,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> add(AddWarehouseBO addBean) throws Exception;
+	Map<String, Object> add(AddWarehouseBO addBean);
 	
 	/**
 	 * 修改仓库
@@ -36,7 +36,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> modify(UpdateWarehouseBO updateBean) throws Exception;
+	Map<String, Object> modify(UpdateWarehouseBO updateBean);
 	
 	/**
 	 * 删除仓库
@@ -46,7 +46,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> delete(DeleteWarehouseBO deleteBean) throws Exception;
+	Map<String, Object> delete(DeleteWarehouseBO deleteBean);
 	
 	/**
 	 * 获取所有仓库信息
@@ -56,7 +56,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getAllList(BaseListParam baseListParam) throws Exception;
+	Map<String, Object> getAllList(BaseListParam baseListParam);
 	
 	/**
 	 * 根据仓库id查询获取仓库
@@ -66,7 +66,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getWarehouseById(SelectWarehouseByIdBO selectByIdBean) throws Exception;
+	Map<String, Object> getWarehouseById(SelectWarehouseByIdBO selectByIdBean);
 	
 	/**
 	 * 根据仓库属性模糊查询获取仓库
@@ -76,7 +76,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getWarehouseByAttribute(SelectWarehouseByAttributeBO selectVagueBean) throws Exception;
+	Map<String, Object> getWarehouseByAttribute(SelectWarehouseByAttributeBO selectVagueBean);
 	
 	/**
 	 * 启用仓库
@@ -86,7 +86,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> enable(IsUseWarehouseBO isUseBean) throws Exception;
+	Map<String, Object> enable(IsUseWarehouseBO isUseBean);
 	
 	/**
 	 * 禁用仓库
@@ -96,14 +96,24 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> disable(IsUseWarehouseBO isUseBean) throws Exception;
+	Map<String, Object> disable(IsUseWarehouseBO isUseBean);
 
+	
 	/**
-	 * 获取所有仓库类型
-	 * @description:
+	 * 获取仓库类型
+	 * @param partnerId
 	 * @return
 	 * @author:zdx
-	 * @date:2017年12月1日
+	 * @date:2017年12月8日
 	 */
 	Map<String, Object> getWarehouseType(String partnerId);
+
+	/**
+	 * 获取所有的仓库名称
+	 * @param partnerId
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月12日
+	 */
+	Map<String, Object> getAllWarehouseName(String partnerId);
 }

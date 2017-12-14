@@ -14,9 +14,9 @@ import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
 import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
-import com.djcps.wms.loadingtable.request.WmsServerForLoadingTableHttpRequest;
-import com.djcps.wms.provider.request.WmsServerForProviderHttpRequest;
-import com.djcps.wms.provider.service.ProviderServiceImpl;
+import com.djcps.wms.loadingtable.request.WmsForLoadingTableHttpRequest;
+import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
+import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -36,9 +36,9 @@ public class LoadingTableServer {
 	private Gson gson = new Gson();
 	
 	@Autowired
-	private WmsServerForLoadingTableHttpRequest loadingTableHttpRequest;
+	private WmsForLoadingTableHttpRequest loadingTableHttpRequest;
 
-	public HttpResult add(AddLoadingTableBO loadingTable)throws Exception{
+	public HttpResult add(AddLoadingTableBO loadingTable){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(loadingTable);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -49,7 +49,7 @@ public class LoadingTableServer {
         return verifyHttpResult(http);
     }
 	
-	public HttpResult modify(UpdateLoadingTableBO loadingTable)throws Exception{
+	public HttpResult modify(UpdateLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -60,7 +60,7 @@ public class LoadingTableServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult delete(DeleteLoadingTableBO loadingTable)throws Exception{
+	public HttpResult delete(DeleteLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -71,7 +71,7 @@ public class LoadingTableServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getAllList(BaseListParam baseListParam)throws Exception{
+	public HttpResult getAllList(BaseListParam baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -82,7 +82,7 @@ public class LoadingTableServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable)throws Exception{
+	public HttpResult getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -93,7 +93,7 @@ public class LoadingTableServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getLoadingTableById(SelectLoadingTableByIdBO loadingTable)throws Exception{
+	public HttpResult getLoadingTableById(SelectLoadingTableByIdBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -104,7 +104,7 @@ public class LoadingTableServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult enable(IsUseLoadingTableBO loadingTable)throws Exception{
+	public HttpResult enable(IsUseLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -115,7 +115,7 @@ public class LoadingTableServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult disable(IsUseLoadingTableBO loadingTable)throws Exception{
+	public HttpResult disable(IsUseLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
 		System.out.println("---http请求参数转化为json格式---:"+json);

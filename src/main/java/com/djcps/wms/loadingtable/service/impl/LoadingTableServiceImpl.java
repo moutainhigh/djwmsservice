@@ -1,4 +1,4 @@
-package com.djcps.wms.loadingtable.service;
+package com.djcps.wms.loadingtable.service.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,8 @@ import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
 import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
 import com.djcps.wms.loadingtable.server.LoadingTableServer;
-import com.djcps.wms.provider.service.ProviderServiceImpl;
+import com.djcps.wms.loadingtable.service.LoadingTableService;
+import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -42,73 +43,51 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 	private LoadingTableServer loadingTableServer;
 
 	@Override
-	public Map<String, Object> add(AddLoadingTableBO loadingTable) throws Exception {
+	public Map<String, Object> add(AddLoadingTableBO loadingTable) {
 		HttpResult result = loadingTableServer.add(loadingTable);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> modify(UpdateLoadingTableBO loadingTable) throws Exception {
+	public Map<String, Object> modify(UpdateLoadingTableBO loadingTable){
 		HttpResult result = loadingTableServer.modify(loadingTable);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> delete(DeleteLoadingTableBO loadingTable) throws Exception {
+	public Map<String, Object> delete(DeleteLoadingTableBO loadingTable){
 		HttpResult result = loadingTableServer.delete(loadingTable);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam) throws Exception {
+	public Map<String, Object> getAllList(BaseListParam baseListParam){
 		HttpResult result = loadingTableServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable) throws Exception{
+	public Map<String, Object> getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable){
 		HttpResult result = loadingTableServer.getLoadingTableByAttribute(loadingTable);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getLoadingTableById(SelectLoadingTableByIdBO loadingTable) throws Exception{
+	public Map<String, Object> getLoadingTableById(SelectLoadingTableByIdBO loadingTable){
 		HttpResult result = loadingTableServer.getLoadingTableById(loadingTable);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> enable(IsUseLoadingTableBO loadingTable) throws Exception{
+	public Map<String, Object> enable(IsUseLoadingTableBO loadingTable){
 		HttpResult result = loadingTableServer.enable(loadingTable);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> disable(IsUseLoadingTableBO loadingTable) throws Exception{
+	public Map<String, Object> disable(IsUseLoadingTableBO loadingTable){
 		HttpResult result = loadingTableServer.disable(loadingTable);
 		return MsgTemplate.customMsg(result);
 	}
-	
-	/**
-	 * @title:校验HttpResult结果并封装返回前端参数
-	 * @description:
-	 * @param http
-	 * @return
-	 * @author:zdx
-	 * @date:2017年11月24日
-	 */
-//	private Map<String, Object> verifyHttpResult(HttpResult result){
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		if(ObjectUtils.isEmpty(result)){
-//			map.put("msg", SysMsgEnum.OPS_FAILURE.getMsg());
-//			map.put("code", SysMsgEnum.OPS_FAILURE.getCode());
-//			map.put("success", false);
-//		}else{
-//			map.put("msg", SysMsgEnum.OPS_SUCCESS.getMsg());
-//			map.put("code", SysMsgEnum.OPS_SUCCESS.getCode());
-//			map.put("success", true);
-//			map.put("data", result);
-//		}
-//		return map;
-//	}
+
 }

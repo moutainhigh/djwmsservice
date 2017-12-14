@@ -18,6 +18,7 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
@@ -27,7 +28,6 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
 import com.djcps.wms.provider.model.UpdateProviderVO;
 import com.djcps.wms.provider.service.ProviderService;
@@ -53,7 +53,7 @@ public class ProviderController {
 	private ProviderService providerService;
 	
 	/**
-	 * @title:新增供应商档案接口
+	 * @title:新增供应商档案
 	 * @description:
 	 * @param json
 	 * @param request
@@ -61,7 +61,7 @@ public class ProviderController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="新增供应商档案",value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> add(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -104,7 +104,7 @@ public class ProviderController {
 	}
 	
 	/**
-	 * @title:修改供应商档案基础信息接口
+	 * @title:修改供应商档案
 	 * @description:
 	 * @param json
 	 * @param request
@@ -112,7 +112,7 @@ public class ProviderController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/modify", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="修改供应商档案",value = "/modify", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> modify(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -155,7 +155,7 @@ public class ProviderController {
 	}
 	
 	/**
-	 * @title:删除供应商档案列表接口
+	 * @title:删除供应商档案
 	 * @description:
 	 * @param json
 	 * @param request
@@ -163,7 +163,7 @@ public class ProviderController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="删除供应商档案",value = "/delete", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> delete(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -196,7 +196,7 @@ public class ProviderController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="获取所有供应商档案列表",value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -210,7 +210,7 @@ public class ProviderController {
 	}
 	
 	/**
-	 * @title:根据供应商属性模糊查询获得供应商信息
+	 * @title:根据供应商属性模糊查询
 	 * @description:
 	 * @param json
 	 * @param request
@@ -218,7 +218,7 @@ public class ProviderController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/getByProviderAttribute", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="根据供应商属性模糊查询",value = "/getByProviderAttribute", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getByProviderAttribute(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);

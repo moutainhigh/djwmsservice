@@ -1,4 +1,4 @@
-package com.djcps.wms.provider.service;
+package com.djcps.wms.provider.service.impl;
 
 import java.util.Map;
 
@@ -7,16 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.provider.controller.ProviderController;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
 import com.djcps.wms.provider.model.UpdateProviderVO;
 import com.djcps.wms.provider.server.ProviderServer;
+import com.djcps.wms.provider.service.ProviderService;
 import com.google.gson.Gson;
 
 /**
@@ -37,31 +38,31 @@ public class ProviderServiceImpl implements ProviderService {
 	private ProviderServer providerServer;
 
 	@Override
-	public Map<String, Object> add(AddProviderBO addBean) throws Exception {
+	public Map<String, Object> add(AddProviderBO addBean){
 		HttpResult result = providerServer.add(addBean);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> modify(UpdateProviderVO updateBean) throws Exception{
+	public Map<String, Object> modify(UpdateProviderVO updateBean){
 		HttpResult result = providerServer.modify(updateBean);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> delete(DeleteProviderBO deleteBean) throws Exception{
+	public Map<String, Object> delete(DeleteProviderBO deleteBean){
 		HttpResult result = providerServer.delete(deleteBean);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam) throws Exception{
+	public Map<String, Object> getAllList(BaseListParam baseListParam){
 		HttpResult result = providerServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getProviderByAttribute(SelectProviderByAttributeBO selectVagueBean) throws Exception{
+	public Map<String, Object> getProviderByAttribute(SelectProviderByAttributeBO selectVagueBean){
 		HttpResult result = providerServer.getProviderByAttribute(selectVagueBean);
 		return MsgTemplate.customMsg(result);
 	}

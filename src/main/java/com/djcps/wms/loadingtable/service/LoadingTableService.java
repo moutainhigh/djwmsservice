@@ -26,7 +26,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> add(AddLoadingTableBO loadingTable) throws Exception;
+	Map<String, Object> add(AddLoadingTableBO loadingTable);
 	
 	/**
 	 * 装车台修改
@@ -36,7 +36,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> modify(UpdateLoadingTableBO loadingTable) throws Exception;
+	Map<String, Object> modify(UpdateLoadingTableBO loadingTable);
 	
 	/**
 	 * 装车台删除
@@ -46,7 +46,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> delete(DeleteLoadingTableBO loadingTable) throws Exception;
+	Map<String, Object> delete(DeleteLoadingTableBO loadingTable);
 	
 	/**
 	 * 获取所有装车台信息
@@ -56,7 +56,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getAllList(BaseListParam baseListParam) throws Exception;
+	Map<String, Object> getAllList(BaseListParam baseListParam);
 	
 	/**
 	 * 根据仓库属性模糊查询
@@ -66,7 +66,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable) throws Exception;
+	Map<String, Object> getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable);
 	
 	/**
 	 * 根据仓库id查询
@@ -76,7 +76,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getLoadingTableById(SelectLoadingTableByIdBO loadingTable) throws Exception;
+	Map<String, Object> getLoadingTableById(SelectLoadingTableByIdBO loadingTable);
 	
 	/**
 	 * 启用装车台
@@ -86,7 +86,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> enable(IsUseLoadingTableBO loadingTable) throws Exception;
+	Map<String, Object> enable(IsUseLoadingTableBO loadingTable);
 	
 	/**
 	 * 禁用装车台
@@ -96,6 +96,6 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> disable(IsUseLoadingTableBO loadingTable) throws Exception;
+	Map<String, Object> disable(IsUseLoadingTableBO loadingTable);
 	
 }
