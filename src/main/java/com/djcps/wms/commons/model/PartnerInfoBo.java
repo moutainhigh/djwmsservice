@@ -10,7 +10,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月30日
  */
-public class PartnerInfoBean  extends BaseParam implements Serializable{
+public class PartnerInfoBo  extends BaseParam implements Serializable{
 	
 	private static final long serialVersionUID = -2191735308081531970L;
 
@@ -39,7 +39,7 @@ public class PartnerInfoBean  extends BaseParam implements Serializable{
 	 */
 	private String operator;
 	
-	public PartnerInfoBean(){
+	public PartnerInfoBo(){
 		this.partnerId = "100"; 
 		this.partnerName = "东经科技";
 		this.partnerArea = "3303";

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.djcps.wms.allocation.model.AddAllocation;
 import com.djcps.wms.commons.base.BaseParam;
-import com.djcps.wms.commons.model.PartnerInfoBean;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 
 
 /**
@@ -33,7 +33,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2017年12月8日
 	 */
-	Map<String, Object> getChooseAllocation(PartnerInfoBean partnern);
+	Map<String, Object> getChooseAllocation(PartnerInfoBo partnern);
 
 	/**
 	 * 保存已选择的混合配货

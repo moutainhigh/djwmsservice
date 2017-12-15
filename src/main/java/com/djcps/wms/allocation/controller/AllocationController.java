@@ -25,7 +25,7 @@ import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBean;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
@@ -89,7 +89,7 @@ public class AllocationController {
 	public Map<String, Object> getChooseAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			PartnerInfoBean  partnern = new PartnerInfoBean();
+			PartnerInfoBo  partnern = new PartnerInfoBo();
 			return allocationService.getChooseAllocation(partnern);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,7 +112,7 @@ public class AllocationController {
 		try {
 			logger.debug("json : " + json);
 			AddAllocation allocation = gson.fromJson(json, AddAllocation.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
 			BeanUtils.copyProperties(partnerInfoBean,allocation);
 			logger.debug("loadingTable : " + allocation.toString());
 			//数据校验

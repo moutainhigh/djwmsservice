@@ -24,7 +24,7 @@ import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBean;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
@@ -92,7 +92,7 @@ public class AreaController {
 			AddAreaBO addArea = new AddAreaBO();
 			List<AddAreaDetailBO> addDetailList = new ArrayList<AddAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
 			BeanUtils.copyProperties(param,addArea);
 			BeanUtils.copyProperties(partnerInfoBean,addArea);
 			
@@ -160,7 +160,7 @@ public class AreaController {
 			UpdateAreaBO updateArea = new UpdateAreaBO();
 			List<UpdateAreaDetailBO> updateDetailList = new ArrayList<UpdateAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
 			BeanUtils.copyProperties(param,updateArea);
 			BeanUtils.copyProperties(partnerInfoBean,updateArea);
 			
@@ -214,7 +214,7 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			DeleteWarehouseBO param = gson.fromJson(json, DeleteWarehouseBO.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -247,7 +247,7 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			SelectAllAreaList param = gson.fromJson(json, SelectAllAreaList.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return areaService.getAreaAllList(param);
 		} catch (Exception e) {

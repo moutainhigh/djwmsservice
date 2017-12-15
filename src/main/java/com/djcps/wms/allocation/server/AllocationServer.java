@@ -10,7 +10,7 @@ import com.djcps.wms.allocation.model.AddAllocation;
 import com.djcps.wms.allocation.request.WmsForAllocationHttpRequest;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.PartnerInfoBean;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -42,7 +42,7 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getChooseAllocation(PartnerInfoBean partnern) {
+	public HttpResult getChooseAllocation(PartnerInfoBo partnern) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(partnern);
 		System.out.println("---http请求参数转化为json格式---:"+json);

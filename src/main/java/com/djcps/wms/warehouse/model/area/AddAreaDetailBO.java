@@ -40,25 +40,21 @@ public class AddAreaDetailBO implements Serializable{
 	/**
 	 * 区名称
 	 */
-	@NotBlank
 	private String countyName;
 	
 	/**
 	 * 区编码
 	 */
-	@NotBlank
 	private String countyCode;
 	
 	/**
 	 * 街道名称
 	 */
-	@NotBlank
 	private String streetName;
 	
 	/**
 	 * 街道编码
 	 */
-	@NotBlank
 	private String streetCode;
 
 	public String getPartnerId() {

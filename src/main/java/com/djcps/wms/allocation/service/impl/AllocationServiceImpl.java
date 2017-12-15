@@ -13,7 +13,7 @@ import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.PartnerInfoBean;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.google.gson.Gson;
 
@@ -41,7 +41,7 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 
 	@Override
-	public Map<String, Object> getChooseAllocation(PartnerInfoBean partnern) {
+	public Map<String, Object> getChooseAllocation(PartnerInfoBo partnern) {
 		HttpResult result = allocationServer.getChooseAllocation(partnern);
 		return MsgTemplate.customMsg(result);
 	}

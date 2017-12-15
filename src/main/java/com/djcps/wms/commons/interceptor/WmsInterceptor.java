@@ -18,8 +18,11 @@ import com.djcps.wms.commons.base.RedisClient;
 import com.djcps.wms.commons.base.RedisClientCluster;
 import com.djcps.wms.commons.contant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
+import com.djcps.wms.inneruser.model.result.UserInfoVo;
+import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.sysurl.model.SysUrlPo;
 import com.djcps.wms.sysurl.service.SysUrlService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,6 +47,9 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	@Autowired 
 	private SysUrlService sysUrlService;
 	
+	@Autowired
+    private InnerUserService innerUserService;
+	
 	private Gson gson = new Gson();
 	
 	@Override
@@ -64,6 +70,17 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		url = url.substring(0, url.indexOf("."));
 		//获取token认证
 		String token = CookiesUtil.getCookieByName(request, "token");
+		UserInfoVo userInfo = innerUserService.getInnerUserInfoFromRedis(token);
+		if(userInfo!=null){
+			PartnerInfoBo partner = new PartnerInfoBo();
+			partner.setOperator(userInfo.getUname());
+			partner.setOperatorId(userInfo.getUids());
+			partner.setPartnerId(userInfo.getUcompany());
+			partner.setPartnerName(userInfo.getOname());
+			partner.setPartnerArea(userInfo.getOcode());
+			//将组织好的合作方信息存到request中方便后面请求的使用
+			request.setAttribute("partnerInfo", partner);
+		}
 		// 用户token 是否过期 或者不存在
 //		if (ObjectUtils.isEmpty(token)) {
 //			responseMsg(SysMsgEnum.NOT_LOGIN, response);
@@ -80,6 +97,9 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 //		if(sysUrl.getLoginType() == loginType){
 //			return true;
 //		}
+		
+		
+		
 		
 //		//web端和app端请求用户控制
 //		String version = request.getParameter("version");
