@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
@@ -69,7 +68,7 @@ public class InnerUserServer {
     public HttpResult loginTokenWithApp(InnerUserLoginPo innerUserLoginPo){
         String userCode = getUserCode(innerUserLoginPo.getUserName());
         if(StringUtils.isNotBlank(userCode)){
-            String password = DigestUtils.md5Hex(DigestUtils.md5Hex(innerUserLoginPo.getPassword()) + userCode);
+            String password = DigestUtils.md5Hex(innerUserLoginPo.getPassword()+ userCode);
             HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginPo.getUserName(),password, AppConstant.LOGIN_TYPE);
             if(httpResponse.isSuccessful()){
                 try{
