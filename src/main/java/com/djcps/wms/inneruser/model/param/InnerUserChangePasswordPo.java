@@ -17,7 +17,6 @@ public class InnerUserChangePasswordPo {
     @NotBlank
     private String newPassword;
 
-    private String userId;
 
     public String getToken() {
         return token;
@@ -43,11 +42,4 @@ public class InnerUserChangePasswordPo {
         this.newPassword = newPassword;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 }

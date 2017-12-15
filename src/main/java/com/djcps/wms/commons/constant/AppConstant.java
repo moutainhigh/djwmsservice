@@ -17,6 +17,6 @@ public class AppConstant {
     /**
      * 内部用户登录标识码
      */
-    public static final String LOGIN_TYPE = "DJWMS";
+    public static final String LOGIN_TYPE = "DJOA";
 
 }
