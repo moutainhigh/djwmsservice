@@ -1,78 +1,94 @@
-package com.djcps.wms.address.server;
+package com.djcps.wms.warehouse.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
-import com.djcps.wms.address.request.AddressServerHttpRequest;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
-import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
+import com.djcps.wms.provider.server.ProviderServer;
+import com.djcps.wms.warehouse.model.location.AddLocationBO;
+import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
+import com.djcps.wms.warehouse.model.location.SelectAllLocationList;
+import com.djcps.wms.warehouse.model.location.SelectLocationByAttributeBO;
+import com.djcps.wms.warehouse.model.location.UpdateLocationBO;
+import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
+import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
+import com.djcps.wms.warehouse.request.WmsForLocationHttpRequest;
+import com.djcps.wms.warehouse.request.WmsForWarehouseHttpRequest;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
 
 /**
- * @title:地址服务
+ * @title:库位调用http服务
  * @description:
  * @company:djwms
  * @author:zdx
  * @date:2017年11月23日
  */
 @Component
-public class AddressServer {
+public class LocationServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AddressServer.class);	
+	private static final Logger logger = LoggerFactory.getLogger(LocationServer.class);	
 	
 	private Gson gson = new Gson();
 	
 	@Autowired
-	private AddressServerHttpRequest addressServerHttpRequest;
+	private WmsForLocationHttpRequest locationHttpRequest;
 
-	public HttpResult getProvinceAllList(ProvinceCityAreaCodeBo param) {
+	public HttpResult addLocation(AddLocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
-		HTTPResponse http = addressServerHttpRequest.getProvinceAllList(rb);
+		HTTPResponse http = locationHttpRequest.addLocation(rb);
 		return verifyHttpResult(http);
 	}
 
-	public HttpResult getCityListByProvince(ProvinceCityAreaCodeBo param) {
+	public HttpResult modifyLocation(UpdateLocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
-		HTTPResponse http = addressServerHttpRequest.getCityListByProvince(rb);
+		HTTPResponse http = locationHttpRequest.modifyLocation(rb);
 		return verifyHttpResult(http);
 	}
 
-	public HttpResult getAreaListByCity(ProvinceCityAreaCodeBo param) {
+	public HttpResult deleteLocation(DeleteLocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
-		HTTPResponse http = addressServerHttpRequest.getAreaListByCity(rb);
+		HTTPResponse http = locationHttpRequest.deleteLocation(rb);
 		return verifyHttpResult(http);
 	}
-	
-	public HttpResult getStreeListByArea(ProvinceCityAreaCodeBo param) {
+
+	public HttpResult getLocationAllList(SelectAllLocationList param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
-		HTTPResponse http = addressServerHttpRequest.getStreeListByArea(rb);
+		HTTPResponse http = locationHttpRequest.getLocationAllList(rb);
+		return verifyHttpResult(http);
+	}
+
+	public HttpResult getLocationByAttribute(SelectLocationByAttributeBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = locationHttpRequest.getLocationByAttribute(rb);
 		return verifyHttpResult(http);
 	}
 	
@@ -96,5 +112,4 @@ public class AddressServer {
 		}
 		return result;
 	}
-
 }

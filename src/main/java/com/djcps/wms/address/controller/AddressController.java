@@ -18,6 +18,7 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.address.service.AddressService;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -28,7 +29,6 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
 import com.djcps.wms.provider.model.UpdateProviderVO;
 import com.djcps.wms.provider.service.ProviderService;
@@ -54,7 +54,7 @@ public class AddressController {
 	private AddressService addressService;
 	
 	/**
-	 * 获取所有的城市列表
+	 * 获取所有的省份列表
 	 * @description:
 	 * @param json
 	 * @param request
@@ -62,7 +62,7 @@ public class AddressController {
 	 * @author:zdx
 	 * @date:2017年12月4日
 	 */
-	@RequestMapping(value = "/getProvinceAllList", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="获取所有的省份列表",value = "/getProvinceAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getProvinceAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -85,7 +85,7 @@ public class AddressController {
 	 * @author:zdx
 	 * @date:2017年12月4日
 	 */
-	@RequestMapping(value = "/getCityListByProvince", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="根据省份获取所有的城市列表", value = "/getCityListByProvince", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getCityListByProvince(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -99,7 +99,7 @@ public class AddressController {
 	}
 	
 	/**
-	 * 根据城市获取所有的区域列表
+	 * 根据城市获取所有的区(县)列表
 	 * @description:
 	 * @param json
 	 * @param request
@@ -107,7 +107,7 @@ public class AddressController {
 	 * @author:zdx
 	 * @date:2017年12月4日
 	 */
-	@RequestMapping(value = "/getAreaListByCity", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="根据城市获取所有的区(县)列表",value = "/getAreaListByCity", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAreaListByCity(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -120,7 +120,16 @@ public class AddressController {
 		}
 	}
 	
-	@RequestMapping(value = "/getStreeListByArea", method = RequestMethod.POST, produces = "application/json")
+	/**
+	 * 根据区(县)获取所有的街道列表
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月13日
+	 */
+	@RequestMapping(name="根据区(县)获取所有的街道列表",value = "/getStreeListByArea", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getStreeListByArea(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);

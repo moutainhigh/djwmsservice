@@ -1,4 +1,4 @@
-package com.djcps.wms.warehouse.service;
+package com.djcps.wms.warehouse.service.impl;
 
 import java.util.Map;
 
@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.warehouse.model.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.UpdateWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
+import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.server.WarehouseServer;
+import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
 
 /**
@@ -42,7 +43,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> add(AddWarehouseBO addBean) throws Exception {
+	public Map<String, Object> add(AddWarehouseBO addBean){
 		HttpResult result = warehouseServer.add(addBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -57,7 +58,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> modify(UpdateWarehouseBO updateBean) throws Exception {
+	public Map<String, Object> modify(UpdateWarehouseBO updateBean){
 		HttpResult result = warehouseServer.modify(updateBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -72,7 +73,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> delete(DeleteWarehouseBO deleteBean) throws Exception {
+	public Map<String, Object> delete(DeleteWarehouseBO deleteBean){
 		HttpResult result = warehouseServer.delete(deleteBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -87,7 +88,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam) throws Exception {
+	public Map<String, Object> getAllList(BaseListParam baseListParam){
 		HttpResult result = warehouseServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}
@@ -102,7 +103,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> getWarehouseById(SelectWarehouseByIdBO selectByIdBean) throws Exception {
+	public Map<String, Object> getWarehouseById(SelectWarehouseByIdBO selectByIdBean){
 		HttpResult result = warehouseServer.getWarehouseById(selectByIdBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -117,7 +118,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> getWarehouseByAttribute(SelectWarehouseByAttributeBO selectVagueBean) throws Exception {
+	public Map<String, Object> getWarehouseByAttribute(SelectWarehouseByAttributeBO selectVagueBean){
 		HttpResult result = warehouseServer.getWarehouseByAttribute(selectVagueBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -132,7 +133,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> enable(IsUseWarehouseBO isUseBean) throws Exception {
+	public Map<String, Object> enable(IsUseWarehouseBO isUseBean){
 		HttpResult result = warehouseServer.enable(isUseBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -147,7 +148,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> disable(IsUseWarehouseBO isUseBean) throws Exception {
+	public Map<String, Object> disable(IsUseWarehouseBO isUseBean){
 		HttpResult result = warehouseServer.disable(isUseBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -155,6 +156,12 @@ public class WarehouseServiceImpl implements WarehouseService {
 	@Override
 	public Map<String, Object> getWarehouseType(String partnerId) {
 		HttpResult result = warehouseServer.getWarehouseType(partnerId);
+		return MsgTemplate.customMsg(result);
+	}
+
+	@Override
+	public Map<String, Object> getAllWarehouseName(String partnerId) {
+		HttpResult result = warehouseServer.getAllWarehouseName(partnerId);
 		return MsgTemplate.customMsg(result);
 	}
 

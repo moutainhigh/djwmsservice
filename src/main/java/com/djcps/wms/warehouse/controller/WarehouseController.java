@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
@@ -25,12 +26,12 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBean;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.UpdateWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
+import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
 
@@ -50,7 +51,7 @@ public class WarehouseController {
 	
 	@Autowired
 	private WarehouseService warehouseService;
-	
+
 	/**
 	 * @title:新增仓库
 	 * @description:
@@ -60,7 +61,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="新增仓库",value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> add(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -73,8 +74,8 @@ public class WarehouseController {
 							new HibernateSupportedValidator<AddWarehouseBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
-					//联系人8个字符
-					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,8))
+					//联系人10个字符
+					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
 					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
@@ -102,7 +103,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/modify", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="修改仓库",value = "/modify", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> modify(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -144,7 +145,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="删除仓库",value = "/delete", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> delete(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -177,7 +178,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/enable", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="启用仓库",value = "/enable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> enable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -210,7 +211,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/disable", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="禁用仓库",value = "/disable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> disable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -243,7 +244,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="获取所有仓库列表",value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -257,7 +258,7 @@ public class WarehouseController {
 	}
 	
 	/**
-	 * @title:根据仓库编号获取某个仓库
+	 * @title:根据id获取仓库
 	 * @description:
 	 * @param json
 	 * @param request
@@ -265,7 +266,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/getWarehouseById", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="根据id获取仓库",value = "/getWarehouseById", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -295,7 +296,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年11月22日
 	 */
-	@RequestMapping(value = "/getWarehouseByAttribute", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="根据仓库属性模糊查询",value = "/getWarehouseByAttribute", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseByAttribute(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -317,7 +318,7 @@ public class WarehouseController {
 	 * @author:zdx
 	 * @date:2017年12月1日
 	 */
-	@RequestMapping(value = "/getWarehouseType", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="获取所有仓库类型",value = "/getWarehouseType", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseType(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
@@ -325,6 +326,30 @@ public class WarehouseController {
 			//该方法查询只需要传合作方id即可
 			String partnerId = "{\"partnerId\":"+str+"}";
 			return warehouseService.getWarehouseType(partnerId);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 获取所有的仓库名称
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月12日
+	 */
+	@RequestMapping(name="获取所有的仓库名称",value = "/getAllWarehouseName", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getAllWarehouseName(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			String str = partnerInfoBean.getPartnerId();
+			//该方法查询只需要传合作方id即可
+			String partnerId = "{\"partnerId\":"+str+"}";
+			return warehouseService.getAllWarehouseName(partnerId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

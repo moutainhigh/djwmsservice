@@ -60,7 +60,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="新增装车台",value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> add(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -96,7 +96,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/modify", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="修改装车台",value = "/modify", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> modify(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -131,7 +131,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/delete", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="删除装车台",value = "/delete", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> delete(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -164,7 +164,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="获取所有装车台",value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -178,7 +178,7 @@ public class LoadingTableController {
 	}
 	
 	/**
-	 * @title:根据装车台编号获取指定装车台
+	 * @title:根据id获取指定装车台
 	 * @description:
 	 * @param json
 	 * @param request
@@ -186,7 +186,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/getLoadingTableById", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="根据id获取指定装车台",value = "/getLoadingTableById", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getLoadingTableById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -208,7 +208,7 @@ public class LoadingTableController {
 	}
 	
 	/**
-	 * @title:根据装车台属性模糊查询获得装车台信息
+	 * @title:根据装车台属性模糊查询
 	 * @description:
 	 * @param json
 	 * @param request
@@ -216,7 +216,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/getLoadingTableByAttribute", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="根据装车台属性模糊查询",value = "/getLoadingTableByAttribute", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getLoadingTableByAttribute(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -238,7 +238,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/enable", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="启用装车台",value = "/enable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> enable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -271,7 +271,7 @@ public class LoadingTableController {
 	 * @author:zdx
 	 * @date:2017年11月23日
 	 */
-	@RequestMapping(value = "/disable", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="禁用装车台",value = "/disable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> disable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);

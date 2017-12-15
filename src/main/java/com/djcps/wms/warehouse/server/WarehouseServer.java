@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.provider.server.ProviderServer;
-import com.djcps.wms.warehouse.model.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.UpdateWarehouseBO;
-import com.djcps.wms.warehouse.request.WmsServerForWarehouseHttpRequest;
+import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
+import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
+import com.djcps.wms.warehouse.request.WmsForWarehouseHttpRequest;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -34,9 +34,9 @@ public class WarehouseServer {
 	private Gson gson = new Gson();
 	
 	@Autowired
-	private WmsServerForWarehouseHttpRequest warehouseHttpRequest;
+	private WmsForWarehouseHttpRequest warehouseHttpRequest;
 	
-	public HttpResult add(AddWarehouseBO addBean)throws Exception{
+	public HttpResult add(AddWarehouseBO addBean){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(addBean);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -47,7 +47,7 @@ public class WarehouseServer {
         return verifyHttpResult(http);
     }
 	
-	public HttpResult modify(UpdateWarehouseBO updateBean)throws Exception{
+	public HttpResult modify(UpdateWarehouseBO updateBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(updateBean);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -58,7 +58,7 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult delete(DeleteWarehouseBO deleteBean)throws Exception{
+	public HttpResult delete(DeleteWarehouseBO deleteBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(deleteBean);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -70,7 +70,7 @@ public class WarehouseServer {
 	}
 	
 
-	public HttpResult getAllList(BaseListParam baseListParam)throws Exception{
+	public HttpResult getAllList(BaseListParam baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -81,7 +81,7 @@ public class WarehouseServer {
 	}
 	
 	
-	public HttpResult getWarehouseById(SelectWarehouseByIdBO selectByIdBean)throws Exception{
+	public HttpResult getWarehouseById(SelectWarehouseByIdBO selectByIdBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(selectByIdBean);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -91,7 +91,7 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getWarehouseByAttribute(SelectWarehouseByAttributeBO selectVagueBean)throws Exception{
+	public HttpResult getWarehouseByAttribute(SelectWarehouseByAttributeBO selectVagueBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(selectVagueBean);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -101,7 +101,7 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult enable(IsUseWarehouseBO isUseBean)throws Exception{
+	public HttpResult enable(IsUseWarehouseBO isUseBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(isUseBean);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -111,7 +111,7 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult disable(IsUseWarehouseBO isUseBean)throws Exception{
+	public HttpResult disable(IsUseWarehouseBO isUseBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(isUseBean);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -123,11 +123,19 @@ public class WarehouseServer {
 	
 	public HttpResult getWarehouseType(String partnerId) {
 		//将请求参数转化为requestbody格式
-//		String json = gson.toJson(partnerId);
 		System.out.println("---http请求参数转化为json格式---:"+partnerId);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),partnerId);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getWarehouseType(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult getAllWarehouseName(String partnerId) {
+		//将请求参数转化为requestbody格式
+		System.out.println("---http请求参数转化为json格式---:"+partnerId);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),partnerId);
+		//调用借口获取信息
+		HTTPResponse http = warehouseHttpRequest.getAllWarehouseName(rb);
 		return verifyHttpResult(http);
 	}
 	
