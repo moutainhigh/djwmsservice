@@ -1,4 +1,4 @@
-package com.djcps.wms.commons.contant;
+package com.djcps.wms.commons.constant;
 
 /**
  * redis前缀常量(所有的redis前缀放这里面)

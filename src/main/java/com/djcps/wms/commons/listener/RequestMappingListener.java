@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.djcps.wms.commons.base.RedisClientCluster;
-import com.djcps.wms.commons.contant.RedisPrefixContant;
+import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.sysurl.model.SysUrlPo;
 import com.djcps.wms.sysurl.service.SysUrlService;
 import com.djcps.wms.warehouse.controller.WarehouseController;
@@ -64,11 +64,13 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 				    String name = info.getName();
 				    PatternsRequestCondition p = info.getPatternsCondition();  
 				    for (String url : p.getPatterns()) {
+				    	//给属性赋值
 				    	SysUrlPo sysUrl = new SysUrlPo();
 				    	String string = UUID.randomUUID().toString();
 				    	sysUrl.setId(string);
 				    	sysUrl.setUrl(url);
 				    	if(ObjectUtils.isEmpty(name)){
+				    		//没有requestMapping("name=")属性,将属性设置为无接口名
 				    		sysUrl.setName("无接口名");
 				    	}else{
 				    		sysUrl.setName(name);

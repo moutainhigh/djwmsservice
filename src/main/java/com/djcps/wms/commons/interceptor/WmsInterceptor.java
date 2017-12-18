@@ -16,7 +16,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.djcps.wms.commons.base.RedisClient;
 import com.djcps.wms.commons.base.RedisClientCluster;
-import com.djcps.wms.commons.contant.RedisPrefixContant;
+import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
