@@ -41,6 +41,11 @@ public class ParamsConfig {
 	 */
 	public static String INNER_USER_SERVER = "";
 
+	/**
+	 * 高德地图Web服务
+	 */
+	public static String MAP_SERVER = "";
+	
 	public static void setMessageServer(String messageServer) {
 		MESSAGE_SERVER = messageServer;
 	}
@@ -68,4 +73,9 @@ public class ParamsConfig {
 	public static void setInnerUserServer(String innerUserServer) {
 		INNER_USER_SERVER = innerUserServer;
 	}
+
+	public static void setMapServer(String mapServer) {
+		MAP_SERVER = mapServer;
+	}
+	
 }

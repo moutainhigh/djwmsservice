@@ -16,6 +16,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.djcps.wms.commons.base.RedisClient;
 import com.djcps.wms.commons.base.RedisClientCluster;
+import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBo;
@@ -68,8 +69,25 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		url = url.substring(contextPath.length());
 		//字符串分割去除.do
 		url = url.substring(0, url.indexOf("."));
+		String json = redisClientCluster.get(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+url);
+		SysUrlPo sysUrl = gson.fromJson(json,SysUrlPo.class);
+		//url失效
+		if(sysUrl.getEffect() == effect){
+			responseMsg(SysMsgEnum.URL_EXPIRE, response);
+			return false;
+		}
+		//不需要登录
+		if(sysUrl.getLoginType() == loginType){
+			return true;
+		}
+		
 		//获取token认证
 		String token = CookiesUtil.getCookieByName(request, "token");
+		// 用户token 是否过期 或者不存在
+		if (ObjectUtils.isEmpty(token)) {
+			responseMsg(SysMsgEnum.NOT_LOGIN, response);
+			return false;
+		}
 		UserInfoVo userInfo = innerUserService.getInnerUserInfoFromRedis(token);
 		if(userInfo!=null){
 			PartnerInfoBo partner = new PartnerInfoBo();
@@ -80,26 +98,11 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 			partner.setPartnerArea(userInfo.getOcode());
 			//将组织好的合作方信息存到request中方便后面请求的使用
 			request.setAttribute("partnerInfo", partner);
+		}else{
+			//用户不存在也代表未登入
+			responseMsg(SysMsgEnum.NOT_LOGIN, response);
+			return false;
 		}
-		// 用户token 是否过期 或者不存在
-//		if (ObjectUtils.isEmpty(token)) {
-//			responseMsg(SysMsgEnum.NOT_LOGIN, response);
-//			return false;
-//		}
-//		String json = redisClientCluster.get(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+url);
-//		SysUrlPo sysUrl = gson.fromJson(json,SysUrlPo.class);
-//		//url失效
-//		if(sysUrl.getEffect() == effect){
-//			responseMsg(SysMsgEnum.URL_EXPIRE, response);
-//			return false;
-//		}
-//		//不需要登录
-//		if(sysUrl.getLoginType() == loginType){
-//			return true;
-//		}
-		
-		
-		
 		
 //		//web端和app端请求用户控制
 //		String version = request.getParameter("version");
@@ -131,7 +134,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
         logger.info(msg.getMsg());
         PrintWriter printWriter = null;
         if (!response.isCommitted()) {
-            Map<String, Object> result = (MsgTemplate.failureMsg(msg));
+            Map<String, Object> result = (MsgTemplate.failureMsg(msg,ParamsConfig.INNER_USER_LOGIN_URL));
             ObjectMapper mapper = new ObjectMapper();
             try {
                 String json = mapper.writeValueAsString(result);

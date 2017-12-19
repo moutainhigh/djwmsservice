@@ -40,11 +40,11 @@ public class PartnerInfoBo  extends BaseParam implements Serializable{
 	private String operator;
 	
 	public PartnerInfoBo(){
-		this.partnerId = "100"; 
-		this.partnerName = "东经科技";
-		this.partnerArea = "3303";
-		this.operatorId = "100";
-		this.operator = "admin";
+//		this.partnerId = "100"; 
+//		this.partnerName = "东经科技";
+//		this.partnerArea = "3303";
+//		this.operatorId = "100";
+//		this.operator = "admin";
 	}
 
 	public String getPartnerId() {

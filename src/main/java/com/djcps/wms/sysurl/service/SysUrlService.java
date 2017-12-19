@@ -30,6 +30,16 @@ public interface SysUrlService {
 	
 	
 	/**
+	 * 单条更新
+	 * @description:
+	 * @param sysUrlList
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月19日
+	 */
+	int updateSysUrlDao(SysUrlPo sysUrlList);
+	
+	/**
 	 * 批量更新 
 	 * @param sysUrlList
 	 * @return

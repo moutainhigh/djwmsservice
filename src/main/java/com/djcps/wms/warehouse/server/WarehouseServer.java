@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.provider.server.ProviderServer;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
@@ -17,6 +18,7 @@ import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.request.WmsForWarehouseHttpRequest;
 import com.google.gson.Gson;
 
+import retrofit2.http.Path;
 import rpc.plugin.http.HTTPResponse;
 
 /**
@@ -35,6 +37,9 @@ public class WarehouseServer {
 	
 	@Autowired
 	private WmsForWarehouseHttpRequest warehouseHttpRequest;
+	
+	@Autowired
+	private MapHttpRequest mapHttpRequest;
 	
 	public HttpResult add(AddWarehouseBO addBean){
         //将请求参数转化为requestbody格式

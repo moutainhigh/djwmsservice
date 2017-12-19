@@ -66,7 +66,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			AddProviderBO param = gson.fromJson(json, AddProviderBO.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("AddProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -117,7 +117,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			UpdateProviderVO param = gson.fromJson(json, UpdateProviderVO.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("UpdateProviderVO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -168,7 +168,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			DeleteProviderBO param = gson.fromJson(json, DeleteProviderBO.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()

@@ -89,8 +89,8 @@ public class AllocationController {
 	public Map<String, Object> getChooseAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			PartnerInfoBo  partnern = new PartnerInfoBo();
-			return allocationService.getChooseAllocation(partnern);
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			return allocationService.getChooseAllocation(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -112,7 +112,7 @@ public class AllocationController {
 		try {
 			logger.debug("json : " + json);
 			AddAllocation allocation = gson.fromJson(json, AddAllocation.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,allocation);
 			logger.debug("loadingTable : " + allocation.toString());
 			//数据校验

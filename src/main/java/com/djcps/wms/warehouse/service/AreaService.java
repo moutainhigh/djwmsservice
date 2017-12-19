@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
+import com.djcps.wms.warehouse.model.area.MapLocationPo;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
@@ -72,4 +73,13 @@ public interface AreaService {
 	 * @date:2017年12月7日
 	 */
 	Map<String, Object> getAreaById(SelectWarehouseByIdBO param);
+	
+	/**
+	 * 推荐库位
+	 * @param location
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月18日
+	 */
+	Map<String, Object> getRecommendLoca(String location);
 }

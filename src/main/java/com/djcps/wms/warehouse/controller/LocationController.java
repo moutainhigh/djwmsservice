@@ -72,7 +72,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			AddLocationBO param = gson.fromJson(json, AddLocationBO.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("AddWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -107,7 +107,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			UpdateLocationBO param = gson.fromJson(json, UpdateLocationBO.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("PartnerInfoBean : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -140,7 +140,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			DeleteLocationBO param = gson.fromJson(json, DeleteLocationBO.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -174,7 +174,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			SelectAllLocationList param = gson.fromJson(json, SelectAllLocationList.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return locationService.getLocationAllList(param);
 		} catch (Exception e) {
@@ -198,7 +198,30 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
-			PartnerInfoBo partnerInfoBean = new PartnerInfoBo();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			return locationService.getLocationByAttribute(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 获取库位编码
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月19日
+	 */
+	@RequestMapping(name="获取库位编码",value = "/getLocationCode", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getLocationCode(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return locationService.getLocationByAttribute(param);
 		} catch (Exception e) {

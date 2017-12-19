@@ -26,12 +26,14 @@ public interface AllocationService {
 	 */
 	Map<String, Object> getOrderType(BaseParam baseParam);
 
+	
 	/**
-	 * 获取已选择的混合配货
+	 * 获取已选择的配货列表
 	 * @description:
+	 * @param partnern
 	 * @return
 	 * @author:zdx
-	 * @date:2017年12月8日
+	 * @date:2017年12月18日
 	 */
 	Map<String, Object> getChooseAllocation(PartnerInfoBo partnern);
 
