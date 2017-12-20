@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.djcps.wms.warehouse.dao.AreaDao">
+
+	<resultMap type="com.djcps.wms.warehouse.model.area.MapLocationPo" id="location">
+		<result column="fid" property="id"/>
+		<result column="flocation" property="location"/>
+		<result column="fcountyname" property="countyName"/>
+		<result column="fcountycode" property="countyCode"/>
+		<result column="fstreetname" property="streetName"/>
+		<result column="fstreetcode" property="streetCode"/>
+	</resultMap>
+	
+	<insert id="insertLocation">
+		insert into t_map_location(fid,flocation,fcountyname,fcountycode,fstreetname,fstreetcode) 
+		values (#{id},#{location},#{countyName},#{countyCode},#{streetName},#{streetCode})
+			
+	</insert>
+	
+	<select id="getAllLocation" resultMap="location">
+		select fid,flocation,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
+	</select>
+	
+	<select id="getLocationByLocation" resultMap="location">
+		select fid,flocation,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
+		where flocation=#{location}
+	</select>
+</mapper>

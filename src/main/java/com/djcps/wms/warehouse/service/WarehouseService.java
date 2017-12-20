@@ -116,4 +116,5 @@ public interface WarehouseService {
 	 * @date:2017年12月12日
 	 */
 	Map<String, Object> getAllWarehouseName(String partnerId);
+
 }

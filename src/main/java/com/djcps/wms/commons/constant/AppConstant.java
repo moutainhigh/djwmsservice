@@ -18,5 +18,10 @@ public class AppConstant {
      * 内部用户登录标识码
      */
     public static final String LOGIN_TYPE = "DJOA";
+    
+    /**
+     * 高德地图Web服务key,目前用的是个人的
+     */
+    public static final String MAP_API_KEY = "acc123608b5ce05371ff359f4d3f4c18";
 
 }

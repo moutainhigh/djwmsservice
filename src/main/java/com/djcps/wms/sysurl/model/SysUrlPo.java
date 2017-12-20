@@ -90,11 +90,5 @@ public class SysUrlPo implements Serializable{
 	public void setUserType(Integer userType) {
 		this.userType = userType;
 	}
-
-	@Override
-	public String toString() {
-		return "SysUrlPo [id=" + id + ", name=" + name + ", url=" + url + ", loginType=" + loginType + ", effect="
-				+ effect + ", userType=" + userType + "]";
-	}
-
+	
 }

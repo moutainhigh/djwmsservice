@@ -37,9 +37,8 @@ public class SysUrlServiceImpl implements SysUrlService {
 	}
 
 	@Override
-	public int batchUpdateSysUrlDao(List<SysUrlPo> sysUrlList) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateSysUrlDao(SysUrlPo sysUrlList) {
+		return sysUrlDao.updateSysUrlDao(sysUrlList);
 	}
 
 	@Override
@@ -50,6 +49,11 @@ public class SysUrlServiceImpl implements SysUrlService {
 	@Override
 	public int batchReplaceSysUrlDao(List<SysUrlPo> sysUrlList) {
 		return sysUrlDao.batchReplaceSysUrlDao(sysUrlList);
+	}
+
+	@Override
+	public int batchUpdateSysUrlDao(List<SysUrlPo> sysUrlList) {
+		return sysUrlDao.batchUpdateSysUrlDao(sysUrlList);
 	}
 
 

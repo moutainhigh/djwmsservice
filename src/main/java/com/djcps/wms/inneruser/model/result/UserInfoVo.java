@@ -349,4 +349,14 @@ public class UserInfoVo{
     public void setOarea(String oarea) {
         this.oarea = oarea;
     }
+
+	@Override
+	public String toString() {
+		return "UserInfoVo [id=" + id + ", uemail=" + uemail + ", uname=" + uname + ", uids=" + uids + ", password="
+				+ password + ", appname=" + appname + ", email=" + email + ", department=" + department
+				+ ", departmentId=" + departmentId + ", ip=" + ip + ", phone=" + phone + ", sex=" + sex + ", ucompany="
+				+ ucompany + ", oname=" + oname + ", ocode=" + ocode + ", oprovince=" + oprovince + ", ocity=" + ocity
+				+ ", oarea=" + oarea + "]";
+	}
+    
 }

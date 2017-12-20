@@ -6,18 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.allocation.model.AddAllocation;
 import com.djcps.wms.allocation.request.WmsForAllocationHttpRequest;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
-import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -49,9 +42,9 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getChooseAllocation() {
+	public HttpResult getChooseAllocation(PartnerInfoBo partnern) {
 		//将请求参数转化为requestbody格式
-		String json = gson.toJson("0");
+		String json = gson.toJson(partnern);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息

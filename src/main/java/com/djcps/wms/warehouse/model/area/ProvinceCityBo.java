@@ -28,16 +28,19 @@ public class ProvinceCityBo implements Serializable{
 	/**
 	 * 仓库编号
 	 */
+	@NotBlank
 	private String warehouseId;
 	
 	/**
 	 * 仓库名称
 	 */
+	@NotBlank
 	private String warehouseName;
 	
 	/**
 	 * 库区编号
 	 */
+	@NotBlank
 	private String warehouseAreaId;
 	
 	/**

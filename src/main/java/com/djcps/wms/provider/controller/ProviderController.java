@@ -23,7 +23,7 @@ import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBean;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.provider.model.AddProviderBO;
@@ -66,7 +66,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			AddProviderBO param = gson.fromJson(json, AddProviderBO.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("AddProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -117,7 +117,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			UpdateProviderVO param = gson.fromJson(json, UpdateProviderVO.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("UpdateProviderVO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -168,7 +168,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			DeleteProviderBO param = gson.fromJson(json, DeleteProviderBO.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()

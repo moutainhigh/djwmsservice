@@ -27,9 +27,11 @@ public enum SysMsgEnum implements MsgInterface {
     SYS_EXCEPTION(880003, "系统异常,请稍后在试"),
     
     /**
-     * token过去或未登入
+     * token过期或未登入
      */
-    NOT_LOGIN(880004, "抱歉，您还未登录，或token已过期，请登录后再试");
+    NOT_LOGIN(880004, "抱歉,您还未登录,或token已过期,请登录后再试"),
+    
+    URL_EXPIRE(880005, "请求路径已失效,请联系管理员");
     
     private int code;
     

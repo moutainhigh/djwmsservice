@@ -6,6 +6,7 @@
 		<result column="fid" property="id"/>
 		<result column="fname" property="name"/>
 		<result column="furl" property="url"/>
+		<result column="flogintype" property="loginType"/>
 		<result column="feffect" property="effect"/>
 		<result column="fusertype" property="userType"/>
 	</resultMap>
@@ -17,14 +18,24 @@
 		</foreach>
 	</insert>
 	
+	<update id="batchUpdateSysUrlDao">
+		<foreach collection="list" item="item" separator=";" >
+			update t_wms_sys_url set fname=#{item.name},furl=#{item.url} where fid = #{item.id}
+		</foreach>
+	</update>
+	
+	<update id="updateSysUrlDao">
+			update t_wms_sys_url set fname=#{name},furl=#{url} where fid = #{id}
+	</update>
+	
 	<select id="getALLSysUrl" resultMap="sysUrl">
 		select fid,fname,furl,flogintype,feffect,fusertype from t_wms_sys_url
 	</select>
 	
 	<insert id="batchReplaceSysUrlDao">
-		REPLACE into t_wms_sys_url(fid,fname,furl) values
+		REPLACE into t_wms_sys_url(fname,furl) values
 		<foreach collection="list" separator="," item="item">
-			(#{item.id},#{item.name},#{item.url})
+			(#{item.name},#{item.url})
 		</foreach>
 	</insert>
 </mapper>

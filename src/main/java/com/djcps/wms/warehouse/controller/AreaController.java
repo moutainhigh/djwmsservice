@@ -14,17 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBean;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
@@ -35,14 +34,9 @@ import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.StreetBo;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaDetailBO;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.service.AreaService;
-import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -92,7 +86,7 @@ public class AreaController {
 			AddAreaBO addArea = new AddAreaBO();
 			List<AddAreaDetailBO> addDetailList = new ArrayList<AddAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(param,addArea);
 			BeanUtils.copyProperties(partnerInfoBean,addArea);
 			
@@ -160,7 +154,7 @@ public class AreaController {
 			UpdateAreaBO updateArea = new UpdateAreaBO();
 			List<UpdateAreaDetailBO> updateDetailList = new ArrayList<UpdateAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(param,updateArea);
 			BeanUtils.copyProperties(partnerInfoBean,updateArea);
 			
@@ -214,7 +208,7 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			DeleteWarehouseBO param = gson.fromJson(json, DeleteWarehouseBO.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -247,7 +241,7 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			SelectAllAreaList param = gson.fromJson(json, SelectAllAreaList.class);
-			PartnerInfoBean partnerInfoBean = new PartnerInfoBean();
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return areaService.getAreaAllList(param);
 		} catch (Exception e) {
@@ -287,4 +281,43 @@ public class AreaController {
 		}
 	}
 	
+	/**
+	 * 推荐库区接口
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月18日
+	 */
+	@RequestMapping(name="推荐库区",value = "/getRecommendLoca")
+	public Map<String, Object> getRecommendLoca(@RequestParam(value="location",required=true) String location, HttpServletRequest request) {
+		try {
+			return areaService.getRecommendLoca(location);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 获取库区编码
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月18日
+	 */
+	@RequestMapping(name="获取库区编码",value = "/getAreaCode",method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			return areaService.getRecommendLoca(json);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
 }

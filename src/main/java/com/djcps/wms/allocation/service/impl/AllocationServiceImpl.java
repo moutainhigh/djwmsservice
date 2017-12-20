@@ -8,21 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.allocation.model.AddAllocation;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.allocation.service.AllocationService;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.provider.controller.ProviderController;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.server.ProviderServer;
-import com.djcps.wms.provider.service.ProviderService;
 import com.google.gson.Gson;
 
 /**
@@ -49,8 +41,8 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 
 	@Override
-	public Map<String, Object> getChooseAllocation() {
-		HttpResult result = allocationServer.getChooseAllocation();
+	public Map<String, Object> getChooseAllocation(PartnerInfoBo partnern) {
+		HttpResult result = allocationServer.getChooseAllocation(partnern);
 		return MsgTemplate.customMsg(result);
 	}
 
