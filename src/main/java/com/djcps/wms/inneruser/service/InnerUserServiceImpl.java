@@ -6,6 +6,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordPo;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhonePo;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginPo;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysPo;
 import com.djcps.wms.inneruser.model.result.UserInfoVo;
@@ -52,6 +53,35 @@ public class InnerUserServiceImpl implements InnerUserService {
     }
 
     /**
+     * 手机验证码登录
+     * @autuor Chengw
+     * @since 2017/12/20  09:15
+     * @param innerUserLoginPhonePo
+     * @return
+     */
+    @Override
+    public Map<String, Object> loginTokenWithPhone(InnerUserLoginPhonePo innerUserLoginPhonePo) {
+        HttpResult baseResult = innerUserServer.loginTokenWithPhone(innerUserLoginPhonePo);
+        return MsgTemplate.customMsg(baseResult);
+    }
+
+    /**
+     * 发送手机验证码 
+     * @autuor Chengw
+     * @since 2017/12/20  09:19
+     * @param innerUserLoginPhonePo
+     * @return
+     */
+    @Override
+    public Map<String, Object> sendLoginCode(InnerUserLoginPhonePo innerUserLoginPhonePo) {
+        Boolean result = innerUserServer.sendLoginCode(innerUserLoginPhonePo.getPhone());
+        if(result){
+            return MsgTemplate.successMsg();
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+    }
+
+    /**
      * 不同系统之间交换token
      * @autuor Chengw
      * @since 2017/12/4  16:42
@@ -89,7 +119,7 @@ public class InnerUserServiceImpl implements InnerUserService {
     @Override
     public String exchangeToken(String onceToken) {
         String token = innerUserServer.exchangeToken(onceToken);
-        if(StringUtils.isBlank(token)){
+        if(StringUtils.isNotBlank(token)){
             return onceToken;
         }
         return token;
@@ -143,7 +173,7 @@ public class InnerUserServiceImpl implements InnerUserService {
     @Override
     public Boolean setUserCookie(String value, HttpServletResponse response){
         if(StringUtils.isNotBlank(value)){
-            CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME,value,ParamsConfig.COOKIE_TIMEOUT);
+            CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME,value, ParamsConfig.COOKIE_TIMEOUT);
             return true;
         }
         return false;

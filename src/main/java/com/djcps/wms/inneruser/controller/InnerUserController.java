@@ -10,10 +10,8 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.enums.InnerUserMsgEnum;
-import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordPo;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPo;
-import com.djcps.wms.inneruser.model.param.UserSwitchSysPo;
-import com.djcps.wms.inneruser.model.param.UserTokenPo;
+import com.djcps.wms.inneruser.model.param.*;
+import com.djcps.wms.inneruser.model.result.UserExchangeTokenVo;
 import com.djcps.wms.inneruser.model.result.UserInfoVo;
 import com.djcps.wms.inneruser.model.result.UserLogoutVo;
 import com.djcps.wms.inneruser.service.InnerUserService;
@@ -49,7 +47,6 @@ public class InnerUserController {
      * @return
      */
     @RequestMapping(name = "APP登录页面",value = "/login", method = {RequestMethod.POST})
-    @AddLog(module = "内部用户",value = "该接口用于内部用户app登录")
     public Map<String, Object> login(@RequestBody(required = false) String json) {
         try {
             InnerUserLoginPo innerUserLoginPo = gson.fromJson(json,InnerUserLoginPo.class);
@@ -70,8 +67,57 @@ public class InnerUserController {
     }
 
     /**
+     * APP登录页面-手机验证码
+     * @param json
+     * @return
+     */
+    @RequestMapping(name = "APP登录页面-手机验证码",value = "/loginWithPhone", method = {RequestMethod.POST})
+    public Map<String, Object> loginWithPhone(@RequestBody(required = false) String json) {
+        try {
+            InnerUserLoginPhonePo param = gson.fromJson(json,InnerUserLoginPhonePo.class);
+            ComplexResult ret = FluentValidator.checkAll().failFast()
+                    .on(param, new HibernateSupportedValidator<InnerUserLoginPhonePo>()
+                            .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                    .doValidate()
+                    .result(toComplex());
+            if(ret.isSuccess()){
+                Map<String, Object> result = innerUserService.loginTokenWithPhone(param);
+                return result;
+            }
+        }catch (Exception e){
+            logger.error("app登录异常：{} ",e.getMessage());
+            e.printStackTrace();
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+    }
+
+    /**
+     * 发送登录手机验证码
+     * @param json
+     * @return
+     */
+    @RequestMapping(name = "发送手机验证码",value = "/sendLoginCode", method = {RequestMethod.POST,RequestMethod.GET})
+    public Map<String, Object> sendLoginCode(@RequestBody(required = false) String json) {
+        try {
+            InnerUserLoginPhonePo param = gson.fromJson(json,InnerUserLoginPhonePo.class);
+            ComplexResult ret = FluentValidator.checkAll().failFast()
+                    .on(param, new HibernateSupportedValidator<InnerUserLoginPhonePo>()
+                            .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                    .doValidate()
+                    .result(toComplex());
+            if(ret.isSuccess()){
+                Map<String, Object> result = innerUserService.sendLoginCode(param);
+                return result;
+            }
+        }catch (Exception e){
+            logger.error("app登录异常：{} ",e.getMessage());
+            e.printStackTrace();
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+    }
+
+    /**
      * 该接口用于获取用户信息
-     *
      * @param token token
      * @return json数据 ，包含用户信息
      */
@@ -148,16 +194,19 @@ public class InnerUserController {
     public Map<String, Object> getToken(@RequestBody(required = false) String json, HttpServletResponse response) {
         try {
             UserTokenPo userTokenPo = gson.fromJson(json,UserTokenPo.class);
-                if (StringUtils.isNotBlank(userTokenPo.getToken())) {
-                    String token  = innerUserService.exchangeToken(userTokenPo.getToken());
-                    if(StringUtils.isNotBlank(token)){
-                        if(innerUserService.setUserCookie(token,response)){
-                            UserInfoVo userInfoVo = innerUserService.getInnerUserInfoFromRedis(token);
-                            return MsgTemplate.successMsg(userInfoVo);
+            if (StringUtils.isNotBlank(userTokenPo.getToken())) {
+                String token  = innerUserService.exchangeToken(userTokenPo.getToken());
+                if(StringUtils.isNotBlank(token)){
+                    UserExchangeTokenVo userExchangeTokenVo = new UserExchangeTokenVo(token);
+                    if(StringUtils.isNotBlank(userExchangeTokenVo.getToken())){
+                        if(innerUserService.setUserCookie(userExchangeTokenVo.getToken(),response)){
+                            UserInfoVo userInfoVo = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVo.getToken());
+                            MsgTemplate.successMsg(userInfoVo);
                         }
                     }
-                    return MsgTemplate.failureMsg(InnerUserMsgEnum.TOEKN_NULL);
                 }
+                return MsgTemplate.failureMsg(InnerUserMsgEnum.TOEKN_NULL);
+            }
         }catch (Exception e){
             e.printStackTrace();
             return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
@@ -171,7 +220,6 @@ public class InnerUserController {
      * @return map
      */
     @RequestMapping(name = "用户登出系统", value = "/logout")
-    @AddLog(module = "内部用户",value = "该接口用于内部用户登出")
     public Map<String, Object> logout(@InnerUserToken String token, HttpServletResponse response) {
         Boolean isSuccess = innerUserService.logout(token);
         //无论是否成功退出内部统一登录系统，本系统内直接可以退出

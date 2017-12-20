@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.server;
 
-import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhonePo;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginPo;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysPo;
-import com.djcps.wms.inneruser.model.result.*;
+import com.djcps.wms.inneruser.model.result.UserCodeVo;
+import com.djcps.wms.inneruser.model.result.UserExchangeTokenVo;
+import com.djcps.wms.inneruser.model.result.UserLogoutVo;
 import com.djcps.wms.inneruser.request.InnerUserRequest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,8 +18,10 @@ import org.springframework.stereotype.Repository;
 import rpc.plugin.http.HTTPResponse;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
+
 /**
  * 内部用户 server
+ *
  * @author Chengw
  * @since 2017/12/4 11:34.
  */
@@ -27,30 +31,30 @@ public class InnerUserServer {
     private static Logger logger = LoggerFactory.getLogger(InnerUserServer.class);
 
 
-
     @Autowired
     private InnerUserRequest innerUserRequest;
 
     /**
      * 获取用户code
-     * @autuor Chengw
-     * @since 2017/12/4  14:46
+     *
      * @param userName
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  14:46
      */
-    public String getUserCode(String userName){
+    public String getUserCode(String userName) {
         HTTPResponse httpResponse = innerUserRequest.getCode(userName);
-        if(httpResponse.isSuccessful()){
-            try{
+        if (httpResponse.isSuccessful()) {
+            try {
                 String body = httpResponse.getBodyString();
-                if(StringUtils.isNotBlank(body)){
+                if (StringUtils.isNotBlank(body)) {
 
-                    HttpResult baseResult =  gson.fromJson(body, HttpResult.class);
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                     String json = gson.toJson(baseResult.getData());
-                    UserCodeVo userCodeVo = gson.fromJson(json,UserCodeVo.class);
+                    UserCodeVo userCodeVo = gson.fromJson(json, UserCodeVo.class);
                     return userCodeVo.getCode();
                 }
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.error(e.getMessage());
                 e.printStackTrace();
             }
@@ -59,26 +63,27 @@ public class InnerUserServer {
     }
 
     /**
-     * App方式登录 
-     * @autuor Chengw
-     * @since 2017/12/4  15:11
+     * App方式登录
+     *
      * @param innerUserLoginPo
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  15:11
      */
-    public HttpResult loginTokenWithApp(InnerUserLoginPo innerUserLoginPo){
+    public HttpResult loginTokenWithApp(InnerUserLoginPo innerUserLoginPo) {
         String userCode = getUserCode(innerUserLoginPo.getUserName());
-        if(StringUtils.isNotBlank(userCode)){
-            String password = DigestUtils.md5Hex(innerUserLoginPo.getPassword()+ userCode);
-            HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginPo.getUserName(),password, AppConstant.LOGIN_TYPE);
-            if(httpResponse.isSuccessful()){
-                try{
+        if (StringUtils.isNotBlank(userCode)) {
+            String password = DigestUtils.md5Hex(DigestUtils.md5Hex(innerUserLoginPo.getPassword()) + userCode);
+            HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginPo.getUserName(), password, AppConstant.LOGIN_TYPE);
+            if (httpResponse.isSuccessful()) {
+                try {
                     String body = httpResponse.getBodyString();
-                    if(StringUtils.isNotBlank(body)){
-                        HttpResult baseResult = gson.fromJson(body,HttpResult.class);
+                    if (StringUtils.isNotBlank(body)) {
+                        HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                         return baseResult;
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     logger.error(e.getMessage());
                     e.printStackTrace();
                 }
@@ -88,26 +93,25 @@ public class InnerUserServer {
     }
 
     /**
-     * 不同系统之间交换token 
-     * @autuor Chengw
-     * @since 2017/12/4  15:10
-     * @param userSwitchSysPo
+     * 手机验证码登录
+     *
+     * @param innerUserLoginPhonePo
      * @return
+     * @autuor Chengw
+     * @since 2017/12/20  09:12
      */
-    public UserLogoutVo swap(UserSwitchSysPo userSwitchSysPo){
-        HTTPResponse httpResponse = innerUserRequest.getTokenLogin(userSwitchSysPo.getOldToken(),userSwitchSysPo.getSys());
-        if(httpResponse.isSuccessful()){
-            try{
+    public HttpResult loginTokenWithPhone(InnerUserLoginPhonePo innerUserLoginPhonePo) {
+        HTTPResponse httpResponse = innerUserRequest.appLoginByPhone(innerUserLoginPhonePo.getPhone(),
+                Integer.valueOf(innerUserLoginPhonePo.getPhoneCode()), AppConstant.LOGIN_TYPE);
+        if (httpResponse.isSuccessful()) {
+            try {
                 String body = httpResponse.getBodyString();
-                if(StringUtils.isNotBlank(body)){
-                    HttpResult baseResult = gson.fromJson(body,HttpResult.class);
-                    if(baseResult.isSuccess()){
-                        String json = gson.toJson(baseResult.getData());
-                        UserLogoutVo userLogoutVo = gson.fromJson(json,UserLogoutVo.class);
-                        return userLogoutVo;
-                    }
+                if (StringUtils.isNotBlank(body)) {
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
+                    return baseResult;
                 }
-            }catch (Exception e){
+
+            } catch (Exception e) {
                 logger.error(e.getMessage());
                 e.printStackTrace();
             }
@@ -116,24 +120,54 @@ public class InnerUserServer {
     }
 
     /**
-     * 用户登出系统 
+     * 不同系统之间交换token
+     *
+     * @param userSwitchSysPo
+     * @return
      * @autuor Chengw
-     * @since 2017/12/4  15:24
+     * @since 2017/12/4  15:10
+     */
+    public UserLogoutVo swap(UserSwitchSysPo userSwitchSysPo) {
+        HTTPResponse httpResponse = innerUserRequest.getTokenLogin(userSwitchSysPo.getOldToken(), userSwitchSysPo.getSys());
+        if (httpResponse.isSuccessful()) {
+            try {
+                String body = httpResponse.getBodyString();
+                if (StringUtils.isNotBlank(body)) {
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
+                    if (baseResult.isSuccess()) {
+                        String json = gson.toJson(baseResult.getData());
+                        UserLogoutVo userLogoutVo = gson.fromJson(json, UserLogoutVo.class);
+                        return userLogoutVo;
+                    }
+                }
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 用户登出系统
+     *
      * @param token
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  15:24
      */
-    public Boolean logout(String token){
+    public Boolean logout(String token) {
         HTTPResponse httpResponse = innerUserRequest.getLogout(token);
-        if(httpResponse.isSuccessful()){
-            try{
+        if (httpResponse.isSuccessful()) {
+            try {
                 String body = httpResponse.getBodyString();
-                if(StringUtils.isNotBlank(body)){
-                    HttpResult baseResult = gson.fromJson(body,HttpResult.class);
-                    if(baseResult.isSuccess()){
+                if (StringUtils.isNotBlank(body)) {
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
+                    if (baseResult.isSuccess()) {
                         return true;
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 logger.error(e.getMessage());
                 e.printStackTrace();
             }
@@ -143,22 +177,23 @@ public class InnerUserServer {
 
     /**
      * 置换token,、将临时的转换为固定token
+     *
      * @param onceToken
      * @return
      */
-    public String exchangeToken(final String onceToken){
+    public String exchangeToken(final String onceToken) {
         HTTPResponse httpResponse = innerUserRequest.getExchangetoken(onceToken);
-        if(httpResponse.isSuccessful()){
+        if (httpResponse.isSuccessful()) {
             String body = httpResponse.getBodyString();
-            if(StringUtils.isNotBlank(body)){
-                try{
-                    HttpResult baseResult = gson.fromJson(body,HttpResult.class);
-                    if(baseResult.isSuccess()){
+            if (StringUtils.isNotBlank(body)) {
+                try {
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
+                    if (baseResult.isSuccess()) {
                         String json = gson.toJson(baseResult.getData());
-                        UserExchangeTokenVo userExchangeTokenVo = gson.fromJson(json,UserExchangeTokenVo.class);
+                        UserExchangeTokenVo userExchangeTokenVo = gson.fromJson(json, UserExchangeTokenVo.class);
                         return userExchangeTokenVo.getToken();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     logger.error(e.getMessage());
                     e.printStackTrace();
                 }
@@ -169,22 +204,48 @@ public class InnerUserServer {
 
     /**
      * 修改内部用户密码
+     *
      * @param userId
      * @param oldPassword
      * @param newPassword
      * @return
      */
-    public Boolean changeUserPassword(String userId,String oldPassword,String newPassword){
-        try{
-            HTTPResponse httpResponse = innerUserRequest.getModifyPassword(userId,oldPassword,newPassword);
-            if(httpResponse.isSuccessful()){
+    public Boolean changeUserPassword(String userId, String oldPassword, String newPassword) {
+        try {
+            HTTPResponse httpResponse = innerUserRequest.getModifyPassword(userId, oldPassword, newPassword);
+            if (httpResponse.isSuccessful()) {
                 String body = httpResponse.getBodyString();
-                if(StringUtils.isNotBlank(body)){
-                    HttpResult baseResult = gson.fromJson(body,HttpResult.class);
+                if (StringUtils.isNotBlank(body)) {
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                     return baseResult.isSuccess();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 发送登录手机验证码
+     *
+     * @param phone
+     * @return
+     * @autuor Chengw
+     * @since 2017/12/20  09:16
+     */
+    public Boolean sendLoginCode(String phone) {
+        try {
+            HTTPResponse httpResponse = innerUserRequest.sendLoginCode(phone);
+            if (httpResponse.isSuccessful()) {
+                String body = httpResponse.getBodyString();
+                if (StringUtils.isNotBlank(body)) {
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
+                    return baseResult.isSuccess();
+                }
+            }
+        } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }

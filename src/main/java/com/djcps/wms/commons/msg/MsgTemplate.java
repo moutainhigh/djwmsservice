@@ -106,7 +106,7 @@ public class MsgTemplate {
      * @return the map
      */
     private static Map<String, Object> customMsg(boolean success, int msgCode, String message, Object data) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>(4);
         result.put("success", success);
         result.put("code", msgCode);
         result.put("msg", message);

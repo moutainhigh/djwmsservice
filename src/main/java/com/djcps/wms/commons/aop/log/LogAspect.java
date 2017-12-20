@@ -38,7 +38,9 @@ public class LogAspect {
     @Autowired
     private InnerUserService innerUserService;
 
-    // AOP执行的方法
+    /**
+     *  AOP执行的方法
+     */
     @Around("@annotation(addLog)")
     public Object validIdentityAndSecure(ProceedingJoinPoint pjp, AddLog addLog) throws Throwable {
         long start = System.currentTimeMillis();

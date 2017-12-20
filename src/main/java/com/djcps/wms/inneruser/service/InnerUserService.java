@@ -1,6 +1,7 @@
 package com.djcps.wms.inneruser.service;
 
 import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordPo;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhonePo;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginPo;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysPo;
 import com.djcps.wms.inneruser.model.result.UserInfoVo;
@@ -23,6 +24,21 @@ public interface InnerUserService {
      * @return
      */
     Map<String,Object> loginTokenWithApp(InnerUserLoginPo innerUserLoginPo);
+
+    /**
+     * app手机验证码登录
+     * @param innerUserLoginPhonePo
+     * @return
+     */
+    Map<String,Object> loginTokenWithPhone(InnerUserLoginPhonePo innerUserLoginPhonePo);
+
+    /**
+     * 发送手机验证码
+     * @param innerUserLoginPhonePo
+     * @return
+     */
+    Map<String,Object> sendLoginCode(InnerUserLoginPhonePo innerUserLoginPhonePo);
+
 
     /**
      * 不同系统之间交换token 
