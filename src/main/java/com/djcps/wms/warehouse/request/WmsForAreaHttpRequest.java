@@ -72,5 +72,15 @@ public interface WmsForAreaHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/getById.do")
 	public HTTPResponse getAreaById(@Body RequestBody json);
-	
+
+	/**
+	 * @title 获取库区编码
+	 * @author  wzy
+	 * @create  2017/12/20 13:11
+	 **/
+	@Headers("content-type:application/json")
+	@POST("code/getCode.do")
+	public HTTPResponse getAreaCode(@Body RequestBody rb);
+
+
 }

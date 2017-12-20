@@ -3,6 +3,9 @@ package com.djcps.wms.warehouse.server;
 import java.util.List;
 import java.util.UUID;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.request.GetCodeRequest;
+import com.djcps.wms.warehouse.model.area.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +18,6 @@ import com.djcps.wms.commons.model.MapAddressComponentBO;
 import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.provider.server.ProviderServer;
 import com.djcps.wms.warehouse.dao.AreaDao;
-import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.MapLocationPo;
-import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
-import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
@@ -56,6 +55,9 @@ public class AreaServer {
 	
 	@Autowired
 	AreaDao areaDao;
+
+	@Autowired
+	private GetCodeRequest getCodeRequest;
 	
 	public HttpResult addArea(AddAreaBO param) {
 		//将请求参数转化为requestbody格式
@@ -138,7 +140,19 @@ public class AreaServer {
 		}
 		
 	}
-	
+
+	public HttpResult getAreaCode(GetCodeBO getCodeBO){
+		//将请求参数转化为requestbody格式
+		String json=gson.toJson(getCodeBO);
+		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json
+		);
+		//调用接口获取信息
+		HTTPResponse http=getCodeRequest.getCode(rb);
+		//HTTPResponse http=warehouseAreaHttpRequest.getAreaCode(rb);
+		return verifyHttpResult(http);
+	}
+
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:

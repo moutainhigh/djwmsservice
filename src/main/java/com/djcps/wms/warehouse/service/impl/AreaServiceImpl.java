@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.warehouse.model.area.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +17,6 @@ import com.djcps.wms.address.server.AddressServer;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.CountyBo;
-import com.djcps.wms.warehouse.model.area.MapLocationPo;
-import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
-import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
-import com.djcps.wms.warehouse.model.area.StreetBo;
-import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.server.AreaServer;
@@ -29,6 +24,7 @@ import com.djcps.wms.warehouse.service.AreaService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysql.fabric.xmlrpc.base.Array;
+import rpc.plugin.http.HTTPResponse;
 
 /**
  * @title:仓库管理业务层
@@ -174,6 +170,12 @@ public class AreaServiceImpl implements AreaService {
 		String output="JSON";
 		MapLocationPo mapLocationPo = wareAreaServer.getRecommendLoca(key,newLocation,output);
 		return new HashMap<>();
+	}
+
+	@Override
+	public Map<String, Object> getAreaCode(GetCodeBO getCodeBO) {
+		HttpResult httpResult=wareAreaServer.getAreaCode(getCodeBO);
+		return MsgTemplate.customMsg(httpResult);
 	}
 
 }

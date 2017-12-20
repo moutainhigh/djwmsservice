@@ -1,5 +1,8 @@
 package com.djcps.wms.warehouse.server;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.request.GetCodeRequest;
+import com.djcps.wms.warehouse.model.location.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +11,6 @@ import org.springframework.stereotype.Component;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.provider.server.ProviderServer;
-import com.djcps.wms.warehouse.model.location.AddLocationBO;
-import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
-import com.djcps.wms.warehouse.model.location.SelectAllLocationList;
-import com.djcps.wms.warehouse.model.location.SelectLocationByAttributeBO;
-import com.djcps.wms.warehouse.model.location.UpdateLocationBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
@@ -41,6 +39,9 @@ public class LocationServer {
 	
 	@Autowired
 	private WmsForLocationHttpRequest locationHttpRequest;
+
+	@Autowired
+	private GetCodeRequest getCodeRequest;
 
 	public HttpResult addLocation(AddLocationBO param) {
 		//将请求参数转化为requestbody格式
@@ -89,6 +90,17 @@ public class LocationServer {
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.getLocationByAttribute(rb);
+		return verifyHttpResult(http);
+	}
+
+	public HttpResult getLocationCode(GetCodeBO getCodeBO){
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(getCodeBO);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = getCodeRequest.getCode(rb);
+		//HTTPResponse http = locationHttpRequest.getLocationCode(rb);
 		return verifyHttpResult(http);
 	}
 	

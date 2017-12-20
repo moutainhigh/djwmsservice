@@ -5,6 +5,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.warehouse.model.area.AreaCode;
+import com.djcps.wms.warehouse.model.location.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -25,11 +28,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.location.AddLocationBO;
-import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
-import com.djcps.wms.warehouse.model.location.SelectAllLocationList;
-import com.djcps.wms.warehouse.model.location.SelectLocationByAttributeBO;
-import com.djcps.wms.warehouse.model.location.UpdateLocationBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
@@ -220,10 +218,26 @@ public class LocationController {
 	public Map<String, Object> getLocationCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
+			//SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
+			//BeanUtils.copyProperties(partnerInfoBean,param);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
-			BeanUtils.copyProperties(partnerInfoBean,param);
-			return locationService.getLocationByAttribute(param);
+			LocationBo param=gson.fromJson(json,LocationBo.class);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<LocationBo>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+
+			GetCodeBO getCodeBO=new GetCodeBO();
+			getCodeBO.setCodeType("3");
+			getCodeBO.setPartnerId(partnerInfoBean.getPartnerId());
+			getCodeBO.setVersion(partnerInfoBean.getVersion());
+			getCodeBO.setWarehouseId(param.getWarehouseId());
+			getCodeBO.setWarehouseAreaId(param.getWarehouseAreaId());
+			return locationService.getLocationCode(getCodeBO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

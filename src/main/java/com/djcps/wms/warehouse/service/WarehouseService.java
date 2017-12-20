@@ -3,12 +3,8 @@ package com.djcps.wms.warehouse.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.warehouse.model.warehouse.*;
 
 
 /**
@@ -116,5 +112,13 @@ public interface WarehouseService {
 	 * @date:2017年12月12日
 	 */
 	Map<String, Object> getAllWarehouseName(String partnerId);
+
+
+	/**
+	 * 获取仓库编码
+	 * @param getWarehouseCodeBO
+	 * @return
+	 */
+	Map<String,Object> getWarehouseCode(GetCodeBO getCodeBO);
 
 }

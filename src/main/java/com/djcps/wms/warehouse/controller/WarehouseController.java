@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.warehouse.model.warehouse.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -26,12 +28,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
 
@@ -370,9 +366,12 @@ public class WarehouseController {
 		try {
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			String str = partnerInfoBean.getPartnerId();
-			//该方法查询只需要传合作方id即可
-			String partnerId = "{\"partnerId\":"+str+"}";
-			return warehouseService.getAllWarehouseName(partnerId);
+			String ver=partnerInfoBean.getVersion();
+			GetCodeBO getCodeBO=new GetCodeBO();
+			getCodeBO.setCodeType("1");
+			getCodeBO.setPartnerId(str);
+			getCodeBO.setVersion(ver);
+			return warehouseService.getWarehouseCode(getCodeBO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

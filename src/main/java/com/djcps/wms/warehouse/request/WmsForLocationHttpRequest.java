@@ -73,5 +73,14 @@ public interface WmsForLocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("warehouseLoc/search.do")
 	public HTTPResponse getLocationByAttribute(@Body RequestBody rb);
+
+	/**
+	 * @title 获取库位编码
+	 * @author  wzy
+	 * @create  2017/12/20 13:11
+	 **/
+	@Headers("content-type:application/json")
+	@POST("code/getCode.do")
+	public HTTPResponse getLocationCode(@Body RequestBody rb);
 	
 }

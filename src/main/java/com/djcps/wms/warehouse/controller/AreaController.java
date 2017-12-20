@@ -7,6 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.warehouse.model.area.*;
+import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -26,14 +29,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.AddAreaDetailBO;
-import com.djcps.wms.warehouse.model.area.CountyBo;
-import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
-import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
-import com.djcps.wms.warehouse.model.area.StreetBo;
-import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
-import com.djcps.wms.warehouse.model.area.UpdateAreaDetailBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.service.AreaService;
@@ -313,7 +308,33 @@ public class AreaController {
 	@RequestMapping(name="获取库区编码",value = "/getAreaCode",method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			return areaService.getRecommendLoca(json);
+			PartnerInfoBo partnerInfoBo=(PartnerInfoBo) request.getAttribute("partnerInfo");
+//			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
+//			logger.debug("GetCodeBO : " + param.toString());
+//			ComplexResult ret = FluentValidator.checkAll().failFast()
+//					.on(param,
+//							new HibernateSupportedValidator<GetCodeBO>()
+//									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//					.doValidate().result(ResultCollectors.toComplex());
+//			if (!ret.isSuccess()) {
+//				return MsgTemplate.failureMsg(ret);
+//			}
+			AreaCode param=gson.fromJson(json,AreaCode.class);
+			logger.debug("AreaCode : " + param.toString());
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<AreaCode>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			GetCodeBO getCodeBO=new GetCodeBO();
+			getCodeBO.setCodeType("2");
+			getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
+			getCodeBO.setVersion(partnerInfoBo.getVersion());
+			getCodeBO.setWarehouseId(param.getWarehouseId());
+			return areaService.getAreaCode(getCodeBO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
