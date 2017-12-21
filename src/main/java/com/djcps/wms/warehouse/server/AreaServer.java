@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.warehouse.model.area.*;
 import org.slf4j.Logger;
@@ -141,7 +142,17 @@ public class AreaServer {
 		
 	}
 
-	public HttpResult getAreaCode(GetCodeBO getCodeBO){
+	/**
+	 * @title 获取库区编码
+	 * @author  wzy
+	 * @create  2017/12/21 17:03
+	 **/
+	public HttpResult getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode){
+		GetCodeBO getCodeBO=new GetCodeBO();
+		getCodeBO.setCodeType("2");
+		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
+		getCodeBO.setVersion(partnerInfoBo.getVersion());
+		getCodeBO.setWarehouseId(areaCode.getWarehouseId());
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
 		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);
@@ -149,7 +160,6 @@ public class AreaServer {
 		);
 		//调用接口获取信息
 		HTTPResponse http=getCodeRequest.getCode(rb);
-		//HTTPResponse http=warehouseAreaHttpRequest.getAreaCode(rb);
 		return verifyHttpResult(http);
 	}
 

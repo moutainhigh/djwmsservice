@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.area.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -173,8 +174,8 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public Map<String, Object> getAreaCode(GetCodeBO getCodeBO) {
-		HttpResult httpResult=wareAreaServer.getAreaCode(getCodeBO);
+	public Map<String, Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode) {
+		HttpResult httpResult=wareAreaServer.getAreaCode(partnerInfoBo,areaCode);
 		return MsgTemplate.customMsg(httpResult);
 	}
 

@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.area.*;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
@@ -87,5 +88,5 @@ public interface AreaService {
 	 * @create  2017/12/20 12:59
 	 **/
 
-	Map<String,Object> getAreaCode(GetCodeBO getCodeBO);
+	Map<String,Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode);
 }

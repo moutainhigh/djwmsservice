@@ -3,6 +3,7 @@ package com.djcps.wms.warehouse.service.impl;
 import java.util.Map;
 
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.location.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,8 +69,8 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public Map<String, Object> getLocationCode(GetCodeBO getCodeBO) {
-		HttpResult result = locationServer.getLocationCode(getCodeBO);
+	public Map<String, Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo) {
+		HttpResult result = locationServer.getLocationCode(partnerInfoBo,locationBo);
 		return MsgTemplate.customMsg(result);
 	}
 

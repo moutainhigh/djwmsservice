@@ -238,7 +238,7 @@ public class LocationController {
 			getCodeBO.setVersion(partnerInfoBean.getVersion());
 			getCodeBO.setWarehouseId(param.getWarehouseId());
 			getCodeBO.setWarehouseAreaId(param.getWarehouseAreaId());
-			return locationService.getLocationCode(getCodeBO);
+			return locationService.getLocationCode(partnerInfoBean,param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

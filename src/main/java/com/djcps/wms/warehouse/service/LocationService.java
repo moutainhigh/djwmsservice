@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.location.*;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
@@ -71,5 +72,5 @@ public interface LocationService {
 	 * @param getLocationCode
 	 * @return
 	 */
-	Map<String,Object> getLocationCode(GetCodeBO getCodeBO);
+	Map<String,Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo);
 }

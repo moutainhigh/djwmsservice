@@ -365,13 +365,7 @@ public class WarehouseController {
 	public Map<String, Object> getWarehouseCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
-			String str = partnerInfoBean.getPartnerId();
-			String ver=partnerInfoBean.getVersion();
-			GetCodeBO getCodeBO=new GetCodeBO();
-			getCodeBO.setCodeType("1");
-			getCodeBO.setPartnerId(str);
-			getCodeBO.setVersion(ver);
-			return warehouseService.getWarehouseCode(getCodeBO);
+			return  warehouseService.getWarehouseCode(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

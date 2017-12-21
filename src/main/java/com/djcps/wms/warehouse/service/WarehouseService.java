@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.warehouse.*;
 
 
@@ -116,9 +117,9 @@ public interface WarehouseService {
 
 	/**
 	 * 获取仓库编码
-	 * @param getWarehouseCodeBO
+	 * @param PartnerInfoBo
 	 * @return
 	 */
-	Map<String,Object> getWarehouseCode(GetCodeBO getCodeBO);
+	Map<String,Object> getWarehouseCode(PartnerInfoBo partnerInfoBo);
 
 }

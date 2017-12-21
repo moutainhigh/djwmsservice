@@ -4,6 +4,11 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 
+/**
+ * @title 获取库位对象
+ * @author  wzy
+ * @create  2017/12/21 17:01
+ **/
 public class LocationBo implements Serializable {
 
     private static final long serialVersionUID = 4080342799779890661L;

@@ -309,16 +309,6 @@ public class AreaController {
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBo partnerInfoBo=(PartnerInfoBo) request.getAttribute("partnerInfo");
-//			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
-//			logger.debug("GetCodeBO : " + param.toString());
-//			ComplexResult ret = FluentValidator.checkAll().failFast()
-//					.on(param,
-//							new HibernateSupportedValidator<GetCodeBO>()
-//									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//					.doValidate().result(ResultCollectors.toComplex());
-//			if (!ret.isSuccess()) {
-//				return MsgTemplate.failureMsg(ret);
-//			}
 			AreaCode param=gson.fromJson(json,AreaCode.class);
 			logger.debug("AreaCode : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -329,12 +319,7 @@ public class AreaController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			GetCodeBO getCodeBO=new GetCodeBO();
-			getCodeBO.setCodeType("2");
-			getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
-			getCodeBO.setVersion(partnerInfoBo.getVersion());
-			getCodeBO.setWarehouseId(param.getWarehouseId());
-			return areaService.getAreaCode(getCodeBO);
+			return areaService.getAreaCode(partnerInfoBo,param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

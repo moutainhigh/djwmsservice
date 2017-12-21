@@ -3,6 +3,7 @@ package com.djcps.wms.warehouse.service.impl;
 import java.util.Map;
 
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	
 	@Autowired
 	private WarehouseServer warehouseServer;
+
+
 
 	/**
 	 * @title:新增仓库
@@ -162,8 +165,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	@Override
-	public Map<String, Object> getWarehouseCode(GetCodeBO getCodeBO) {
-		HttpResult result=warehouseServer.getWarehouseCode(getCodeBO);
+	public Map<String, Object> getWarehouseCode(PartnerInfoBo partnerInfoBo) {
+		HttpResult result=warehouseServer.getWarehouseCode(partnerInfoBo);
 		return MsgTemplate.customMsg(result);
 	}
 }

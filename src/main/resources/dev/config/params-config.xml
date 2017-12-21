@@ -17,8 +17,8 @@
         <!-- 统一消息推送服务-->
         <property name="messageServer" value="http://192.168.10.200/djmsgpushserver/" />
         <!-- wms服务端 -->
-      	<!--<property name="wmsServer" value="http://192.168.12.71:8080/djwmsserver/" />-->
-     	  <property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/>
+      	<property name="wmsServer" value="http://192.168.12.71:8080/djwmsserver/" />
+     	  <!--<property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/>-->
           <property name="numberServer" value="http://192.168.10.200:80/djnumserver/"/>
         <!-- 地址服务 -->
         <!-- <property name="addressServer"  value="http://192.168.10.200/djaddressserver/"/> -->
