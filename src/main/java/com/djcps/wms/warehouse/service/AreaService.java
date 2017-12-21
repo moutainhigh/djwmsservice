@@ -3,9 +3,11 @@ package com.djcps.wms.warehouse.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBo;
-import com.djcps.wms.warehouse.model.area.*;
+import com.djcps.wms.warehouse.model.area.AddAreaBO;
+import com.djcps.wms.warehouse.model.area.AreaCode;
+import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
+import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
