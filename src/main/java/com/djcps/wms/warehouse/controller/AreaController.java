@@ -282,26 +282,6 @@ public class AreaController {
 	}
 	
 	/**
-	 * 推荐库区接口
-	 * @description:
-	 * @param json
-	 * @param request
-	 * @return
-	 * @author:zdx
-	 * @date:2017年12月18日
-	 */
-	@RequestMapping(name="推荐库区",value = "/getRecommendLoca")
-	public Map<String, Object> getRecommendLoca(@RequestParam(value="location",required=true) String location, HttpServletRequest request) {
-		try {
-			return areaService.getRecommendLoca(location);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
-		}
-	}
-	
-	/**
 	 * 获取库区编码
 	 * @description:
 	 * @param json
@@ -313,7 +293,7 @@ public class AreaController {
 	@RequestMapping(name="获取库区编码",value = "/getAreaCode",method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			return areaService.getRecommendLoca(json);
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

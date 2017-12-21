@@ -28,6 +28,6 @@ public interface MapHttpRequest {
 	 * @date:2017年12月18日
 	 */
 	@GET("geocode/regeo?")
-	HTTPResponse getRecommendLoca(@Query("key")String key,@Query("location")String location,@Query("output")String output);
+	HTTPResponse getStreetCode(@Query("key")String key,@Query("location")String location,@Query("output")String output);
 
 }

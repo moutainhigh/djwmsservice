@@ -1,36 +1,20 @@
 package com.djcps.wms.warehouse.server;
 
-import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.MapAddressComponentBO;
 import com.djcps.wms.commons.request.MapHttpRequest;
-import com.djcps.wms.provider.server.ProviderServer;
-import com.djcps.wms.warehouse.dao.AreaDao;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.MapLocationPo;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.request.WmsForAreaHttpRequest;
-import com.djcps.wms.warehouse.request.WmsForWarehouseHttpRequest;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import rpc.plugin.http.HTTPResponse;
 
@@ -53,9 +37,6 @@ public class AreaServer {
 	
 	@Autowired
 	private MapHttpRequest mapHttpRequest;
-	
-	@Autowired
-	AreaDao areaDao;
 	
 	public HttpResult addArea(AddAreaBO param) {
 		//将请求参数转化为requestbody格式
@@ -110,33 +91,6 @@ public class AreaServer {
         HTTPResponse http = warehouseAreaHttpRequest.getAreaById(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
-	}
-	
-	public MapLocationPo getRecommendLoca(String key, String location, String output) {
-		MapLocationPo allLocation = areaDao.getLocationByLocation(location);
-		if(allLocation!=null){
-			//非空直接返回
-			return allLocation;
-		}else{
-			//为空
-			//调用接口获取信息
-			HTTPResponse http = mapHttpRequest.getRecommendLoca(key, location,output);
-			String bodyString = http.getBodyString();
-			JsonParser jsonParser = new JsonParser();
-			JsonElement jsonElement = jsonParser.parse(bodyString).getAsJsonObject().get("regeocode");
-			JsonElement jsonElement2 = jsonElement.getAsJsonObject().get("addressComponent");
-			MapAddressComponentBO fromJson = gson.fromJson(jsonElement2, MapAddressComponentBO.class);
-			MapLocationPo mapLocaTion = new MapLocationPo();
-			mapLocaTion.setId(UUID.randomUUID().toString());
-			mapLocaTion.setStreetCode(fromJson.getTowncode().substring(0,9));
-			mapLocaTion.setStreetName(fromJson.getTownship());
-			mapLocaTion.setCountyCode(fromJson.getAdcode());
-			mapLocaTion.setCountyName(fromJson.getDistrict());
-			mapLocaTion.setLocation(location);
-			areaDao.insertLocation(mapLocaTion);
-			return mapLocaTion;
-		}
-		
 	}
 	
 	/**

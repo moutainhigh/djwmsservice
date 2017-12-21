@@ -17,7 +17,6 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.CountyBo;
-import com.djcps.wms.warehouse.model.area.MapLocationPo;
 import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.StreetBo;
@@ -147,33 +146,6 @@ public class AreaServiceImpl implements AreaService {
 		provinceCity.setCountyList(countyList);
 		result.setData(provinceCity);
 		return MsgTemplate.customMsg(result);
-	}
-
-	@Override
-	public Map<String, Object> getRecommendLoca(String location) {
-		//location要求小数点显示后六位
-		String newLocation = "";
-		String[] split = location.split(",");
-		for(int i =0;i<=split.length-1;i++){
-			String str = split[i];
-			int indexOf = str.indexOf(".");
-			String substring = str.substring(indexOf+1);
-			if(substring.length()>6){
-				String str1 = str.substring(0,indexOf);
-				String str2 = str.substring(indexOf+1,indexOf+7);
-				String str3  = str1+"."+str2;
-				if(i == 0){
-					newLocation = str3;
-				}else{
-					newLocation = newLocation+","+str3;
-				}
-			}
-		}
-		//key表示高德地图api的需要的key,location表示经纬度,output输出格式
-		String key=AppConstant.MAP_API_KEY;
-		String output="JSON";
-		MapLocationPo mapLocationPo = wareAreaServer.getRecommendLoca(key,newLocation,output);
-		return new HashMap<>();
 	}
 
 }
