@@ -294,5 +294,20 @@ public class LoadingTableController {
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
-	
+
+	/**
+	 * @title 随机获取1个编码
+	 * @author  wzy
+	 * @create  2017/12/21 10:43
+	 **/
+	@RequestMapping(name = "获取随机编号",value = "/getnumber")
+	public Map<String, Object> getNumber(@RequestBody(required = false) String json, HttpServletRequest request){
+		try {
+			return loadingTableService.getnumber(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
 }

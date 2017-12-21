@@ -212,6 +212,7 @@ public class LocationController {
 	 * @param request
 	 * @return
 	 * @author:zdx
+	 * @update:wzy
 	 * @date:2017年12月19日
 	 */
 	@RequestMapping(name="获取库位编码",value = "/getLocationCode", method = RequestMethod.POST, produces = "application/json")

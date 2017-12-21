@@ -1,5 +1,8 @@
 package com.djcps.wms.loadingtable.server;
 
+import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.loadingtable.model.*;
+import com.djcps.wms.loadingtable.request.NumberServerHttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,18 +11,13 @@ import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
-import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
-import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
-import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
 import com.djcps.wms.loadingtable.request.WmsForLoadingTableHttpRequest;
-import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
-import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @title:装车台服务
@@ -37,6 +35,10 @@ public class LoadingTableServer {
 	
 	@Autowired
 	private WmsForLoadingTableHttpRequest loadingTableHttpRequest;
+
+	@Autowired
+	private NumberServerHttpRequest numberServerHttp;
+
 
 	public HttpResult add(AddLoadingTableBO loadingTable){
         //将请求参数转化为requestbody格式
@@ -124,6 +126,35 @@ public class LoadingTableServer {
 		HTTPResponse http = loadingTableHttpRequest.disable(rb);
 		//校验请求是否成功
 		return verifyHttpResult(http);
+	}
+
+/**
+ * @title 获取随机编号
+ * @author  wzy
+ * @create  2017/12/21 10:50
+ **/
+	public HttpResult getNumber(int count){
+		GetNumberBO getNumberBO=new GetNumberBO();
+		getNumberBO.setCount(count);
+		String json=gson.toJson(getNumberBO);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = numberServerHttp.getnumber(rb);
+		//校验请求是否成功
+		HttpResult result=verifyHttpResult(http);
+		//更换data为字符串"ZTC+numbers"
+		String backjson= gson.toJson(result.getData());
+		System.out.println("");
+		Map<String,List<String>> map=gson.fromJson(backjson, Map.class);
+		String number= "";
+		//返回的编号键名
+		String key="numbers";
+		if((map.get(key)).size()>0){
+			number=AppConstant.ZCT+(map.get("numbers")).get(0);
+		}
+		result.setData(number);
+		return result;
 	}
 	
 	/**
