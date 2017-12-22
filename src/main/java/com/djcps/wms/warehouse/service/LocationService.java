@@ -68,9 +68,10 @@ public interface LocationService {
 	Map<String, Object> getLocationByAttribute(SelectLocationByAttributeBO param);
 
 	/**
-	 *
+	 * 获取库位编码
 	 * @author  wzy
-	 * @param partnerInfoBo,locationbo
+	 * @param partnerInfoBo
+	 * @param locationBo
 	 * @return
 	 * @create  2017/12/22 13:32
 	 **/

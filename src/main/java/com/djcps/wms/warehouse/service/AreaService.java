@@ -87,7 +87,8 @@ public interface AreaService {
 	/**
 	 * 获取库区编码
 	 * @author  wzy
-	 * @param partnerInfoBo,areaCode
+	 * @param partnerInfoBo
+	 * @param areaCode
 	 * @return
 	 * @create  2017/12/20 12:59
 	 **/

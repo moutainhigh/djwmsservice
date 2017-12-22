@@ -118,7 +118,7 @@ public interface WarehouseService {
 	/**
 	 * 获取仓库编码
 	 * @author  wzy
-	 * @param PartnerInfoBo
+	 * @param partnerInfoBo
 	 * @return
 	 * @create  2017/12/22 13:33
 	 **/
