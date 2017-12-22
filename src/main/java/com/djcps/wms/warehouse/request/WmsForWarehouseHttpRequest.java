@@ -2,6 +2,7 @@ package com.djcps.wms.warehouse.request;
 
 
 import com.djcps.wms.commons.config.ParamsConfig;
+import com.sun.org.apache.regexp.internal.RE;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -127,5 +128,36 @@ public interface WmsForWarehouseHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("warehouse/warehouseName.do")
 	public HTTPResponse getAllWarehouseName(@Body RequestBody rb);
+
+	/**
+	 * @title 获取仓库编码
+	 * @author  wzy
+	 * @create  2017/12/20 10:15
+	 **/
+	@Headers("content-type:application/json")
+	@POST("code/getCode.do")
+	public HTTPResponse getWarehouseCode(@Body RequestBody rb);
+
 	
+	/**
+	 * 编码确认
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/verifyCode.do")
+	public HTTPResponse verifyCode(@Body RequestBody rb);
+
+	/**
+	 * 删除编码
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/delCode.do")
+	public HTTPResponse deleteCode(@Body RequestBody rb);
 }

@@ -55,6 +55,11 @@ public class AddWarehouseBO extends BaseAddBo implements Serializable{
 	 * 备注,最多50个字
 	 */
 	private String remark;
+	
+	/**
+	 * 编码类型
+	 */
+	private String codeType = "1";
 
 	public String getWarehouseId() {
 		return warehouseId;
@@ -112,11 +117,19 @@ public class AddWarehouseBO extends BaseAddBo implements Serializable{
 		this.remark = remark;
 	}
 
+	public String getCodeType() {
+		return codeType;
+	}
+
+	public void setCodeType(String codeType) {
+		this.codeType = codeType;
+	}
+
 	@Override
 	public String toString() {
 		return "AddWarehouseBO [warehouseId=" + warehouseId + ", name=" + name + ", type=" + type + ", contacts="
-				+ contacts + ", tel=" + tel + ", phone=" + phone + ", remark=" + remark + "]";
+				+ contacts + ", tel=" + tel + ", phone=" + phone + ", remark=" + remark + ", codeType=" + codeType
+				+ "]";
 	}
-
 	
 }

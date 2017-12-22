@@ -71,6 +71,11 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		url = url.substring(0, url.indexOf("."));
 		String json = redisClientCluster.get(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+url);
 		SysUrlPo sysUrl = gson.fromJson(json,SysUrlPo.class);
+		//取不到url
+		if(sysUrl==null){
+			responseMsg(SysMsgEnum.SYSURL_NULL, response);
+			return false;
+		}
 		//url失效
 		if(sysUrl.getEffect() == effect){
 			responseMsg(SysMsgEnum.URL_EXPIRE, response);

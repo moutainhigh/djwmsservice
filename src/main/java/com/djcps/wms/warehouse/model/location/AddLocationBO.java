@@ -84,6 +84,11 @@ public class AddLocationBO extends BaseAddBo implements Serializable{
 	 * 库位承重 kg
 	 */
 	private String bearing;
+	
+	/**
+	 * 编码类型
+	 */
+	private String codeType = "3";
 
 	public String getWarehouseId() {
 		return warehouseId;
@@ -180,15 +185,21 @@ public class AddLocationBO extends BaseAddBo implements Serializable{
 	public void setBearing(String bearing) {
 		this.bearing = bearing;
 	}
+	
+	public String getCodeType() {
+		return codeType;
+	}
+
+	public void setCodeType(String codeType) {
+		this.codeType = codeType;
+	}
 
 	@Override
 	public String toString() {
 		return "AddLocationBO [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId="
 				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
 				+ ", name=" + name + ", type=" + type + ", length=" + length + ", width=" + width + ", height=" + height
-				+ ", volume=" + volume + ", bearing=" + bearing + "]";
+				+ ", volume=" + volume + ", bearing=" + bearing + ", codeType=" + codeType + "]";
 	}
-
-
 	
 }

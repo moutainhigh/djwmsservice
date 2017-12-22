@@ -3,11 +3,9 @@ package com.djcps.wms.warehouse.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.warehouse.model.location.AddLocationBO;
-import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
-import com.djcps.wms.warehouse.model.location.SelectAllLocationList;
-import com.djcps.wms.warehouse.model.location.SelectLocationByAttributeBO;
-import com.djcps.wms.warehouse.model.location.UpdateLocationBO;
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.warehouse.model.location.*;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
@@ -68,4 +66,11 @@ public interface LocationService {
 	 * @date:2017年12月8日
 	 */
 	Map<String, Object> getLocationByAttribute(SelectLocationByAttributeBO param);
+
+	/**
+	 * 获取库位编码
+	 * @param getLocationCode
+	 * @return
+	 */
+	Map<String,Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo);
 }

@@ -24,4 +24,10 @@ public class AppConstant {
      */
     public static final String MAP_API_KEY = "acc123608b5ce05371ff359f4d3f4c18";
 
+
+    /**
+     * 装车台编号前缀
+     */
+    public static final String ZCT="ZCT";
+
 }

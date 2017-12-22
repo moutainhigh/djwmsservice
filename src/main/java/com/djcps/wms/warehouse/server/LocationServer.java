@@ -5,22 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.provider.server.ProviderServer;
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.warehouse.model.location.AddLocationBO;
 import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
+import com.djcps.wms.warehouse.model.location.LocationBo;
 import com.djcps.wms.warehouse.model.location.SelectAllLocationList;
 import com.djcps.wms.warehouse.model.location.SelectLocationByAttributeBO;
 import com.djcps.wms.warehouse.model.location.UpdateLocationBO;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.request.WmsForLocationHttpRequest;
-import com.djcps.wms.warehouse.request.WmsForWarehouseHttpRequest;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -41,6 +36,9 @@ public class LocationServer {
 	
 	@Autowired
 	private WmsForLocationHttpRequest locationHttpRequest;
+
+	@Autowired
+	private GetCodeRequest getCodeRequest;
 
 	public HttpResult addLocation(AddLocationBO param) {
 		//将请求参数转化为requestbody格式
@@ -90,6 +88,49 @@ public class LocationServer {
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.getLocationByAttribute(rb);
 		return verifyHttpResult(http);
+	}
+
+	/**
+	 * @title  获取库位编码
+	 * @author  wzy
+	 * @create  2017/12/21 17:04
+	 **/
+	public HttpResult getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo){
+		GetCodeBO getCodeBO=new GetCodeBO();
+		getCodeBO.setCodeType("3");
+		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
+		getCodeBO.setVersion(partnerInfoBo.getVersion());
+		getCodeBO.setWarehouseId(locationBo.getWarehouseId());
+		getCodeBO.setWarehouseAreaId(locationBo.getWarehouseAreaId());
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(getCodeBO);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = getCodeRequest.getCode(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult verifyCode(AddLocationBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = locationHttpRequest.verifyCode(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+	}
+	
+	public HttpResult deleteCode(DeleteLocationBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = locationHttpRequest.deleteCode(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
 	}
 	
 	/**

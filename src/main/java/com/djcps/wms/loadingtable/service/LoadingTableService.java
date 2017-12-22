@@ -97,5 +97,12 @@ public interface LoadingTableService {
 	 * @date:2017年11月30日
 	 */
 	Map<String, Object> disable(IsUseLoadingTableBO loadingTable);
+
+	/**
+	 * @title 获取随机编码
+	 * @author  wzy
+	 * @create  2017/12/21 11:01
+	 **/
+	Map<String,Object> getnumber(int count);
 	
 }

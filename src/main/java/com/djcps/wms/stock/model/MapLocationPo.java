@@ -1,4 +1,4 @@
-package com.djcps.wms.warehouse.model.area;
+package com.djcps.wms.stock.model;
 
 import java.io.Serializable;
 

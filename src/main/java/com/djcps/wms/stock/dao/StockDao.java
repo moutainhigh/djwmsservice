@@ -1,21 +1,22 @@
-package com.djcps.wms.warehouse.dao;
+package com.djcps.wms.stock.dao;
 
 
 import java.util.List;
 import org.springframework.stereotype.Repository;
-import com.djcps.wms.warehouse.model.area.MapLocationPo;
+
+import com.djcps.wms.stock.model.MapLocationPo;
 
 
 
 /**
- * 数据库maplocationDAO
+ * 入库移库dao
  * @description:
  * @company:djwms
  * @author:zdx
  * @date:2017年12月19日
  */
 @Repository
-public interface AreaDao {
+public interface StockDao {
 	
 	/**
 	 * 经纬度插入

@@ -56,7 +56,6 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 		logger.error("------容器初始化开始------");
 	    try {
 	    	List<SysUrlPo> sysUrlList = new ArrayList<SysUrlPo>();
-	    	List<SysUrlPo> updateList = new ArrayList<SysUrlPo>();
 	    	List<SysUrlPo> insertList = new ArrayList<SysUrlPo>();
 	    	Map<String,SysUrlPo> sysUrlMap = new HashMap<String,SysUrlPo>();
 	    	
@@ -102,13 +101,8 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 					//不为空表示已存在需要更新
 					sysUrlPo.setId(sysUrlPo2.getId());
 					sysUrlService.updateSysUrlDao(sysUrlPo);
-//					updateList.add(sysUrlPo);
 				}
 			}
-			//统一执行插入操作和更新操作
-//			if(!ObjectUtils.isEmpty(updateList)){
-//				sysUrlService.batchUpdateSysUrlDao(updateList);
-//			}
 			if(!ObjectUtils.isEmpty(insertList)){
 				sysUrlService.batchInsertSysUrlDao(insertList);
 			}

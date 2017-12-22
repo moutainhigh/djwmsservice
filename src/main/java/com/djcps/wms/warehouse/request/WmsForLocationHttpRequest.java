@@ -73,5 +73,36 @@ public interface WmsForLocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("warehouseLoc/search.do")
 	public HTTPResponse getLocationByAttribute(@Body RequestBody rb);
+
+	/**
+	 * @title 获取库位编码
+	 * @author  wzy
+	 * @create  2017/12/20 13:11
+	 **/
+	@Headers("content-type:application/json")
+	@POST("code/getCode.do")
+	public HTTPResponse getLocationCode(@Body RequestBody rb);
+	
+	/**
+	 * 编码确认
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/verifyCode.do")
+	public HTTPResponse verifyCode(@Body RequestBody rb);
+	
+	/**
+	 * 删除编码
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/delCode.do")
+	public HTTPResponse deleteCode(@Body RequestBody rb);
 	
 }

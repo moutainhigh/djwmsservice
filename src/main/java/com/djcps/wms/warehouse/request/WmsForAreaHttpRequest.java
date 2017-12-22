@@ -72,5 +72,35 @@ public interface WmsForAreaHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/getById.do")
 	public HTTPResponse getAreaById(@Body RequestBody json);
+
+	/**
+	 * 编码确认
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/verifyCode.do")
+	public HTTPResponse verifyCode(@Body RequestBody rb);
 	
+	/**
+	 * 删除编码
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/delCode.do")
+	public HTTPResponse deleteCode(@Body RequestBody rb);
+	
+	/**
+	 * @title 获取库区编码
+	 * @author  wzy
+	 * @create  2017/12/20 13:11
+	 **/
+	@Headers("content-type:application/json")
+	@POST("code/getCode.do")
+	HTTPResponse getAreaCode(@Body RequestBody rb);
 }

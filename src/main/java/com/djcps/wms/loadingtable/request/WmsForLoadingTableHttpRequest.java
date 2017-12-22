@@ -105,4 +105,5 @@ public interface WmsForLoadingTableHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("loadingTable/disable.do")
 	public HTTPResponse disable(@Body RequestBody json);
+
 }

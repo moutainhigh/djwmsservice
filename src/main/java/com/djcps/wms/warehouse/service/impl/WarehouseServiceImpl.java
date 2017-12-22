@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
@@ -45,8 +47,14 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 */
 	@Override
 	public Map<String, Object> add(AddWarehouseBO addBean){
-		HttpResult result = warehouseServer.add(addBean);
-		return MsgTemplate.customMsg(result);
+		//编码确认
+		HttpResult verifyCode = warehouseServer.verifyCode(addBean);
+		if(verifyCode.isSuccess()){
+			HttpResult result = warehouseServer.add(addBean);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
 	}
 
 	/**
@@ -75,8 +83,14 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 */
 	@Override
 	public Map<String, Object> delete(DeleteWarehouseBO deleteBean){
-		HttpResult result = warehouseServer.delete(deleteBean);
-		return MsgTemplate.customMsg(result);
+		//删除编码
+		HttpResult deleteCode = warehouseServer.deleteCode(deleteBean);
+		if(deleteCode.isSuccess()){
+			HttpResult result = warehouseServer.delete(deleteBean);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
 	}
 
 	/**
@@ -166,4 +180,9 @@ public class WarehouseServiceImpl implements WarehouseService {
 		return MsgTemplate.customMsg(result);
 	}
 
+	@Override
+	public Map<String, Object> getWarehouseCode(PartnerInfoBo partnerInfoBo) {
+		HttpResult result=warehouseServer.getWarehouseCode(partnerInfoBo);
+		return MsgTemplate.customMsg(result);
+	}
 }
