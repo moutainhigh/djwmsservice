@@ -19,6 +19,7 @@ public interface NumberServerHttpRequest {
     /**
      * 获取随机编号http接口
      * @param json
+     * @author wzy
      * @return
      */
     @Headers("content-type:application/json")

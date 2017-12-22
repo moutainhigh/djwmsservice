@@ -86,10 +86,12 @@ public interface AreaService {
 	Map<String, Object> getRecommendLoca(String location);
 
 	/**
-	 * @title 获取库区编码
+	 * 获取库区编码
 	 * @author  wzy
+	 * @param partnerInfoBo
+	 * @param areaCode
+	 * @return
 	 * @create  2017/12/20 12:59
 	 **/
-
 	Map<String,Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode);
 }

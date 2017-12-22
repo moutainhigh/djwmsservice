@@ -16,8 +16,16 @@ import rpc.plugin.http.RPCClientFields;
  **/
 @RPCClientFields(urlfield = "WMS_SERVER", urlbean = ParamsConfig.class)
 public interface GetCodeRequest {
+
+    /**
+     * 获取编码统一接口
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2017/12/22 13:43
+     **/
     @Headers("content-type:application/json")
     @POST("code/getCode.do")
-    public HTTPResponse getCode(@Body RequestBody rb);
+    HTTPResponse getCode(@Body RequestBody rb);
 
 }

@@ -11,9 +11,9 @@ public class GetNumberBO implements Serializable {
 
     private static final long serialVersionUID = 1716108404288752798L;
 
-    private int count;
+    private Integer count;
 
-    public int getCount() {
+    public Integer getCount() {
         return count;
     }
 

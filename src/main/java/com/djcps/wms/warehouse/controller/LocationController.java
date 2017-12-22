@@ -219,8 +219,6 @@ public class LocationController {
 	public Map<String, Object> getLocationCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			//SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
-			//BeanUtils.copyProperties(partnerInfoBean,param);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			LocationBo param=gson.fromJson(json,LocationBo.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
