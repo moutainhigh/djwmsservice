@@ -130,8 +130,10 @@ public interface WmsForWarehouseHttpRequest {
 	public HTTPResponse getAllWarehouseName(@Body RequestBody rb);
 
 	/**
-	 * @title 获取仓库编码
+	 * 获取仓库编码
 	 * @author  wzy
+	 * @param rb
+	 * @return
 	 * @create  2017/12/20 10:15
 	 **/
 	@Headers("content-type:application/json")

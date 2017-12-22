@@ -168,8 +168,6 @@ public class WarehouseServer {
 		);
 		//调用接口获取信息
 		HTTPResponse http=getCodeRequest.getCode(rb);
-		//HTTPResponse http=warehouseHttpRequest.getWarehouseCode(rb);
-		//HTTPResponse http = warehouseHttpRequest.getAllWarehouseName(rb);
 		return verifyHttpResult(http);
 	}
 	

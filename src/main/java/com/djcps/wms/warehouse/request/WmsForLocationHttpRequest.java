@@ -75,8 +75,10 @@ public interface WmsForLocationHttpRequest {
 	public HTTPResponse getLocationByAttribute(@Body RequestBody rb);
 
 	/**
-	 * @title 获取库位编码
+	 * 获取库位编码
 	 * @author  wzy
+	 * @param rb
+	 * @return
 	 * @create  2017/12/20 13:11
 	 **/
 	@Headers("content-type:application/json")
