@@ -9,6 +9,7 @@ import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
@@ -179,4 +180,9 @@ public class WarehouseServiceImpl implements WarehouseService {
 		return MsgTemplate.customMsg(result);
 	}
 
+	@Override
+	public Map<String, Object> getWarehouseCode(PartnerInfoBo partnerInfoBo) {
+		HttpResult result=warehouseServer.getWarehouseCode(partnerInfoBo);
+		return MsgTemplate.customMsg(result);
+	}
 }

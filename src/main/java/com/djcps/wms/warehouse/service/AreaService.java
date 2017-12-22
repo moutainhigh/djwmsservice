@@ -3,7 +3,9 @@ package com.djcps.wms.warehouse.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
+import com.djcps.wms.warehouse.model.area.AreaCode;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
@@ -74,4 +76,20 @@ public interface AreaService {
 	 */
 	Map<String, Object> getAreaById(SelectWarehouseByIdBO param);
 	
+	/**
+	 * 推荐库位
+	 * @param location
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月18日
+	 */
+	Map<String, Object> getRecommendLoca(String location);
+
+	/**
+	 * @title 获取库区编码
+	 * @author  wzy
+	 * @create  2017/12/20 12:59
+	 **/
+
+	Map<String,Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode);
 }

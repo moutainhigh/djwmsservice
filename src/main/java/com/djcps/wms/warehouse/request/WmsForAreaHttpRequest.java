@@ -95,4 +95,12 @@ public interface WmsForAreaHttpRequest {
 	@POST("code/delCode.do")
 	public HTTPResponse deleteCode(@Body RequestBody rb);
 	
+	/**
+	 * @title 获取库区编码
+	 * @author  wzy
+	 * @create  2017/12/20 13:11
+	 **/
+	@Headers("content-type:application/json")
+	@POST("code/getCode.do")
+	HTTPResponse getAreaCode(@Body RequestBody rb);
 }

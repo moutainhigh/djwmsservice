@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.warehouse.model.area.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,7 @@ import com.djcps.wms.warehouse.service.AreaService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mysql.fabric.xmlrpc.base.Array;
+import rpc.plugin.http.HTTPResponse;
 
 /**
  * @title:仓库管理业务层
@@ -161,5 +165,17 @@ public class AreaServiceImpl implements AreaService {
 		result.setData(provinceCity);
 		return MsgTemplate.customMsg(result);
 	}
+
+	@Override
+	public Map<String, Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode) {
+		HttpResult httpResult=wareAreaServer.getAreaCode(partnerInfoBo,areaCode);
+		return MsgTemplate.customMsg(httpResult);
+	}
+
+    @Override
+    public Map<String, Object> getRecommendLoca(String location) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

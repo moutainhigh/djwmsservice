@@ -2,6 +2,9 @@ package com.djcps.wms.warehouse.service.impl;
 
 import java.util.Map;
 
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.warehouse.model.location.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +12,6 @@ import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.warehouse.model.location.AddLocationBO;
-import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
-import com.djcps.wms.warehouse.model.location.SelectAllLocationList;
-import com.djcps.wms.warehouse.model.location.SelectLocationByAttributeBO;
-import com.djcps.wms.warehouse.model.location.UpdateLocationBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
@@ -83,5 +81,12 @@ public class LocationServiceImpl implements LocationService {
 		HttpResult result = locationServer.getLocationByAttribute(param);
 		return MsgTemplate.customMsg(result);
 	}
+
+	@Override
+	public Map<String, Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo) {
+		HttpResult result = locationServer.getLocationCode(partnerInfoBo,locationBo);
+		return MsgTemplate.customMsg(result);
+	}
+
 
 }

@@ -3,6 +3,7 @@ package com.djcps.wms.inneruser.request;
 import com.djcps.wms.commons.config.ParamsConfig;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import rpc.plugin.http.HTTPResponse;
 import rpc.plugin.http.RPCClientFields;
@@ -27,6 +28,19 @@ public interface InnerUserRequest {
     HTTPResponse getApplogin(@Field("username") String username,
                              @Field("password") String password,
                              @Field("appname") String appname);
+
+    /**
+     * APP手机验证码登录
+     * @param phone
+     * @param phoneCode
+     * @param appname
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("appLoginByPhone.do")
+    HTTPResponse appLoginByPhone(@Field("phone") String phone,
+                                 @Field("phoneCode") Integer phoneCode,
+                                 @Field("appname") String appname);
 
     /**
      * 置换固定Token
@@ -77,4 +91,13 @@ public interface InnerUserRequest {
     @FormUrlEncoded
     @POST("getcode.do")
     HTTPResponse getCode(@Field("username") String username);
+
+    /**
+     * 发送登录手机验证码
+     * @param phone
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("sendLoginCode.do")
+    HTTPResponse sendLoginCode(@Field("phone") String phone);
 }
