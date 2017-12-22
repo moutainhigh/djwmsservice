@@ -23,6 +23,17 @@ public class DeleteWarehouseBO extends BaseUpdateAndDeleteBo implements Serializ
 	 */
 	@NotBlank
 	private String id;
+	
+	/**
+	 * 编码类型
+	 */
+	private String codeType="1";
+	
+	/**
+	 * 仓库编码 
+	 */
+	@NotBlank
+	private String warehouseId;
 
 	public String getId() {
 		return id;
@@ -32,9 +43,25 @@ public class DeleteWarehouseBO extends BaseUpdateAndDeleteBo implements Serializ
 		this.id = id;
 	}
 
-	@Override
-	public String toString() {
-		return "DeleteWarehouseBO [id=" + id + "]";
+	public String getCodeType() {
+		return codeType;
 	}
 
+	public void setCodeType(String codeType) {
+		this.codeType = codeType;
+	}
+
+	public String getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(String warehouseId) {
+		this.warehouseId = warehouseId;
+	}
+
+	@Override
+	public String toString() {
+		return "DeleteWarehouseBO [id=" + id + ", codeType=" + codeType + ", warehouseId=" + warehouseId + "]";
+	}
+	
 }

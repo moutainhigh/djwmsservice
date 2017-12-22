@@ -68,6 +68,11 @@ public class AddAreaBO extends BaseAddBo implements Serializable{
 	@NotBlank
 	private String cityCode;
 	
+	/**
+	 * 编码类型
+	 */
+	private String codeType = "2";
+	
 	@NotEmpty
 	private List<AddAreaDetailBO> countyList;
 
@@ -143,12 +148,20 @@ public class AddAreaBO extends BaseAddBo implements Serializable{
 		this.countyList = countyList;
 	}
 
+	public String getCodeType() {
+		return codeType;
+	}
+
+	public void setCodeType(String codeType) {
+		this.codeType = codeType;
+	}
+
 	@Override
 	public String toString() {
 		return "AddAreaBO [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId="
 				+ warehouseAreaId + ", name=" + name + ", provinceName=" + provinceName + ", provinceCode="
-				+ provinceCode + ", cityName=" + cityName + ", cityCode=" + cityCode + ", countyList=" + countyList
-				+ "]";
+				+ provinceCode + ", cityName=" + cityName + ", cityCode=" + cityCode + ", codeType=" + codeType
+				+ ", countyList=" + countyList + "]";
 	}
-
+	
 }

@@ -22,6 +22,23 @@ public class DeleteAreaBO extends BaseUpdateAndDeleteBo implements Serializable{
 	 */
 	@NotBlank
 	private String id;
+	
+	/**
+	 * 编码类型
+	 */
+	private String codeType="2";
+	
+	/**
+	 * 仓库编码
+	 */
+	@NotBlank
+	private String warehouseId;
+	
+	/**
+	 * 库区编码
+	 */
+	@NotBlank
+	private String warehouseAreaId;
 
 	public String getId() {
 		return id;
@@ -31,9 +48,34 @@ public class DeleteAreaBO extends BaseUpdateAndDeleteBo implements Serializable{
 		this.id = id;
 	}
 
+	public String getCodeType() {
+		return codeType;
+	}
+
+	public void setCodeType(String codeType) {
+		this.codeType = codeType;
+	}
+
+	public String getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(String warehouseId) {
+		this.warehouseId = warehouseId;
+	}
+
+	public String getWarehouseAreaId() {
+		return warehouseAreaId;
+	}
+
+	public void setWarehouseAreaId(String warehouseAreaId) {
+		this.warehouseAreaId = warehouseAreaId;
+	}
+
 	@Override
 	public String toString() {
-		return "DeleteWarehouseBO [id=" + id + "]";
+		return "DeleteAreaBO [id=" + id + ", codeType=" + codeType + ", warehouseId=" + warehouseId
+				+ ", warehouseAreaId=" + warehouseAreaId + "]";
 	}
 
 }

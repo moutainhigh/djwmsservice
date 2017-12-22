@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
+import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
@@ -50,7 +51,7 @@ public interface AreaService {
 	 * @author:zdx
 	 * @date:2017年12月7日
 	 */
-	Map<String, Object> deleteArea(DeleteWarehouseBO param);
+	Map<String, Object> deleteArea(DeleteAreaBO param);
 
 	/**
 	 * 获取所有库区

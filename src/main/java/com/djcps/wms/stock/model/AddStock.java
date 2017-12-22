@@ -30,16 +30,6 @@ public class AddStock extends BaseAddBo implements Serializable{
 	@NotBlank
 	private String amountSave;
 	/**
-	 * 已入库数量
-	 */
-	@NotBlank
-	private String amountSaved;
-	/**
-	 * 在库数量
-	 */
-	@NotBlank
-	private String amounted;
-	/**
 	 * 仓库编号
 	 */
 	@NotBlank
@@ -79,7 +69,6 @@ public class AddStock extends BaseAddBo implements Serializable{
 	 */
 	@NotNull
 	private OperationRecordBo operationRecord;
-	
 	public String getOrderId() {
 		return orderId;
 	}
@@ -97,18 +86,6 @@ public class AddStock extends BaseAddBo implements Serializable{
 	}
 	public void setAmountSave(String amountSave) {
 		this.amountSave = amountSave;
-	}
-	public String getAmountSaved() {
-		return amountSaved;
-	}
-	public void setAmountSaved(String amountSaved) {
-		this.amountSaved = amountSaved;
-	}
-	public String getAmounted() {
-		return amounted;
-	}
-	public void setAmounted(String amounted) {
-		this.amounted = amounted;
 	}
 	public String getWarehouseId() {
 		return warehouseId;
@@ -160,11 +137,10 @@ public class AddStock extends BaseAddBo implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "AddStock [orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave + ", amountSaved="
-				+ amountSaved + ", amounted=" + amounted + ", warehouseId=" + warehouseId + ", warehouseName="
-				+ warehouseName + ", remark=" + remark + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName="
-				+ warehouseAreaName + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName
-				+ ", operationRecord=" + operationRecord + "]";
+		return "AddStock [orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave + ", warehouseId="
+				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", warehouseAreaId="
+				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
+				+ ", warehouseLocName=" + warehouseLocName + ", operationRecord=" + operationRecord + "]";
 	}
 	
 }

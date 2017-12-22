@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.address.server.AddressServer;
 import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.CountyBo;
+import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.StreetBo;
@@ -58,8 +60,14 @@ public class AreaServiceImpl implements AreaService {
 	 */
 	@Override
 	public Map<String, Object> addArea(AddAreaBO param){
-		HttpResult result = wareAreaServer.addArea(param);
-		return MsgTemplate.customMsg(result);
+		//编码确认
+		HttpResult verifyCode = wareAreaServer.verifyCode(param);
+		if(verifyCode.isSuccess()){
+			HttpResult result = wareAreaServer.addArea(param);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
 	}
 
 	/**
@@ -87,9 +95,15 @@ public class AreaServiceImpl implements AreaService {
 	 * @date:2017年12月7日
 	 */
 	@Override
-	public Map<String, Object> deleteArea(DeleteWarehouseBO param){
-		HttpResult result = wareAreaServer.deleteArea(param);
-		return MsgTemplate.customMsg(result);
+	public Map<String, Object> deleteArea(DeleteAreaBO param){
+		//删除编码
+		HttpResult deleteCode = wareAreaServer.deleteCode(param);
+		if(deleteCode.isSuccess()){
+			HttpResult result = wareAreaServer.deleteArea(param);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
 	}
 
 	/**

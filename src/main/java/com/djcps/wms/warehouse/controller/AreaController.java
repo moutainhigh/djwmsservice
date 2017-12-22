@@ -29,6 +29,7 @@ import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.AddAreaDetailBO;
 import com.djcps.wms.warehouse.model.area.CountyBo;
+import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.StreetBo;
@@ -207,13 +208,13 @@ public class AreaController {
 	public Map<String, Object> deleteArea(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			DeleteWarehouseBO param = gson.fromJson(json, DeleteWarehouseBO.class);
+			DeleteAreaBO param = gson.fromJson(json, DeleteAreaBO.class);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<DeleteWarehouseBO>()
+							new HibernateSupportedValidator<DeleteAreaBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.warehouse.model.location.AddLocationBO;
@@ -42,8 +43,14 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Map<String, Object> addLocation(AddLocationBO param) {
-		HttpResult result = locationServer.addLocation(param);
-		return MsgTemplate.customMsg(result);
+		//编码确认
+		HttpResult verifyCode = locationServer.verifyCode(param);
+		if(verifyCode.isSuccess()){
+			HttpResult result = locationServer.addLocation(param);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
 	}
 
 	@Override
@@ -54,8 +61,15 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Map<String, Object> deleteLocation(DeleteLocationBO param) {
-		HttpResult result = locationServer.deleteLocation(param);
-		return MsgTemplate.customMsg(result);
+		//删除编码
+		HttpResult deleteCode = locationServer.deleteCode(param);
+		if(deleteCode.isSuccess()){
+			HttpResult result = locationServer.deleteLocation(param);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
+		
 	}
 
 	@Override

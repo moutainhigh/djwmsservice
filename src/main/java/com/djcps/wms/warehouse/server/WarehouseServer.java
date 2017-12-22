@@ -9,6 +9,7 @@ import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.provider.server.ProviderServer;
+import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
@@ -142,6 +143,28 @@ public class WarehouseServer {
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getAllWarehouseName(rb);
 		return verifyHttpResult(http);
+	}
+	
+	public HttpResult verifyCode(AddWarehouseBO addBean) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(addBean);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = warehouseHttpRequest.verifyCode(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+	}
+	
+	public HttpResult deleteCode(DeleteWarehouseBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = warehouseHttpRequest.deleteCode(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
 	}
 	
 	/**
