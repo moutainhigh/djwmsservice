@@ -2,7 +2,7 @@ package com.djcps.wms.address.model;
 
 import java.io.Serializable;
 
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 
 /**
  * 获取省市区对象
@@ -11,7 +11,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月8日
  */
-public class ProvinceCityAreaCodeBo extends BaseParam implements Serializable{
+public class ProvinceCityAreaCodeBo extends BaseBO implements Serializable{
 	
 	private static final long serialVersionUID = -4587232100549379283L;
 	

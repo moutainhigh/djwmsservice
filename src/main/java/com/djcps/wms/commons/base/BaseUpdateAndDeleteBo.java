@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author:zdx
  * @date:2017年11月30日
  */
-public class BaseUpdateAndDeleteBo extends BaseParam implements Serializable{
+public class BaseUpdateAndDeleteBo extends BaseBO implements Serializable{
 	
 	private static final long serialVersionUID = 4726558779577505996L;
 

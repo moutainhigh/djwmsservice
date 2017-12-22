@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseListParam;
-
 /**
  * 纸板纸箱对象
  * @company:djwms

@@ -2,9 +2,9 @@ package com.djcps.wms.inneruser.server;
 
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPhonePo;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPo;
-import com.djcps.wms.inneruser.model.param.UserSwitchSysPo;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
+import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
 import com.djcps.wms.inneruser.model.result.UserCodeVo;
 import com.djcps.wms.inneruser.model.result.UserExchangeTokenVo;
 import com.djcps.wms.inneruser.model.result.UserLogoutVo;
@@ -65,16 +65,16 @@ public class InnerUserServer {
     /**
      * App方式登录
      *
-     * @param innerUserLoginPo
+     * @param innerUserLoginBO
      * @return
      * @autuor Chengw
      * @since 2017/12/4  15:11
      */
-    public HttpResult loginTokenWithApp(InnerUserLoginPo innerUserLoginPo) {
-        String userCode = getUserCode(innerUserLoginPo.getUserName());
+    public HttpResult loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
+        String userCode = getUserCode(innerUserLoginBO.getUserName());
         if (StringUtils.isNotBlank(userCode)) {
-            String password = DigestUtils.md5Hex(innerUserLoginPo.getPassword() + userCode);
-            HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginPo.getUserName(), password, AppConstant.LOGIN_TYPE);
+            String password = DigestUtils.md5Hex(innerUserLoginBO.getPassword() + userCode);
+            HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginBO.getUserName(), password, AppConstant.LOGIN_TYPE);
             if (httpResponse.isSuccessful()) {
                 try {
                     String body = httpResponse.getBodyString();
@@ -95,14 +95,14 @@ public class InnerUserServer {
     /**
      * 手机验证码登录
      *
-     * @param innerUserLoginPhonePo
+     * @param innerUserLoginPhoneBO
      * @return
      * @autuor Chengw
      * @since 2017/12/20  09:12
      */
-    public HttpResult loginTokenWithPhone(InnerUserLoginPhonePo innerUserLoginPhonePo) {
-        HTTPResponse httpResponse = innerUserRequest.appLoginByPhone(innerUserLoginPhonePo.getPhone(),
-                Integer.valueOf(innerUserLoginPhonePo.getPhoneCode()), AppConstant.LOGIN_TYPE);
+    public HttpResult loginTokenWithPhone(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
+        HTTPResponse httpResponse = innerUserRequest.appLoginByPhone(innerUserLoginPhoneBO.getPhone(),
+                Integer.valueOf(innerUserLoginPhoneBO.getPhoneCode()), AppConstant.LOGIN_TYPE);
         if (httpResponse.isSuccessful()) {
             try {
                 String body = httpResponse.getBodyString();
@@ -122,13 +122,13 @@ public class InnerUserServer {
     /**
      * 不同系统之间交换token
      *
-     * @param userSwitchSysPo
+     * @param userSwitchSysBO
      * @return
      * @autuor Chengw
      * @since 2017/12/4  15:10
      */
-    public UserLogoutVo swap(UserSwitchSysPo userSwitchSysPo) {
-        HTTPResponse httpResponse = innerUserRequest.getTokenLogin(userSwitchSysPo.getOldToken(), userSwitchSysPo.getSys());
+    public UserLogoutVo swap(UserSwitchSysBO userSwitchSysBO) {
+        HTTPResponse httpResponse = innerUserRequest.getTokenLogin(userSwitchSysBO.getOldToken(), userSwitchSysBO.getSys());
         if (httpResponse.isSuccessful()) {
             try {
                 String body = httpResponse.getBodyString();

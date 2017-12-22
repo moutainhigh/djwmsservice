@@ -9,15 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.address.server.AddressServer;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.provider.controller.ProviderController;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.server.ProviderServer;
 import com.google.gson.Gson;
 
 /**

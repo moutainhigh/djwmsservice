@@ -1,9 +1,9 @@
 package com.djcps.wms.inneruser.service;
 
-import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordPo;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPhonePo;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPo;
-import com.djcps.wms.inneruser.model.param.UserSwitchSysPo;
+import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordBO;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
+import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
 import com.djcps.wms.inneruser.model.result.UserInfoVo;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,34 +20,34 @@ public interface InnerUserService {
      * app方式登录
      * @autuor Chengw
      * @since 2017/12/4  16:40
-     * @param innerUserLoginPo
+     * @param innerUserLoginBO
      * @return
      */
-    Map<String,Object> loginTokenWithApp(InnerUserLoginPo innerUserLoginPo);
+    Map<String,Object> loginTokenWithApp(InnerUserLoginBO innerUserLoginBO);
 
     /**
      * app手机验证码登录
-     * @param innerUserLoginPhonePo
+     * @param innerUserLoginPhoneBO
      * @return
      */
-    Map<String,Object> loginTokenWithPhone(InnerUserLoginPhonePo innerUserLoginPhonePo);
+    Map<String,Object> loginTokenWithPhone(InnerUserLoginPhoneBO innerUserLoginPhoneBO);
 
     /**
      * 发送手机验证码
-     * @param innerUserLoginPhonePo
+     * @param innerUserLoginPhoneBO
      * @return
      */
-    Map<String,Object> sendLoginCode(InnerUserLoginPhonePo innerUserLoginPhonePo);
+    Map<String,Object> sendLoginCode(InnerUserLoginPhoneBO innerUserLoginPhoneBO);
 
 
     /**
      * 不同系统之间交换token 
      * @autuor Chengw
      * @since 2017/12/4  16:42
-     * @param userSwitchSysPo
+     * @param userSwitchSysBO
      * @return
      */
-    Map<String,Object> swap(UserSwitchSysPo userSwitchSysPo);
+    Map<String,Object> swap(UserSwitchSysBO userSwitchSysBO);
 
     /**
      * 用户登出系统 
@@ -71,10 +71,10 @@ public interface InnerUserService {
      * 更改用户密码
      * @autuor Chengw
      * @since 2017/12/4  16:42
-     * @param innerUserChangePasswordPo
+     * @param innerUserChangePasswordBO
      * @return
      */
-    Map<String,Object> changeInnerUserPassword(InnerUserChangePasswordPo innerUserChangePasswordPo);
+    Map<String,Object> changeInnerUserPassword(InnerUserChangePasswordBO innerUserChangePasswordBO);
 
     /**
      * 获取内部用户信息

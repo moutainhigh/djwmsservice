@@ -2,9 +2,8 @@ package com.djcps.wms.warehouse.model.area;
 
 import java.io.Serializable;
 
+import com.djcps.wms.commons.base.BaseBO;
 import org.hibernate.validator.constraints.NotBlank;
-
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * 根据仓库id获取该仓库下所有的库区
@@ -13,7 +12,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月11日
  */
-public class SelectAllAreaList extends BaseParam implements Serializable{
+public class SelectAllAreaList extends BaseBO implements Serializable{
 	
 	private static final long serialVersionUID = -2898629682156747601L;
 

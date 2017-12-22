@@ -5,7 +5,7 @@ package com.djcps.wms.commons.model.param;
  * @author Chengw
  * @since 2017/10/31 16:38.
  */
-public class PhoneCodePo {
+public class PhoneCodeBO {
 
     private String phone;
     private String code;

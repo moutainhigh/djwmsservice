@@ -5,10 +5,10 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
-import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordPo;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPhonePo;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPo;
-import com.djcps.wms.inneruser.model.param.UserSwitchSysPo;
+import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordBO;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
+import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
 import com.djcps.wms.inneruser.model.result.UserInfoVo;
 import com.djcps.wms.inneruser.model.result.UserLogoutVo;
 import com.djcps.wms.inneruser.redis.InnerUserRedisDao;
@@ -43,12 +43,12 @@ public class InnerUserServiceImpl implements InnerUserService {
      * app方式登录
      * @autuor Chengw
      * @since 2017/12/4  16:40
-     * @param innerUserLoginPo
+     * @param innerUserLoginBO
      * @return
      */
     @Override
-    public Map<String, Object> loginTokenWithApp(InnerUserLoginPo innerUserLoginPo) {
-        HttpResult baseResult = innerUserServer.loginTokenWithApp(innerUserLoginPo);
+    public Map<String, Object> loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
+        HttpResult baseResult = innerUserServer.loginTokenWithApp(innerUserLoginBO);
         return MsgTemplate.customMsg(baseResult);
     }
 
@@ -56,12 +56,12 @@ public class InnerUserServiceImpl implements InnerUserService {
      * 手机验证码登录
      * @autuor Chengw
      * @since 2017/12/20  09:15
-     * @param innerUserLoginPhonePo
+     * @param innerUserLoginPhoneBO
      * @return
      */
     @Override
-    public Map<String, Object> loginTokenWithPhone(InnerUserLoginPhonePo innerUserLoginPhonePo) {
-        HttpResult baseResult = innerUserServer.loginTokenWithPhone(innerUserLoginPhonePo);
+    public Map<String, Object> loginTokenWithPhone(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
+        HttpResult baseResult = innerUserServer.loginTokenWithPhone(innerUserLoginPhoneBO);
         return MsgTemplate.customMsg(baseResult);
     }
 
@@ -69,12 +69,12 @@ public class InnerUserServiceImpl implements InnerUserService {
      * 发送手机验证码 
      * @autuor Chengw
      * @since 2017/12/20  09:19
-     * @param innerUserLoginPhonePo
+     * @param innerUserLoginPhoneBO
      * @return
      */
     @Override
-    public Map<String, Object> sendLoginCode(InnerUserLoginPhonePo innerUserLoginPhonePo) {
-        Boolean result = innerUserServer.sendLoginCode(innerUserLoginPhonePo.getPhone());
+    public Map<String, Object> sendLoginCode(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
+        Boolean result = innerUserServer.sendLoginCode(innerUserLoginPhoneBO.getPhone());
         if(result){
             return MsgTemplate.successMsg();
         }
@@ -85,12 +85,12 @@ public class InnerUserServiceImpl implements InnerUserService {
      * 不同系统之间交换token
      * @autuor Chengw
      * @since 2017/12/4  16:42
-     * @param userSwitchSysPo
+     * @param userSwitchSysBO
      * @return
      */
     @Override
-    public Map<String, Object> swap(UserSwitchSysPo userSwitchSysPo){
-        UserLogoutVo userLogoutVo = innerUserServer.swap(userSwitchSysPo);
+    public Map<String, Object> swap(UserSwitchSysBO userSwitchSysBO){
+        UserLogoutVo userLogoutVo = innerUserServer.swap(userSwitchSysBO);
         if(StringUtils.isNotBlank(userLogoutVo.getUrl())){
            return MsgTemplate.successMsg(userLogoutVo);
         }
@@ -129,17 +129,17 @@ public class InnerUserServiceImpl implements InnerUserService {
      * 更改用户密码
      * @autuor Chengw
      * @since 2017/12/4  16:42
-     * @param innerUserChangePasswordPo
+     * @param innerUserChangePasswordBO
      * @return
      */
     @Override
-    public Map<String, Object> changeInnerUserPassword(InnerUserChangePasswordPo innerUserChangePasswordPo) {
+    public Map<String, Object> changeInnerUserPassword(InnerUserChangePasswordBO innerUserChangePasswordBO) {
         try{
-            UserInfoVo userInfoVo = innerUserRedisDao.getInnerUserInfo(innerUserChangePasswordPo.getToken());
+            UserInfoVo userInfoVo = innerUserRedisDao.getInnerUserInfo(innerUserChangePasswordBO.getToken());
             String userCode = innerUserServer.getUserCode(userInfoVo.getUids());
             if(!ObjectUtils.isEmpty(userInfoVo) && StringUtils.isNotBlank(userCode)){
-                String oldPassword = DigestUtils.md5Hex(innerUserChangePasswordPo.getOldPassword()+userCode);
-                String newPassword = DigestUtils.md5Hex(innerUserChangePasswordPo.getNewPassword()+userCode);
+                String oldPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getOldPassword()+userCode);
+                String newPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getNewPassword()+userCode);
                 Boolean status = innerUserServer.changeUserPassword(String.valueOf(userInfoVo.getId()),oldPassword,newPassword);
                 if(status){
                     return  MsgTemplate.successMsg();

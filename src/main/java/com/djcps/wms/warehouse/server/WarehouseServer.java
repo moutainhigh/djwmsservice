@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBo;
@@ -79,7 +79,7 @@ public class WarehouseServer {
 	}
 	
 
-	public HttpResult getAllList(BaseListParam baseListParam){
+	public HttpResult getAllList(BaseListBO baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
 		System.out.println("---http请求参数转化为json格式---:"+json);

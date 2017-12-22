@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseParam;
-
 /**
  * 获取库区推荐对象
  * @company:djwms

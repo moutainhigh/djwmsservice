@@ -4,9 +4,6 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseParam;
-import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
-
 /**
  * @title:仓库库区详情修改对象
  * @description:

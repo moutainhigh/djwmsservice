@@ -1,6 +1,5 @@
 package com.djcps.wms.stock.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,29 +13,15 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
-import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
-import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
-import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
-import com.djcps.wms.loadingtable.service.LoadingTableService;
-import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.stock.model.AddStock;
 import com.djcps.wms.stock.model.MoveStock;
 import com.djcps.wms.stock.model.OperationRecordBo;
@@ -44,13 +29,8 @@ import com.djcps.wms.stock.model.RecommendLocaBo;
 import com.djcps.wms.stock.model.SelectAreaByOrderId;
 import com.djcps.wms.stock.model.SelectSavedStockAmount;
 import com.djcps.wms.stock.service.StockService;
-import com.djcps.wms.warehouse.model.area.CountyBo;
-import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
 
 /**

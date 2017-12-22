@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
 import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.warehouse.model.area.AreaCode;
 import com.djcps.wms.warehouse.model.location.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,22 +20,12 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
-import com.djcps.wms.warehouse.server.LocationServer;
 import com.djcps.wms.warehouse.service.LocationService;
-import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
 
 /**

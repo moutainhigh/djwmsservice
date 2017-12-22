@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.base.BaseBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,20 +22,9 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.allocation.model.AddAllocation;
 import com.djcps.wms.allocation.service.AllocationService;
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
-import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
-import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
-import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
-import com.djcps.wms.loadingtable.service.LoadingTableService;
 import com.google.gson.Gson;
 
 /**
@@ -68,8 +58,8 @@ public class AllocationController {
 	public Map<String, Object> getOrderType(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseParam baseParam = new BaseParam();
-			return allocationService.getOrderType(baseParam);
+			BaseBO baseBO = new BaseBO();
+			return allocationService.getOrderType(baseBO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

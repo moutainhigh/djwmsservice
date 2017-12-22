@@ -2,16 +2,8 @@ package com.djcps.wms.warehouse.service;
 
 import java.util.Map;
 
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.location.*;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 
 
 /**

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 
 /**
  * 获取所有库位对象
@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseListParam;
  * @author:zdx
  * @date:2017年12月12日
  */
-public class SelectAllLocationList extends BaseListParam implements Serializable{
+public class SelectAllLocationList extends BaseListBO implements Serializable{
 
 	private static final long serialVersionUID = 3062314207607906888L;
 	

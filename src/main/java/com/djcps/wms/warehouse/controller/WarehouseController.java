@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
-import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,6 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
@@ -244,7 +243,7 @@ public class WarehouseController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListParam param = gson.fromJson(json, BaseListParam.class);
+			BaseListBO param = gson.fromJson(json, BaseListBO.class);
 			return warehouseService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -3,11 +3,6 @@ package com.djcps.wms.address.service;
 import java.util.Map;
 
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
 
 /**
  * 地址业务层

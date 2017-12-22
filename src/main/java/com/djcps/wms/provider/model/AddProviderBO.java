@@ -5,8 +5,6 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseAddBo;
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * @title:供应商修改对象

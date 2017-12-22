@@ -2,9 +2,8 @@ package com.djcps.wms.stock.model;
 
 import java.io.Serializable;
 
+import com.djcps.wms.commons.base.BaseBO;
 import org.hibernate.validator.constraints.NotBlank;
-
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * 获取已入库的订单数量
@@ -12,7 +11,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class SelectSavedStockAmount extends BaseParam implements Serializable{
+public class SelectSavedStockAmount extends BaseBO implements Serializable{
 	
 	private static final long serialVersionUID = -4764501424934419327L;
 	

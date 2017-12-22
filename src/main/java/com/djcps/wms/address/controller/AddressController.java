@@ -3,36 +3,19 @@ package com.djcps.wms.address.controller;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baidu.unbiz.fluentvalidator.ComplexResult;
-import com.baidu.unbiz.fluentvalidator.FluentValidator;
-import com.baidu.unbiz.fluentvalidator.ResultCollectors;
-import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.address.service.AddressService;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.service.ProviderService;
-import com.djcps.wms.warehouse.controller.WarehouseController;
 import com.google.gson.Gson;
 
 /**
