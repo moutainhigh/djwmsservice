@@ -10,6 +10,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseAddBo;
 
+/**
+ * 入库对象
+ * @company:djwms
+ * @author:zdx
+ * @date:2017年12月22日
+ */
 public class AddStock extends BaseAddBo implements Serializable{
 	
 	private static final long serialVersionUID = 5650542988348663815L;

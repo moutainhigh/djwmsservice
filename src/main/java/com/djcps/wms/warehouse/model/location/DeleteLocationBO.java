@@ -26,7 +26,7 @@ public class DeleteLocationBO extends BaseUpdateAndDeleteBo implements Serializa
 	/**
 	 * 编码类型
 	 */
-	private String codeType="3";
+	private String codeType;
 	
 	/**
 	 * 仓库编码

@@ -27,7 +27,7 @@ public class DeleteWarehouseBO extends BaseUpdateAndDeleteBo implements Serializ
 	/**
 	 * 编码类型
 	 */
-	private String codeType="1";
+	private String codeType;
 	
 	/**
 	 * 仓库编码 

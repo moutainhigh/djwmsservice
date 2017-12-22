@@ -26,7 +26,7 @@ public class DeleteAreaBO extends BaseUpdateAndDeleteBo implements Serializable{
 	/**
 	 * 编码类型
 	 */
-	private String codeType="2";
+	private String codeType;
 	
 	/**
 	 * 仓库编码

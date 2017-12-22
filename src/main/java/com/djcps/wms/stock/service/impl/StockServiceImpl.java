@@ -39,6 +39,7 @@ public class StockServiceImpl implements StockService{
 	
 	@Override
 	public Map<String, Object> getRecommendLoca(RecommendLocaBo param) {
+		StringBuilder bulider1 = new StringBuilder();
 		List<RecommendLocaParamBo> addList = new ArrayList<RecommendLocaParamBo>();
 		String location = param.getLocation();
 		//location要求小数点显示后六位
@@ -51,20 +52,21 @@ public class StockServiceImpl implements StockService{
 			if(substring.length()>6){
 				String str1 = str.substring(0,indexOf);
 				String str2 = str.substring(indexOf+1,indexOf+7);
-				String str3  = str1+"."+str2;
+				String str3  = new StringBuilder().append(str1).append(".").append(str2).toString();
 				if(i == 0){
-					newLocation = str3;
+					bulider1.append(str3);
 				}else{
-					newLocation = newLocation+","+str3;
+					bulider1.append(",").append(str3);
 				}
 			}else{
 				if(i == 0){
-					newLocation = split[i];
+					bulider1.append(split[i]);
 				}else{
-					newLocation = newLocation+","+split[i];
+					bulider1.append(",").append(split[i]);
 				}
 			}
 		}
+		newLocation = bulider1.toString();
 		//key表示高德地图api的需要的key,location表示经纬度,output输出格式
 		String key=AppConstant.MAP_API_KEY;
 		String output="JSON";
@@ -75,6 +77,8 @@ public class StockServiceImpl implements StockService{
 		addList.add(rl);
 		param.setParam(addList);
 		HttpResult result = stockServer.getRecommendLoca(param);
+		ArrayList data = (ArrayList) result.getData();
+		result.setData(data.get(0));
 		return MsgTemplate.customMsg(result);
 	}
 

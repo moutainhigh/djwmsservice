@@ -26,7 +26,7 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchInsertSysUrlDao(List<SysUrlPo> sysUrlList);
+	int batchInsertSysUrl(List<SysUrlPo> sysUrlList);
 	
 	
 	/**
@@ -37,7 +37,7 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月19日
 	 */
-	int updateSysUrlDao(SysUrlPo sysUrlList);
+	int updateSysUrl(SysUrlPo sysUrlList);
 	
 	/**
 	 * 批量更新 
@@ -46,7 +46,7 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchUpdateSysUrlDao(List<SysUrlPo> sysUrlList);
+	int batchUpdateSysUrl(List<SysUrlPo> sysUrlList);
 	
 	/**
 	 * 获取所有的url
@@ -63,5 +63,5 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchReplaceSysUrlDao(List<SysUrlPo> sysUrlList);
+	int batchReplaceSysUrl(List<SysUrlPo> sysUrlList);
 }

@@ -22,6 +22,7 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
@@ -82,6 +83,7 @@ public class WarehouseController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
+			param.setCodeType(AppConstant.WAREHOUSE_CODE);
 			return warehouseService.add(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -157,6 +159,7 @@ public class WarehouseController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
+			param.setCodeType(AppConstant.WAREHOUSE_CODE);
 			return warehouseService.delete(param);
 		} catch (Exception e) {
 			e.printStackTrace();

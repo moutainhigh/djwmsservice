@@ -71,7 +71,7 @@ public class AddAreaBO extends BaseAddBo implements Serializable{
 	/**
 	 * 编码类型
 	 */
-	private String codeType = "2";
+	private String codeType;
 	
 	@NotEmpty
 	private List<AddAreaDetailBO> countyList;

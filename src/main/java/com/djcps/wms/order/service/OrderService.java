@@ -14,12 +14,13 @@ import com.djcps.wms.stock.model.OrderIdBo;
  */
 public interface OrderService {
 
+	
 	/**
 	 * 获取所有的订单
-	 * @param baseListParam
+	 * @param paperOrder
 	 * @return
 	 * @author:zdx
-	 * @date:2017年12月21日
+	 * @date:2017年12月22日
 	 */
 	Map<String, Object> getAllOrderList(PaperOrderBo paperOrder);
 

@@ -7,6 +7,12 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.djcps.wms.commons.base.BaseAddBo;
 import com.djcps.wms.commons.base.BaseListParam;
 
+/**
+ * 操作记录
+ * @company:djwms
+ * @author:zdx
+ * @date:2017年12月22日
+ */
 public class OperationRecordBo extends BaseListParam implements Serializable{
 
 	private static final long serialVersionUID = 5996668621435889565L;

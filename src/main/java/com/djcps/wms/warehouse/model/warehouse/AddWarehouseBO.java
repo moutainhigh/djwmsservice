@@ -59,7 +59,7 @@ public class AddWarehouseBO extends BaseAddBo implements Serializable{
 	/**
 	 * 编码类型
 	 */
-	private String codeType = "1";
+	private String codeType ;
 
 	public String getWarehouseId() {
 		return warehouseId;

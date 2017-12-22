@@ -16,12 +16,13 @@ import com.djcps.wms.stock.model.SelectSavedStockAmount;
  */
 public interface StockService {
 
+
 	/**
 	 * 获取推荐库位
-	 * @param location
+	 * @param param
 	 * @return
 	 * @author:zdx
-	 * @date:2017年12月20日
+	 * @date:2017年12月22日
 	 */
 	Map<String, Object> getRecommendLoca(RecommendLocaBo param);
 
@@ -34,12 +35,13 @@ public interface StockService {
 	 */
 	Map<String, Object> getOperationRecord(String string);
 
+	
 	/**
 	 * 入库
-	 * @param string
+	 * @param param
 	 * @return
 	 * @author:zdx
-	 * @date:2017年12月20日
+	 * @date:2017年12月22日
 	 */
 	Map<String, Object> addStock(AddStock param);
 

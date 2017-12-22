@@ -32,13 +32,13 @@ public class SysUrlServiceImpl implements SysUrlService {
 	private SysUrlDao sysUrlDao;
 	
 	@Override
-	public int batchInsertSysUrlDao(List<SysUrlPo> sysUrlList) {
-		return sysUrlDao.batchInsertSysUrlDao(sysUrlList);
+	public int batchInsertSysUrl(List<SysUrlPo> sysUrlList) {
+		return sysUrlDao.batchInsertSysUrl(sysUrlList);
 	}
 
 	@Override
-	public int updateSysUrlDao(SysUrlPo sysUrlList) {
-		return sysUrlDao.updateSysUrlDao(sysUrlList);
+	public int updateSysUrl(SysUrlPo sysUrlList) {
+		return sysUrlDao.updateSysUrl(sysUrlList);
 	}
 
 	@Override
@@ -47,13 +47,13 @@ public class SysUrlServiceImpl implements SysUrlService {
 	}
 
 	@Override
-	public int batchReplaceSysUrlDao(List<SysUrlPo> sysUrlList) {
-		return sysUrlDao.batchReplaceSysUrlDao(sysUrlList);
+	public int batchReplaceSysUrl(List<SysUrlPo> sysUrlList) {
+		return sysUrlDao.batchReplaceSysUrl(sysUrlList);
 	}
 
 	@Override
-	public int batchUpdateSysUrlDao(List<SysUrlPo> sysUrlList) {
-		return sysUrlDao.batchUpdateSysUrlDao(sysUrlList);
+	public int batchUpdateSysUrl(List<SysUrlPo> sysUrlList) {
+		return sysUrlDao.batchUpdateSysUrl(sysUrlList);
 	}
 
 

@@ -88,7 +88,7 @@ public class AddLocationBO extends BaseAddBo implements Serializable{
 	/**
 	 * 编码类型
 	 */
-	private String codeType = "3";
+	private String codeType ;
 
 	public String getWarehouseId() {
 		return warehouseId;

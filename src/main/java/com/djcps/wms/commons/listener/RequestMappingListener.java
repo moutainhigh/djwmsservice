@@ -52,8 +52,8 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		String  rootName= "Root WebApplicationContext";
 		String displayName = contextRefreshedEvent.getApplicationContext().getParent().getDisplayName();
-		logger.error("------我的父容器为------:"+displayName);
-		logger.error("------容器初始化开始------");
+		logger.info("------我的父容器为------:"+displayName);
+		logger.info("------容器初始化开始------");
 	    try {
 	    	List<SysUrlPo> sysUrlList = new ArrayList<SysUrlPo>();
 	    	List<SysUrlPo> insertList = new ArrayList<SysUrlPo>();
@@ -89,7 +89,7 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 				}
 			}else{
 				//为空直接插入
-				sysUrlService.batchInsertSysUrlDao(sysUrlList);
+				sysUrlService.batchInsertSysUrl(sysUrlList);
 				return;
 			}
 			for (SysUrlPo sysUrlPo : sysUrlList) {
@@ -100,17 +100,17 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 				}else{
 					//不为空表示已存在需要更新
 					sysUrlPo.setId(sysUrlPo2.getId());
-					sysUrlService.updateSysUrlDao(sysUrlPo);
+					sysUrlService.updateSysUrl(sysUrlPo);
 				}
 			}
 			if(!ObjectUtils.isEmpty(insertList)){
-				sysUrlService.batchInsertSysUrlDao(insertList);
+				sysUrlService.batchInsertSysUrl(insertList);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
-	    logger.error("------容器初始化结束------");
+	    logger.info("------容器初始化结束------");
 	}
 
 }

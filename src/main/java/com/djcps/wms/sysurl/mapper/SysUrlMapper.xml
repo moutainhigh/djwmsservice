@@ -11,20 +11,20 @@
 		<result column="fusertype" property="userType"/>
 	</resultMap>
 	
-	<insert id="batchInsertSysUrlDao">
+	<insert id="batchInsertSysUrl">
 		insert into t_wms_sys_url(fid,fname,furl) values
 		<foreach collection="list" separator="," item="item">
 			(#{item.id},#{item.name},#{item.url})
 		</foreach>
 	</insert>
 	
-	<update id="batchUpdateSysUrlDao">
+	<update id="batchUpdateSysUrl">
 		<foreach collection="list" item="item" separator=";" >
 			update t_wms_sys_url set fname=#{item.name},furl=#{item.url} where fid = #{item.id}
 		</foreach>
 	</update>
 	
-	<update id="updateSysUrlDao">
+	<update id="updateSysUrl">
 			update t_wms_sys_url set fname=#{name},furl=#{url} where fid = #{id}
 	</update>
 	
@@ -32,7 +32,7 @@
 		select fid,fname,furl,flogintype,feffect,fusertype from t_wms_sys_url
 	</select>
 	
-	<insert id="batchReplaceSysUrlDao">
+	<insert id="batchReplaceSysUrl">
 		REPLACE into t_wms_sys_url(fname,furl) values
 		<foreach collection="list" separator="," item="item">
 			(#{item.name},#{item.url})

@@ -22,6 +22,7 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
@@ -83,6 +84,7 @@ public class LocationController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
+			param.setCodeType(AppConstant.WAREHOUSE_AREA_LOCA_CODE);
 			return locationService.addLocation(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,6 +151,7 @@ public class LocationController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
+			param.setCodeType(AppConstant.WAREHOUSE_AREA_LOCA_CODE);
 			return locationService.deleteLocation(param);
 		} catch (Exception e) {
 			e.printStackTrace();
