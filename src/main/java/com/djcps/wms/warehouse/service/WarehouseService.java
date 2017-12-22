@@ -117,9 +117,11 @@ public interface WarehouseService {
 
 	/**
 	 * 获取仓库编码
+	 * @author  wzy
 	 * @param PartnerInfoBo
 	 * @return
-	 */
+	 * @create  2017/12/22 13:33
+	 **/
 	Map<String,Object> getWarehouseCode(PartnerInfoBo partnerInfoBo);
 
 }

@@ -18,6 +18,6 @@ import rpc.plugin.http.RPCClientFields;
 public interface GetCodeRequest {
     @Headers("content-type:application/json")
     @POST("code/getCode.do")
-    public HTTPResponse getCode(@Body RequestBody rb);
+    HTTPResponse getCode(@Body RequestBody rb);
 
 }

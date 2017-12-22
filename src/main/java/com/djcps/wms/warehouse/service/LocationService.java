@@ -68,9 +68,11 @@ public interface LocationService {
 	Map<String, Object> getLocationByAttribute(SelectLocationByAttributeBO param);
 
 	/**
-	 * 获取库位编码
-	 * @param getLocationCode
+	 *
+	 * @author  wzy
+	 * @param partnerInfoBo,locationbo
 	 * @return
-	 */
+	 * @create  2017/12/22 13:32
+	 **/
 	Map<String,Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo);
 }
