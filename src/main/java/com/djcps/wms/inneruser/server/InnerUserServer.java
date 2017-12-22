@@ -73,7 +73,7 @@ public class InnerUserServer {
     public HttpResult loginTokenWithApp(InnerUserLoginPo innerUserLoginPo) {
         String userCode = getUserCode(innerUserLoginPo.getUserName());
         if (StringUtils.isNotBlank(userCode)) {
-            String password = DigestUtils.md5Hex(DigestUtils.md5Hex(innerUserLoginPo.getPassword()) + userCode);
+            String password = DigestUtils.md5Hex(innerUserLoginPo.getPassword() + userCode);
             HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginPo.getUserName(), password, AppConstant.LOGIN_TYPE);
             if (httpResponse.isSuccessful()) {
                 try {
