@@ -31,7 +31,20 @@ public enum SysMsgEnum implements MsgInterface {
      */
     NOT_LOGIN(880004, "抱歉,您还未登录,或token已过期,请登录后再试"),
     
-    URL_EXPIRE(880005, "请求路径已失效,请联系管理员");
+    /**
+     * 路径失效
+     */
+    URL_EXPIRE(880005, "请求路径已失效,请联系管理员"),
+	
+	/**
+	 * 请求参数错误
+	 */
+	PARAM_ERROR(880006, "请求参数有误"),
+	
+	/**
+	 * redis中取不到用户URL
+	 */
+	SYSURL_NULL(880007, "非法操作,已记录了你的ip");
     
     private int code;
     
