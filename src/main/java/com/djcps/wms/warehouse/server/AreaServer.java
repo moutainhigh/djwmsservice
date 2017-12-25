@@ -1,25 +1,21 @@
 package com.djcps.wms.warehouse.server;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.AreaCodeBO;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.request.WmsForAreaHttpRequest;
 import com.google.gson.Gson;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
 
 /**
@@ -105,12 +101,7 @@ public class AreaServer {
 	 * @author  wzy
 	 * @create  2017/12/21 17:03
 	 **/
-	public HttpResult getAreaCode(PartnerInfoBO partnerInfoBo,AreaCodeBO areaCode){
-		GetCodeBO getCodeBO=new GetCodeBO();
-		getCodeBO.setCodeType("2");
-		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
-		getCodeBO.setVersion(partnerInfoBo.getVersion());
-		getCodeBO.setWarehouseId(areaCode.getWarehouseId());
+	public HttpResult getAreaCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
 		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);

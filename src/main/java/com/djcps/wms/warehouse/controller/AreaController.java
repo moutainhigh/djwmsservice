@@ -1,12 +1,21 @@
 package com.djcps.wms.warehouse.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
+import com.baidu.unbiz.fluentvalidator.ComplexResult;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import com.baidu.unbiz.fluentvalidator.ResultCollectors;
+import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
+import com.djcps.wms.warehouse.model.area.*;
+import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
+import com.djcps.wms.warehouse.service.AreaService;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -16,30 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baidu.unbiz.fluentvalidator.ComplexResult;
-import com.baidu.unbiz.fluentvalidator.FluentValidator;
-import com.baidu.unbiz.fluentvalidator.ResultCollectors;
-import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.AddAreaDetailBO;
-import com.djcps.wms.warehouse.model.area.AreaCodeBO;
-import com.djcps.wms.warehouse.model.area.CountyBO;
-import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
-import com.djcps.wms.warehouse.model.area.ProvinceCityBO;
-import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
-import com.djcps.wms.warehouse.model.area.StreetBO;
-import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
-import com.djcps.wms.warehouse.model.area.UpdateAreaDetailBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.service.AreaService;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @title:仓库库区管理控制层
@@ -297,17 +287,18 @@ public class AreaController {
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
-			AreaCodeBO param=gson.fromJson(json,AreaCodeBO.class);
-			logger.debug("AreaCode : " + param.toString());
+			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
+			logger.debug("GetCodeBO : " + param.toString());
+			BeanUtils.copyProperties(partnerInfoBo,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<AreaCodeBO>()
+							new HibernateSupportedValidator<GetCodeBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return areaService.getAreaCode(partnerInfoBo,param);
+			return areaService.getAreaCode(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

@@ -1,14 +1,19 @@
 package com.djcps.wms.warehouse.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
+import com.baidu.unbiz.fluentvalidator.ComplexResult;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import com.baidu.unbiz.fluentvalidator.ResultCollectors;
+import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.location.*;
 import com.djcps.wms.warehouse.service.LocationService;
-
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,17 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baidu.unbiz.fluentvalidator.ComplexResult;
-import com.baidu.unbiz.fluentvalidator.FluentValidator;
-import com.baidu.unbiz.fluentvalidator.ResultCollectors;
-import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.google.gson.Gson;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.Map;
 
 /**
  * @title:库位管理控制层
@@ -97,7 +94,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			UpdateLocationBO param = gson.fromJson(json, UpdateLocationBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("PartnerInfoBean : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
