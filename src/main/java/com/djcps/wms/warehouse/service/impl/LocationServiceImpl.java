@@ -69,8 +69,8 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public Map<String, Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo) {
-		HttpResult result = locationServer.getLocationCode(partnerInfoBo,locationBo);
+	public Map<String, Object> getLocationCode(GetCodeBO getCodeBO) {
+		HttpResult result = locationServer.getLocationCode(getCodeBO);
 		return MsgTemplate.customMsg(result);
 	}
 

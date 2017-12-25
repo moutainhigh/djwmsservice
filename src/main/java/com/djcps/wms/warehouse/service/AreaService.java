@@ -3,9 +3,9 @@ package com.djcps.wms.warehouse.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.AreaCode;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
@@ -92,5 +92,5 @@ public interface AreaService {
 	 * @return
 	 * @create  2017/12/20 12:59
 	 **/
-	Map<String,Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode);
+	Map<String,Object> getAreaCode(GetCodeBO getCodeBO);
 }

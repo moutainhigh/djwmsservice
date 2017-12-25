@@ -75,5 +75,5 @@ public interface LocationService {
 	 * @return
 	 * @create  2017/12/22 13:32
 	 **/
-	Map<String,Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo);
+	Map<String,Object> getLocationCode(GetCodeBO getCodeBO);
 }

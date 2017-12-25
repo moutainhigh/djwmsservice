@@ -146,16 +146,10 @@ public class WarehouseServer {
 	/**
 	 * @title 获取仓库编码
 	 * @author  wzy
+	 * @param getCodeBO
 	 * @create  2017/12/21 17:04
 	 **/
-	public HttpResult getWarehouseCode(PartnerInfoBo partnerInfoBo){
-		String str = partnerInfoBo.getPartnerId();
-		String ver=partnerInfoBo.getVersion();
-		GetCodeBO getCodeBO=new GetCodeBO();
-		getCodeBO.setCodeType("1");
-		getCodeBO.setPartnerId(str);
-		getCodeBO.setVersion(ver);
-
+	public HttpResult getWarehouseCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
 		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);

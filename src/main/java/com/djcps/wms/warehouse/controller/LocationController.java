@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
 import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.warehouse.model.area.AreaCode;
 import com.djcps.wms.warehouse.model.location.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -219,24 +218,18 @@ public class LocationController {
 	public Map<String, Object> getLocationCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
+			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
-			LocationBo param=gson.fromJson(json,LocationBo.class);
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<LocationBo>()
+							new HibernateSupportedValidator<GetCodeBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-
-			GetCodeBO getCodeBO=new GetCodeBO();
-			getCodeBO.setCodeType("3");
-			getCodeBO.setPartnerId(partnerInfoBean.getPartnerId());
-			getCodeBO.setVersion(partnerInfoBean.getVersion());
-			getCodeBO.setWarehouseId(param.getWarehouseId());
-			getCodeBO.setWarehouseAreaId(param.getWarehouseAreaId());
-			return locationService.getLocationCode(partnerInfoBean,param);
+			return locationService.getLocationCode(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

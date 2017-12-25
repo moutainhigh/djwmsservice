@@ -103,14 +103,11 @@ public class AreaServer {
 	/**
 	 * @title 获取库区编码
 	 * @author  wzy
+	 * @param getCodeBO
+	 * @return
 	 * @create  2017/12/21 17:03
 	 **/
-	public HttpResult getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode){
-		GetCodeBO getCodeBO=new GetCodeBO();
-		getCodeBO.setCodeType("2");
-		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
-		getCodeBO.setVersion(partnerInfoBo.getVersion());
-		getCodeBO.setWarehouseId(areaCode.getWarehouseId());
+	public HttpResult getAreaCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
 		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);

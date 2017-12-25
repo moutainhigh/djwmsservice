@@ -153,8 +153,8 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public Map<String, Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCode areaCode) {
-		HttpResult httpResult=wareAreaServer.getAreaCode(partnerInfoBo,areaCode);
+	public Map<String, Object> getAreaCode(GetCodeBO getCodeBO) {
+		HttpResult httpResult=wareAreaServer.getAreaCode(getCodeBO);
 		return MsgTemplate.customMsg(httpResult);
 	}
 

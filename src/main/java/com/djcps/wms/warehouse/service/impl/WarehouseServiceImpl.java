@@ -165,8 +165,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	@Override
-	public Map<String, Object> getWarehouseCode(PartnerInfoBo partnerInfoBo) {
-		HttpResult result=warehouseServer.getWarehouseCode(partnerInfoBo);
+	public Map<String, Object> getWarehouseCode(GetCodeBO getCodeBO) {
+		HttpResult result=warehouseServer.getWarehouseCode(getCodeBO);
 		return MsgTemplate.customMsg(result);
 	}
 }

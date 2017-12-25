@@ -364,8 +364,10 @@ public class WarehouseController {
 	@RequestMapping(name="获取仓库编码",value = "/getWarehouseCode", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
+			GetCodeBO getCodeBO=gson.fromJson(json,GetCodeBO.class);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
-			return  warehouseService.getWarehouseCode(partnerInfoBean);
+			BeanUtils.copyProperties(partnerInfoBean,getCodeBO);
+			return  warehouseService.getWarehouseCode(getCodeBO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

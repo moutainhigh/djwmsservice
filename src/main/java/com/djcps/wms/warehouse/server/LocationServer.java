@@ -99,13 +99,7 @@ public class LocationServer {
 	 * @author  wzy
 	 * @create  2017/12/21 17:04
 	 **/
-	public HttpResult getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo){
-		GetCodeBO getCodeBO=new GetCodeBO();
-		getCodeBO.setCodeType("3");
-		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
-		getCodeBO.setVersion(partnerInfoBo.getVersion());
-		getCodeBO.setWarehouseId(locationBo.getWarehouseId());
-		getCodeBO.setWarehouseAreaId(locationBo.getWarehouseAreaId());
+	public HttpResult getLocationCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(getCodeBO);
 		System.out.println("---http请求参数转化为json格式---:"+json);

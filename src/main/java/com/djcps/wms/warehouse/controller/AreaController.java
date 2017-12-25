@@ -289,17 +289,18 @@ public class AreaController {
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBo partnerInfoBo=(PartnerInfoBo) request.getAttribute("partnerInfo");
-			AreaCode param=gson.fromJson(json,AreaCode.class);
-			logger.debug("AreaCode : " + param.toString());
+			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
+			logger.debug("GetCodeBO : " + param.toString());
+			BeanUtils.copyProperties(partnerInfoBo,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<AreaCode>()
+							new HibernateSupportedValidator<GetCodeBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return areaService.getAreaCode(partnerInfoBo,param);
+			return areaService.getAreaCode(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
