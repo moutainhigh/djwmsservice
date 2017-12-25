@@ -19,22 +19,12 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.allocation.model.AddAllocation;
+import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
-import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
-import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
-import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
-import com.djcps.wms.loadingtable.service.LoadingTableService;
 import com.google.gson.Gson;
 
 /**
@@ -111,14 +101,14 @@ public class AllocationController {
 	public Map<String, Object> saveAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			AddAllocation allocation = gson.fromJson(json, AddAllocation.class);
+			AddAllocationBO allocation = gson.fromJson(json, AddAllocationBO.class);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,allocation);
 			logger.debug("loadingTable : " + allocation.toString());
 			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(allocation,
-							new HibernateSupportedValidator<AddAllocation>()
+							new HibernateSupportedValidator<AddAllocationBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {

@@ -1,7 +1,7 @@
 package com.djcps.wms.sysurl.service;
 
 import java.util.List;
-import com.djcps.wms.sysurl.model.SysUrlPo;
+import com.djcps.wms.sysurl.model.SysUrlPO;
 
 /**
  * 系统url业务层
@@ -26,7 +26,7 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchInsertSysUrl(List<SysUrlPo> sysUrlList);
+	int batchInsertSysUrl(List<SysUrlPO> sysUrlList);
 	
 	
 	/**
@@ -37,7 +37,7 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月19日
 	 */
-	int updateSysUrl(SysUrlPo sysUrlList);
+	int updateSysUrl(SysUrlPO sysUrlList);
 	
 	/**
 	 * 批量更新 
@@ -46,7 +46,7 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchUpdateSysUrl(List<SysUrlPo> sysUrlList);
+	int batchUpdateSysUrl(List<SysUrlPO> sysUrlList);
 	
 	/**
 	 * 获取所有的url
@@ -54,7 +54,7 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	List<SysUrlPo> getALLSysUrl();
+	List<SysUrlPO> getALLSysUrl();
 	
 	/**
 	 * 批量替换,有就更新,没有就新增,需要保证表有唯一索引
@@ -63,5 +63,5 @@ public interface SysUrlService {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchReplaceSysUrl(List<SysUrlPo> sysUrlList);
+	int batchReplaceSysUrl(List<SysUrlPO> sysUrlList);
 }

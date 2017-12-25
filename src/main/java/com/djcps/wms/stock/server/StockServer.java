@@ -8,26 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.MapAddressComponentBO;
+import com.djcps.wms.commons.model.MapAddressComponentPO;
 import com.djcps.wms.commons.request.MapHttpRequest;
-import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
-import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
-import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
-import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
-import com.djcps.wms.loadingtable.request.WmsForLoadingTableHttpRequest;
-import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
-import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
 import com.djcps.wms.stock.dao.StockDao;
-import com.djcps.wms.stock.model.AddStock;
-import com.djcps.wms.stock.model.MapLocationPo;
-import com.djcps.wms.stock.model.MoveStock;
-import com.djcps.wms.stock.model.RecommendLocaBo;
-import com.djcps.wms.stock.model.SelectAreaByOrderId;
-import com.djcps.wms.stock.model.SelectSavedStockAmount;
+import com.djcps.wms.stock.model.AddStockBO;
+import com.djcps.wms.stock.model.MapLocationPO;
+import com.djcps.wms.stock.model.MoveStockBO;
+import com.djcps.wms.stock.model.RecommendLocaBO;
+import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
+import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
 import com.djcps.wms.stock.request.WmsForStockHttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -58,8 +48,8 @@ public class StockServer {
 	@Autowired
 	WmsForStockHttpRequest wmsForStockHttpRequest;
 	
-	public MapLocationPo getStreetCode(String key, String newLocation, String output) {
-		MapLocationPo allLocation = stockDao.getLocationByLocation(newLocation);
+	public MapLocationPO getStreetCode(String key, String newLocation, String output) {
+		MapLocationPO allLocation = stockDao.getLocationByLocation(newLocation);
 		if(allLocation!=null){
 			//非空直接返回
 			return allLocation;
@@ -71,8 +61,8 @@ public class StockServer {
 			JsonParser jsonParser = new JsonParser();
 			JsonElement jsonElement = jsonParser.parse(bodyString).getAsJsonObject().get("regeocode");
 			JsonElement jsonElement2 = jsonElement.getAsJsonObject().get("addressComponent");
-			MapAddressComponentBO fromJson = gson.fromJson(jsonElement2, MapAddressComponentBO.class);
-			MapLocationPo mapLocaTion = new MapLocationPo();
+			MapAddressComponentPO fromJson = gson.fromJson(jsonElement2, MapAddressComponentPO.class);
+			MapLocationPO mapLocaTion = new MapLocationPO();
 			mapLocaTion.setId(UUID.randomUUID().toString());
 			mapLocaTion.setStreetCode(fromJson.getTowncode().substring(0,9));
 			mapLocaTion.setStreetName(fromJson.getTownship());
@@ -84,7 +74,7 @@ public class StockServer {
 		}
 	}
 	
-	public HttpResult getRecommendLoca(RecommendLocaBo param) {
+	public HttpResult getRecommendLoca(RecommendLocaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -105,7 +95,7 @@ public class StockServer {
         return verifyHttpResult(http);
 	}
 	
-	public HttpResult addStock(AddStock param) {
+	public HttpResult addStock(AddStockBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -116,7 +106,7 @@ public class StockServer {
         return verifyHttpResult(http);
 	}
 	
-	public HttpResult moveStock(MoveStock param) {
+	public HttpResult moveStock(MoveStockBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -127,7 +117,7 @@ public class StockServer {
         return verifyHttpResult(http);
 	}
 	
-	public HttpResult getSavedStockAmount(SelectSavedStockAmount param) {
+	public HttpResult getSavedStockAmount(SelectSavedStockAmountBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -138,7 +128,7 @@ public class StockServer {
         return verifyHttpResult(http);
 	}
 	
-	public HttpResult getAreaByOrderId(SelectAreaByOrderId param) {
+	public HttpResult getAreaByOrderId(SelectAreaByOrderIdBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);

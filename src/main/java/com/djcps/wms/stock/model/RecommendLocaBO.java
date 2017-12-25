@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class RecommendLocaBo extends BaseParam implements Serializable{
+public class RecommendLocaBO extends BaseParam implements Serializable{
 
 	private static final long serialVersionUID = -7237160364347242371L;
 	
@@ -29,7 +29,7 @@ public class RecommendLocaBo extends BaseParam implements Serializable{
 	@NotBlank
 	private String partnerId;
 	
-	private List<RecommendLocaParamBo> param;
+	private List<RecommendLocaParamBO> param;
 
 	public String getLocation() {
 		return location;
@@ -47,11 +47,11 @@ public class RecommendLocaBo extends BaseParam implements Serializable{
 		this.partnerId = partnerId;
 	}
 
-	public List<RecommendLocaParamBo> getParam() {
+	public List<RecommendLocaParamBO> getParam() {
 		return param;
 	}
 
-	public void setParam(List<RecommendLocaParamBo> param) {
+	public void setParam(List<RecommendLocaParamBO> param) {
 		this.param = param;
 	}
 

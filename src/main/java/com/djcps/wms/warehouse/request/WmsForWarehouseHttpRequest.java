@@ -2,7 +2,6 @@ package com.djcps.wms.warehouse.request;
 
 
 import com.djcps.wms.commons.config.ParamsConfig;
-import com.sun.org.apache.regexp.internal.RE;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;

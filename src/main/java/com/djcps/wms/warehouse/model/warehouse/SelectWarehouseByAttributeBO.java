@@ -2,11 +2,8 @@ package com.djcps.wms.warehouse.model.warehouse;
 
 import java.io.Serializable;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * @title:模糊查询仓库对象

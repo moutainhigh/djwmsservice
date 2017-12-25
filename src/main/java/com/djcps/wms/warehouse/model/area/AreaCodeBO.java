@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author  wzy
  * @create  2017/12/20 13:42
  **/
-public class AreaCode implements Serializable {
+public class AreaCodeBO implements Serializable {
 
     private static final long serialVersionUID = -4019809043692166800L;
 

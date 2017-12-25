@@ -1,14 +1,11 @@
 package com.djcps.wms.loadingtable.service.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.logging.log4j.core.appender.CountingNoOpAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -21,11 +18,8 @@ import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
 import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
 import com.djcps.wms.loadingtable.server.LoadingTableServer;
 import com.djcps.wms.loadingtable.service.LoadingTableService;
-import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
 import com.google.gson.Gson;
 
-import retrofit2.http.HTTP;
-import rpc.plugin.http.HTTPResponse;
 
 /**
  * @title:装车台service层实现类

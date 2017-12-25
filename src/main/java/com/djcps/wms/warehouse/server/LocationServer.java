@@ -11,8 +11,8 @@ import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.warehouse.model.location.AddLocationBO;
 import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
-import com.djcps.wms.warehouse.model.location.LocationBo;
-import com.djcps.wms.warehouse.model.location.SelectAllLocationList;
+import com.djcps.wms.warehouse.model.location.LocationBO;
+import com.djcps.wms.warehouse.model.location.SelectAllLocationListBO;
 import com.djcps.wms.warehouse.model.location.SelectLocationByAttributeBO;
 import com.djcps.wms.warehouse.model.location.UpdateLocationBO;
 import com.djcps.wms.warehouse.request.WmsForLocationHttpRequest;
@@ -70,7 +70,7 @@ public class LocationServer {
 		return verifyHttpResult(http);
 	}
 
-	public HttpResult getLocationAllList(SelectAllLocationList param) {
+	public HttpResult getLocationAllList(SelectAllLocationListBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -95,7 +95,7 @@ public class LocationServer {
 	 * @author  wzy
 	 * @create  2017/12/21 17:04
 	 **/
-	public HttpResult getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo){
+	public HttpResult getLocationCode(PartnerInfoBo partnerInfoBo,LocationBO locationBo){
 		GetCodeBO getCodeBO=new GetCodeBO();
 		getCodeBO.setCodeType("3");
 		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
@@ -133,6 +133,16 @@ public class LocationServer {
         return verifyHttpResult(http);
 	}
 	
+	public HttpResult getLocationByCode(SelectLocationByAttributeBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = locationHttpRequest.getLocationByAttribute(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -153,4 +163,5 @@ public class LocationServer {
 		}
 		return result;
 	}
+	
 }

@@ -2,9 +2,8 @@ package com.djcps.wms.order.service;
 
 import java.util.Map;
 
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.order.model.PaperOrderBo;
-import com.djcps.wms.stock.model.OrderIdBo;
+import com.djcps.wms.order.model.PaperOrderBO;
+import com.djcps.wms.stock.model.OrderIdBO;
 
 /**
  * 订单业务层
@@ -22,7 +21,7 @@ public interface OrderService {
 	 * @author:zdx
 	 * @date:2017年12月22日
 	 */
-	Map<String, Object> getAllOrderList(PaperOrderBo paperOrder);
+	Map<String, Object> getAllOrderList(PaperOrderBO paperOrder);
 
 	/**
 	 * 根据订单号获取订单信息
@@ -31,6 +30,6 @@ public interface OrderService {
 	 * @author:zdx
 	 * @date:2017年12月22日
 	 */
-	Map<String, Object> getOrderByOrderId(OrderIdBo param);
+	Map<String, Object> getOrderByOrderId(OrderIdBO param);
 	
 }

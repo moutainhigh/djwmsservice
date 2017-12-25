@@ -5,15 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
 import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
+import com.djcps.wms.provider.model.UpdateProviderBO;
 import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
-import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -46,7 +44,7 @@ public class ProviderServer {
         return verifyHttpResult(http);
     }
 	
-	public HttpResult modify(UpdateProviderVO updateBean){
+	public HttpResult modify(UpdateProviderBO updateBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(updateBean);
 		System.out.println("---http请求参数转化为json格式---:"+json);

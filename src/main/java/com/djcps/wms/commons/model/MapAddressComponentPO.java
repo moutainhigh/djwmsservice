@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author:zdx
  * @date:2017年12月19日
  */
-public class MapAddressComponentBO implements Serializable{
+public class MapAddressComponentPO implements Serializable{
 	
 	private static final long serialVersionUID = -4548731253497913620L;
 	

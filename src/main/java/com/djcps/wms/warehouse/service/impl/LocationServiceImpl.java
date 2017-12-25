@@ -1,25 +1,18 @@
 package com.djcps.wms.warehouse.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.location.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 import com.djcps.wms.warehouse.server.LocationServer;
-import com.djcps.wms.warehouse.server.WarehouseServer;
 import com.djcps.wms.warehouse.service.LocationService;
 import com.google.gson.Gson;
 
@@ -71,7 +64,7 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public Map<String, Object> getLocationAllList(SelectAllLocationList param) {
+	public Map<String, Object> getLocationAllList(SelectAllLocationListBO param) {
 		HttpResult result = locationServer.getLocationAllList(param);
 		return MsgTemplate.customMsg(result);
 	}
@@ -83,8 +76,18 @@ public class LocationServiceImpl implements LocationService {
 	}
 
 	@Override
-	public Map<String, Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo) {
+	public Map<String, Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBO locationBo) {
 		HttpResult result = locationServer.getLocationCode(partnerInfoBo,locationBo);
+		return MsgTemplate.customMsg(result);
+	}
+
+	@Override
+	public Map<String, Object> getLocationByCode(SelectLocationByAttributeBO param) {
+		HttpResult result = locationServer.getLocationByAttribute(param);
+		Map map = (Map) result.getData();
+		ArrayList list = (ArrayList) map.get("result");
+		Object object = list.get(0);
+		result.setData(object);;
 		return MsgTemplate.customMsg(result);
 	}
 

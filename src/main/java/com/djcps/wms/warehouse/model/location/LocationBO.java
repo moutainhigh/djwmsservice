@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author  wzy
  * @create  2017/12/21 17:01
  **/
-public class LocationBo implements Serializable {
+public class LocationBO implements Serializable {
 
     private static final long serialVersionUID = 4080342799779890661L;
 

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.allocation.model.AddAllocation;
+import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.request.WmsForAllocationHttpRequest;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -52,7 +52,7 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult saveAllocation(AddAllocation allocation) {
+	public HttpResult saveAllocation(AddAllocationBO allocation) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(allocation);
 		System.out.println("---http请求参数转化为json格式---:"+json);

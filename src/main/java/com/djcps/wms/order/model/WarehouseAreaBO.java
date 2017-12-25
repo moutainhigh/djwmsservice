@@ -8,7 +8,7 @@ import java.util.List;
  * @author:zdx
  * @date:2017年12月21日
  */
-public class WarehouseAreaBo {
+public class WarehouseAreaBO {
 	/**
 	 * 库区编号 
 	 */
@@ -22,7 +22,7 @@ public class WarehouseAreaBo {
 	/**
 	 * 库区list
 	 */
-	private List<WarehouseLocationBo> locationList;
+	private List<WarehouseLocationBO> locationList;
 
 	public String getWarehouseAreaId() {
 		return warehouseAreaId;
@@ -40,11 +40,11 @@ public class WarehouseAreaBo {
 		this.warehouseAreaName = warehouseAreaName;
 	}
 
-	public List<WarehouseLocationBo> getLocationList() {
+	public List<WarehouseLocationBO> getLocationList() {
 		return locationList;
 	}
 
-	public void setLocationList(List<WarehouseLocationBo> locationList) {
+	public void setLocationList(List<WarehouseLocationBO> locationList) {
 		this.locationList = locationList;
 	}
 	

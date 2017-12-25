@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseListParam;
  * @author:zdx
  * @date:2017年12月12日
  */
-public class SelectAllLocationList extends BaseListParam implements Serializable{
+public class SelectAllLocationListBO extends BaseListParam implements Serializable{
 
 	private static final long serialVersionUID = 3062314207607906888L;
 	

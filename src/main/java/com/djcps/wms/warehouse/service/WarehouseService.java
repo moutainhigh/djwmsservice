@@ -3,7 +3,6 @@ package com.djcps.wms.warehouse.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.warehouse.*;
 
@@ -112,7 +111,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年12月12日
 	 */
-	Map<String, Object> getAllWarehouseName(String partnerId);
+	Map<String, Object> getAllWarehouseName(PartnerInfoBo partnerInfoBean);
 
 
 	/**

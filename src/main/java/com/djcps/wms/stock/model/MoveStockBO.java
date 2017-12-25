@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseAddBo;
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * 移库对象
@@ -15,7 +14,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class MoveStock extends BaseAddBo implements Serializable{
+public class MoveStockBO extends BaseAddBo implements Serializable{
 
 	private static final long serialVersionUID = 2489810729435810994L;
 	
@@ -63,8 +62,7 @@ public class MoveStock extends BaseAddBo implements Serializable{
 	/**
 	 * 操作记录信息
 	 */
-	@NotNull
-	private OperationRecordBo operationRecord;
+	private OperationRecordBO operationRecord;
 	
 	public String getOrderId() {
 		return orderId;
@@ -114,10 +112,10 @@ public class MoveStock extends BaseAddBo implements Serializable{
 	public void setWarehouseLocName(String warehouseLocName) {
 		this.warehouseLocName = warehouseLocName;
 	}
-	public OperationRecordBo getOperationRecord() {
+	public OperationRecordBO getOperationRecord() {
 		return operationRecord;
 	}
-	public void setOperationRecord(OperationRecordBo operationRecord) {
+	public void setOperationRecord(OperationRecordBO operationRecord) {
 		this.operationRecord = operationRecord;
 	}
 	@Override

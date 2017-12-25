@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
 
 /**
@@ -15,7 +13,7 @@ import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class UpdateProviderVO extends BaseUpdateAndDeleteBo implements Serializable{
+public class UpdateProviderBO extends BaseUpdateAndDeleteBo implements Serializable{
 
 	private static final long serialVersionUID = 3436724307882748378L;
 

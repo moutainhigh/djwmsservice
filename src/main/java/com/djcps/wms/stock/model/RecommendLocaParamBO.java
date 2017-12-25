@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * 获取库区推荐对象
@@ -12,7 +11,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class RecommendLocaParamBo implements Serializable{
+public class RecommendLocaParamBO implements Serializable{
 
 	private static final long serialVersionUID = -7237160364347242371L;
 	

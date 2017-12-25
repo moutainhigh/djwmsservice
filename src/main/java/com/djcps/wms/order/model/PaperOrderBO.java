@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseListParam;
 
 /**
  * 纸板纸箱对象
@@ -13,7 +12,7 @@ import com.djcps.wms.commons.base.BaseListParam;
  * @author:zdx
  * @date:2017年12月21日
  */
-public class PaperOrderBo implements Serializable{
+public class PaperOrderBO implements Serializable{
 
 	private static final long serialVersionUID = -6808929963013139398L;
 	
@@ -63,9 +62,9 @@ public class PaperOrderBo implements Serializable{
 	/**
 	 * 库区list
 	 */
-	private List<WarehouseAreaBo> areaList;
+	private List<WarehouseAreaBO> areaList;
 	
-	public PaperOrderBo() {
+	public PaperOrderBO() {
 		this.orderId = "1111";
 		this.xiadanshijian = "2017-12-15 17:08:36";
 		this.jiaoqianshijian = "2017-12-15 17:08:36";
@@ -231,11 +230,11 @@ public class PaperOrderBo implements Serializable{
 		this.warehouseType = warehouseType;
 	}
 
-	public List<WarehouseAreaBo> getAreaList() {
+	public List<WarehouseAreaBO> getAreaList() {
 		return areaList;
 	}
 
-	public void setAreaList(List<WarehouseAreaBo> areaList) {
+	public void setAreaList(List<WarehouseAreaBO> areaList) {
 		this.areaList = areaList;
 	}
 

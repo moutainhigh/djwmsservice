@@ -10,25 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.order.model.PaperOrderBo;
-import com.djcps.wms.order.model.WarehouseAreaBo;
-import com.djcps.wms.order.model.WarehouseLocationBo;
+import com.djcps.wms.order.model.PaperOrderBO;
+import com.djcps.wms.order.model.WarehouseAreaBO;
+import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
-import com.djcps.wms.provider.controller.ProviderController;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.server.ProviderServer;
-import com.djcps.wms.provider.service.ProviderService;
-import com.djcps.wms.stock.model.OrderIdBo;
-import com.djcps.wms.stock.model.SelectAreaByOrderId;
-import com.djcps.wms.stock.server.StockServer;
+import com.djcps.wms.stock.model.OrderIdBO;
+import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.service.StockService;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -55,17 +44,17 @@ public class OrderServiceImpl implements OrderService {
 	private StockService stockService;
 
 	@Override
-	public Map<String, Object> getAllOrderList(PaperOrderBo paperOrder) {
-		PaperOrderBo PaperOrder1 = new PaperOrderBo();
-		PaperOrderBo PaperOrder2 = new PaperOrderBo();
-		PaperOrderBo PaperOrder3 = new PaperOrderBo();
-		PaperOrderBo PaperOrder4 = new PaperOrderBo();
-		PaperOrderBo PaperOrder5 = new PaperOrderBo();
-		PaperOrderBo PaperOrder6 = new PaperOrderBo();
-		PaperOrderBo PaperOrder7 = new PaperOrderBo();
-		PaperOrderBo PaperOrder8 = new PaperOrderBo();
-		PaperOrderBo PaperOrder9 = new PaperOrderBo();
-		PaperOrderBo PaperOrder10 = new PaperOrderBo();
+	public Map<String, Object> getAllOrderList(PaperOrderBO paperOrder) {
+		PaperOrderBO PaperOrder1 = new PaperOrderBO();
+		PaperOrderBO PaperOrder2 = new PaperOrderBO();
+		PaperOrderBO PaperOrder3 = new PaperOrderBO();
+		PaperOrderBO PaperOrder4 = new PaperOrderBO();
+		PaperOrderBO PaperOrder5 = new PaperOrderBO();
+		PaperOrderBO PaperOrder6 = new PaperOrderBO();
+		PaperOrderBO PaperOrder7 = new PaperOrderBO();
+		PaperOrderBO PaperOrder8 = new PaperOrderBO();
+		PaperOrderBO PaperOrder9 = new PaperOrderBO();
+		PaperOrderBO PaperOrder10 = new PaperOrderBO();
 		PaperOrder1.setOrderId("0000");
 		PaperOrder2.setOrderId("1111");
 		PaperOrder3.setOrderId("2222");
@@ -77,16 +66,16 @@ public class OrderServiceImpl implements OrderService {
 		PaperOrder9.setOrderId("8888");
 		PaperOrder10.setOrderId("9999");
 		List list = new ArrayList<>();
-		OrderIdBo orderId1 = new OrderIdBo();
-		OrderIdBo orderId2 = new OrderIdBo();
-		OrderIdBo orderId3 = new OrderIdBo();
-		OrderIdBo orderId4 = new OrderIdBo();
-		OrderIdBo orderId5 = new OrderIdBo();
-		OrderIdBo orderId6 = new OrderIdBo();
-		OrderIdBo orderId7 = new OrderIdBo();
-		OrderIdBo orderId8 = new OrderIdBo();
-		OrderIdBo orderId9 = new OrderIdBo();
-		OrderIdBo orderId10 = new OrderIdBo();
+		OrderIdBO orderId1 = new OrderIdBO();
+		OrderIdBO orderId2 = new OrderIdBO();
+		OrderIdBO orderId3 = new OrderIdBO();
+		OrderIdBO orderId4 = new OrderIdBO();
+		OrderIdBO orderId5 = new OrderIdBO();
+		OrderIdBO orderId6 = new OrderIdBO();
+		OrderIdBO orderId7 = new OrderIdBO();
+		OrderIdBO orderId8 = new OrderIdBO();
+		OrderIdBO orderId9 = new OrderIdBO();
+		OrderIdBO orderId10 = new OrderIdBO();
 		orderId1.setOrderId((PaperOrder1.getOrderId()));
 		orderId2.setOrderId((PaperOrder2.getOrderId()));
 		orderId3.setOrderId((PaperOrder3.getOrderId()));
@@ -107,48 +96,51 @@ public class OrderServiceImpl implements OrderService {
 		list.add(orderId8);
 		list.add(orderId9);
 		list.add(orderId10);
-		SelectAreaByOrderId param = new SelectAreaByOrderId();
+		SelectAreaByOrderIdBO param = new SelectAreaByOrderIdBO();
 		param.setOrderIds(list);
 		//根据id获取在库信息
 		return  getStockInfo(param);
 	}
 
 	@Override
-	public Map<String, Object> getOrderByOrderId(OrderIdBo param) {
-		PaperOrderBo PaperOrder1 = new PaperOrderBo();
+	public Map<String, Object> getOrderByOrderId(OrderIdBO param) {
+		PaperOrderBO PaperOrder1 = new PaperOrderBO();
 		PaperOrder1.setOrderId("0000");
-		SelectAreaByOrderId selectAreaByOrderId = new SelectAreaByOrderId();
+		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 		List list = new ArrayList<>();
 		list.add(PaperOrder1);
 		selectAreaByOrderId.setOrderIds(list);
 //		param.setOrderIds(list);
-		return  getStockInfo(selectAreaByOrderId);
+		Map<String, Object> map = getStockInfo(selectAreaByOrderId);
+		List dateList =(List)map.get("data");
+		map.put("data", dateList.get(0));
+		return map;
 	}
 
-	private Map<String, Object> getStockInfo(SelectAreaByOrderId param){
-		List<PaperOrderBo> paperOrderList = new ArrayList<PaperOrderBo>();
+	private Map<String, Object> getStockInfo(SelectAreaByOrderIdBO param){
+		List<PaperOrderBO> paperOrderList = new ArrayList<PaperOrderBO>();
 		//根据id查询
 		Map<String, Object> areaByOrderIdMap = stockService.getAreaByOrderId(param);
 		Object object = areaByOrderIdMap.get("data");
 		if(!ObjectUtils.isEmpty(object)){
 			JsonArray asJsonArray = jsonParser.parse(gson.toJson(object)).getAsJsonArray();
 			for (JsonElement jsonElement : asJsonArray) {
-				PaperOrderBo paperOrderBo = gson.fromJson(jsonElement, PaperOrderBo.class);
+				PaperOrderBO paperOrderBo = gson.fromJson(jsonElement, PaperOrderBO.class);
 				paperOrderList.add(paperOrderBo);
 				JsonArray areaArray = jsonParser.parse(gson.toJson(jsonElement)).getAsJsonObject().get("warehouseAreaInfo").getAsJsonArray();
 				//遍历库区
-				List<WarehouseAreaBo> areaList = new ArrayList<WarehouseAreaBo>();
+				List<WarehouseAreaBO> areaList = new ArrayList<WarehouseAreaBO>();
 				paperOrderBo.setAreaList(areaList);
 				for (JsonElement jsonElement2 : areaArray) {
-					 WarehouseAreaBo area = gson.fromJson(jsonElement2, WarehouseAreaBo.class);
+					 WarehouseAreaBO area = gson.fromJson(jsonElement2, WarehouseAreaBO.class);
 					 areaList.add(area);
 					 //一个库区可能会有多个库位库位,每次遍历库区创建库位list,把list赋值给库区
-					 List<WarehouseLocationBo> locationList = new ArrayList<WarehouseLocationBo>();
+					 List<WarehouseLocationBO> locationList = new ArrayList<WarehouseLocationBO>();
 					 area.setLocationList(locationList);
 					 JsonArray locationArray = jsonParser.parse(gson.toJson(jsonElement2)).getAsJsonObject().get("warehouseLocInfo").getAsJsonArray();
 					 //遍历库位
 					 for (JsonElement jsonElement3 : locationArray) {
-						 WarehouseLocationBo location = gson.fromJson(jsonElement3, WarehouseLocationBo.class);
+						 WarehouseLocationBO location = gson.fromJson(jsonElement3, WarehouseLocationBO.class);
 						 locationList.add(location);
 					}
 				}

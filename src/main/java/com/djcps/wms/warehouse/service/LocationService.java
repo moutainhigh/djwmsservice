@@ -2,16 +2,8 @@ package com.djcps.wms.warehouse.service;
 
 import java.util.Map;
 
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.warehouse.model.location.*;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
 
 
 /**
@@ -56,7 +48,7 @@ public interface LocationService {
 	 * @author:zdx
 	 * @date:2017年12月8日
 	 */
-	Map<String, Object> getLocationAllList(SelectAllLocationList param);
+	Map<String, Object> getLocationAllList(SelectAllLocationListBO param);
 
 	/**
 	 * 根据库位属性模糊查询
@@ -75,5 +67,14 @@ public interface LocationService {
 	 * @return
 	 * @create  2017/12/22 13:32
 	 **/
-	Map<String,Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBo locationBo);
+	Map<String,Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBO locationBo);
+
+	/**
+	 * 根据编码获取库位信息
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月25日
+	 */
+	Map<String, Object> getLocationByCode(SelectLocationByAttributeBO param);
 }

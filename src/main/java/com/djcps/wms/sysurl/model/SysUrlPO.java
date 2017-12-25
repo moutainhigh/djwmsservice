@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author:zdx
  * @date:2017年12月13日
  */
-public class SysUrlPo implements Serializable{
+public class SysUrlPO implements Serializable{
 	
 	private static final long serialVersionUID = -6949618255180508493L;
 

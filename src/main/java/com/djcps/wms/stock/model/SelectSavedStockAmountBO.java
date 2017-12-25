@@ -12,7 +12,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class SelectSavedStockAmount extends BaseParam implements Serializable{
+public class SelectSavedStockAmountBO extends BaseParam implements Serializable{
 	
 	private static final long serialVersionUID = -4764501424934419327L;
 	

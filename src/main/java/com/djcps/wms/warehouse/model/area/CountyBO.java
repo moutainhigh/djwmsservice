@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author:zdx
  * @date:2017年12月8日
  */
-public class CountyBo implements Serializable{
+public class CountyBO implements Serializable{
 	
 	private static final long serialVersionUID = 1138136777264335726L;
 

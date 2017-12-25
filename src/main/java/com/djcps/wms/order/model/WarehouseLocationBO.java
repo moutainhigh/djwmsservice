@@ -6,7 +6,7 @@ package com.djcps.wms.order.model;
  * @author:zdx
  * @date:2017年12月21日
  */
-public class WarehouseLocationBo {
+public class WarehouseLocationBO {
 	
 	/**
 	 * 实时在库数量

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBo;
@@ -175,8 +174,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	@Override
-	public Map<String, Object> getAllWarehouseName(String partnerId) {
-		HttpResult result = warehouseServer.getAllWarehouseName(partnerId);
+	public Map<String, Object> getAllWarehouseName(PartnerInfoBo partnerInfoBean) {
+		HttpResult result = warehouseServer.getAllWarehouseName(partnerInfoBean);
 		return MsgTemplate.customMsg(result);
 	}
 

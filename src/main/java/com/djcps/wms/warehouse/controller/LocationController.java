@@ -6,8 +6,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
 import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.warehouse.model.area.AreaCode;
 import com.djcps.wms.warehouse.model.location.*;
+import com.djcps.wms.warehouse.service.LocationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,23 +22,12 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
-import com.djcps.wms.warehouse.server.LocationServer;
-import com.djcps.wms.warehouse.service.LocationService;
-import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
 
 /**
@@ -174,7 +164,7 @@ public class LocationController {
 	public Map<String, Object> getLocationAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			SelectAllLocationList param = gson.fromJson(json, SelectAllLocationList.class);
+			SelectAllLocationListBO param = gson.fromJson(json, SelectAllLocationListBO.class);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return locationService.getLocationAllList(param);
@@ -223,10 +213,10 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
-			LocationBo param=gson.fromJson(json,LocationBo.class);
+			LocationBO param=gson.fromJson(json,LocationBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<LocationBo>()
+							new HibernateSupportedValidator<LocationBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -240,6 +230,30 @@ public class LocationController {
 			getCodeBO.setWarehouseId(param.getWarehouseId());
 			getCodeBO.setWarehouseAreaId(param.getWarehouseAreaId());
 			return locationService.getLocationCode(partnerInfoBean,param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * @title:根据库位编码获取库位详细信息
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年11月22日
+	 */
+	@RequestMapping(name="根据库位编码获取库位详细信息",value = "/getLocationByCode", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getLocationByCode(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
+			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			return locationService.getLocationByCode(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

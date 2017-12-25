@@ -4,7 +4,7 @@ package com.djcps.wms.stock.dao;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
-import com.djcps.wms.stock.model.MapLocationPo;
+import com.djcps.wms.stock.model.MapLocationPO;
 
 
 
@@ -25,7 +25,7 @@ public interface StockDao {
 	 * @author:zdx
 	 * @date:2017年12月19日
 	 */
-	int insertLocation(MapLocationPo mapLocationPo);
+	int insertLocation(MapLocationPO mapLocationPo);
 	
 	/**
 	 * 获得所有的经纬度
@@ -33,7 +33,7 @@ public interface StockDao {
 	 * @author:zdx
 	 * @date:2017年12月19日
 	 */
-	List<MapLocationPo> getAllLocation();
+	List<MapLocationPO> getAllLocation();
 	
 	/**
 	 * 根据经纬度查询
@@ -42,5 +42,5 @@ public interface StockDao {
 	 * @author:zdx
 	 * @date:2017年12月19日
 	 */
-	MapLocationPo getLocationByLocation(String location);
+	MapLocationPO getLocationByLocation(String location);
 }

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.allocation.model.AddAllocation;
+import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.base.BaseParam;
@@ -47,7 +47,7 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 
 	@Override
-	public Map<String, Object> saveAllocation(AddAllocation allocation) {
+	public Map<String, Object> saveAllocation(AddAllocationBO allocation) {
 		HttpResult result = allocationServer.saveAllocation(allocation);
 		return MsgTemplate.customMsg(result);
 	}

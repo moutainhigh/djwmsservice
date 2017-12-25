@@ -2,7 +2,6 @@ package com.djcps.wms.provider.model;
 
 import java.io.Serializable;
 
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseListParam;
 

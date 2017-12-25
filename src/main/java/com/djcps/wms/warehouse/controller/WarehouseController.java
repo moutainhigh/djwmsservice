@@ -5,7 +5,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
-import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,13 +71,13 @@ public class WarehouseController {
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -115,13 +114,13 @@ public class WarehouseController {
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -345,10 +344,10 @@ public class WarehouseController {
 	public Map<String, Object> getAllWarehouseName(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
-			String str = partnerInfoBean.getPartnerId();
-			//该方法查询只需要传合作方id即可
-			String partnerId = "{\"partnerId\":"+str+"}";
-			return warehouseService.getAllWarehouseName(partnerId);
+//			String str = partnerInfoBean.getPartnerId();
+//			//该方法查询只需要传合作方id即可
+//			String partnerId = "{\"partnerId\":"+str+"}";
+			return warehouseService.getAllWarehouseName(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

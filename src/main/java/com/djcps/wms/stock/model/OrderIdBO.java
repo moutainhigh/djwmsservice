@@ -6,7 +6,7 @@ package com.djcps.wms.stock.model;
  * @author:zdx
  * @date:2017年12月21日
  */
-public class OrderIdBo {
+public class OrderIdBO {
 	
 	/**
 	 * 订单号

@@ -7,17 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
+import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
 import com.djcps.wms.address.server.AddressServer;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.provider.controller.ProviderController;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.server.ProviderServer;
 import com.google.gson.Gson;
 
 /**
@@ -38,25 +31,25 @@ public class AddressServiceImpl implements AddressService {
 	private AddressServer addressServer;
 
 	@Override
-	public Map<String, Object> getProvinceAllList(ProvinceCityAreaCodeBo param) {
+	public Map<String, Object> getProvinceAllList(ProvinceCityAreaCodeBO param) {
 		HttpResult result = addressServer.getProvinceAllList(param);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getCityListByProvince(ProvinceCityAreaCodeBo param) {
+	public Map<String, Object> getCityListByProvince(ProvinceCityAreaCodeBO param) {
 		HttpResult result = addressServer.getCityListByProvince(param);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getAreaListByCity(ProvinceCityAreaCodeBo param) {
+	public Map<String, Object> getAreaListByCity(ProvinceCityAreaCodeBO param) {
 		HttpResult result = addressServer.getAreaListByCity(param);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getStreeListByArea(ProvinceCityAreaCodeBo param) {
+	public Map<String, Object> getStreeListByArea(ProvinceCityAreaCodeBO param) {
 		HttpResult result = addressServer.getStreeListByArea(param);
 		return MsgTemplate.customMsg(result);
 	}

@@ -2,12 +2,9 @@ package com.djcps.wms.sysurl.controller;
 
 
 
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 

@@ -3,7 +3,7 @@ package com.djcps.wms.allocation.service;
 
 import java.util.Map;
 
-import com.djcps.wms.allocation.model.AddAllocation;
+import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.model.PartnerInfoBo;
 
@@ -45,6 +45,6 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2017年12月8日
 	 */
-	Map<String, Object> saveAllocation(AddAllocation allocation);
+	Map<String, Object> saveAllocation(AddAllocationBO allocation);
 
 }

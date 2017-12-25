@@ -1,12 +1,9 @@
 package com.djcps.wms.stock.model;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseAddBo;
 
@@ -16,7 +13,7 @@ import com.djcps.wms.commons.base.BaseAddBo;
  * @author:zdx
  * @date:2017年12月22日
  */
-public class AddStock extends BaseAddBo implements Serializable{
+public class AddStockBO extends BaseAddBo implements Serializable{
 	
 	private static final long serialVersionUID = 5650542988348663815L;
 	
@@ -73,8 +70,7 @@ public class AddStock extends BaseAddBo implements Serializable{
 	/**
 	 * 操作记录信息集合
 	 */
-	@NotNull
-	private OperationRecordBo operationRecord;
+	private OperationRecordBO operationRecord;
 	public String getOrderId() {
 		return orderId;
 	}
@@ -135,10 +131,10 @@ public class AddStock extends BaseAddBo implements Serializable{
 	public void setWarehouseLocName(String warehouseLocName) {
 		this.warehouseLocName = warehouseLocName;
 	}
-	public OperationRecordBo getOperationRecord() {
+	public OperationRecordBO getOperationRecord() {
 		return operationRecord;
 	}
-	public void setOperationRecord(OperationRecordBo operationRecord) {
+	public void setOperationRecord(OperationRecordBO operationRecord) {
 		this.operationRecord = operationRecord;
 	}
 	@Override

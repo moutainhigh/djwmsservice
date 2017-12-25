@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.djcps.wms.commons.base.BaseAddBo;
 
 
 /**
@@ -16,7 +15,7 @@ import com.djcps.wms.commons.base.BaseAddBo;
  * @author:zdx
  * @date:2017年12月8日
  */
-public class ProvinceCityBo implements Serializable{
+public class ProvinceCityBO implements Serializable{
 	
 	private static final long serialVersionUID = 4149549572390899075L;
 	

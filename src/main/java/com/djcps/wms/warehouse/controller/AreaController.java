@@ -28,11 +28,11 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.AddAreaDetailBO;
-import com.djcps.wms.warehouse.model.area.AreaCode;
-import com.djcps.wms.warehouse.model.area.CountyBo;
+import com.djcps.wms.warehouse.model.area.AreaCodeBO;
+import com.djcps.wms.warehouse.model.area.CountyBO;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
-import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
-import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
+import com.djcps.wms.warehouse.model.area.ProvinceCityBO;
+import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
 import com.djcps.wms.warehouse.model.area.StreetBo;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaDetailBO;
@@ -72,10 +72,10 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			//数据校验
-			ProvinceCityBo param = gson.fromJson(json, ProvinceCityBo.class);
+			ProvinceCityBO param = gson.fromJson(json, ProvinceCityBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<ProvinceCityBo>()
+							new HibernateSupportedValidator<ProvinceCityBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
@@ -92,8 +92,8 @@ public class AreaController {
 			BeanUtils.copyProperties(partnerInfoBean,addArea);
 			
 			String areaDetailListJson = gson.toJson(param.getCountyList());
-			List<CountyBo> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBo>>(){}.getType()); 
-			for (CountyBo areaBo : retList) {
+			List<CountyBO> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBO>>(){}.getType()); 
+			for (CountyBO areaBo : retList) {
 				String streetListJson = gson.toJson(areaBo.getStreetList());
 				List<StreetBo> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBo>>(){}.getType());
 				for (StreetBo street : streetList) {
@@ -141,10 +141,10 @@ public class AreaController {
 	public Map<String, Object> modifyArea(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			//数据校验
-			ProvinceCityBo param = gson.fromJson(json, ProvinceCityBo.class);
+			ProvinceCityBO param = gson.fromJson(json, ProvinceCityBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<ProvinceCityBo>()
+							new HibernateSupportedValidator<ProvinceCityBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
@@ -161,8 +161,8 @@ public class AreaController {
 			BeanUtils.copyProperties(partnerInfoBean,updateArea);
 			
 			String areaDetailListJson = gson.toJson(param.getCountyList());
-			List<CountyBo> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBo>>(){}.getType()); 
-			for (CountyBo areaBo : retList) {
+			List<CountyBO> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBO>>(){}.getType()); 
+			for (CountyBO areaBo : retList) {
 				String streetListJson = gson.toJson(areaBo.getStreetList());
 				List<StreetBo> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBo>>(){}.getType());
 				for (StreetBo street : streetList) {
@@ -243,7 +243,7 @@ public class AreaController {
 	public Map<String, Object> getAreaAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			SelectAllAreaList param = gson.fromJson(json, SelectAllAreaList.class);
+			SelectAllAreaListBO param = gson.fromJson(json, SelectAllAreaListBO.class);
 			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return areaService.getAreaAllList(param);
@@ -297,11 +297,11 @@ public class AreaController {
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBo partnerInfoBo=(PartnerInfoBo) request.getAttribute("partnerInfo");
-			AreaCode param=gson.fromJson(json,AreaCode.class);
+			AreaCodeBO param=gson.fromJson(json,AreaCodeBO.class);
 			logger.debug("AreaCode : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<AreaCode>()
+							new HibernateSupportedValidator<AreaCodeBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {

@@ -42,9 +42,6 @@ public class WarehouseServer {
 	@Autowired
 	private GetCodeRequest getCodeRequest;
 	
-	@Autowired
-	private MapHttpRequest mapHttpRequest;
-	
 	public HttpResult add(AddWarehouseBO addBean){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(addBean);
@@ -139,10 +136,11 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getAllWarehouseName(String partnerId) {
+	public HttpResult getAllWarehouseName(PartnerInfoBo partnerInfoBean) {
+		String json = gson.toJson(partnerInfoBean);
 		//将请求参数转化为requestbody格式
-		System.out.println("---http请求参数转化为json格式---:"+partnerId);
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),partnerId);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getAllWarehouseName(rb);
 		return verifyHttpResult(http);

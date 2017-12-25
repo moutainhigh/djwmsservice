@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.djcps.wms.sysurl.dao.SysUrlDao;
-import com.djcps.wms.sysurl.model.SysUrlPo;
+import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.djcps.wms.sysurl.service.SysUrlService;
 import com.google.gson.Gson;
 
@@ -32,27 +32,27 @@ public class SysUrlServiceImpl implements SysUrlService {
 	private SysUrlDao sysUrlDao;
 	
 	@Override
-	public int batchInsertSysUrl(List<SysUrlPo> sysUrlList) {
+	public int batchInsertSysUrl(List<SysUrlPO> sysUrlList) {
 		return sysUrlDao.batchInsertSysUrl(sysUrlList);
 	}
 
 	@Override
-	public int updateSysUrl(SysUrlPo sysUrlList) {
+	public int updateSysUrl(SysUrlPO sysUrlList) {
 		return sysUrlDao.updateSysUrl(sysUrlList);
 	}
 
 	@Override
-	public List<SysUrlPo> getALLSysUrl() {
+	public List<SysUrlPO> getALLSysUrl() {
 		return sysUrlDao.getALLSysUrl();
 	}
 
 	@Override
-	public int batchReplaceSysUrl(List<SysUrlPo> sysUrlList) {
+	public int batchReplaceSysUrl(List<SysUrlPO> sysUrlList) {
 		return sysUrlDao.batchReplaceSysUrl(sysUrlList);
 	}
 
 	@Override
-	public int batchUpdateSysUrl(List<SysUrlPo> sysUrlList) {
+	public int batchUpdateSysUrl(List<SysUrlPO> sysUrlList) {
 		return sysUrlDao.batchUpdateSysUrl(sysUrlList);
 	}
 

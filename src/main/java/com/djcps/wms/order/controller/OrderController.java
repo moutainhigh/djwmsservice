@@ -7,7 +7,6 @@ import javax.validation.Validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,25 +17,11 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.order.model.PaperOrderBo;
+import com.djcps.wms.order.model.PaperOrderBO;
 import com.djcps.wms.order.service.OrderService;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.service.ProviderService;
-import com.djcps.wms.stock.model.OrderIdBo;
-import com.djcps.wms.stock.model.SelectAreaByOrderId;
-import com.djcps.wms.warehouse.controller.WarehouseController;
+import com.djcps.wms.stock.model.OrderIdBO;
 import com.google.gson.Gson;
 
 /**
@@ -71,10 +56,10 @@ public class OrderController {
 		try {
 			//仓库类型,1,2,3,4,5(纸板，纸箱，积分商城仓库，物料仓库，退货仓库)
 			logger.debug("json : " + json);
-			PaperOrderBo param = gson.fromJson(json, PaperOrderBo.class);
+			PaperOrderBO param = gson.fromJson(json, PaperOrderBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<PaperOrderBo>()
+							new HibernateSupportedValidator<PaperOrderBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -92,10 +77,10 @@ public class OrderController {
 	public Map<String, Object> getOrderByOrderId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			OrderIdBo param = gson.fromJson(json, OrderIdBo.class);
+			OrderIdBO param = gson.fromJson(json, OrderIdBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<OrderIdBo>()
+							new HibernateSupportedValidator<OrderIdBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
