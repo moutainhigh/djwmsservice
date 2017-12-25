@@ -18,7 +18,7 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBo;
@@ -168,7 +168,7 @@ public class LoadingTableController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListParam baseListParam  = gson.fromJson(json, BaseListParam.class);
+			BaseListBO baseListParam  = gson.fromJson(json, BaseListBO.class);
 			return loadingTableService.getAllList(baseListParam);
 		} catch (Exception e) {
 			e.printStackTrace();

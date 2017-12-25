@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseAddBo;
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * 移库对象

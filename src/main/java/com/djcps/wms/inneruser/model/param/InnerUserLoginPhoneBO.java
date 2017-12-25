@@ -1,6 +1,6 @@
 package com.djcps.wms.inneruser.model.param;
 
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 
 import java.io.Serializable;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Chengw
  * @since 2017/12/19 15:44.
  */
-public class InnerUserLoginPhonePo extends BaseParam implements Serializable{
+public class InnerUserLoginPhoneBO extends BaseBO implements Serializable{
 
     /**
      * 手机号

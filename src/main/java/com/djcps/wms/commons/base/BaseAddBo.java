@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author:zdx
  * @date:2017年11月30日
  */
-public class BaseAddBo extends BaseParam implements Serializable{
+public class BaseAddBo extends BaseBO implements Serializable{
 	
 	private static final long serialVersionUID = -185610484814897617L;
 

@@ -2,7 +2,7 @@ package com.djcps.wms.commons.model;
 
 import java.io.Serializable;
 
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 
 /**
  * 合作方对象
@@ -10,7 +10,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月30日
  */
-public class PartnerInfoBo  extends BaseParam implements Serializable{
+public class PartnerInfoBo  extends BaseBO implements Serializable{
 	
 	private static final long serialVersionUID = -2191735308081531970L;
 

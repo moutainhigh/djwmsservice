@@ -2,11 +2,10 @@ package com.djcps.wms.warehouse.service.impl;
 
 import java.util.Map;
 
+import com.djcps.wms.commons.base.BaseListBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBo;
@@ -103,7 +102,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam){
+	public Map<String, Object> getAllList(BaseListBO baseListParam){
 		HttpResult result = warehouseServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}

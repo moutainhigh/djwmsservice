@@ -1,6 +1,6 @@
 package com.djcps.wms.inneruser.model.param;
 
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @author Chengw
  * @since 2017/12/5 16:17.
  */
-public class UserSwitchSysPo extends BaseParam implements Serializable{
+public class UserSwitchSysBO extends BaseBO implements Serializable{
 
     /**
      * 用户在线token

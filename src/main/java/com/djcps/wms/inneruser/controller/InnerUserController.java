@@ -49,14 +49,14 @@ public class InnerUserController {
     @RequestMapping(name = "APP登录页面",value = "/login", method = {RequestMethod.POST})
     public Map<String, Object> login(@RequestBody(required = false) String json) {
         try {
-            InnerUserLoginPo innerUserLoginPo = gson.fromJson(json,InnerUserLoginPo.class);
+            InnerUserLoginBO innerUserLoginBO = gson.fromJson(json,InnerUserLoginBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(innerUserLoginPo, new HibernateSupportedValidator<InnerUserLoginPo>()
+                    .on(innerUserLoginBO, new HibernateSupportedValidator<InnerUserLoginBO>()
                             .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate()
                     .result(toComplex());
             if(ret.isSuccess()){
-                Map<String, Object> result = innerUserService.loginTokenWithApp(innerUserLoginPo);
+                Map<String, Object> result = innerUserService.loginTokenWithApp(innerUserLoginBO);
                 return result;
             }
         }catch (Exception e){
@@ -74,9 +74,9 @@ public class InnerUserController {
     @RequestMapping(name = "APP登录页面-手机验证码",value = "/loginWithPhone", method = {RequestMethod.POST})
     public Map<String, Object> loginWithPhone(@RequestBody(required = false) String json) {
         try {
-            InnerUserLoginPhonePo param = gson.fromJson(json,InnerUserLoginPhonePo.class);
+            InnerUserLoginPhoneBO param = gson.fromJson(json,InnerUserLoginPhoneBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(param, new HibernateSupportedValidator<InnerUserLoginPhonePo>()
+                    .on(param, new HibernateSupportedValidator<InnerUserLoginPhoneBO>()
                             .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate()
                     .result(toComplex());
@@ -99,9 +99,9 @@ public class InnerUserController {
     @RequestMapping(name = "发送手机验证码",value = "/sendLoginCode", method = {RequestMethod.POST,RequestMethod.GET})
     public Map<String, Object> sendLoginCode(@RequestBody(required = false) String json) {
         try {
-            InnerUserLoginPhonePo param = gson.fromJson(json,InnerUserLoginPhonePo.class);
+            InnerUserLoginPhoneBO param = gson.fromJson(json,InnerUserLoginPhoneBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(param, new HibernateSupportedValidator<InnerUserLoginPhonePo>()
+                    .on(param, new HibernateSupportedValidator<InnerUserLoginPhoneBO>()
                             .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate()
                     .result(toComplex());
@@ -138,17 +138,17 @@ public class InnerUserController {
     @AddLog(module = "内部用户",value = "该接口用于修改密码")
     public Map<String, Object> changeUserPassword(@RequestBody(required = false) String json ,@InnerUserToken String token) {
         try {
-            InnerUserChangePasswordPo innerUserChangePasswordPo = gson.fromJson(json,InnerUserChangePasswordPo.class);
+            InnerUserChangePasswordBO innerUserChangePasswordBO = gson.fromJson(json,InnerUserChangePasswordBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(innerUserChangePasswordPo, new HibernateSupportedValidator<InnerUserChangePasswordPo>()
+                    .on(innerUserChangePasswordBO, new HibernateSupportedValidator<InnerUserChangePasswordBO>()
                             .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate()
                     .result(toComplex());
             if(ret.isSuccess()){
-                if(StringUtils.isBlank(innerUserChangePasswordPo.getToken())){
-                    innerUserChangePasswordPo.setToken(token);
+                if(StringUtils.isBlank(innerUserChangePasswordBO.getToken())){
+                    innerUserChangePasswordBO.setToken(token);
                 }
-                return innerUserService.changeInnerUserPassword(innerUserChangePasswordPo);
+                return innerUserService.changeInnerUserPassword(innerUserChangePasswordBO);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -166,17 +166,17 @@ public class InnerUserController {
     @RequestMapping(name = "该接口用于不同系统切换间交换token",value = "/switchSys", method = {RequestMethod.GET,RequestMethod.POST})
     public Map<String, Object> switchSys(@RequestBody(required = false) String json,@InnerUserToken String token) {
         try{
-            UserSwitchSysPo userSwitchSysPo = gson.fromJson(json,UserSwitchSysPo.class);
+            UserSwitchSysBO userSwitchSysBO = gson.fromJson(json,UserSwitchSysBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(userSwitchSysPo, new HibernateSupportedValidator<UserSwitchSysPo>()
+                    .on(userSwitchSysBO, new HibernateSupportedValidator<UserSwitchSysBO>()
                             .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate()
                     .result(toComplex());
             if(ret.isSuccess()){
-                if(StringUtils.isNotBlank(userSwitchSysPo.getOldToken())){
-                    userSwitchSysPo.setOldToken(token);
+                if(StringUtils.isNotBlank(userSwitchSysBO.getOldToken())){
+                    userSwitchSysBO.setOldToken(token);
                 }
-                return innerUserService.swap(userSwitchSysPo);
+                return innerUserService.swap(userSwitchSysBO);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -193,9 +193,9 @@ public class InnerUserController {
     @RequestMapping(name = "将一次性Token转换为固定Token", value = "/handleOnceToken", method = RequestMethod.POST)
     public Map<String, Object> getToken(@RequestBody(required = false) String json, HttpServletResponse response) {
         try {
-            UserTokenPo userTokenPo = gson.fromJson(json,UserTokenPo.class);
-            if (StringUtils.isNotBlank(userTokenPo.getToken())) {
-                String token  = innerUserService.exchangeToken(userTokenPo.getToken());
+            UserTokenBO userTokenBO = gson.fromJson(json,UserTokenBO.class);
+            if (StringUtils.isNotBlank(userTokenBO.getToken())) {
+                String token  = innerUserService.exchangeToken(userTokenBO.getToken());
                 if(StringUtils.isNotBlank(token)){
                     UserExchangeTokenVo userExchangeTokenVo = new UserExchangeTokenVo(token);
                     if(StringUtils.isNotBlank(userExchangeTokenVo.getToken())){

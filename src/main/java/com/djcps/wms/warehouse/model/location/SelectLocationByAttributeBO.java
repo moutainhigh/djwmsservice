@@ -3,10 +3,8 @@ package com.djcps.wms.warehouse.model.location;
 import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseListBO;
 
 /**
  * @title:模糊查询仓库对象
@@ -15,7 +13,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class SelectLocationByAttributeBO extends BaseListParam implements Serializable{
+public class SelectLocationByAttributeBO extends BaseListBO implements Serializable{
 
 	private static final long serialVersionUID = 4482968502224906253L;
 	

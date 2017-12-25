@@ -2,7 +2,7 @@ package com.djcps.wms.loadingtable.service;
 
 import java.util.Map;
 
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
 import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
@@ -56,7 +56,7 @@ public interface LoadingTableService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getAllList(BaseListParam baseListParam);
+	Map<String, Object> getAllList(BaseListBO baseListParam);
 	
 	/**
 	 * 根据仓库属性模糊查询

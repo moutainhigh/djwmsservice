@@ -1,6 +1,5 @@
 package com.djcps.wms.warehouse.model.warehouse;
 
-import com.djcps.wms.commons.base.BaseParam;
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
