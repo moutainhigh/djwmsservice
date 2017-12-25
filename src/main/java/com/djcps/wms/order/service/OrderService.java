@@ -2,8 +2,8 @@ package com.djcps.wms.order.service;
 
 import java.util.Map;
 
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.PaperOrderBO;
-import com.djcps.wms.stock.model.OrderIdBO;
 
 /**
  *  订单业务层

@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.PaperOrderBO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
 import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
-import com.djcps.wms.stock.model.OrderIdBO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.service.StockService;
 import com.google.gson.Gson;
@@ -113,7 +113,9 @@ public class OrderServiceImpl implements OrderService {
 //		param.setOrderIds(list);
 		Map<String, Object> map = getStockInfo(selectAreaByOrderId);
 		List dateList =(List)map.get("data");
-		map.put("data", dateList.get(0));
+		if(!ObjectUtils.isEmpty(dateList)){
+			map.put("data", dateList.get(0));
+		}
 		return map;
 	}
 

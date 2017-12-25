@@ -1,13 +1,16 @@
 package com.djcps.wms.order.model;
 
+import java.io.Serializable;
+
 /**
  * 库位对象
  * @company:djwms
  * @author:zdx
  * @date:2017年12月21日
  */
-public class WarehouseLocationBO {
+public class WarehouseLocationBO implements Serializable{
 	
+	private static final long serialVersionUID = 4913476852497777763L;
 	/**
 	 * 实时在库数量
 	 */

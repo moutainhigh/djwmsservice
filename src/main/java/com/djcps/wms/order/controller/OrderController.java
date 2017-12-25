@@ -19,9 +19,9 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.PaperOrderBO;
 import com.djcps.wms.order.service.OrderService;
-import com.djcps.wms.stock.model.OrderIdBO;
 import com.google.gson.Gson;
 
 /**

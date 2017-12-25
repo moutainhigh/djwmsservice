@@ -1,5 +1,6 @@
 package com.djcps.wms.order.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,10 @@ import java.util.List;
  * @author:zdx
  * @date:2017年12月21日
  */
-public class WarehouseAreaBO {
+public class WarehouseAreaBO implements Serializable{
+	
+	private static final long serialVersionUID = 1657011130307398174L;
+
 	/**
 	 * 库区编号 
 	 */
