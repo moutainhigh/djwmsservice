@@ -7,9 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
-import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.warehouse.model.area.*;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -17,19 +14,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
+import com.djcps.wms.warehouse.model.area.AddAreaBO;
+import com.djcps.wms.warehouse.model.area.AddAreaDetailBO;
+import com.djcps.wms.warehouse.model.area.AreaCodeBO;
+import com.djcps.wms.warehouse.model.area.CountyBO;
+import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
+import com.djcps.wms.warehouse.model.area.ProvinceCityBO;
+import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
+import com.djcps.wms.warehouse.model.area.StreetBO;
+import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
+import com.djcps.wms.warehouse.model.area.UpdateAreaDetailBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.service.AreaService;
 import com.google.gson.Gson;
@@ -66,10 +72,10 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			//数据校验
-			ProvinceCityBo param = gson.fromJson(json, ProvinceCityBo.class);
+			ProvinceCityBO param = gson.fromJson(json, ProvinceCityBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<ProvinceCityBo>()
+							new HibernateSupportedValidator<ProvinceCityBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
@@ -81,16 +87,16 @@ public class AreaController {
 			AddAreaBO addArea = new AddAreaBO();
 			List<AddAreaDetailBO> addDetailList = new ArrayList<AddAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(param,addArea);
 			BeanUtils.copyProperties(partnerInfoBean,addArea);
 			
 			String areaDetailListJson = gson.toJson(param.getCountyList());
-			List<CountyBo> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBo>>(){}.getType()); 
-			for (CountyBo areaBo : retList) {
+			List<CountyBO> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBO>>(){}.getType()); 
+			for (CountyBO areaBo : retList) {
 				String streetListJson = gson.toJson(areaBo.getStreetList());
-				List<StreetBo> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBo>>(){}.getType());
-				for (StreetBo street : streetList) {
+				List<StreetBO> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBO>>(){}.getType());
+				for (StreetBO street : streetList) {
 					AddAreaDetailBO areaDetai = new AddAreaDetailBO();
 					//把仓库编号,库区编号,合作方id赋值
 					BeanUtils.copyProperties(param,areaDetai);
@@ -113,6 +119,7 @@ public class AreaController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(otherRet);
 			}
+			addArea.setCodeType(AppConstant.WAREHOUSE_AREA_CODE);
 			return areaService.addArea(addArea);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -134,10 +141,10 @@ public class AreaController {
 	public Map<String, Object> modifyArea(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			//数据校验
-			ProvinceCityBo param = gson.fromJson(json, ProvinceCityBo.class);
+			ProvinceCityBO param = gson.fromJson(json, ProvinceCityBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<ProvinceCityBo>()
+							new HibernateSupportedValidator<ProvinceCityBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
@@ -149,16 +156,16 @@ public class AreaController {
 			UpdateAreaBO updateArea = new UpdateAreaBO();
 			List<UpdateAreaDetailBO> updateDetailList = new ArrayList<UpdateAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(param,updateArea);
 			BeanUtils.copyProperties(partnerInfoBean,updateArea);
 			
 			String areaDetailListJson = gson.toJson(param.getCountyList());
-			List<CountyBo> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBo>>(){}.getType()); 
-			for (CountyBo areaBo : retList) {
+			List<CountyBO> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBO>>(){}.getType()); 
+			for (CountyBO areaBo : retList) {
 				String streetListJson = gson.toJson(areaBo.getStreetList());
-				List<StreetBo> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBo>>(){}.getType());
-				for (StreetBo street : streetList) {
+				List<StreetBO> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBO>>(){}.getType());
+				for (StreetBO street : streetList) {
 					UpdateAreaDetailBO areaDetai = new UpdateAreaDetailBO();
 					//把仓库编号,库区编号,合作方id赋值
 					BeanUtils.copyProperties(param,areaDetai);
@@ -202,18 +209,19 @@ public class AreaController {
 	public Map<String, Object> deleteArea(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			DeleteWarehouseBO param = gson.fromJson(json, DeleteWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			DeleteAreaBO param = gson.fromJson(json, DeleteAreaBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<DeleteWarehouseBO>()
+							new HibernateSupportedValidator<DeleteAreaBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
+			param.setCodeType(AppConstant.WAREHOUSE_AREA_CODE);
 			return areaService.deleteArea(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -235,8 +243,8 @@ public class AreaController {
 	public Map<String, Object> getAreaAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			SelectAllAreaList param = gson.fromJson(json, SelectAllAreaList.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			SelectAllAreaListBO param = gson.fromJson(json, SelectAllAreaListBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return areaService.getAreaAllList(param);
 		} catch (Exception e) {
@@ -288,19 +296,18 @@ public class AreaController {
 	@RequestMapping(name="获取库区编码",value = "/getAreaCode",method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			PartnerInfoBo partnerInfoBo=(PartnerInfoBo) request.getAttribute("partnerInfo");
-			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
-			logger.debug("GetCodeBO : " + param.toString());
-			BeanUtils.copyProperties(partnerInfoBo,param);
+			PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+			AreaCodeBO param=gson.fromJson(json,AreaCodeBO.class);
+			logger.debug("AreaCode : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<GetCodeBO>()
+							new HibernateSupportedValidator<AreaCodeBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return areaService.getAreaCode(param);
+			return areaService.getAreaCode(partnerInfoBo,param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

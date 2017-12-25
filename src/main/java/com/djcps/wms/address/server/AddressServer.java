@@ -5,16 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
+import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
 import com.djcps.wms.address.request.AddressServerHttpRequest;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.provider.model.DeleteProviderBO;
-import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
-import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
-import com.djcps.wms.provider.service.impl.ProviderServiceImpl;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -36,7 +29,7 @@ public class AddressServer {
 	@Autowired
 	private AddressServerHttpRequest addressServerHttpRequest;
 
-	public HttpResult getProvinceAllList(ProvinceCityAreaCodeBo param) {
+	public HttpResult getProvinceAllList(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -46,7 +39,7 @@ public class AddressServer {
 		return verifyHttpResult(http);
 	}
 
-	public HttpResult getCityListByProvince(ProvinceCityAreaCodeBo param) {
+	public HttpResult getCityListByProvince(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -56,7 +49,7 @@ public class AddressServer {
 		return verifyHttpResult(http);
 	}
 
-	public HttpResult getAreaListByCity(ProvinceCityAreaCodeBo param) {
+	public HttpResult getAreaListByCity(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -66,7 +59,7 @@ public class AddressServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getStreeListByArea(ProvinceCityAreaCodeBo param) {
+	public HttpResult getStreeListByArea(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);

@@ -2,7 +2,7 @@ package com.djcps.wms.warehouse.model.warehouse;
 
 import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
-import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 
 /**
  * @title:启用禁用装车台对象
@@ -11,7 +11,7 @@ import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class IsUseWarehouseBO extends BaseUpdateAndDeleteBo implements Serializable{
+public class IsUseWarehouseBO extends BaseUpdateAndDeleteBO implements Serializable{
 
 	private static final long serialVersionUID = -7664247947519185744L;
 

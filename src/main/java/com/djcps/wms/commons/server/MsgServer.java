@@ -1,15 +1,10 @@
 package com.djcps.wms.commons.server;
 
-import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.param.PhoneCodePo;
+import com.djcps.wms.commons.model.param.PhoneCodeBO;
 import com.djcps.wms.commons.request.MsgHttpRequest;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.Gson;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
 /**
@@ -27,13 +22,13 @@ public class MsgServer {
 
     /**
      * 发送手机短信验证码
-     * @param phoneCodePo
+     * @param phoneCodeBO
      * @return
      */
-    public Boolean sendPhoneCode(PhoneCodePo phoneCodePo){
-        HTTPResponse httpResponse = msgHttpRequest.sendCode(phoneCodePo.getPhone(),
-                phoneCodePo.getCode(),
-                phoneCodePo.getAppSystem());
+    public Boolean sendPhoneCode(PhoneCodeBO phoneCodeBO){
+        HTTPResponse httpResponse = msgHttpRequest.sendCode(phoneCodeBO.getPhone(),
+                phoneCodeBO.getCode(),
+                phoneCodeBO.getAppSystem());
         if(httpResponse.isSuccessful()){
             return true;
         }

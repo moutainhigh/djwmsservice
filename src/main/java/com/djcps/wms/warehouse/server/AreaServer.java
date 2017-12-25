@@ -1,21 +1,21 @@
 package com.djcps.wms.warehouse.server;
 
 
-import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.commons.model.PartnerInfoBo;
-import com.djcps.wms.commons.request.GetCodeRequest;
-import com.djcps.wms.warehouse.model.area.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.SelectAllAreaList;
+import com.djcps.wms.warehouse.model.area.AreaCodeBO;
+import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
+import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.request.WmsForAreaHttpRequest;
 import com.google.gson.Gson;
@@ -67,7 +67,7 @@ public class AreaServer {
         return verifyHttpResult(http);
 	}
 
-	public HttpResult deleteArea(DeleteWarehouseBO param) {
+	public HttpResult deleteArea(DeleteAreaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -78,7 +78,7 @@ public class AreaServer {
         return verifyHttpResult(http);
 	}
 
-	public HttpResult getAreaAllList(SelectAllAreaList param) {
+	public HttpResult getAreaAllList(SelectAllAreaListBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -103,11 +103,14 @@ public class AreaServer {
 	/**
 	 * @title 获取库区编码
 	 * @author  wzy
-	 * @param getCodeBO
-	 * @return
 	 * @create  2017/12/21 17:03
 	 **/
-	public HttpResult getAreaCode(GetCodeBO getCodeBO){
+	public HttpResult getAreaCode(PartnerInfoBO partnerInfoBo,AreaCodeBO areaCode){
+		GetCodeBO getCodeBO=new GetCodeBO();
+		getCodeBO.setCodeType("2");
+		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());
+		getCodeBO.setVersion(partnerInfoBo.getVersion());
+		getCodeBO.setWarehouseId(areaCode.getWarehouseId());
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
 		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);
@@ -118,6 +121,28 @@ public class AreaServer {
 		return verifyHttpResult(http);
 	}
 
+	public HttpResult verifyCode(AddAreaBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = warehouseAreaHttpRequest.verifyCode(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+	}
+	
+	public HttpResult deleteCode(DeleteAreaBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = warehouseAreaHttpRequest.deleteCode(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:

@@ -85,4 +85,26 @@ public interface WmsForLocationHttpRequest {
 	@POST("code/getCode.do")
 	public HTTPResponse getLocationCode(@Body RequestBody rb);
 	
+	/**
+	 * 编码确认
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/verifyCode.do")
+	public HTTPResponse verifyCode(@Body RequestBody rb);
+	
+	/**
+	 * 删除编码
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月22日
+	 */
+	@Headers("content-type:application/json")
+	@POST("code/delCode.do")
+	public HTTPResponse deleteCode(@Body RequestBody rb);
+	
 }

@@ -1,19 +1,19 @@
 package com.djcps.wms.warehouse.service.impl;
 
-import java.util.Map;
-
-import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.commons.model.PartnerInfoBo;
-import com.djcps.wms.warehouse.model.warehouse.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.server.WarehouseServer;
 import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @title:仓库管理业务层
@@ -43,8 +43,14 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 */
 	@Override
 	public Map<String, Object> add(AddWarehouseBO addBean){
-		HttpResult result = warehouseServer.add(addBean);
-		return MsgTemplate.customMsg(result);
+		//编码确认
+		HttpResult verifyCode = warehouseServer.verifyCode(addBean);
+		if(verifyCode.isSuccess()){
+			HttpResult result = warehouseServer.add(addBean);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
 	}
 
 	/**
@@ -73,8 +79,14 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 */
 	@Override
 	public Map<String, Object> delete(DeleteWarehouseBO deleteBean){
-		HttpResult result = warehouseServer.delete(deleteBean);
-		return MsgTemplate.customMsg(result);
+		//删除编码
+		HttpResult deleteCode = warehouseServer.deleteCode(deleteBean);
+		if(deleteCode.isSuccess()){
+			HttpResult result = warehouseServer.delete(deleteBean);
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		}
 	}
 
 	/**
@@ -87,7 +99,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam){
+	public Map<String, Object> getAllList(BaseListBO baseListParam){
 		HttpResult result = warehouseServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}
@@ -159,8 +171,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	@Override
-	public Map<String, Object> getAllWarehouseName(String partnerId) {
-		HttpResult result = warehouseServer.getAllWarehouseName(partnerId);
+	public Map<String, Object> getAllWarehouseName(PartnerInfoBO partnerInfoBean) {
+		HttpResult result = warehouseServer.getAllWarehouseName(partnerInfoBean);
 		return MsgTemplate.customMsg(result);
 	}
 

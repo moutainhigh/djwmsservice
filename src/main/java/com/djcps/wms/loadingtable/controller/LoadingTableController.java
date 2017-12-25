@@ -18,10 +18,10 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
@@ -65,7 +65,7 @@ public class LoadingTableController {
 		try {
 			logger.debug("json : " + json);
 			AddLoadingTableBO loadingTable = gson.fromJson(json, AddLoadingTableBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
 			logger.debug("loadingTable : " + loadingTable.toString());
 			//数据校验
@@ -101,7 +101,7 @@ public class LoadingTableController {
 		try {
 			logger.debug("json : " + json);
 			UpdateLoadingTableBO loadingTable  = gson.fromJson(json, UpdateLoadingTableBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
 			logger.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -136,7 +136,7 @@ public class LoadingTableController {
 		try {
 			logger.debug("json : " + json);
 			DeleteLoadingTableBO loadingTable  = gson.fromJson(json, DeleteLoadingTableBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
 			logger.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -168,7 +168,7 @@ public class LoadingTableController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListParam baseListParam  = gson.fromJson(json, BaseListParam.class);
+			BaseListBO baseListParam  = gson.fromJson(json, BaseListBO.class);
 			return loadingTableService.getAllList(baseListParam);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -243,7 +243,7 @@ public class LoadingTableController {
 		try {
 			logger.debug("json : " + json);
 			IsUseLoadingTableBO loadingTable  = gson.fromJson(json, IsUseLoadingTableBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
 			logger.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -276,7 +276,7 @@ public class LoadingTableController {
 		try {
 			logger.debug("json : " + json);
 			IsUseLoadingTableBO loadingTable  = gson.fromJson(json, IsUseLoadingTableBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
 			logger.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()

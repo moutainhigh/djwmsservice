@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseAddBo;
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * @title:库位新增对象
@@ -14,7 +13,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class AddLocationBO extends BaseAddBo implements Serializable{
+public class AddLocationBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 4254884515508797752L;
 
@@ -84,6 +83,11 @@ public class AddLocationBO extends BaseAddBo implements Serializable{
 	 * 库位承重 kg
 	 */
 	private String bearing;
+	
+	/**
+	 * 编码类型
+	 */
+	private String codeType ;
 
 	public String getWarehouseId() {
 		return warehouseId;
@@ -180,15 +184,21 @@ public class AddLocationBO extends BaseAddBo implements Serializable{
 	public void setBearing(String bearing) {
 		this.bearing = bearing;
 	}
+	
+	public String getCodeType() {
+		return codeType;
+	}
+
+	public void setCodeType(String codeType) {
+		this.codeType = codeType;
+	}
 
 	@Override
 	public String toString() {
 		return "AddLocationBO [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId="
 				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
 				+ ", name=" + name + ", type=" + type + ", length=" + length + ", width=" + width + ", height=" + height
-				+ ", volume=" + volume + ", bearing=" + bearing + "]";
+				+ ", volume=" + volume + ", bearing=" + bearing + ", codeType=" + codeType + "]";
 	}
-
-
 	
 }

@@ -7,15 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.provider.controller.ProviderController;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
+import com.djcps.wms.provider.model.UpdateProviderBO;
 import com.djcps.wms.provider.server.ProviderServer;
 import com.djcps.wms.provider.service.ProviderService;
 import com.google.gson.Gson;
@@ -44,7 +42,7 @@ public class ProviderServiceImpl implements ProviderService {
 	}
 
 	@Override
-	public Map<String, Object> modify(UpdateProviderVO updateBean){
+	public Map<String, Object> modify(UpdateProviderBO updateBean){
 		HttpResult result = providerServer.modify(updateBean);
 		return MsgTemplate.customMsg(result);
 	}
@@ -56,7 +54,7 @@ public class ProviderServiceImpl implements ProviderService {
 	}
 
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam){
+	public Map<String, Object> getAllList(BaseListBO baseListParam){
 		HttpResult result = providerServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}

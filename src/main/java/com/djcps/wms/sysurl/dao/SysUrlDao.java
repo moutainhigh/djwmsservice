@@ -2,10 +2,9 @@ package com.djcps.wms.sysurl.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.djcps.wms.sysurl.model.SysUrlPo;
+import com.djcps.wms.sysurl.model.SysUrlPO;
 
 
 /**
@@ -24,7 +23,7 @@ public interface SysUrlDao {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchInsertSysUrlDao(List<SysUrlPo> sysUrlList);
+	int batchInsertSysUrl(List<SysUrlPO> sysUrlList);
 	
 	/**
 	 * 批量更新
@@ -33,7 +32,7 @@ public interface SysUrlDao {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchUpdateSysUrlDao(List<SysUrlPo> sysUrlList);
+	int batchUpdateSysUrl(List<SysUrlPO> sysUrlList);
 	
 	/**
 	 * 单条更新 
@@ -42,7 +41,7 @@ public interface SysUrlDao {
 	 * @author:zdx
 	 * @date:2017年12月19日
 	 */
-	int updateSysUrlDao(SysUrlPo sysUrl);
+	int updateSysUrl(SysUrlPO sysUrl);
 	
 	/**
 	 * 批量替换,有就更新,没有就新增,需要保证表有唯一索引
@@ -51,7 +50,7 @@ public interface SysUrlDao {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	int batchReplaceSysUrlDao(List<SysUrlPo> sysUrlList);
+	int batchReplaceSysUrl(List<SysUrlPO> sysUrlList);
 	
 	/**
 	 * 获取所有的url
@@ -60,5 +59,5 @@ public interface SysUrlDao {
 	 * @author:zdx
 	 * @date:2017年12月14日
 	 */
-	List<SysUrlPo> getALLSysUrl();
+	List<SysUrlPO> getALLSysUrl();
 }

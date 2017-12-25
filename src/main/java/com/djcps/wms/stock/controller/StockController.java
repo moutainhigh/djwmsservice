@@ -1,6 +1,5 @@
 package com.djcps.wms.stock.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,47 +13,30 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
-import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
-import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
-import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
-import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
-import com.djcps.wms.loadingtable.service.LoadingTableService;
-import com.djcps.wms.provider.model.AddProviderBO;
-import com.djcps.wms.stock.model.AddStock;
-import com.djcps.wms.stock.model.MoveStock;
-import com.djcps.wms.stock.model.OperationRecordBo;
-import com.djcps.wms.stock.model.RecommendLocaBo;
-import com.djcps.wms.stock.model.SelectAreaByOrderId;
-import com.djcps.wms.stock.model.SelectSavedStockAmount;
+import com.djcps.wms.stock.model.AddStockBO;
+import com.djcps.wms.stock.model.MoveStockBO;
+import com.djcps.wms.stock.model.OperationRecordBO;
+import com.djcps.wms.stock.model.RecommendLocaBO;
+import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
+import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
 import com.djcps.wms.stock.service.StockService;
-import com.djcps.wms.warehouse.model.area.CountyBo;
-import com.djcps.wms.warehouse.model.area.ProvinceCityBo;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
 
 /**
- * 入库移库控制层
+ *  入库移库控制层
  * @company:djwms
  * @author:zdx
  * @date:2017年12月20日
@@ -83,12 +65,12 @@ public class StockController {
 	public Map<String, Object> getRecommendLoca(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			RecommendLocaBo param = gson.fromJson(json, RecommendLocaBo.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			RecommendLocaBO param = gson.fromJson(json, RecommendLocaBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<RecommendLocaBo>()
+							new HibernateSupportedValidator<RecommendLocaBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -122,15 +104,15 @@ public class StockController {
 	public Map<String, Object> addStock(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			AddStock param = gson.fromJson(json, AddStock.class);
-			OperationRecordBo operationRecord = param.getOperationRecord();
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			AddStockBO param = gson.fromJson(json, AddStockBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			BeanUtils.copyProperties(partnerInfoBean,operationRecord);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<AddStock>()
+							new HibernateSupportedValidator<AddStockBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					//备注50个字
+					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -147,14 +129,14 @@ public class StockController {
 	public Map<String, Object> moveStock(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			MoveStock param = gson.fromJson(json, MoveStock.class);
-			OperationRecordBo operationRecord = param.getOperationRecord();
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			MoveStockBO param = gson.fromJson(json, MoveStockBO.class);
+			OperationRecordBO operationRecord = param.getOperationRecord();
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			BeanUtils.copyProperties(partnerInfoBean,operationRecord);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<MoveStock>()
+							new HibernateSupportedValidator<MoveStockBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -172,10 +154,10 @@ public class StockController {
 	public Map<String, Object> getSavedStockAmount(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			SelectSavedStockAmount param = gson.fromJson(json, SelectSavedStockAmount.class);
+			SelectSavedStockAmountBO param = gson.fromJson(json, SelectSavedStockAmountBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<SelectSavedStockAmount>()
+							new HibernateSupportedValidator<SelectSavedStockAmountBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -194,10 +176,10 @@ public class StockController {
 		try {
 			logger.debug("json : " + json);
 			//参数就需要订单号和版本号,用这个参数也一样
-			SelectAreaByOrderId param = gson.fromJson(json, SelectAreaByOrderId.class);
+			SelectAreaByOrderIdBO param = gson.fromJson(json, SelectAreaByOrderIdBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<SelectAreaByOrderId>()
+							new HibernateSupportedValidator<SelectAreaByOrderIdBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {

@@ -21,11 +21,11 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.service.WarehouseService;
@@ -62,7 +62,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			AddWarehouseBO param = gson.fromJson(json, AddWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("AddWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -71,17 +71,18 @@ public class WarehouseController {
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
+			param.setCodeType(AppConstant.WAREHOUSE_CODE);
 			return warehouseService.add(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,7 +105,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			UpdateWarehouseBO param = gson.fromJson(json, UpdateWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("PartnerInfoBean : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -113,13 +114,13 @@ public class WarehouseController {
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel().length(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -146,7 +147,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			DeleteWarehouseBO param = gson.fromJson(json, DeleteWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -157,6 +158,7 @@ public class WarehouseController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
+			param.setCodeType(AppConstant.WAREHOUSE_CODE);
 			return warehouseService.delete(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -179,7 +181,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			IsUseWarehouseBO param = gson.fromJson(json, IsUseWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("IsUseWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -212,7 +214,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			IsUseWarehouseBO param = gson.fromJson(json, IsUseWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("IsUseWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -244,7 +246,7 @@ public class WarehouseController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListParam param = gson.fromJson(json, BaseListParam.class);
+			BaseListBO param = gson.fromJson(json, BaseListBO.class);
 			return warehouseService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -317,7 +319,7 @@ public class WarehouseController {
 	@RequestMapping(name="获取所有仓库类型",value = "/getWarehouseType", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseType(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			String str = partnerInfoBean.getPartnerId();
 			//该方法查询只需要传合作方id即可
 			String partnerId = "{\"partnerId\":"+str+"}";
@@ -341,11 +343,11 @@ public class WarehouseController {
 	@RequestMapping(name="获取所有的仓库名称",value = "/getAllWarehouseName", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllWarehouseName(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
-			String str = partnerInfoBean.getPartnerId();
-			//该方法查询只需要传合作方id即可
-			String partnerId = "{\"partnerId\":"+str+"}";
-			return warehouseService.getAllWarehouseName(partnerId);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+//			String str = partnerInfoBean.getPartnerId();
+//			//该方法查询只需要传合作方id即可
+//			String partnerId = "{\"partnerId\":"+str+"}";
+			return warehouseService.getAllWarehouseName(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -365,7 +367,7 @@ public class WarehouseController {
 	public Map<String, Object> getWarehouseCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			GetCodeBO getCodeBO=gson.fromJson(json,GetCodeBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,getCodeBO);
 			return  warehouseService.getWarehouseCode(getCodeBO);
 		} catch (Exception e) {

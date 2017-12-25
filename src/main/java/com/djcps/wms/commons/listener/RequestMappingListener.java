@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import com.djcps.wms.commons.base.RedisClientCluster;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
-import com.djcps.wms.sysurl.model.SysUrlPo;
+import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.djcps.wms.sysurl.service.SysUrlService;
 import com.google.gson.Gson;
 
@@ -52,12 +52,12 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		String  rootName= "Root WebApplicationContext";
 		String displayName = contextRefreshedEvent.getApplicationContext().getParent().getDisplayName();
-		logger.error("------我的父容器为------:"+displayName);
-		logger.error("------容器初始化开始------");
+		logger.info("------我的父容器为------:"+displayName);
+		logger.info("------容器初始化开始------");
 	    try {
-	    	List<SysUrlPo> sysUrlList = new ArrayList<SysUrlPo>();
-	    	List<SysUrlPo> insertList = new ArrayList<SysUrlPo>();
-	    	Map<String,SysUrlPo> sysUrlMap = new HashMap<String,SysUrlPo>();
+	    	List<SysUrlPO> sysUrlList = new ArrayList<SysUrlPO>();
+	    	List<SysUrlPO> insertList = new ArrayList<SysUrlPO>();
+	    	Map<String,SysUrlPO> sysUrlMap = new HashMap<String,SysUrlPO>();
 	    	
 	    	if(rootName.equals(displayName)){
 				Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();  
@@ -67,7 +67,7 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 				    PatternsRequestCondition p = info.getPatternsCondition();  
 				    for (String url : p.getPatterns()) {
 				    	//给属性赋值
-				    	SysUrlPo sysUrl = new SysUrlPo();
+				    	SysUrlPO sysUrl = new SysUrlPO();
 				    	String string = UUID.randomUUID().toString();
 				    	sysUrl.setId(string);
 				    	sysUrl.setUrl(url);
@@ -81,36 +81,36 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 				    }
 				}
 			}
-			List<SysUrlPo> allSysUrl = sysUrlService.getALLSysUrl();
+			List<SysUrlPO> allSysUrl = sysUrlService.getALLSysUrl();
 			if(!ObjectUtils.isEmpty(allSysUrl)){
-				for (SysUrlPo sysUrlPo : allSysUrl) {
+				for (SysUrlPO sysUrlPo : allSysUrl) {
 					redisClientCluster.set(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
 					sysUrlMap.put(sysUrlPo.getUrl(), sysUrlPo);
 				}
 			}else{
 				//为空直接插入
-				sysUrlService.batchInsertSysUrlDao(sysUrlList);
+				sysUrlService.batchInsertSysUrl(sysUrlList);
 				return;
 			}
-			for (SysUrlPo sysUrlPo : sysUrlList) {
-				SysUrlPo sysUrlPo2 = sysUrlMap.get(sysUrlPo.getUrl());
+			for (SysUrlPO sysUrlPo : sysUrlList) {
+				SysUrlPO sysUrlPo2 = sysUrlMap.get(sysUrlPo.getUrl());
 				if(sysUrlPo2==null){
 					//为空表示新增的url
 					insertList.add(sysUrlPo);
 				}else{
 					//不为空表示已存在需要更新
 					sysUrlPo.setId(sysUrlPo2.getId());
-					sysUrlService.updateSysUrlDao(sysUrlPo);
+					sysUrlService.updateSysUrl(sysUrlPo);
 				}
 			}
 			if(!ObjectUtils.isEmpty(insertList)){
-				sysUrlService.batchInsertSysUrlDao(insertList);
+				sysUrlService.batchInsertSysUrl(insertList);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
-	    logger.error("------容器初始化结束------");
+	    logger.info("------容器初始化结束------");
 	}
 
 }

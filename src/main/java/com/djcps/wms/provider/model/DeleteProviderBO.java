@@ -4,9 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseListParam;
-import com.djcps.wms.commons.base.BaseParam;
-import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 
 /**
  * @title:供应商删除对象
@@ -15,7 +13,7 @@ import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class DeleteProviderBO extends BaseUpdateAndDeleteBo implements Serializable{
+public class DeleteProviderBO extends BaseUpdateAndDeleteBO implements Serializable{
 
 	private static final long serialVersionUID = 3019764457554816231L;
 	

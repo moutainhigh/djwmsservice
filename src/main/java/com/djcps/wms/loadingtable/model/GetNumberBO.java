@@ -17,7 +17,7 @@ public class GetNumberBO implements Serializable {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 

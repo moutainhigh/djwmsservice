@@ -1,12 +1,8 @@
 package com.djcps.wms.warehouse.model.area;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
-
-import com.djcps.wms.commons.base.BaseAddBo;
-import com.djcps.wms.commons.base.BaseParam;
 
 /**
  * @title:仓库库区详情新增对象

@@ -6,8 +6,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.djcps.wms.commons.base.BaseAddBo;
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * @title:仓库库区新增对象
@@ -16,7 +15,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class AddAreaBO extends BaseAddBo implements Serializable{
+public class AddAreaBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 7933981734548867239L;
 
@@ -67,6 +66,11 @@ public class AddAreaBO extends BaseAddBo implements Serializable{
 	 */
 	@NotBlank
 	private String cityCode;
+	
+	/**
+	 * 编码类型
+	 */
+	private String codeType;
 	
 	@NotEmpty
 	private List<AddAreaDetailBO> countyList;
@@ -143,12 +147,20 @@ public class AddAreaBO extends BaseAddBo implements Serializable{
 		this.countyList = countyList;
 	}
 
+	public String getCodeType() {
+		return codeType;
+	}
+
+	public void setCodeType(String codeType) {
+		this.codeType = codeType;
+	}
+
 	@Override
 	public String toString() {
 		return "AddAreaBO [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId="
 				+ warehouseAreaId + ", name=" + name + ", provinceName=" + provinceName + ", provinceCode="
-				+ provinceCode + ", cityName=" + cityName + ", cityCode=" + cityCode + ", countyList=" + countyList
-				+ "]";
+				+ provinceCode + ", cityName=" + cityName + ", cityCode=" + cityCode + ", codeType=" + codeType
+				+ ", countyList=" + countyList + "]";
 	}
-
+	
 }

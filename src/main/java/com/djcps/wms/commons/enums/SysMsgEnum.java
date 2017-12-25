@@ -44,8 +44,13 @@ public enum SysMsgEnum implements MsgInterface {
 	/**
 	 * redis中取不到用户URL
 	 */
-	SYSURL_NULL(880007, "非法操作,已记录了你的ip");
+	SYSURL_NULL(880007, "非法操作,已记录了你的ip"),
     
+	/**
+	 * 编码错误,请重新获取
+	 */
+	CODE_ERROE(880009, "编码错误,请重新获取");
+	
     private int code;
     
     private String msg;

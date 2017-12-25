@@ -2,12 +2,11 @@ package com.djcps.wms.provider.service;
 
 import java.util.Map;
 
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBo;
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
-import com.djcps.wms.provider.model.UpdateProviderVO;
+import com.djcps.wms.provider.model.UpdateProviderBO;
 
 /**
  * 供应商业务层
@@ -34,7 +33,7 @@ public interface ProviderService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> modify(UpdateProviderVO updateBean);
+	Map<String, Object> modify(UpdateProviderBO updateBean);
 	
 	/**
 	 * 删除供应商
@@ -54,7 +53,7 @@ public interface ProviderService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getAllList(BaseListParam baseListParam);
+	Map<String, Object> getAllList(BaseListBO baseListParam);
 	
 	/**
 	 * 根据供应商属性模糊查询
