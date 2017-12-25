@@ -2,13 +2,13 @@ package com.djcps.wms.warehouse.service.impl;
 
 import java.util.Map;
 
+import com.djcps.wms.commons.base.BaseListBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
 import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
@@ -102,7 +102,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam){
+	public Map<String, Object> getAllList(BaseListBO baseListParam){
 		HttpResult result = warehouseServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}
@@ -174,13 +174,13 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	@Override
-	public Map<String, Object> getAllWarehouseName(PartnerInfoBo partnerInfoBean) {
+	public Map<String, Object> getAllWarehouseName(PartnerInfoBO partnerInfoBean) {
 		HttpResult result = warehouseServer.getAllWarehouseName(partnerInfoBean);
 		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
-	public Map<String, Object> getWarehouseCode(PartnerInfoBo partnerInfoBo) {
+	public Map<String, Object> getWarehouseCode(PartnerInfoBO partnerInfoBo) {
 		HttpResult result=warehouseServer.getWarehouseCode(partnerInfoBo);
 		return MsgTemplate.customMsg(result);
 	}

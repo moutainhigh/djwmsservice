@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author:zdx
  * @date:2017年12月8日
  */
-public class StreetBo implements Serializable{
+public class StreetBO implements Serializable{
 	
 	private static final long serialVersionUID = -5140531461362068945L;
 	

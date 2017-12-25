@@ -25,7 +25,7 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.google.gson.Gson;
@@ -61,7 +61,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			AddLocationBO param = gson.fromJson(json, AddLocationBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("AddWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -97,7 +97,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			UpdateLocationBO param = gson.fromJson(json, UpdateLocationBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("PartnerInfoBean : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -130,7 +130,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			DeleteLocationBO param = gson.fromJson(json, DeleteLocationBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -165,7 +165,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			SelectAllLocationListBO param = gson.fromJson(json, SelectAllLocationListBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return locationService.getLocationAllList(param);
 		} catch (Exception e) {
@@ -189,7 +189,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return locationService.getLocationByAttribute(param);
 		} catch (Exception e) {
@@ -212,7 +212,7 @@ public class LocationController {
 	public Map<String, Object> getLocationCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			LocationBO param=gson.fromJson(json,LocationBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
@@ -238,7 +238,7 @@ public class LocationController {
 	}
 	
 	/**
-	 * @title:根据库位编码获取库位详细信息
+	 * @title: 根据库位编码获取库位详细信息
 	 * @description:
 	 * @param json
 	 * @param request
@@ -251,7 +251,7 @@ public class LocationController {
 		try {
 			logger.debug("json : " + json);
 			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return locationService.getLocationByCode(param);
 		} catch (Exception e) {

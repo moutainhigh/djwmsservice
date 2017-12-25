@@ -21,7 +21,7 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.stock.model.AddStockBO;
@@ -36,7 +36,7 @@ import com.google.gson.JsonParser;
 
 
 /**
- * 入库移库控制层
+ *  入库移库控制层
  * @company:djwms
  * @author:zdx
  * @date:2017年12月20日
@@ -66,7 +66,7 @@ public class StockController {
 		try {
 			logger.debug("json : " + json);
 			RecommendLocaBO param = gson.fromJson(json, RecommendLocaBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
@@ -105,7 +105,7 @@ public class StockController {
 		try {
 			logger.debug("json : " + json);
 			AddStockBO param = gson.fromJson(json, AddStockBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
@@ -131,7 +131,7 @@ public class StockController {
 			logger.debug("json : " + json);
 			MoveStockBO param = gson.fromJson(json, MoveStockBO.class);
 			OperationRecordBO operationRecord = param.getOperationRecord();
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			BeanUtils.copyProperties(partnerInfoBean,operationRecord);
 			ComplexResult ret = FluentValidator.checkAll().failFast()

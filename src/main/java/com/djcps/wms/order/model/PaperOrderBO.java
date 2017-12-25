@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-
 /**
  * 纸板纸箱对象
  * @company:djwms

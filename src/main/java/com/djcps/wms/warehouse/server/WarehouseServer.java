@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
@@ -76,7 +76,7 @@ public class WarehouseServer {
 	}
 	
 
-	public HttpResult getAllList(BaseListParam baseListParam){
+	public HttpResult getAllList(BaseListBO baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -136,7 +136,7 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getAllWarehouseName(PartnerInfoBo partnerInfoBean) {
+	public HttpResult getAllWarehouseName(PartnerInfoBO partnerInfoBean) {
 		String json = gson.toJson(partnerInfoBean);
 		//将请求参数转化为requestbody格式
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -151,7 +151,7 @@ public class WarehouseServer {
 	 * @author  wzy
 	 * @create  2017/12/21 17:04
 	 **/
-	public HttpResult getWarehouseCode(PartnerInfoBo partnerInfoBo){
+	public HttpResult getWarehouseCode(PartnerInfoBO partnerInfoBo){
 		String str = partnerInfoBo.getPartnerId();
 		String ver=partnerInfoBo.getVersion();
 		GetCodeBO getCodeBO=new GetCodeBO();

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseAddBo;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * 移库对象
@@ -14,7 +14,7 @@ import com.djcps.wms.commons.base.BaseAddBo;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class MoveStockBO extends BaseAddBo implements Serializable{
+public class MoveStockBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 2489810729435810994L;
 	

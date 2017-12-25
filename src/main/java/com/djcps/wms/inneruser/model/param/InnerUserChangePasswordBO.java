@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author Chengw
  * @since 2017/12/5 15:11.
  */
-public class InnerUserChangePasswordPo {
+public class InnerUserChangePasswordBO {
 
     private String token;
 

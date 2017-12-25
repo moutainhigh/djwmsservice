@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.warehouse.model.location.AddLocationBO;
 import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
@@ -95,7 +95,7 @@ public class LocationServer {
 	 * @author  wzy
 	 * @create  2017/12/21 17:04
 	 **/
-	public HttpResult getLocationCode(PartnerInfoBo partnerInfoBo,LocationBO locationBo){
+	public HttpResult getLocationCode(PartnerInfoBO partnerInfoBo,LocationBO locationBo){
 		GetCodeBO getCodeBO=new GetCodeBO();
 		getCodeBO.setCodeType("3");
 		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());

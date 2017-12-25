@@ -5,33 +5,21 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * @title:新增基础对象
- * @description:需要新增的对象,需要继承此对象
+ * @title:删除基础对象
+ * @description:需要删除的对象,都需要继承此对象
  * @company:djwms
  * @author:zdx
  * @date:2017年11月30日
  */
-public class BaseAddBo extends BaseParam implements Serializable{
+public class BaseUpdateAndDeleteBO extends BaseBO implements Serializable{
 	
-	private static final long serialVersionUID = -185610484814897617L;
+	private static final long serialVersionUID = 4726558779577505996L;
 
 	/**
 	 *合作方id
 	 */
 	@NotBlank
 	private String partnerId;
-	
-	/**
-	 * 合作方名称
-	 */
-	@NotBlank
-	private String partnerName;
-	
-	/**
-	 * 合作方所在区域
-	 */
-	@NotBlank
-	private String partnerArea;
 	
 	/**
 	 * 操作人id
@@ -53,22 +41,6 @@ public class BaseAddBo extends BaseParam implements Serializable{
 		this.partnerId = partnerId;
 	}
 
-	public String getPartnerName() {
-		return partnerName;
-	}
-
-	public void setPartnerName(String partnerName) {
-		this.partnerName = partnerName;
-	}
-
-	public String getPartnerArea() {
-		return partnerArea;
-	}
-
-	public void setPartnerArea(String partnerArea) {
-		this.partnerArea = partnerArea;
-	}
-
 	public String getOperatorId() {
 		return operatorId;
 	}
@@ -87,8 +59,7 @@ public class BaseAddBo extends BaseParam implements Serializable{
 
 	@Override
 	public String toString() {
-		return "BaseAddBo [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea=" + partnerArea
-				+ ", operatorId=" + operatorId + ", operator=" + operator + "]";
+		return "BaseDeleteBo [partnerId=" + partnerId + ", operatorId=" + operatorId + ", operator=" + operator + "]";
 	}
 	
 }

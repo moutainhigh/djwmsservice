@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-
 /**
  * 获取库区推荐对象
  * @company:djwms

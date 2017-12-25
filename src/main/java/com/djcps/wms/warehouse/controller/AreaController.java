@@ -23,7 +23,7 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
@@ -33,7 +33,7 @@ import com.djcps.wms.warehouse.model.area.CountyBO;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.ProvinceCityBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
-import com.djcps.wms.warehouse.model.area.StreetBo;
+import com.djcps.wms.warehouse.model.area.StreetBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaDetailBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
@@ -87,7 +87,7 @@ public class AreaController {
 			AddAreaBO addArea = new AddAreaBO();
 			List<AddAreaDetailBO> addDetailList = new ArrayList<AddAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(param,addArea);
 			BeanUtils.copyProperties(partnerInfoBean,addArea);
 			
@@ -95,8 +95,8 @@ public class AreaController {
 			List<CountyBO> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBO>>(){}.getType()); 
 			for (CountyBO areaBo : retList) {
 				String streetListJson = gson.toJson(areaBo.getStreetList());
-				List<StreetBo> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBo>>(){}.getType());
-				for (StreetBo street : streetList) {
+				List<StreetBO> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBO>>(){}.getType());
+				for (StreetBO street : streetList) {
 					AddAreaDetailBO areaDetai = new AddAreaDetailBO();
 					//把仓库编号,库区编号,合作方id赋值
 					BeanUtils.copyProperties(param,areaDetai);
@@ -156,7 +156,7 @@ public class AreaController {
 			UpdateAreaBO updateArea = new UpdateAreaBO();
 			List<UpdateAreaDetailBO> updateDetailList = new ArrayList<UpdateAreaDetailBO>();
 			//用户对象属性赋值
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(param,updateArea);
 			BeanUtils.copyProperties(partnerInfoBean,updateArea);
 			
@@ -164,8 +164,8 @@ public class AreaController {
 			List<CountyBO> retList = gson.fromJson(areaDetailListJson,new TypeToken<List<CountyBO>>(){}.getType()); 
 			for (CountyBO areaBo : retList) {
 				String streetListJson = gson.toJson(areaBo.getStreetList());
-				List<StreetBo> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBo>>(){}.getType());
-				for (StreetBo street : streetList) {
+				List<StreetBO> streetList = gson.fromJson(streetListJson,new TypeToken<List<StreetBO>>(){}.getType());
+				for (StreetBO street : streetList) {
 					UpdateAreaDetailBO areaDetai = new UpdateAreaDetailBO();
 					//把仓库编号,库区编号,合作方id赋值
 					BeanUtils.copyProperties(param,areaDetai);
@@ -210,7 +210,7 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			DeleteAreaBO param = gson.fromJson(json, DeleteAreaBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -244,7 +244,7 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			SelectAllAreaListBO param = gson.fromJson(json, SelectAllAreaListBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return areaService.getAreaAllList(param);
 		} catch (Exception e) {
@@ -296,7 +296,7 @@ public class AreaController {
 	@RequestMapping(name="获取库区编码",value = "/getAreaCode",method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAreaCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			PartnerInfoBo partnerInfoBo=(PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
 			AreaCodeBO param=gson.fromJson(json,AreaCodeBO.class);
 			logger.debug("AreaCode : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()

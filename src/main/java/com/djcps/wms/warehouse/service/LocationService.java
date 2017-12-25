@@ -2,7 +2,7 @@ package com.djcps.wms.warehouse.service;
 
 import java.util.Map;
 
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.warehouse.model.location.*;
 
 
@@ -67,7 +67,7 @@ public interface LocationService {
 	 * @return
 	 * @create  2017/12/22 13:32
 	 **/
-	Map<String,Object> getLocationCode(PartnerInfoBo partnerInfoBo,LocationBO locationBo);
+	Map<String,Object> getLocationCode(PartnerInfoBO partnerInfoBo,LocationBO locationBo);
 
 	/**
 	 * 根据编码获取库位信息

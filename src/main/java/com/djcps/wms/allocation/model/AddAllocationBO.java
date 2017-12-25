@@ -2,7 +2,7 @@ package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
 
-import com.djcps.wms.commons.base.BaseAddBo;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * 订单类型对象
@@ -11,7 +11,7 @@ import com.djcps.wms.commons.base.BaseAddBo;
  * @author:zdx
  * @date:2017年12月8日
  */
-public class AddAllocationBO extends BaseAddBo implements Serializable{
+public class AddAllocationBO extends BaseAddBO implements Serializable{
 	
 	private static final long serialVersionUID = -5680146319503523432L;
 	

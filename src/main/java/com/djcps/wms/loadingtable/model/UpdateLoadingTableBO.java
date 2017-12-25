@@ -2,17 +2,16 @@ package com.djcps.wms.loadingtable.model;
 
 import java.io.Serializable;
 
-
-import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 
 /**
- * @title:修改装车台对象
+ * @title: 修改装车台对象
  * @description:
  * @company:djwms
  * @author:zdx
  * @date:2017年11月27日
  */
-public class UpdateLoadingTableBO extends BaseUpdateAndDeleteBo implements Serializable{
+public class UpdateLoadingTableBO extends BaseUpdateAndDeleteBO implements Serializable{
 	
 	private static final long serialVersionUID = 8863360524886335013L;
 	

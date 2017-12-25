@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseAddBo;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * 入库对象
@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseAddBo;
  * @author:zdx
  * @date:2017年12月22日
  */
-public class AddStockBO extends BaseAddBo implements Serializable{
+public class AddStockBO extends BaseAddBO implements Serializable{
 	
 	private static final long serialVersionUID = 5650542988348663815L;
 	

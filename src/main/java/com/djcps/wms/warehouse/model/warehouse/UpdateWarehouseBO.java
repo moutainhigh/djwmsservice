@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 
 /**
  * @title:仓库修改对象
@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class UpdateWarehouseBO extends BaseUpdateAndDeleteBo implements Serializable{
+public class UpdateWarehouseBO extends BaseUpdateAndDeleteBO implements Serializable{
 
 	private static final long serialVersionUID = 8459493360763354343L;
 	

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
@@ -105,7 +105,7 @@ public class AreaServer {
 	 * @author  wzy
 	 * @create  2017/12/21 17:03
 	 **/
-	public HttpResult getAreaCode(PartnerInfoBo partnerInfoBo,AreaCodeBO areaCode){
+	public HttpResult getAreaCode(PartnerInfoBO partnerInfoBo,AreaCodeBO areaCode){
 		GetCodeBO getCodeBO=new GetCodeBO();
 		getCodeBO.setCodeType("2");
 		getCodeBO.setPartnerId(partnerInfoBo.getPartnerId());

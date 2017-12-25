@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 
 /**
  * 根据订单id获取库位
@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class SelectAreaByOrderIdBO extends BaseParam implements Serializable{
+public class SelectAreaByOrderIdBO extends BaseBO implements Serializable{
 
 	private static final long serialVersionUID = 4690212141709269272L;
 	

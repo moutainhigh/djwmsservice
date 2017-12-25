@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +22,11 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.service.WarehouseService;
@@ -62,7 +63,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			AddWarehouseBO param = gson.fromJson(json, AddWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("AddWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -105,7 +106,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			UpdateWarehouseBO param = gson.fromJson(json, UpdateWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("PartnerInfoBean : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -147,7 +148,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			DeleteWarehouseBO param = gson.fromJson(json, DeleteWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -181,7 +182,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			IsUseWarehouseBO param = gson.fromJson(json, IsUseWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("IsUseWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -214,7 +215,7 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			IsUseWarehouseBO param = gson.fromJson(json, IsUseWarehouseBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("IsUseWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -246,7 +247,7 @@ public class WarehouseController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListParam param = gson.fromJson(json, BaseListParam.class);
+			BaseListBO param = gson.fromJson(json, BaseListBO.class);
 			return warehouseService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -319,7 +320,7 @@ public class WarehouseController {
 	@RequestMapping(name="获取所有仓库类型",value = "/getWarehouseType", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseType(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			String str = partnerInfoBean.getPartnerId();
 			//该方法查询只需要传合作方id即可
 			String partnerId = "{\"partnerId\":"+str+"}";
@@ -343,7 +344,7 @@ public class WarehouseController {
 	@RequestMapping(name="获取所有的仓库名称",value = "/getAllWarehouseName", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllWarehouseName(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 //			String str = partnerInfoBean.getPartnerId();
 //			//该方法查询只需要传合作方id即可
 //			String partnerId = "{\"partnerId\":"+str+"}";
@@ -366,7 +367,7 @@ public class WarehouseController {
 	@RequestMapping(name="获取仓库编码",value = "/getWarehouseCode", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			return  warehouseService.getWarehouseCode(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();

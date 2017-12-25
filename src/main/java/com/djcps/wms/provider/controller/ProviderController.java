@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.base.BaseListBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,11 +19,10 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.base.BaseListParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.provider.model.AddProviderBO;
@@ -64,7 +64,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			AddProviderBO param = gson.fromJson(json, AddProviderBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("AddProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -115,7 +115,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			UpdateProviderBO param = gson.fromJson(json, UpdateProviderBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("UpdateProviderVO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -166,7 +166,7 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			DeleteProviderBO param = gson.fromJson(json, DeleteProviderBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			logger.debug("DeleteProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -198,7 +198,7 @@ public class ProviderController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListParam param = gson.fromJson(json, BaseListParam.class);
+			BaseListBO param = gson.fromJson(json, BaseListBO.class);
 			return providerService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();

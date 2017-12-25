@@ -3,7 +3,7 @@ package com.djcps.wms.warehouse.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.warehouse.model.area.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import com.djcps.wms.warehouse.model.area.CountyBO;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.ProvinceCityBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
-import com.djcps.wms.warehouse.model.area.StreetBo;
+import com.djcps.wms.warehouse.model.area.StreetBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.server.AreaServer;
@@ -134,13 +134,13 @@ public class AreaServiceImpl implements AreaService {
 		if(list.size()!= 0){
 			for (CountyBO countyBo : countyList) {
 				//数据库查出来的街道
-				List<StreetBo> sqlStreetList = gson.fromJson(gson.toJson(countyBo.getStreetList()),new TypeToken<List<StreetBo>>(){}.getType());
+				List<StreetBO> sqlStreetList = gson.fromJson(gson.toJson(countyBo.getStreetList()),new TypeToken<List<StreetBO>>(){}.getType());
 				//以下是从地址服务获取的街道
 				String countyCode = countyBo.getCountyCode();
 				ProvinceCityAreaCodeBO code = new ProvinceCityAreaCodeBO();
 				code.setCode(countyCode);
 				HttpResult streeListByArea = addressServer.getStreeListByArea(code);
-				List<StreetBo> streetList = gson.fromJson(gson.toJson(streeListByArea.getData()),new TypeToken<List<StreetBo>>(){}.getType());
+				List<StreetBO> streetList = gson.fromJson(gson.toJson(streeListByArea.getData()),new TypeToken<List<StreetBO>>(){}.getType());
 				if(sqlStreetList.size() == streetList.size()){
 					countyBo.setCountyStatus("2");
 				}else if(sqlStreetList.size() != streetList.size()){
@@ -158,7 +158,7 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public Map<String, Object> getAreaCode(PartnerInfoBo partnerInfoBo,AreaCodeBO areaCode) {
+	public Map<String, Object> getAreaCode(PartnerInfoBO partnerInfoBo,AreaCodeBO areaCode) {
 		HttpResult httpResult=wareAreaServer.getAreaCode(partnerInfoBo,areaCode);
 		return MsgTemplate.customMsg(httpResult);
 	}

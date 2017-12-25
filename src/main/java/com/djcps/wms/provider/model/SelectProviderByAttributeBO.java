@@ -2,8 +2,7 @@ package com.djcps.wms.provider.model;
 
 import java.io.Serializable;
 
-
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 
 /**
  * @title:根据供应商属性模糊查询获取供应商对象
@@ -12,7 +11,7 @@ import com.djcps.wms.commons.base.BaseListParam;
  * @author:zdx
  * @date:2017年11月29日
  */
-public class SelectProviderByAttributeBO extends BaseListParam implements Serializable{
+public class SelectProviderByAttributeBO extends BaseListBO implements Serializable{
 
 	private static final long serialVersionUID = 7878892531556006961L;
 

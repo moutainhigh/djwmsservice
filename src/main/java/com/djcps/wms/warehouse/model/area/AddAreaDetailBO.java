@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-
 /**
  * @title:仓库库区详情新增对象
  * @description:

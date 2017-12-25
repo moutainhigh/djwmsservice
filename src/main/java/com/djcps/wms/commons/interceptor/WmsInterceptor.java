@@ -19,7 +19,7 @@ import com.djcps.wms.commons.base.RedisClientCluster;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.model.result.UserInfoVo;
@@ -95,7 +95,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		}
 		UserInfoVo userInfo = innerUserService.getInnerUserInfoFromRedis(token);
 		if(userInfo!=null){
-			PartnerInfoBo partner = new PartnerInfoBo();
+			PartnerInfoBO partner = new PartnerInfoBO();
 			partner.setOperator(userInfo.getUname());
 			partner.setOperatorId(userInfo.getUids());
 			partner.setPartnerId(userInfo.getUcompany());

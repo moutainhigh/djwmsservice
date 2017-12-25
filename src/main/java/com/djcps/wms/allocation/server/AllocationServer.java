@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.request.WmsForAllocationHttpRequest;
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -32,9 +32,9 @@ public class AllocationServer {
 	@Autowired
 	private WmsForAllocationHttpRequest allocationHttpRequest;
 	
-	public HttpResult getOrderType(BaseParam baseParam) {
+	public HttpResult getOrderType(BaseBO baseBO) {
 		//将请求参数转化为requestbody格式
-		String json = gson.toJson(baseParam);
+		String json = gson.toJson(baseBO);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
@@ -42,7 +42,7 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getChooseAllocation(PartnerInfoBo partnern) {
+	public HttpResult getChooseAllocation(PartnerInfoBO partnern) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(partnern);
 		System.out.println("---http请求参数转化为json格式---:"+json);

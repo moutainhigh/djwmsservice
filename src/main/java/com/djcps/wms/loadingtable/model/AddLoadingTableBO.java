@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseAddBo;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * @title:新增装车台对象
@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseAddBo;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class AddLoadingTableBO extends BaseAddBo implements Serializable{
+public class AddLoadingTableBO extends BaseAddBO implements Serializable{
 	
 	private static final long serialVersionUID = 8245001644412433835L;
 

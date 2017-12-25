@@ -3,7 +3,7 @@ package com.djcps.wms.warehouse.model.location;
 import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
-import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 
 /**
  * @title:删除仓库对象
@@ -12,7 +12,7 @@ import com.djcps.wms.commons.base.BaseUpdateAndDeleteBo;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class DeleteLocationBO extends BaseUpdateAndDeleteBo implements Serializable{
+public class DeleteLocationBO extends BaseUpdateAndDeleteBO implements Serializable{
 	
 	private static final long serialVersionUID = 8845311354628210086L;
 	/**

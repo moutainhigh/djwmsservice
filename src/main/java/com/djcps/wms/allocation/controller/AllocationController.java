@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.base.BaseBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -21,9 +22,8 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
-import com.djcps.wms.commons.base.BaseParam;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.model.PartnerInfoBo;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.google.gson.Gson;
 
@@ -58,8 +58,8 @@ public class AllocationController {
 	public Map<String, Object> getOrderType(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseParam baseParam = new BaseParam();
-			return allocationService.getOrderType(baseParam);
+			BaseBO baseBO = new BaseBO();
+			return allocationService.getOrderType(baseBO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -79,7 +79,7 @@ public class AllocationController {
 	public Map<String, Object> getChooseAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			return allocationService.getChooseAllocation(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +102,7 @@ public class AllocationController {
 		try {
 			logger.debug("json : " + json);
 			AddAllocationBO allocation = gson.fromJson(json, AddAllocationBO.class);
-			PartnerInfoBo partnerInfoBean = (PartnerInfoBo) request.getAttribute("partnerInfo");
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,allocation);
 			logger.debug("loadingTable : " + allocation.toString());
 			//数据校验

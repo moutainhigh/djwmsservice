@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.djcps.wms.commons.base.BaseListParam;
+import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
@@ -57,7 +57,7 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 	}
 
 	@Override
-	public Map<String, Object> getAllList(BaseListParam baseListParam){
+	public Map<String, Object> getAllList(BaseListBO baseListParam){
 		HttpResult result = loadingTableServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 
 /**
  * @title:仓库唯一标识查询对象
@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class SelectAreaByIdBO extends BaseParam implements Serializable{
+public class SelectAreaByIdBO extends BaseBO implements Serializable{
 
 	private static final long serialVersionUID = 5667965468953896917L;
 	/**

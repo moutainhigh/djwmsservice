@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseParam;
+import com.djcps.wms.commons.base.BaseBO;
 
 /**
  * @title:根据编号查询装车台对象
@@ -13,7 +13,7 @@ import com.djcps.wms.commons.base.BaseParam;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class SelectLoadingTableByIdBO extends BaseParam implements Serializable{
+public class SelectLoadingTableByIdBO extends BaseBO implements Serializable{
 
 	private static final long serialVersionUID = 631699184714543761L;
 	
