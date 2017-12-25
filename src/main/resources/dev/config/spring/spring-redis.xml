@@ -31,8 +31,17 @@
         <!--表示一个对象至少停留在idle状态的最短时间 毫秒数 -->
         <property name="minEvictableIdleTimeMillis" value="5000" />
     </bean>
+    
+	<!-- 	集群redis -->
+	<bean class="com.djcps.wms.commons.base.RedisClientCluster" id="redisClientCluster">
+		<property name="jedisCluster" ref="jedisCluster"/>
+	</bean>
 	
-	<bean class="com.djcps.wms.commons.base.RedisClientCluster" id="redisClientCluster"></bean>
+	<!-- 	单机redis -->
+	<bean class="com.djcps.wms.commons.base.RedisClientSingle" id="redisClientSingle">
+		<property name="jedisPool" ref="userJedisPool"/>
+	</bean>
+	
     <bean class="redis.clients.jedis.JedisCluster" id="jedisCluster">
         <constructor-arg>
             <set>
@@ -69,7 +78,7 @@
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
     </bean>
 
-    <!--Redis 内部统一登录用户信息、内部URL权限-->
+   <!--Redis 内部统一登录用户信息、内部URL权限-->
     <bean id="userJedisPool" class="redis.clients.jedis.JedisPool">
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"/>
         <constructor-arg name="host" value="${redis.user.host}"/>
@@ -78,6 +87,5 @@
         <constructor-arg name="password" value="${redis.user.password}"/>
         <constructor-arg name="database" value="${redis.userJedisPool.database}"/>
     </bean>
-
 
 </beans>

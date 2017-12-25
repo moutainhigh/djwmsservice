@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import com.djcps.wms.commons.base.RedisClient;
 import com.djcps.wms.commons.base.RedisClientCluster;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.sysurl.model.SysUrlPO;
@@ -42,7 +44,8 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 	private SysUrlService sysUrlService;
 	
 	@Autowired
-	RedisClientCluster redisClientCluster;
+	@Qualifier("redisClientCluster")
+	RedisClient redisClient;
 	
 	private static final Logger logger = LoggerFactory.getLogger(RequestMappingListener.class);
 	
@@ -84,7 +87,7 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 			List<SysUrlPO> allSysUrl = sysUrlService.getALLSysUrl();
 			if(!ObjectUtils.isEmpty(allSysUrl)){
 				for (SysUrlPO sysUrlPo : allSysUrl) {
-					redisClientCluster.set(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
+					redisClient.set(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
 					sysUrlMap.put(sysUrlPo.getUrl(), sysUrlPo);
 				}
 			}else{
