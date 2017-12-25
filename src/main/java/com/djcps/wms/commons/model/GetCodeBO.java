@@ -1,7 +1,7 @@
 package com.djcps.wms.commons.model;
 
 import org.hibernate.validator.constraints.NotBlank;
-import com.djcps.wms.commons.base.BaseAddBo;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 import java.io.Serializable;
 
@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author  wzy
  * @create  2017/12/20 17:17
  **/
-public class GetCodeBO extends BaseAddBo implements Serializable {
+public class GetCodeBO extends BaseAddBO implements Serializable {
     private static final long serialVersionUID = -5482024471175235674L;
     /**
      * 编码类型 1 仓库编码 2 库区编码 3 库位编码
