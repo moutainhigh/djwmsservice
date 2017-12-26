@@ -119,7 +119,7 @@ public class InnerUserServiceImpl implements InnerUserService {
     @Override
     public String exchangeToken(String onceToken) {
         String token = innerUserServer.exchangeToken(onceToken);
-        if(StringUtils.isNotBlank(token)){
+        if(StringUtils.isBlank(token)){
             return onceToken;
         }
         return token;
