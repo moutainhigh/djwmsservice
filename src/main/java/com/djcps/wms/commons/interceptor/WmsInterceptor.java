@@ -93,10 +93,10 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		if(userInfo!=null){
 			//toke是否过期,过期重新设置过期时间
 			if(redisClient.ttl(token)>=0){
-				redisClient.expire(token, AppConstant.TOKEN_EFFECTIVE_TIME);
+				redisClient.expire(token,ParamsConfig.COOKIE_TIMEOUT);
 			}
 			//设置cook时间
-			CookiesUtil.setCookie(response,"token",token, AppConstant.TOKEN_EFFECTIVE_TIME);
+			CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME,token,ParamsConfig.COOKIE_TIMEOUT);
 			//给合作方属性赋值
 			PartnerInfoBO partner = new PartnerInfoBO();
 			partner.setOperator(userInfo.getUname());

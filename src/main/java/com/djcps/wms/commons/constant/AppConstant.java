@@ -44,8 +44,4 @@ public class AppConstant {
      */
     public static final String WAREHOUSE_AREA_LOCA_CODE ="3";
     
-    /**
-     * token过期时间30分钟
-     */
-    public static final Integer TOKEN_EFFECTIVE_TIME = 1800;
 }
