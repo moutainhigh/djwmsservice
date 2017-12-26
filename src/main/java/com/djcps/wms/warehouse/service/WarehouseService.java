@@ -1,10 +1,11 @@
 package com.djcps.wms.warehouse.service;
 
-import java.util.Map;
-
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
+
+import java.util.Map;
 
 
 /**
@@ -117,10 +118,10 @@ public interface WarehouseService {
 	/**
 	 * 获取仓库编码
 	 * @author  wzy
-	 * @param partnerInfoBo
+	 * @param getCodeBO
 	 * @return
 	 * @create  2017/12/22 13:33
 	 **/
-	Map<String,Object> getWarehouseCode(PartnerInfoBO partnerInfoBo);
+	Map<String,Object> getWarehouseCode(GetCodeBO getCodeBO);
 
 }

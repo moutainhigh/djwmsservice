@@ -41,7 +41,7 @@ public class WarehouseServer {
 
 	@Autowired
 	private GetCodeRequest getCodeRequest;
-	
+
 	public HttpResult add(AddWarehouseBO addBean){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(addBean);
@@ -149,16 +149,10 @@ public class WarehouseServer {
 	/**
 	 * @title 获取仓库编码
 	 * @author  wzy
+	 * @param getCodeBO
 	 * @create  2017/12/21 17:04
 	 **/
-	public HttpResult getWarehouseCode(PartnerInfoBO partnerInfoBo){
-		String str = partnerInfoBo.getPartnerId();
-		String ver=partnerInfoBo.getVersion();
-		GetCodeBO getCodeBO=new GetCodeBO();
-		getCodeBO.setCodeType("1");
-		getCodeBO.setPartnerId(str);
-		getCodeBO.setVersion(ver);
-
+	public HttpResult getWarehouseCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
 		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);
@@ -168,7 +162,7 @@ public class WarehouseServer {
 		HTTPResponse http=getCodeRequest.getCode(rb);
 		return verifyHttpResult(http);
 	}
-	
+
 	public HttpResult verifyCode(AddWarehouseBO addBean) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(addBean);
@@ -179,7 +173,7 @@ public class WarehouseServer {
         //校验请求是否成功
         return verifyHttpResult(http);
 	}
-	
+
 	public HttpResult deleteCode(DeleteWarehouseBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
@@ -190,7 +184,7 @@ public class WarehouseServer {
         //校验请求是否成功
         return verifyHttpResult(http);
 	}
-	
+
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:

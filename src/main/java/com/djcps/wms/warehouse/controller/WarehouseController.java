@@ -1,13 +1,21 @@
 package com.djcps.wms.warehouse.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
-
+import com.baidu.unbiz.fluentvalidator.ComplexResult;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import com.baidu.unbiz.fluentvalidator.ResultCollectors;
+import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
+import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
+import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.warehouse.*;
+import com.djcps.wms.warehouse.service.WarehouseService;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -17,20 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import com.baidu.unbiz.fluentvalidator.ComplexResult;
-import com.baidu.unbiz.fluentvalidator.FluentValidator;
-import com.baidu.unbiz.fluentvalidator.ResultCollectors;
-import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.djcps.wms.warehouse.service.WarehouseService;
-import com.google.gson.Gson;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.Map;
 
 /**
  * @title:仓库管理控制层
@@ -367,8 +364,10 @@ public class WarehouseController {
 	@RequestMapping(name="获取仓库编码",value = "/getWarehouseCode", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
+			GetCodeBO getCodeBO=gson.fromJson(json,GetCodeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			return  warehouseService.getWarehouseCode(partnerInfoBean);
+			BeanUtils.copyProperties(partnerInfoBean,getCodeBO);
+			return  warehouseService.getWarehouseCode(getCodeBO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

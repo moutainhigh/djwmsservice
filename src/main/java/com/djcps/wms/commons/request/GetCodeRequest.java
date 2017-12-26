@@ -20,7 +20,7 @@ public interface GetCodeRequest {
     /**
      * 获取编码统一接口
      * @author  wzy
-     * @param
+     * @param rb
      * @return
      * @create  2017/12/22 13:43
      **/

@@ -1,24 +1,19 @@
 package com.djcps.wms.warehouse.service.impl;
 
-import java.util.Map;
-
 import com.djcps.wms.commons.base.BaseListBO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.warehouse.model.warehouse.AddWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.DeleteWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.IsUseWarehouseBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByAttributeBO;
-import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-import com.djcps.wms.warehouse.model.warehouse.UpdateWarehouseBO;
+import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.server.WarehouseServer;
 import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @title:仓库管理业务层
@@ -34,6 +29,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	
 	@Autowired
 	private WarehouseServer warehouseServer;
+
+
 
 	/**
 	 * @title:新增仓库
@@ -180,8 +177,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	@Override
-	public Map<String, Object> getWarehouseCode(PartnerInfoBO partnerInfoBo) {
-		HttpResult result=warehouseServer.getWarehouseCode(partnerInfoBo);
+	public Map<String, Object> getWarehouseCode(GetCodeBO getCodeBO) {
+		HttpResult result=warehouseServer.getWarehouseCode(getCodeBO);
 		return MsgTemplate.customMsg(result);
 	}
 }
