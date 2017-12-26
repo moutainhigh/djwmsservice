@@ -70,15 +70,6 @@ public interface AreaService {
 	Map<String, Object> getAreaById(SelectWarehouseByIdBO param);
 	
 	/**
-	 * 推荐库位
-	 * @param location
-	 * @return
-	 * @author:zdx
-	 * @date:2017年12月18日
-	 */
-	Map<String, Object> getRecommendLoca(String location);
-
-	/**
 	 * 获取库区编码
 	 * @author  wzy
 	 * @param getCodeBO

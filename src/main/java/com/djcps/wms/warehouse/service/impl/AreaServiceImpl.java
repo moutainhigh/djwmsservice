@@ -162,10 +162,4 @@ public class AreaServiceImpl implements AreaService {
 		return MsgTemplate.customMsg(httpResult);
 	}
 
-    @Override
-    public Map<String, Object> getRecommendLoca(String location) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }
