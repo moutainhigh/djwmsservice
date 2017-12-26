@@ -1,14 +1,19 @@
 package com.djcps.wms.warehouse.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
+import com.baidu.unbiz.fluentvalidator.ComplexResult;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import com.baidu.unbiz.fluentvalidator.ResultCollectors;
+import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.model.location.*;
 import com.djcps.wms.warehouse.service.LocationService;
-
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,17 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baidu.unbiz.fluentvalidator.ComplexResult;
-import com.baidu.unbiz.fluentvalidator.FluentValidator;
-import com.baidu.unbiz.fluentvalidator.ResultCollectors;
-import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
-import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
-import com.google.gson.Gson;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.Map;
 
 /**
  * @title:库位管理控制层
@@ -212,48 +209,18 @@ public class LocationController {
 	public Map<String, Object> getLocationCode(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			LocationBO param=gson.fromJson(json,LocationBO.class);
+			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
+            PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<LocationBO>()
+							new HibernateSupportedValidator<GetCodeBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-
-			GetCodeBO getCodeBO=new GetCodeBO();
-			getCodeBO.setCodeType("3");
-			getCodeBO.setPartnerId(partnerInfoBean.getPartnerId());
-			getCodeBO.setVersion(partnerInfoBean.getVersion());
-			getCodeBO.setWarehouseId(param.getWarehouseId());
-			getCodeBO.setWarehouseAreaId(param.getWarehouseAreaId());
-			return locationService.getLocationCode(partnerInfoBean,param);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
-		}
-	}
-	
-	/**
-	 * @title: 根据库位编码获取库位详细信息
-	 * @description:
-	 * @param json
-	 * @param request
-	 * @return
-	 * @author:zdx
-	 * @date:2017年11月22日
-	 */
-	@RequestMapping(name="根据库位编码获取库位详细信息",value = "/getLocationByCode", method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> getLocationByCode(@RequestBody(required = false) String json, HttpServletRequest request) {
-		try {
-			logger.debug("json : " + json);
-			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
-			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			BeanUtils.copyProperties(partnerInfoBean,param);
-			return locationService.getLocationByCode(param);
+			return locationService.getLocationCode(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

@@ -3,8 +3,7 @@ package com.djcps.wms.warehouse.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.warehouse.model.area.*;
+import com.djcps.wms.commons.model.GetCodeBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -129,7 +128,7 @@ public class AreaServiceImpl implements AreaService {
 	public Map<String, Object> getAreaById(SelectWarehouseByIdBO param){
 		HttpResult result = wareAreaServer.getAreaById(param);
 		ProvinceCityBO provinceCity = gson.fromJson(gson.toJson(result.getData()), ProvinceCityBO.class);
-		List<CountyBO> countyList = gson.fromJson(gson.toJson(provinceCity.getCountyList()),new TypeToken<List<CountyBO>>(){}.getType()); 
+		List<CountyBO> countyList = gson.fromJson(gson.toJson(provinceCity.getCountyList()),new TypeToken<List<CountyBO>>(){}.getType());
 		List list = provinceCity.getCountyList();
 		if(list.size()!= 0){
 			for (CountyBO countyBo : countyList) {
@@ -158,8 +157,8 @@ public class AreaServiceImpl implements AreaService {
 	}
 
 	@Override
-	public Map<String, Object> getAreaCode(PartnerInfoBO partnerInfoBo,AreaCodeBO areaCode) {
-		HttpResult httpResult=wareAreaServer.getAreaCode(partnerInfoBo,areaCode);
+	public Map<String, Object> getAreaCode(GetCodeBO getCodeBO) {
+		HttpResult httpResult=wareAreaServer.getAreaCode(getCodeBO);
 		return MsgTemplate.customMsg(httpResult);
 	}
 

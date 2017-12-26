@@ -2,14 +2,13 @@ package com.djcps.wms.warehouse.service;
 
 import java.util.Map;
 
-import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
-import com.djcps.wms.warehouse.model.area.AreaCodeBO;
+
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
-
 
 /**
  * 仓库库区业务层
@@ -82,10 +81,9 @@ public interface AreaService {
 	/**
 	 * 获取库区编码
 	 * @author  wzy
-	 * @param partnerInfoBo
-	 * @param areaCode
+	 * @param getCodeBO
 	 * @return
 	 * @create  2017/12/20 12:59
 	 **/
-	Map<String,Object> getAreaCode(PartnerInfoBO partnerInfoBo,AreaCodeBO areaCode);
+	Map<String,Object> getAreaCode(GetCodeBO getCodeBO);
 }

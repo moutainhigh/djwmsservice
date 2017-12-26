@@ -1,6 +1,7 @@
 package com.djcps.wms.commons.model;
 
 import org.hibernate.validator.constraints.NotBlank;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 import java.io.Serializable;
 
@@ -14,25 +15,13 @@ import java.io.Serializable;
  * @author  wzy
  * @create  2017/12/20 17:17
  **/
-public class GetCodeBO implements Serializable {
+public class GetCodeBO extends BaseAddBO implements Serializable {
     private static final long serialVersionUID = -5482024471175235674L;
     /**
      * 编码类型 1 仓库编码 2 库区编码 3 库位编码
      */
     @NotBlank
     private String codeType;
-
-    /**
-     * 合作方id
-     */
-    @NotBlank
-    private String partnerId;
-
-    /**
-     * 版本号
-     */
-    @NotBlank
-    private String version;
 
     /**
      * 仓库编码
@@ -52,21 +41,6 @@ public class GetCodeBO implements Serializable {
         this.codeType = codeType;
     }
 
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
 
     public String getWarehouseId() {
         return warehouseId;
@@ -88,8 +62,6 @@ public class GetCodeBO implements Serializable {
     public String toString() {
         return "GetCodeBO{" +
                 "codeType='" + codeType + '\'' +
-                ", partnerId='" + partnerId + '\'' +
-                ", version='" + version + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
                 ", warehouseAreaId='" + warehouseAreaId + '\'' +
                 '}';
