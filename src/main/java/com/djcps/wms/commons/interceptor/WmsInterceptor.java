@@ -2,7 +2,6 @@ package com.djcps.wms.commons.interceptor;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.djcps.wms.commons.base.RedisClient;
-import com.djcps.wms.commons.base.RedisClientCluster;
 import com.djcps.wms.commons.config.ParamsConfig;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -25,11 +25,9 @@ import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.model.result.UserInfoVo;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.sysurl.model.SysUrlPO;
-import com.djcps.wms.sysurl.service.SysUrlService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
-import redis.clients.jedis.Jedis;
 
 /**
  * @title:wms权限控制拦截器
@@ -43,10 +41,8 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	private static final Logger logger = LoggerFactory.getLogger(WmsInterceptor.class);
 	
 	@Autowired
-	RedisClientCluster redisClientCluster;
-	
-	@Autowired 
-	private SysUrlService sysUrlService;
+	@Qualifier("redisClientCluster")
+	RedisClient redisClient;
 	
 	@Autowired
     private InnerUserService innerUserService;
@@ -69,7 +65,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		url = url.substring(contextPath.length());
 		//字符串分割去除.do
 		url = url.substring(0, url.indexOf("."));
-		String json = redisClientCluster.get(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+url);
+		String json = redisClient.get(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+url);
 		SysUrlPO sysUrl = gson.fromJson(json,SysUrlPO.class);
 		//取不到url
 		if(sysUrl==null){
@@ -95,6 +91,13 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		}
 		UserInfoVo userInfo = innerUserService.getInnerUserInfoFromRedis(token);
 		if(userInfo!=null){
+			//toke是否过期,过期重新设置过期时间
+			if(redisClient.ttl(token)>=0){
+				redisClient.expire(token, AppConstant.TOKEN_EFFECTIVE_TIME);
+			}
+			//设置cook时间
+			CookiesUtil.setCookie(response,"token",token, AppConstant.TOKEN_EFFECTIVE_TIME);
+			//给合作方属性赋值
 			PartnerInfoBO partner = new PartnerInfoBO();
 			partner.setOperator(userInfo.getUname());
 			partner.setOperatorId(userInfo.getUids());

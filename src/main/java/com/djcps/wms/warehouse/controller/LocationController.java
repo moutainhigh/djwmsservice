@@ -228,4 +228,28 @@ public class LocationController {
 		}
 	}
 	
+	/**
+	 * @title: 根据库位编码获取库位详细信息
+	 * @description:
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2017年11月22日
+	 */
+	@RequestMapping(name="根据库位编码获取库位详细信息",value = "/getLocationByCode", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getLocationByCode(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			SelectLocationByAttributeBO param = gson.fromJson(json, SelectLocationByAttributeBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			return locationService.getLocationByCode(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
 }
