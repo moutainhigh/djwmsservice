@@ -201,7 +201,7 @@ public class InnerUserController {
                     if(StringUtils.isNotBlank(userExchangeTokenVo.getToken())){
                         if(innerUserService.setUserCookie(userExchangeTokenVo.getToken(),response)){
                             UserInfoVo userInfoVo = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVo.getToken());
-                            MsgTemplate.successMsg(userInfoVo);
+                            return MsgTemplate.successMsg(userInfoVo);
                         }
                     }
                 }
