@@ -42,7 +42,6 @@
 		<property name="jedisPool" ref="userJedisPool"/>
 	</bean>
 
-    <bean class="com.djcps.wms.commons.base.RedisClientCluster" id="redisClientCluster"></bean>
     <bean class="redis.clients.jedis.JedisCluster" id="jedisCluster">
         <constructor-arg>
             <set>

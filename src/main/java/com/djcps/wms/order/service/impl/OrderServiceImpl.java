@@ -105,7 +105,11 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Map<String, Object> getOrderByOrderId(OrderIdBO param) {
 		PaperOrderBO PaperOrder1 = new PaperOrderBO();
-		PaperOrder1.setOrderId("0000");
+		if(param.getOrderId().equals("6666")){
+			PaperOrder1.setOrderId("6666");
+		}else{
+			PaperOrder1.setOrderId("0000");
+		}
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 		List list = new ArrayList<>();
 		list.add(PaperOrder1);

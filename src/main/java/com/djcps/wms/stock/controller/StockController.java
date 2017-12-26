@@ -130,10 +130,8 @@ public class StockController {
 		try {
 			logger.debug("json : " + json);
 			MoveStockBO param = gson.fromJson(json, MoveStockBO.class);
-			OperationRecordBO operationRecord = param.getOperationRecord();
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			BeanUtils.copyProperties(partnerInfoBean,operationRecord);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<MoveStockBO>()

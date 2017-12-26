@@ -24,7 +24,7 @@ public enum SysMsgEnum implements MsgInterface {
     /**
      * 系统异常，服务器报错
      */
-    SYS_EXCEPTION(880003, "系统异常,请稍后在试"),
+    SYS_EXCEPTION(880003, "系统异常,请稍后再试"),
     
     /**
      * token过期或未登入
