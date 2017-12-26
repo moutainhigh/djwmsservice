@@ -17,13 +17,12 @@
         <!-- 统一消息推送服务-->
         <property name="messageServer" value="http://192.168.10.200/djmsgpushserver/" />
         <!-- wms服务端 -->
-      	<!--<property name="wmsServer" value="http://192.168.12.71:8080/djwmsserver/" />-->
-     	  <property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/>
-          <property name="numberServer" value="http://192.168.10.200:80/djnumserver/"/>
+      <!-- 	<property name="wmsServer" value="http://192.168.12.71:8080/djwmsserver/" /> -->
+     	 <property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/> 
+     	<!-- 编号服务 -->
+        <property name="numberServer" value="http://192.168.10.200:80/djnumserver/"/>
         <!-- 地址服务 -->
-        <!-- <property name="addressServer"  value="http://192.168.10.200/djaddressserver/"/> -->
-       <!--  <property name="addressServer"  value="http://172.16.0.30:8080/"/> -->
-        <property name="addressServer"  value="http://172.16.0.100:8080/"/>
+        <property name="addressServer"  value="http://192.168.10.200/djaddressserver/"/>
         <!-- 内部用户服务 -->
         <property name="innerUserServer" value="http://192.168.10.200/djauth/" />
         <!-- 高德地图Web服务 -->

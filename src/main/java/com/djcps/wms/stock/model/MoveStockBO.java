@@ -59,10 +59,6 @@ public class MoveStockBO extends BaseAddBO implements Serializable{
 	 */
 	@NotBlank
 	private String warehouseLocName;
-	/**
-	 * 操作记录信息
-	 */
-	private OperationRecordBO operationRecord;
 	
 	public String getOrderId() {
 		return orderId;
@@ -112,18 +108,12 @@ public class MoveStockBO extends BaseAddBO implements Serializable{
 	public void setWarehouseLocName(String warehouseLocName) {
 		this.warehouseLocName = warehouseLocName;
 	}
-	public OperationRecordBO getOperationRecord() {
-		return operationRecord;
-	}
-	public void setOperationRecord(OperationRecordBO operationRecord) {
-		this.operationRecord = operationRecord;
-	}
 	@Override
 	public String toString() {
-		return "MoveStock [orderId=" + orderId + ", amountSave=" + amountSave + ", warehouseAreaId=" + warehouseAreaId
+		return "MoveStockBO [orderId=" + orderId + ", amountSave=" + amountSave + ", warehouseAreaId=" + warehouseAreaId
 				+ ", originalWarehouseAreaId=" + originalWarehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
 				+ ", warehouseLocId=" + warehouseLocId + ", originalWarehouseLocId=" + originalWarehouseLocId
-				+ ", warehouseLocName=" + warehouseLocName + ", operationRecord=" + operationRecord + "]";
+				+ ", warehouseLocName=" + warehouseLocName + "]";
 	}
 
 }

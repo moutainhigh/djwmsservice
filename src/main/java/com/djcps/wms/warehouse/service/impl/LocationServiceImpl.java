@@ -10,6 +10,7 @@ import com.djcps.wms.warehouse.service.LocationService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -84,8 +85,13 @@ public class LocationServiceImpl implements LocationService {
         HttpResult result = locationServer.getLocationByAttribute(param);
         Map map = (Map) result.getData();
         ArrayList list = (ArrayList) map.get("result");
-        Object object = list.get(0);
-        result.setData(object);
-        return MsgTemplate.customMsg(result);
+        if(!ObjectUtils.isEmpty(list)){
+        	Object object = list.get(0);
+            result.setData(object);
+            return MsgTemplate.customMsg(result);
+        }else{
+        	result.setData(null);
+        	return MsgTemplate.customMsg(result);
+        }
     }
 }
