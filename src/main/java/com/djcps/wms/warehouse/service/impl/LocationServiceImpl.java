@@ -4,10 +4,15 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
 import com.djcps.wms.warehouse.model.location.*;
 import com.djcps.wms.warehouse.server.LocationServer;
 import com.djcps.wms.warehouse.service.LocationService;
 import com.google.gson.Gson;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -25,6 +30,8 @@ import java.util.Map;
 @Service
 public class LocationServiceImpl implements LocationService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(LocationServiceImpl.class);
+	
 	private Gson gson = new Gson();
 	
 	@Autowired
@@ -39,6 +46,9 @@ public class LocationServiceImpl implements LocationService {
 			HttpResult result = locationServer.addLocation(param);
 			return MsgTemplate.customMsg(result);
 		}else{
+			DeleteLocationBO deleteLocation = new DeleteLocationBO();
+			BeanUtils.copyProperties(param, deleteLocation);
+			HttpResult deleteCode = locationServer.deleteCode(deleteLocation);
 			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
 		}
 	}
@@ -51,14 +61,18 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Map<String, Object> deleteLocation(DeleteLocationBO param) {
+		HttpResult result = locationServer.deleteLocation(param);
 		//删除编码
-		HttpResult deleteCode = locationServer.deleteCode(param);
-		if(deleteCode.isSuccess()){
-			HttpResult result = locationServer.deleteLocation(param);
-			return MsgTemplate.customMsg(result);
-		}else{
-			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		if(result.isSuccess()){
+			HttpResult deleteCode = locationServer.deleteCode(param);
+			if(deleteCode.isSuccess()){
+				return MsgTemplate.customMsg(deleteCode);
+			}else{
+				logger.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
+				return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+			}
 		}
+		return MsgTemplate.customMsg(result);
 
 	}
 

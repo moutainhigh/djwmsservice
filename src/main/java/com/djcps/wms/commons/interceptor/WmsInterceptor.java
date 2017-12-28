@@ -45,6 +45,10 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	RedisClient redisClient;
 	
 	@Autowired
+	@Qualifier("redisClientSingle")
+	RedisClient userRedisClient;
+	
+	@Autowired
     private InnerUserService innerUserService;
 	
 	private Gson gson = new Gson();
@@ -92,8 +96,8 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		UserInfoVo userInfo = innerUserService.getInnerUserInfoFromRedis(token);
 		if(userInfo!=null){
 			//toke是否过期,过期重新设置过期时间
-			if(redisClient.ttl(token)>=0){
-				redisClient.expire(token,ParamsConfig.COOKIE_TIMEOUT);
+			if(userRedisClient.ttl(token)>=0){
+				userRedisClient.expire(token,ParamsConfig.COOKIE_TIMEOUT);
 			}
 			//设置cook时间
 			CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME,token,ParamsConfig.COOKIE_TIMEOUT);

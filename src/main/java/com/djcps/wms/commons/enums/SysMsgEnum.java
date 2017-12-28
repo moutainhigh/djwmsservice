@@ -49,7 +49,12 @@ public enum SysMsgEnum implements MsgInterface {
 	/**
 	 * 编码错误,请重新获取
 	 */
-	CODE_ERROE(880009, "编码失效,请重刷新页面");
+	CODE_ERROE(880009, "编码失效,请重刷新页面"),
+	
+	/**
+	 * 编码删除错误,请联系管理员
+	 */
+	DELETE_CODE_ERROE(880010, "编码删除失败,请联系管理员");
 	
     private int code;
     

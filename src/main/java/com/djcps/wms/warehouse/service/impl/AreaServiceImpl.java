@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.djcps.wms.commons.model.GetCodeBO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +16,7 @@ import com.djcps.wms.address.server.AddressServer;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.warehouse.controller.AreaController;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.CountyBO;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
@@ -22,6 +27,7 @@ import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.server.AreaServer;
 import com.djcps.wms.warehouse.service.AreaService;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,6 +40,8 @@ import com.google.gson.reflect.TypeToken;
  */
 @Service
 public class AreaServiceImpl implements AreaService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AreaServiceImpl.class);
 	
 	private Gson gson = new Gson();
 	
@@ -60,6 +68,9 @@ public class AreaServiceImpl implements AreaService {
 			HttpResult result = wareAreaServer.addArea(param);
 			return MsgTemplate.customMsg(result);
 		}else{
+			DeleteAreaBO deleteAreaBO = new DeleteAreaBO();
+			BeanUtils.copyProperties(param, param);
+			HttpResult deleteCode = wareAreaServer.deleteCode(deleteAreaBO);
 			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
 		}
 	}
@@ -90,14 +101,18 @@ public class AreaServiceImpl implements AreaService {
 	 */
 	@Override
 	public Map<String, Object> deleteArea(DeleteAreaBO param){
+		HttpResult result = wareAreaServer.deleteArea(param);
 		//删除编码
-		HttpResult deleteCode = wareAreaServer.deleteCode(param);
-		if(deleteCode.isSuccess()){
-			HttpResult result = wareAreaServer.deleteArea(param);
-			return MsgTemplate.customMsg(result);
-		}else{
-			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+		if(result.isSuccess()){
+			HttpResult deleteCode = wareAreaServer.deleteCode(param);
+			if(deleteCode.isSuccess()){
+				return MsgTemplate.customMsg(deleteCode);
+			}else{
+				logger.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
+				return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+			}
 		}
+		return MsgTemplate.customMsg(result);
 	}
 
 	/**
