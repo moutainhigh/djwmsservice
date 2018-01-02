@@ -67,10 +67,22 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	 */
 	@NotBlank
 	private String warehouseLocName;
+	
+	/**
+	 * 推荐库区编码
+	 */
+	private String recommendAreaId;
+	
+	/**
+	 * 推荐库区名称
+	 */
+	private String recommendAreaName;
+	
 	/**
 	 * 操作记录信息集合
 	 */
 	private OperationRecordBO operationRecord;
+	
 	public String getOrderId() {
 		return orderId;
 	}
@@ -137,12 +149,25 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	public void setOperationRecord(OperationRecordBO operationRecord) {
 		this.operationRecord = operationRecord;
 	}
+	public String getRecommendAreaId() {
+		return recommendAreaId;
+	}
+	public void setRecommendAreaId(String recommendAreaId) {
+		this.recommendAreaId = recommendAreaId;
+	}
+	public String getRecommendAreaName() {
+		return recommendAreaName;
+	}
+	public void setRecommendAreaName(String recommendAreaName) {
+		this.recommendAreaName = recommendAreaName;
+	}
 	@Override
 	public String toString() {
-		return "AddStock [orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave + ", warehouseId="
+		return "AddStockBO [orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave + ", warehouseId="
 				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", warehouseAreaId="
 				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
-				+ ", warehouseLocName=" + warehouseLocName + ", operationRecord=" + operationRecord + "]";
+				+ ", warehouseLocName=" + warehouseLocName + ", recommendAreaId=" + recommendAreaId
+				+ ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord + "]";
 	}
 	
 }
