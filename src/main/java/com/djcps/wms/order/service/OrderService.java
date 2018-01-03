@@ -16,11 +16,11 @@ public interface OrderService {
 
 	
 	/**
-	 * 获取所有的订单
-	 * @param paperOrder
+	 * 获取所有订单列表
+	 * @param param
 	 * @return
 	 * @author:zdx
-	 * @date:2017年12月22日
+	 * @date:2018年1月3日
 	 */
 	Map<String, Object> getAllOrderList(OrderParamBO param);
 

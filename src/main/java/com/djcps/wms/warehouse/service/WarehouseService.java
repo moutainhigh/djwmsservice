@@ -107,10 +107,10 @@ public interface WarehouseService {
 
 	/**
 	 * 获取所有的仓库名称
-	 * @param partnerId
+	 * @param partnerInfoBean
 	 * @return
 	 * @author:zdx
-	 * @date:2017年12月12日
+	 * @date:2018年1月3日
 	 */
 	Map<String, Object> getAllWarehouseName(PartnerInfoBO partnerInfoBean);
 
