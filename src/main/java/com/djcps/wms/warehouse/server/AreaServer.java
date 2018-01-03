@@ -7,6 +7,7 @@ import com.djcps.wms.commons.request.GetCodeRequest;
 import com.djcps.wms.commons.request.MapHttpRequest;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
+import com.djcps.wms.warehouse.model.area.IsUseStreetBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
@@ -130,6 +131,17 @@ public class AreaServer {
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.deleteCode(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+	}
+	
+	public HttpResult isUsedStreet(IsUseStreetBO isUseStreetBO) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(isUseStreetBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = warehouseAreaHttpRequest.isUsedStreet(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
 	}

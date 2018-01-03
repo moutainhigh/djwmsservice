@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.OrderParamBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.request.WmsForOrderHttpRequest;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.request.WmsForProviderHttpRequest;
 import com.google.gson.Gson;
@@ -27,19 +31,29 @@ public class OrderServer {
 	private Gson gson = new Gson();
 	
 	@Autowired
-	private WmsForProviderHttpRequest providerHttpRequest;
+	private WmsForOrderHttpRequest orderHttpRequest;
 	
-	public HttpResult add(AddProviderBO addBean){
-        //将请求参数转化为requestbody格式
-        String json = gson.toJson(addBean);
+	public HttpResult getAllOrderList(OrderParamBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
-        HTTPResponse http = providerHttpRequest.add(rb);
+        HTTPResponse http = orderHttpRequest.getAllOrderList(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+	}
+	
+	public HttpResult getOrderByOrderId(OrderIdBO param){
+        //将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = orderHttpRequest.getOrderByOrderId(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
     }
-	
 	
 	/**
 	 * @title:校验HTTPResponse结果是否成功

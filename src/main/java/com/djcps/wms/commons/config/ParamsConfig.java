@@ -52,6 +52,19 @@ public class ParamsConfig {
 	 */
 	public static String MAP_SERVER = "";
 	
+	/**
+	 * 订单服务
+	 */
+	public static String ORDER_SERVER = "";
+	
+	public static String getOrderServer() {
+		return ORDER_SERVER;
+	}
+
+	public static void setOrderServer(String orderServer) {
+		ORDER_SERVER = orderServer;
+	}
+
 	public static void setMessageServer(String messageServer) {
 		MESSAGE_SERVER = messageServer;
 	}

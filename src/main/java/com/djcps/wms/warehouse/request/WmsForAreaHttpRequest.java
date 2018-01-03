@@ -106,4 +106,15 @@ public interface WmsForAreaHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("code/getCode.do")
 	HTTPResponse getAreaCode(@Body RequestBody rb);
+
+	/**
+	 * 新增库区校验是否已存在街道
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月2日
+	 */
+	@Headers("content-type:application/json")
+	@POST("warehouseArea/isUsedStreet.do")
+	public HTTPResponse isUsedStreet(@Body RequestBody rb);
 }

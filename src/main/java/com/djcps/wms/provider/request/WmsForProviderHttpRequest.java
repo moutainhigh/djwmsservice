@@ -105,4 +105,5 @@ public interface WmsForProviderHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("provider/search.do")
 	public HTTPResponse getAreaListByCity(@Body RequestBody rb);
+
 }

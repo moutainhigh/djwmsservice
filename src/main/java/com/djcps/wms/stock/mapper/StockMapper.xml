@@ -4,7 +4,7 @@
 
 	<resultMap type="com.djcps.wms.stock.model.MapLocationPO" id="location">
 		<result column="fid" property="id"/>
-		<result column="flocation" property="location"/>
+		<result column="flnglat" property="lnglat"/>
 		<result column="fcountyname" property="countyName"/>
 		<result column="fcountycode" property="countyCode"/>
 		<result column="fstreetname" property="streetName"/>
@@ -12,17 +12,17 @@
 	</resultMap>
 	
 	<insert id="insertLocation">
-		insert into t_map_location(fid,flocation,fcountyname,fcountycode,fstreetname,fstreetcode) 
-		values (#{id},#{location},#{countyName},#{countyCode},#{streetName},#{streetCode})
+		insert into t_map_location(fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode) 
+		values (#{id},#{lnglat},#{countyName},#{countyCode},#{streetName},#{streetCode})
 			
 	</insert>
 	
 	<select id="getAllLocation" resultMap="location">
-		select fid,flocation,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
+		select fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
 	</select>
 	
 	<select id="getLocationByLocation" resultMap="location">
-		select fid,flocation,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
-		where flocation=#{location}
+		select fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
+		where flnglat=#{flnglat}
 	</select>
 </mapper>

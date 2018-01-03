@@ -16,17 +16,29 @@ import rpc.plugin.http.RPCClientFields;
  * @author:zdx
  * @date:2017年12月21日
  */
-@RPCClientFields(urlfield = "WMS_SERVER", urlbean = ParamsConfig.class)
+@RPCClientFields(urlfield = "ORDER_SERVER", urlbean = ParamsConfig.class)
 public interface WmsForOrderHttpRequest {
+	
 	/**
-	 * 供应商新增http接口
-	 * @param json
-	 * @return HTTPResponse
+	 * 获取订单详情
+	 * @param rb
+	 * @return
 	 * @author:zdx
-	 * @date:2017年11月24日
+	 * @date:2017年12月29日
 	 */
 	@Headers("content-type:application/json")
-	@POST("provider/save.do")
-	public HTTPResponse add(@Body RequestBody json);
+	@POST("order/load.do")
+	public HTTPResponse getAllOrderList(@Body RequestBody rb);
+
+	/**
+	 * 根据订单号获取订单详情
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月29日
+	 */
+	@Headers("content-type:application/json")
+	@POST("order/getInfoByChildId.do")
+	public HTTPResponse getOrderByOrderId(@Body RequestBody rb);
 	
 }

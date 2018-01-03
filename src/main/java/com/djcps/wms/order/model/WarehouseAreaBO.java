@@ -51,5 +51,11 @@ public class WarehouseAreaBO implements Serializable{
 	public void setLocationList(List<WarehouseLocationBO> locationList) {
 		this.locationList = locationList;
 	}
+
+	@Override
+	public String toString() {
+		return "WarehouseAreaBO [warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+				+ ", locationList=" + locationList + "]";
+	}
 	
 }

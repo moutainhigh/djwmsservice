@@ -50,16 +50,27 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 */
 	@Override
 	public Map<String, Object> add(AddWarehouseBO addBean){
-		//编码确认
-		HttpResult verifyCode = warehouseServer.verifyCode(addBean);
-		if(verifyCode.isSuccess()){
+		//标志只有才true的情况下才能新增,保存编码的唯一性,false的情况表示确认编码失败.不允许新增了
+		Boolean flag = true;
+		if(flag){
 			HttpResult result = warehouseServer.add(addBean);
-			return MsgTemplate.customMsg(result);
+			//新增成功
+			if(result.isSuccess()){
+				//编码确认
+				HttpResult verifyCode = warehouseServer.verifyCode(addBean);
+				//编码确认失败打印错误，将标志改成false
+				if(!verifyCode.isSuccess()){
+					flag = false;
+					logger.error("----wms基础服务编码确认失败----");
+					return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+				}
+				return MsgTemplate.customMsg(verifyCode);
+			}else{
+				//新增失败直接返回错误信息
+				return MsgTemplate.customMsg(result);
+			}
 		}else{
-			DeleteWarehouseBO deleteBean = new DeleteWarehouseBO();
-			BeanUtils.copyProperties(addBean, deleteBean);
-			HttpResult deleteCode = warehouseServer.deleteCode(deleteBean);
-			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+			return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
 		}
 	}
 

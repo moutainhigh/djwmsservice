@@ -20,7 +20,8 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
-import com.djcps.wms.order.model.PaperOrderBO;
+import com.djcps.wms.order.model.OrderParamBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.service.OrderService;
 import com.google.gson.Gson;
 
@@ -56,10 +57,10 @@ public class OrderController {
 		try {
 			//仓库类型,1,2,3,4,5(纸板，纸箱，积分商城仓库，物料仓库，退货仓库)
 			logger.debug("json : " + json);
-			PaperOrderBO param = gson.fromJson(json, PaperOrderBO.class);
+			OrderParamBO param = gson.fromJson(json, OrderParamBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<PaperOrderBO>()
+							new HibernateSupportedValidator<OrderParamBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {

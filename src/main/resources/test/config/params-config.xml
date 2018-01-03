@@ -22,6 +22,8 @@
         <property name="addressServer"  value="http://192.168.10.200/djaddressserver"/>
         <!-- 内部用户服务 -->
         <property name="innerUserServer" value="http://192.168.10.200/djauth/" />
+        <!-- 订单服务 -->
+        <property name="orderServer" value="http://192.168.10.200/djorderserver/" />
     </bean>
 
 </beans>

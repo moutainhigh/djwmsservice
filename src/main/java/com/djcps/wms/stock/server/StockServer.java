@@ -68,7 +68,7 @@ public class StockServer {
 			mapLocaTion.setStreetName(fromJson.getTownship());
 			mapLocaTion.setCountyCode(fromJson.getAdcode());
 			mapLocaTion.setCountyName(fromJson.getDistrict());
-			mapLocaTion.setLocation(newLocation);
+			mapLocaTion.setLnglat(newLocation);
 			stockDao.insertLocation(mapLocaTion);
 			return mapLocaTion;
 		}

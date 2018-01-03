@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -75,8 +76,10 @@ public class StockServiceImpl implements StockService{
 		addList.add(rl);
 		param.setParam(addList);
 		HttpResult result = stockServer.getRecommendLoca(param);
-		ArrayList data = (ArrayList) result.getData();
-		result.setData(data.get(0));
+		if(!ObjectUtils.isEmpty(result.getData())){
+			ArrayList data = (ArrayList) result.getData();
+			result.setData(data.get(0));
+		}
 		return MsgTemplate.customMsg(result);
 	}
 

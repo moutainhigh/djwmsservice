@@ -1,24 +1,29 @@
 package com.djcps.wms.order.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
-import com.djcps.wms.order.model.PaperOrderBO;
+import com.djcps.wms.order.model.OrderParamBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
 import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.service.StockService;
+import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -42,118 +47,158 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private StockService stockService;
+	
+	@Autowired
+	private OrderServer orderServer;
 
-	@Override
-	public Map<String, Object> getAllOrderList(PaperOrderBO paperOrder) {
-		PaperOrderBO PaperOrder1 = new PaperOrderBO();
-		PaperOrderBO PaperOrder2 = new PaperOrderBO();
-		PaperOrderBO PaperOrder3 = new PaperOrderBO();
-		PaperOrderBO PaperOrder4 = new PaperOrderBO();
-		PaperOrderBO PaperOrder5 = new PaperOrderBO();
-		PaperOrderBO PaperOrder6 = new PaperOrderBO();
-		PaperOrderBO PaperOrder7 = new PaperOrderBO();
-		PaperOrderBO PaperOrder8 = new PaperOrderBO();
-		PaperOrderBO PaperOrder9 = new PaperOrderBO();
-		PaperOrderBO PaperOrder10 = new PaperOrderBO();
-		PaperOrder1.setOrderId("0000");
-		PaperOrder2.setOrderId("1111");
-		PaperOrder3.setOrderId("2222");
-		PaperOrder4.setOrderId("3333");
-		PaperOrder5.setOrderId("4444");
-		PaperOrder6.setOrderId("5555");
-		PaperOrder7.setOrderId("6666");
-		PaperOrder8.setOrderId("7777");
-		PaperOrder9.setOrderId("8888");
-		PaperOrder10.setOrderId("9999");
-		List list = new ArrayList<>();
-		OrderIdBO orderId1 = new OrderIdBO();
-		OrderIdBO orderId2 = new OrderIdBO();
-		OrderIdBO orderId3 = new OrderIdBO();
-		OrderIdBO orderId4 = new OrderIdBO();
-		OrderIdBO orderId5 = new OrderIdBO();
-		OrderIdBO orderId6 = new OrderIdBO();
-		OrderIdBO orderId7 = new OrderIdBO();
-		OrderIdBO orderId8 = new OrderIdBO();
-		OrderIdBO orderId9 = new OrderIdBO();
-		OrderIdBO orderId10 = new OrderIdBO();
-		orderId1.setOrderId((PaperOrder1.getOrderId()));
-		orderId2.setOrderId((PaperOrder2.getOrderId()));
-		orderId3.setOrderId((PaperOrder3.getOrderId()));
-		orderId4.setOrderId((PaperOrder4.getOrderId()));
-		orderId5.setOrderId((PaperOrder5.getOrderId()));
-		orderId6.setOrderId((PaperOrder6.getOrderId()));
-		orderId7.setOrderId((PaperOrder7.getOrderId()));
-		orderId8.setOrderId((PaperOrder8.getOrderId()));
-		orderId9.setOrderId((PaperOrder9.getOrderId()));
-		orderId10.setOrderId((PaperOrder10.getOrderId()));
-		list.add(orderId1);
-		list.add(orderId2);
-		list.add(orderId3);
-		list.add(orderId4);
-		list.add(orderId5);
-		list.add(orderId6);
-		list.add(orderId7);
-		list.add(orderId8);
-		list.add(orderId9);
-		list.add(orderId10);
-		SelectAreaByOrderIdBO param = new SelectAreaByOrderIdBO();
-		param.setOrderIds(list);
+	@Override 
+	public Map<String, Object> getAllOrderList(OrderParamBO param) {
+		HttpResult result = orderServer.getAllOrderList(param);
+		if(!result.isSuccess()){
+			return MsgTemplate.customMsg(result); 
+		}
+		JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();  
+		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+		List list = new ArrayList<OrderIdBO>();
+		List detailList = new ArrayList<WarehouseOrderDetailPO>();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
+		for (JsonElement jsonElement : asJsonArray) {
+			String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
+			OrderIdBO orderIdBO = new OrderIdBO();
+			orderIdBO.setOrderId(orderId);
+			list.add(orderIdBO);
+			WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
+			//拼接字符串,拼接成产品规格和下料规格
+			fromJson.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
+					.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+			fromJson.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
+					.append(fromJson.getFmaterialwidth()).toString());
+			fromJson.setOrderId(fromJson.getFchildorderid());
+			fromJson.setAmount(fromJson.getFamount());
+			fromJson.setAmountSaved("0");
+			detailList.add(fromJson);
+		}
+		selectAreaByOrderId.setOrderIds(list);
 		//根据id获取在库信息
-		return  getStockInfo(param);
+		List<WarehouseOrderDetailPO> resultList = getStockInfo(selectAreaByOrderId);
+		if(resultList==null){
+			return MsgTemplate.successMsg(detailList);
+		}
+		//根据id存入到map中
+		for (WarehouseOrderDetailPO warehouseOrderDetailPO : resultList) {
+			map.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
+		}
+		for (JsonElement jsonElement : asJsonArray) {
+			String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
+			WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
+			if(warehouseOrderDetailPO!=null){
+				WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
+				//拼接字符串,拼接成产品规格和下料规格
+				warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
+						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+				warehouseOrderDetailPO.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
+						.append(fromJson.getFmaterialwidth()).toString());
+				warehouseOrderDetailPO.setFordertime(fromJson.getFordertime());
+				warehouseOrderDetailPO.setFdelivery(fromJson.getFdelivery());
+				warehouseOrderDetailPO.setFgroupgoodname(fromJson.getFgroupgoodname());
+				warehouseOrderDetailPO.setFflutetype(fromJson.getFflutetype());
+				warehouseOrderDetailPO.setFstatus(fromJson.getFstatus());
+				warehouseOrderDetailPO.setFmaterialname(fromJson.getFmaterialname());
+				warehouseOrderDetailPO.setFlnglat(fromJson.getFlnglat());
+				warehouseOrderDetailPO.setFpaymenttime(fromJson.getFpaymenttime());
+				warehouseOrderDetailPO.setFamount(warehouseOrderDetailPO.getAmount());
+			}
+		}
+		return  MsgTemplate.successMsg(resultList);
 	}
 
 	@Override
 	public Map<String, Object> getOrderByOrderId(OrderIdBO param) {
-		PaperOrderBO PaperOrder1 = new PaperOrderBO();
-		if(param.getOrderId().equals("6666")){
-			PaperOrder1.setOrderId("6666");
+		HttpResult result = orderServer.getOrderByOrderId(param);
+		if(result.isSuccess()){
+			WarehouseOrderDetailPO paperOrder = new WarehouseOrderDetailPO();
+			SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+			List list = new ArrayList<OrderIdBO>();
+			OrderIdBO orderIdBO = new OrderIdBO();
+			orderIdBO.setOrderId(new JsonParser().parse(gson.toJson(result.getData())).getAsJsonObject().get("fchildorderid").getAsString());
+			list.add(orderIdBO);
+			selectAreaByOrderId.setOrderIds(list);
+			//根据id获取在库信息
+			List<WarehouseOrderDetailPO> resultList = getStockInfo(selectAreaByOrderId);
+			WarehouseOrderDetailPO fromJson = gson.fromJson(gson.toJson(result.getData()), WarehouseOrderDetailPO.class);
+			if(resultList!=null){
+				WarehouseOrderDetailPO warehouseOrderDetailPO = resultList.get(0);
+				//拼接字符串,拼接成产品规格和下料规格
+				warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
+						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+				warehouseOrderDetailPO.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
+						.append(fromJson.getFmaterialwidth()).toString());
+				warehouseOrderDetailPO.setFordertime(fromJson.getFordertime());
+				warehouseOrderDetailPO.setFdelivery(fromJson.getFdelivery());
+				warehouseOrderDetailPO.setFgroupgoodname(fromJson.getFgroupgoodname());
+				warehouseOrderDetailPO.setFflutetype(fromJson.getFflutetype());
+				warehouseOrderDetailPO.setFstatus(fromJson.getFstatus());
+				warehouseOrderDetailPO.setFmaterialname(fromJson.getFmaterialname());
+				warehouseOrderDetailPO.setFlnglat(fromJson.getFlnglat());
+				warehouseOrderDetailPO.setFpaymenttime(fromJson.getFpaymenttime());
+				warehouseOrderDetailPO.setFamount(warehouseOrderDetailPO.getAmount());
+				return MsgTemplate.successMsg(warehouseOrderDetailPO);
+			}else{
+				fromJson.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
+						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+				fromJson.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
+						.append(fromJson.getFmaterialwidth()).toString());
+				fromJson.setOrderId(fromJson.getFchildorderid());
+				fromJson.setAmount(fromJson.getFamount());
+				fromJson.setAmountSaved("0");
+				return MsgTemplate.successMsg(fromJson);
+			}
 		}else{
-			PaperOrder1.setOrderId("0000");
+			return MsgTemplate.successMsg(null);
 		}
-		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
-		List list = new ArrayList<>();
-		list.add(PaperOrder1);
-		selectAreaByOrderId.setOrderIds(list);
-//		param.setOrderIds(list);
-		Map<String, Object> map = getStockInfo(selectAreaByOrderId);
-		List dateList =(List)map.get("data");
-		if(!ObjectUtils.isEmpty(dateList)){
-			map.put("data", dateList.get(0));
-		}
-		return map;
 	}
 
-	private Map<String, Object> getStockInfo(SelectAreaByOrderIdBO param){
-		List<PaperOrderBO> paperOrderList = new ArrayList<PaperOrderBO>();
+	/**
+	 * 根据id去获取在库信息
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月2日
+	 */
+	private List<WarehouseOrderDetailPO> getStockInfo(SelectAreaByOrderIdBO param){
+		List<WarehouseOrderDetailPO> paperOrderList = new ArrayList<WarehouseOrderDetailPO>();
 		//根据id查询
 		Map<String, Object> areaByOrderIdMap = stockService.getAreaByOrderId(param);
 		Object object = areaByOrderIdMap.get("data");
 		if(!ObjectUtils.isEmpty(object)){
 			JsonArray asJsonArray = jsonParser.parse(gson.toJson(object)).getAsJsonArray();
 			for (JsonElement jsonElement : asJsonArray) {
-				PaperOrderBO paperOrderBo = gson.fromJson(jsonElement, PaperOrderBO.class);
+				WarehouseOrderDetailPO paperOrderBo = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
 				paperOrderList.add(paperOrderBo);
-				JsonArray areaArray = jsonParser.parse(gson.toJson(jsonElement)).getAsJsonObject().get("warehouseAreaInfo").getAsJsonArray();
-				//遍历库区
-				List<WarehouseAreaBO> areaList = new ArrayList<WarehouseAreaBO>();
-				paperOrderBo.setAreaList(areaList);
-				for (JsonElement jsonElement2 : areaArray) {
-					 WarehouseAreaBO area = gson.fromJson(jsonElement2, WarehouseAreaBO.class);
-					 areaList.add(area);
-					 //一个库区可能会有多个库位库位,每次遍历库区创建库位list,把list赋值给库区
-					 List<WarehouseLocationBO> locationList = new ArrayList<WarehouseLocationBO>();
-					 area.setLocationList(locationList);
-					 JsonArray locationArray = jsonParser.parse(gson.toJson(jsonElement2)).getAsJsonObject().get("warehouseLocInfo").getAsJsonArray();
-					 //遍历库位
-					 for (JsonElement jsonElement3 : locationArray) {
-						 WarehouseLocationBO location = gson.fromJson(jsonElement3, WarehouseLocationBO.class);
-						 locationList.add(location);
+				JsonElement jsoElem = jsonParser.parse(gson.toJson(jsonElement)).getAsJsonObject().get("warehouseAreaInfo");
+				if(jsoElem!=null){
+					JsonArray areaArray = jsoElem.getAsJsonArray();
+					//遍历库区
+					List<WarehouseAreaBO> areaList = new ArrayList<WarehouseAreaBO>();
+					paperOrderBo.setAreaList(areaList);
+					for (JsonElement jsonElement2 : areaArray) {
+						 WarehouseAreaBO area = gson.fromJson(jsonElement2, WarehouseAreaBO.class);
+						 areaList.add(area);
+						 //一个库区可能会有多个库位库位,每次遍历库区创建库位list,把list赋值给库区
+						 List<WarehouseLocationBO> locationList = new ArrayList<WarehouseLocationBO>();
+						 area.setLocationList(locationList);
+						 JsonArray locationArray = jsonParser.parse(gson.toJson(jsonElement2)).getAsJsonObject().get("warehouseLocInfo").getAsJsonArray();
+						 //遍历库位
+						 for (JsonElement jsonElement3 : locationArray) {
+							 WarehouseLocationBO location = gson.fromJson(jsonElement3, WarehouseLocationBO.class);
+							 locationList.add(location);
+						}
 					}
 				}
 			}
-			return MsgTemplate.successMsg(paperOrderList);
+			return paperOrderList;
 		}else{
-			return areaByOrderIdMap;
+			return null;
 		}
 	}
 

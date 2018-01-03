@@ -20,6 +20,7 @@ import com.djcps.wms.warehouse.controller.AreaController;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.CountyBO;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
+import com.djcps.wms.warehouse.model.area.IsUseStreetBO;
 import com.djcps.wms.warehouse.model.area.ProvinceCityBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
 import com.djcps.wms.warehouse.model.area.StreetBO;
@@ -62,16 +63,35 @@ public class AreaServiceImpl implements AreaService {
 	 */
 	@Override
 	public Map<String, Object> addArea(AddAreaBO param){
-		//编码确认
-		HttpResult verifyCode = wareAreaServer.verifyCode(param);
-		if(verifyCode.isSuccess()){
+		//先判断街道是否被使用
+		IsUseStreetBO isUseStreetBO = new IsUseStreetBO();
+		BeanUtils.copyProperties(param, isUseStreetBO);
+		isUseStreetBO.setStreetList(param.getCountyList());
+		HttpResult isUseResult = wareAreaServer.isUsedStreet(isUseStreetBO);
+		if(!isUseResult.isSuccess()){
+			return MsgTemplate.customMsg(isUseResult);
+		}
+		//标志只有才true的情况下才能新增,保存编码的唯一性,false的情况表示确认编码失败.不允许新增了
+		Boolean flag = true;
+		if(flag){
 			HttpResult result = wareAreaServer.addArea(param);
-			return MsgTemplate.customMsg(result);
+			//新增成功
+			if(result.isSuccess()){
+				//编码确认
+				HttpResult verifyCode = wareAreaServer.verifyCode(param);
+				//编码确认失败打印错误，将标志改成false
+				if(!verifyCode.isSuccess()){
+					flag = false;
+					logger.error("----wms基础服务编码确认失败----");
+					return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+				}
+				return MsgTemplate.customMsg(verifyCode);
+			}else{
+				//新增失败直接返回错误信息
+				return MsgTemplate.customMsg(result);
+			}
 		}else{
-			DeleteAreaBO deleteAreaBO = new DeleteAreaBO();
-			BeanUtils.copyProperties(param, param);
-			HttpResult deleteCode = wareAreaServer.deleteCode(deleteAreaBO);
-			return MsgTemplate.failureMsg(SysMsgEnum.CODE_ERROE);
+			return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
 		}
 	}
 

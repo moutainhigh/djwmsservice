@@ -19,7 +19,7 @@ public class MapLocationPO implements Serializable{
 	/**
 	 * 经纬度
 	 */
-	private String location;
+	private String lnglat;
 	/**
 	 * 区县名称
 	 */
@@ -36,46 +36,82 @@ public class MapLocationPO implements Serializable{
 	 * 街道编码
 	 */
 	private String streetCode;
+	
 	public String getId() {
 		return id;
 	}
+
+
+
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getLocation() {
-		return location;
+
+
+
+	public String getLnglat() {
+		return lnglat;
 	}
-	public void setLocation(String location) {
-		this.location = location;
+
+
+
+	public void setLnglat(String lnglat) {
+		this.lnglat = lnglat;
 	}
+
+
+
 	public String getCountyName() {
 		return countyName;
 	}
+
+
+
 	public void setCountyName(String countyName) {
 		this.countyName = countyName;
 	}
+
+
+
 	public String getCountyCode() {
 		return countyCode;
 	}
+
+
+
 	public void setCountyCode(String countyCode) {
 		this.countyCode = countyCode;
 	}
+
+
+
 	public String getStreetName() {
 		return streetName;
 	}
+
+
+
 	public void setStreetName(String streetName) {
 		this.streetName = streetName;
 	}
+
+
+
 	public String getStreetCode() {
 		return streetCode;
 	}
+
+
+
 	public void setStreetCode(String streetCode) {
 		this.streetCode = streetCode;
 	}
+
+
+
 	@Override
 	public String toString() {
-		return "MapLocationPo [id=" + id + ", location=" + location + ", countyName=" + countyName + ", countyCode="
+		return "MapLocationPO [id=" + id + ", lnglat=" + lnglat + ", countyName=" + countyName + ", countyCode="
 				+ countyCode + ", streetName=" + streetName + ", streetCode=" + streetCode + "]";
 	}
-	
 }

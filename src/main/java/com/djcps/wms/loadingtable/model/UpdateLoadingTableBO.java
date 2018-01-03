@@ -27,7 +27,7 @@ public class UpdateLoadingTableBO extends BaseUpdateAndDeleteBO implements Seria
 	/**
 	 * 装车台状态(1.使用中 2.空闲中)
 	 */
-	private String state; 
+	private String status; 
 	
 	/**
 	 * 装车台可用该车辆规格数组
@@ -42,12 +42,12 @@ public class UpdateLoadingTableBO extends BaseUpdateAndDeleteBO implements Seria
 		this.name = name;
 	}
 
-	public String getState() {
-		return state;
+	public String getStatus() {
+		return status;
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getSpecs() {
@@ -68,7 +68,7 @@ public class UpdateLoadingTableBO extends BaseUpdateAndDeleteBO implements Seria
 
 	@Override
 	public String toString() {
-		return "UpdateLoadingTableBO [id=" + id + ", name=" + name + ", state=" + state + ", specs=" + specs + "]";
+		return "UpdateLoadingTableBO [id=" + id + ", name=" + name + ", status=" + status + ", specs=" + specs + "]";
 	}
 
 }
