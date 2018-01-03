@@ -42,4 +42,12 @@ public class InnerUserChangePasswordBO {
         this.newPassword = newPassword;
     }
 
+    @Override
+    public String toString() {
+        return "InnerUserChangePasswordBO{" +
+                "token='" + token + '\'' +
+                ", oldPassword='" + oldPassword + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                '}';
+    }
 }

@@ -35,4 +35,12 @@ public class BaseListBO extends BaseBO implements Serializable{
     public void setPageNo(Integer pageNo) {
         this.pageNo = pageNo;
     }
+
+    @Override
+    public String toString() {
+        return "BaseListBO{" +
+                "pageSize=" + pageSize +
+                ", pageNo=" + pageNo +
+                '}';
+    }
 }

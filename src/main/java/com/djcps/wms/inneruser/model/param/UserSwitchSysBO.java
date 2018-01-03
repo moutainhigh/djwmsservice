@@ -38,4 +38,12 @@ public class UserSwitchSysBO extends BaseBO implements Serializable{
     public void setSys(String sys) {
         this.sys = sys;
     }
+
+    @Override
+    public String toString() {
+        return "UserSwitchSysBO{" +
+                "oldToken='" + oldToken + '\'' +
+                ", sys='" + sys + '\'' +
+                '}';
+    }
 }

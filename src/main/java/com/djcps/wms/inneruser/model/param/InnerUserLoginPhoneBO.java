@@ -36,4 +36,12 @@ public class InnerUserLoginPhoneBO extends BaseBO implements Serializable{
     public void setPhoneCode(String phoneCode) {
         this.phoneCode = phoneCode;
     }
+
+    @Override
+    public String toString() {
+        return "InnerUserLoginPhoneBO{" +
+                "phone='" + phone + '\'' +
+                ", phoneCode='" + phoneCode + '\'' +
+                '}';
+    }
 }

@@ -34,4 +34,13 @@ public class PhoneCodeBO {
     public void setAppSystem(String appSystem) {
         this.appSystem = appSystem;
     }
+
+    @Override
+    public String toString() {
+        return "PhoneCodeBO{" +
+                "phone='" + phone + '\'' +
+                ", code='" + code + '\'' +
+                ", appSystem='" + appSystem + '\'' +
+                '}';
+    }
 }

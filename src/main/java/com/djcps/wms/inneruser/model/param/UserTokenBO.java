@@ -23,4 +23,11 @@ public class UserTokenBO extends BaseBO implements Serializable{
     public void setToken(String token) {
         this.token = token;
     }
+
+    @Override
+    public String toString() {
+        return "UserTokenBO{" +
+                "token='" + token + '\'' +
+                '}';
+    }
 }

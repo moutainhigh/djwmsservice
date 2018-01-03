@@ -39,4 +39,12 @@ public class InnerUserLoginBO extends BaseBO implements Serializable{
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public String toString() {
+        return "InnerUserLoginBO{" +
+                "userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
