@@ -2,6 +2,7 @@ package com.djcps.wms.stock.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -25,13 +26,13 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	/**
 	 * 订单数量
 	 */
-	@NotBlank
-	private String amount;
+	@NotNull
+	private Integer amount;
 	/**
 	 * 准备入库数量
 	 */
-	@NotBlank
-	private String amountSave;
+	@NotNull
+	private Integer amountSave;
 	/**
 	 * 仓库编号
 	 */
@@ -89,16 +90,16 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	public String getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
-	public void setAmount(String amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
-	public String getAmountSave() {
+	public Integer getAmountSave() {
 		return amountSave;
 	}
-	public void setAmountSave(String amountSave) {
+	public void setAmountSave(Integer amountSave) {
 		this.amountSave = amountSave;
 	}
 	public String getWarehouseId() {

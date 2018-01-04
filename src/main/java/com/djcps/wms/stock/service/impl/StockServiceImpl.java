@@ -1,5 +1,6 @@
 package com.djcps.wms.stock.service.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.request.UpdateOrderHttpRequest;
+import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.stock.model.AddStockBO;
 import com.djcps.wms.stock.model.MapLocationPO;
 import com.djcps.wms.stock.model.MoveStockBO;
@@ -21,6 +27,9 @@ import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
 import com.djcps.wms.stock.server.StockServer;
 import com.djcps.wms.stock.service.StockService;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * 入库移库业务层
@@ -33,6 +42,17 @@ public class StockServiceImpl implements StockService{
 
 	@Autowired
 	private StockServer stockServer;
+	
+	@Autowired
+	private OrderServer orderServer;
+	
+	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
+	private StockService stockService;
+	
+	private JsonParser jsonParser = new JsonParser();
 	
 	private Gson gson = new Gson();
 	
@@ -91,6 +111,50 @@ public class StockServiceImpl implements StockService{
 
 	@Override
 	public Map<String, Object> addStock(AddStockBO param) {
+		ArrayList<OrderIdBO> list = new ArrayList<OrderIdBO>();
+		//订单号
+		String orderId = param.getOrderId();
+		//入库数量
+		Integer saveAmount = param.getAmountSave();
+		//订单数量
+		Integer orderAmount = param.getAmount();
+		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+		OrderIdBO orderIdBO = new OrderIdBO();
+		orderIdBO.setOrderId(orderId);
+		list.add(orderIdBO);
+		selectAreaByOrderId.setOrderIds(list);
+		//解析在库信息
+		Map<String, Object> areaByOrderIdMap = stockService.getAreaByOrderId(selectAreaByOrderId);
+		Object object = areaByOrderIdMap.get("data");
+		if(!ObjectUtils.isEmpty(object)){
+			JsonArray asJsonArray = jsonParser.parse(gson.toJson(object)).getAsJsonArray();
+			Integer trueAmount = asJsonArray.get(0).getAsJsonObject().get("amountSaved").getAsInt();
+			if(trueAmount+saveAmount>orderAmount){
+				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
+			}else if(trueAmount+saveAmount==orderAmount){
+				//相等表示已入库修改订单状态
+				orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
+			}else{
+				//小于表示部分入库
+				orderIdBO.setStatus(AppConstant.LESS_ADD_STOCK);
+			}
+		}else{
+			if(saveAmount > orderAmount){
+				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
+			}else if(saveAmount == orderAmount){
+				//相等表示已入库修改订单状态
+				orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
+			}else{
+				//小于表示部分入库
+				orderIdBO.setStatus(AppConstant.LESS_ADD_STOCK);
+			}
+		}
+		HttpResult updateOrderResult = orderServer.updateOrderStatus(orderIdBO);
+		//订单状态修改失败
+		if(!updateOrderResult.isSuccess()){
+			return MsgTemplate.failureMsg(SysMsgEnum.ORDER_UPDATE_ERROR);
+		}
+		//入库
 		HttpResult result = stockServer.addStock(param);
 		return MsgTemplate.customMsg(result);
 	}

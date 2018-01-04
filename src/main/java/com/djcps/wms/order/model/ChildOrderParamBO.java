@@ -116,11 +116,7 @@ public class ChildOrderParamBO implements Serializable{
 	private String fcity;
 	
 	public ChildOrderParamBO() {
-		this.fboxheight = "-1";
-		this.fboxlength = "-1";
-		this.fboxwidth = "-1";
 		this.fexcpstatus = "1";
-		this.fstatus = "-1";
 		this.fmanufacturer = "400";
 		this.fkeyarea = "3303";
 		this.manufacturerName = "温州东诚包装有限公司";

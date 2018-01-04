@@ -32,6 +32,7 @@ public class SelectAllLocationListBO extends BaseListBO implements Serializable{
 	/**
 	 * 库区编码
 	 */
+	@NotBlank
 	private String warehouseAreaId;
 
 	public String getPartnerId() {

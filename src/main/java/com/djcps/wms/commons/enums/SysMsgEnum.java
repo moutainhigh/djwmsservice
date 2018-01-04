@@ -12,12 +12,12 @@ import com.djcps.wms.commons.msg.MsgInterface;
 public enum SysMsgEnum implements MsgInterface {
     
     /**
-     * 操作成功
+     * 操作成功,基本不用
      */
     OPS_SUCCESS(880001, "操作成功"),
     
     /**
-     * 操作失败
+     * 操作失败,基本也不用
      */
     OPS_FAILURE(880002, "操作失败"),
     
@@ -42,7 +42,7 @@ public enum SysMsgEnum implements MsgInterface {
 	PARAM_ERROR(880006, "请求参数有误"),
 	
 	/**
-	 * redis中取不到用户URL
+	 * redis中取不到用户URL,其实没有记录ip地址
 	 */
 	SYSURL_NULL(880007, "非法操作,已记录了你的ip"),
     
@@ -54,7 +54,17 @@ public enum SysMsgEnum implements MsgInterface {
 	/**
 	 * 编码新增或删除有误,请联系管理员!!!
 	 */
-	DELETE_CODE_ERROE(880010, "编码新增或删除有误,请联系管理员!!!");
+	DELETE_CODE_ERROE(880010, "编码新增或删除有误,请联系管理员!!!"),
+	
+	/**
+	 * 入库数量有误请重新核对
+	 */
+	SAVE_AMOUNT_ERROE(880011, "入库数量有误请重新核对"),
+	
+	/**
+	 * 订单状态修改失败
+	 */
+	ORDER_UPDATE_ERROR(880012, "订单状态修改失败,且入库失败,请联系管理员");
 	
     private int code;
     

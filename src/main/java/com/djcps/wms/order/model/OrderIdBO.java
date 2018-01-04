@@ -25,6 +25,8 @@ public class OrderIdBO extends BaseBO implements Serializable{
 	
 	private String orderId;
 	
+	private String status;
+	
 	@NotBlank
 	private String fkeyarea;
 	
@@ -57,9 +59,18 @@ public class OrderIdBO extends BaseBO implements Serializable{
 		this.orderId = orderId;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "OrderIdBO [childOrderId=" + childOrderId + ", orderId=" + orderId + ", fkeyarea=" + fkeyarea + "]";
+		return "OrderIdBO [childOrderId=" + childOrderId + ", orderId=" + orderId + ", status=" + status + ", fkeyarea="
+				+ fkeyarea + "]";
 	}
 
 }

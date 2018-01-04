@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.httpclient.OrderHttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderParamBO;
@@ -23,7 +24,6 @@ import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.service.StockService;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -53,9 +53,15 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override 
 	public Map<String, Object> getAllOrderList(OrderParamBO param) {
-		HttpResult result = orderServer.getAllOrderList(param);
+		OrderHttpResult result = orderServer.getAllOrderList(param);
 		if(!result.isSuccess()){
-			return MsgTemplate.customMsg(result); 
+			HttpResult otherResult = new HttpResult();
+			BeanUtils.copyProperties(result, otherResult);
+			return MsgTemplate.customMsg(otherResult); 
+		}
+		// data数据为空将值赋值为null,这里取到的是空数组
+		if(ObjectUtils.isEmpty(result.getData())){
+			return MsgTemplate.successMsg(null); 
 		}
 		JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();  
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
@@ -68,9 +74,13 @@ public class OrderServiceImpl implements OrderService {
 			orderIdBO.setOrderId(orderId);
 			list.add(orderIdBO);
 			WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-			//拼接字符串,拼接成产品规格和下料规格
-			fromJson.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
-					.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+			//规格长宽高都不为null,才进行拼接
+			if(!ObjectUtils.isEmpty(fromJson.getFboxlength()) && !ObjectUtils.isEmpty(fromJson.getFboxwidth()) &&
+					!ObjectUtils.isEmpty(fromJson.getFboxheight())){
+				//拼接字符串,拼接成产品规格和下料规格
+				fromJson.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
+						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+			}
 			fromJson.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
 					.append(fromJson.getFmaterialwidth()).toString());
 			fromJson.setOrderId(fromJson.getFchildorderid());
@@ -93,11 +103,16 @@ public class OrderServiceImpl implements OrderService {
 			WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
 			if(warehouseOrderDetailPO!=null){
 				WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-				//拼接字符串,拼接成产品规格和下料规格
-				warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
-						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+				//规格长宽高都不为null,才进行拼接
+				if(!ObjectUtils.isEmpty(fromJson.getFboxlength()) && !ObjectUtils.isEmpty(fromJson.getFboxwidth()) &&
+						!ObjectUtils.isEmpty(fromJson.getFboxheight())){
+					//拼接字符串,拼接成产品规格和下料规格
+					warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
+							.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+				}
 				warehouseOrderDetailPO.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
 						.append(fromJson.getFmaterialwidth()).toString());
+				//拼接参数
 				warehouseOrderDetailPO.setFordertime(fromJson.getFordertime());
 				warehouseOrderDetailPO.setFdelivery(fromJson.getFdelivery());
 				warehouseOrderDetailPO.setFgroupgoodname(fromJson.getFgroupgoodname());
@@ -106,10 +121,22 @@ public class OrderServiceImpl implements OrderService {
 				warehouseOrderDetailPO.setFmaterialname(fromJson.getFmaterialname());
 				warehouseOrderDetailPO.setFlnglat(fromJson.getFlnglat());
 				warehouseOrderDetailPO.setFpaymenttime(fromJson.getFpaymenttime());
+				warehouseOrderDetailPO.setFaddressdetail(fromJson.getFaddressdetail());
+				warehouseOrderDetailPO.setFcodeprovince(fromJson.getFcodeprovince());
+				warehouseOrderDetailPO.setFconsignee(fromJson.getFconsignee());
+				warehouseOrderDetailPO.setFcontactway(fromJson.getFcontactway());
+				warehouseOrderDetailPO.setFpusername(fromJson.getFpusername());
 				warehouseOrderDetailPO.setFamount(warehouseOrderDetailPO.getAmount());
 			}
 		}
-		return  MsgTemplate.successMsg(resultList);
+		//因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("success", true);
+		resultMap.put("code", 100000);
+		resultMap.put("msg", "");
+		resultMap.put("total", result.getTotalCount());
+		resultMap.put("data", resultList);
+		return resultMap;
 	}
 
 	@Override
@@ -128,9 +155,14 @@ public class OrderServiceImpl implements OrderService {
 			WarehouseOrderDetailPO fromJson = gson.fromJson(gson.toJson(result.getData()), WarehouseOrderDetailPO.class);
 			if(resultList!=null){
 				WarehouseOrderDetailPO warehouseOrderDetailPO = resultList.get(0);
-				//拼接字符串,拼接成产品规格和下料规格
-				warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
-						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+				//规格长宽高都不为null,才进行拼接
+				if(!ObjectUtils.isEmpty(fromJson.getFboxlength()) && !ObjectUtils.isEmpty(fromJson.getFboxwidth()) &&
+						!ObjectUtils.isEmpty(fromJson.getFboxheight())){
+					//拼接字符串,拼接成产品规格和下料规格
+					warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
+							.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
+				}
+				//拼接参数
 				warehouseOrderDetailPO.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
 						.append(fromJson.getFmaterialwidth()).toString());
 				warehouseOrderDetailPO.setFordertime(fromJson.getFordertime());
@@ -141,6 +173,11 @@ public class OrderServiceImpl implements OrderService {
 				warehouseOrderDetailPO.setFmaterialname(fromJson.getFmaterialname());
 				warehouseOrderDetailPO.setFlnglat(fromJson.getFlnglat());
 				warehouseOrderDetailPO.setFpaymenttime(fromJson.getFpaymenttime());
+				warehouseOrderDetailPO.setFaddressdetail(fromJson.getFaddressdetail());
+				warehouseOrderDetailPO.setFcodeprovince(fromJson.getFcodeprovince());
+				warehouseOrderDetailPO.setFconsignee(fromJson.getFconsignee());
+				warehouseOrderDetailPO.setFcontactway(fromJson.getFcontactway());
+				warehouseOrderDetailPO.setFpusername(fromJson.getFpusername());
 				warehouseOrderDetailPO.setFamount(warehouseOrderDetailPO.getAmount());
 				return MsgTemplate.successMsg(warehouseOrderDetailPO);
 			}else{
@@ -154,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
 				return MsgTemplate.successMsg(fromJson);
 			}
 		}else{
-			return MsgTemplate.successMsg(null);
+			return MsgTemplate.customMsg(result);
 		}
 	}
 
@@ -165,7 +202,8 @@ public class OrderServiceImpl implements OrderService {
 	 * @author:zdx
 	 * @date:2018年1月2日
 	 */
-	private List<WarehouseOrderDetailPO> getStockInfo(SelectAreaByOrderIdBO param){
+	@Override
+	public List<WarehouseOrderDetailPO> getStockInfo(SelectAreaByOrderIdBO param){
 		List<WarehouseOrderDetailPO> paperOrderList = new ArrayList<WarehouseOrderDetailPO>();
 		//根据id查询
 		Map<String, Object> areaByOrderIdMap = stockService.getAreaByOrderId(param);

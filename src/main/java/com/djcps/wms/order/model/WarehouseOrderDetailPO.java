@@ -86,9 +86,43 @@ public class WarehouseOrderDetailPO implements Serializable{
 	private String units;
 	
 	/**
-	 * 订单状态(8,9,10)
+	 * 订单状态(
+	 *	已付款:2
+	 *	已分发:3
+	 * 	部分入库：21  
+		已入库：22 
+		已配货：23  
+		已提货：24 
+		已装车：25  
+		已发车：26
+		)
 	 */
 	private String fstatus;
+	
+	/**
+	 * 联系人
+	 */
+	private String fconsignee;
+	
+	/**
+	 * 联系方式
+	 */
+	private String fcontactway;
+	
+	/**
+	 * 省市区
+	 */
+	private String fcodeprovince;
+	
+	/**
+	 * 地址街道
+	 */
+	private String faddressdetail;
+	
+	/**
+	 * 客户名称
+	 */
+	private String fpusername;
 	
 	/**
 	 * =====================================================================
@@ -140,18 +174,12 @@ public class WarehouseOrderDetailPO implements Serializable{
 	private String remark;
 	
 	/**
-	 * 总数
-	 */
-	private String total;
-	
-	/**
 	 * 库区list
 	 */
 	private List<WarehouseAreaBO> areaList;
 	
 	public WarehouseOrderDetailPO() {
 		super();
-		this.total="100";
 		this.units = "片";
 	}
 	
@@ -159,20 +187,8 @@ public class WarehouseOrderDetailPO implements Serializable{
 		return fpaymenttime;
 	}
 
-
-
 	public void setFpaymenttime(Date fpaymenttime) {
 		this.fpaymenttime = fpaymenttime;
-	}
-
-
-
-	public String getTotal() {
-		return total;
-	}
-
-	public void setTotal(String total) {
-		this.total = total;
 	}
 
 	public String getFchildorderid() {
@@ -367,16 +383,59 @@ public class WarehouseOrderDetailPO implements Serializable{
 		return fordertime;
 	}
 
+	public String getFconsignee() {
+		return fconsignee;
+	}
+
+	public void setFconsignee(String fconsignee) {
+		this.fconsignee = fconsignee;
+	}
+
+	public String getFcontactway() {
+		return fcontactway;
+	}
+
+	public void setFcontactway(String fcontactway) {
+		this.fcontactway = fcontactway;
+	}
+
+	public String getFcodeprovince() {
+		return fcodeprovince;
+	}
+
+	public void setFcodeprovince(String fcodeprovince) {
+		this.fcodeprovince = fcodeprovince;
+	}
+
+	public String getFaddressdetail() {
+		return faddressdetail;
+	}
+
+	public void setFaddressdetail(String faddressdetail) {
+		this.faddressdetail = faddressdetail;
+	}
+
+	public String getFpusername() {
+		return fpusername;
+	}
+
+	public void setFpusername(String fpusername) {
+		this.fpusername = fpusername;
+	}
+
 	@Override
 	public String toString() {
 		return "WarehouseOrderDetailPO [fboxlength=" + fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight="
 				+ fboxheight + ", fmateriallength=" + fmateriallength + ", fmaterialwidth=" + fmaterialwidth
-				+ ", fordertime=" + fordertime + ", fdelivery=" + fdelivery + ", fgroupgoodname=" + fgroupgoodname
-				+ ", fflutetype=" + fflutetype + ", fmaterialname=" + fmaterialname + ", fmaterialRule=" + fmaterialRule
-				+ ", fproductRule=" + fproductRule + ", units=" + units + ", fstatus=" + fstatus + ", fchildorderid="
-				+ fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat + ", amountSaved=" + amountSaved
-				+ ", famount=" + famount + ", amount=" + amount + ", warehouseId=" + warehouseId + ", warehouseName="
-				+ warehouseName + ", remark=" + remark + ", total=" + total + ", areaList=" + areaList + "]";
+				+ ", fordertime=" + fordertime + ", fpaymenttime=" + fpaymenttime + ", fdelivery=" + fdelivery
+				+ ", fgroupgoodname=" + fgroupgoodname + ", fflutetype=" + fflutetype + ", fmaterialname="
+				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", units="
+				+ units + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
+				+ ", fcodeprovince=" + fcodeprovince + ", faddressdetail=" + faddressdetail + ", fpusername="
+				+ fpusername + ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
+				+ ", amountSaved=" + amountSaved + ", famount=" + famount + ", amount=" + amount + ", warehouseId="
+				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", areaList=" + areaList
+				+ "]";
 	}
 	
 }

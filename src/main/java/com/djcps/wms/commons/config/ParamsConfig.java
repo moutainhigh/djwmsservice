@@ -57,6 +57,19 @@ public class ParamsConfig {
 	 */
 	public static String ORDER_SERVER = "";
 	
+	/**
+	 * 临时天伟订单修改服务
+	 */
+	public static String UPDATE_ORDER_SERVER = "";
+	
+	public static String getUpdateOrderServer() {
+		return UPDATE_ORDER_SERVER;
+	}
+
+	public static void setUpdateOrderServer(String updateOrderServer) {
+		UPDATE_ORDER_SERVER = updateOrderServer;
+	}
+
 	public static String getOrderServer() {
 		return ORDER_SERVER;
 	}
