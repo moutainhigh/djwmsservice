@@ -74,17 +74,8 @@ public class OrderServiceImpl implements OrderService {
 			orderIdBO.setOrderId(orderId);
 			list.add(orderIdBO);
 			WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-			//规格长宽高都不为null,才进行拼接
-			if(!ObjectUtils.isEmpty(fromJson.getFboxlength()) && !ObjectUtils.isEmpty(fromJson.getFboxwidth()) &&
-					!ObjectUtils.isEmpty(fromJson.getFboxheight())){
-				//拼接字符串,拼接成产品规格和下料规格
-				fromJson.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
-						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
-			}
-			fromJson.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
-					.append(fromJson.getFmaterialwidth()).toString());
-			fromJson.setOrderId(fromJson.getFchildorderid());
-			fromJson.setAmount(fromJson.getFamount());
+			//组织参数
+			getOrderDetail(fromJson,fromJson);
 			fromJson.setAmountSaved("0");
 			detailList.add(fromJson);
 		}
@@ -103,30 +94,8 @@ public class OrderServiceImpl implements OrderService {
 			WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
 			if(warehouseOrderDetailPO!=null){
 				WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-				//规格长宽高都不为null,才进行拼接
-				if(!ObjectUtils.isEmpty(fromJson.getFboxlength()) && !ObjectUtils.isEmpty(fromJson.getFboxwidth()) &&
-						!ObjectUtils.isEmpty(fromJson.getFboxheight())){
-					//拼接字符串,拼接成产品规格和下料规格
-					warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
-							.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
-				}
-				warehouseOrderDetailPO.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
-						.append(fromJson.getFmaterialwidth()).toString());
-				//拼接参数
-				warehouseOrderDetailPO.setFordertime(fromJson.getFordertime());
-				warehouseOrderDetailPO.setFdelivery(fromJson.getFdelivery());
-				warehouseOrderDetailPO.setFgroupgoodname(fromJson.getFgroupgoodname());
-				warehouseOrderDetailPO.setFflutetype(fromJson.getFflutetype());
-				warehouseOrderDetailPO.setFstatus(fromJson.getFstatus());
-				warehouseOrderDetailPO.setFmaterialname(fromJson.getFmaterialname());
-				warehouseOrderDetailPO.setFlnglat(fromJson.getFlnglat());
-				warehouseOrderDetailPO.setFpaymenttime(fromJson.getFpaymenttime());
-				warehouseOrderDetailPO.setFaddressdetail(fromJson.getFaddressdetail());
-				warehouseOrderDetailPO.setFcodeprovince(fromJson.getFcodeprovince());
-				warehouseOrderDetailPO.setFconsignee(fromJson.getFconsignee());
-				warehouseOrderDetailPO.setFcontactway(fromJson.getFcontactway());
-				warehouseOrderDetailPO.setFpusername(fromJson.getFpusername());
-				warehouseOrderDetailPO.setFamount(warehouseOrderDetailPO.getAmount());
+				//组织参数
+				getOrderDetail(warehouseOrderDetailPO,fromJson);
 			}
 		}
 		//因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
@@ -155,38 +124,12 @@ public class OrderServiceImpl implements OrderService {
 			WarehouseOrderDetailPO fromJson = gson.fromJson(gson.toJson(result.getData()), WarehouseOrderDetailPO.class);
 			if(resultList!=null){
 				WarehouseOrderDetailPO warehouseOrderDetailPO = resultList.get(0);
-				//规格长宽高都不为null,才进行拼接
-				if(!ObjectUtils.isEmpty(fromJson.getFboxlength()) && !ObjectUtils.isEmpty(fromJson.getFboxwidth()) &&
-						!ObjectUtils.isEmpty(fromJson.getFboxheight())){
-					//拼接字符串,拼接成产品规格和下料规格
-					warehouseOrderDetailPO.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
-							.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
-				}
-				//拼接参数
-				warehouseOrderDetailPO.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
-						.append(fromJson.getFmaterialwidth()).toString());
-				warehouseOrderDetailPO.setFordertime(fromJson.getFordertime());
-				warehouseOrderDetailPO.setFdelivery(fromJson.getFdelivery());
-				warehouseOrderDetailPO.setFgroupgoodname(fromJson.getFgroupgoodname());
-				warehouseOrderDetailPO.setFflutetype(fromJson.getFflutetype());
-				warehouseOrderDetailPO.setFstatus(fromJson.getFstatus());
-				warehouseOrderDetailPO.setFmaterialname(fromJson.getFmaterialname());
-				warehouseOrderDetailPO.setFlnglat(fromJson.getFlnglat());
-				warehouseOrderDetailPO.setFpaymenttime(fromJson.getFpaymenttime());
-				warehouseOrderDetailPO.setFaddressdetail(fromJson.getFaddressdetail());
-				warehouseOrderDetailPO.setFcodeprovince(fromJson.getFcodeprovince());
-				warehouseOrderDetailPO.setFconsignee(fromJson.getFconsignee());
-				warehouseOrderDetailPO.setFcontactway(fromJson.getFcontactway());
-				warehouseOrderDetailPO.setFpusername(fromJson.getFpusername());
-				warehouseOrderDetailPO.setFamount(warehouseOrderDetailPO.getAmount());
+				//组织参数
+				getOrderDetail(warehouseOrderDetailPO,fromJson);
 				return MsgTemplate.successMsg(warehouseOrderDetailPO);
 			}else{
-				fromJson.setFproductRule(new StringBuffer().append(fromJson.getFboxlength()).append("*")
-						.append(fromJson.getFboxwidth()).append("*").append(fromJson.getFboxheight()).toString());
-				fromJson.setFmaterialRule(new StringBuffer().append(fromJson.getFmateriallength()).append("*")
-						.append(fromJson.getFmaterialwidth()).toString());
-				fromJson.setOrderId(fromJson.getFchildorderid());
-				fromJson.setAmount(fromJson.getFamount());
+				//组织参数
+				getOrderDetail(fromJson,fromJson);
 				fromJson.setAmountSaved("0");
 				return MsgTemplate.successMsg(fromJson);
 			}
@@ -239,5 +182,46 @@ public class OrderServiceImpl implements OrderService {
 			return null;
 		}
 	}
-
+	
+	
+	/**
+	 * 参数拼接
+	 * @param source
+	 * @param target
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月8日
+	 */
+	private WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target){
+		//规格长宽高都不为null,才进行拼接
+		if(!ObjectUtils.isEmpty(target.getFboxlength()) && !ObjectUtils.isEmpty(target.getFboxwidth()) &&
+				!ObjectUtils.isEmpty(target.getFboxheight())){
+			//拼接字符串,拼接成产品规格和下料规格
+			source.setFproductRule(new StringBuffer().append(target.getFboxlength()).append("*")
+					.append(target.getFboxwidth()).append("*").append(target.getFboxheight()).toString());
+		}
+		source.setFmaterialRule(new StringBuffer().append(target.getFmateriallength()).append("*")
+				.append(target.getFmaterialwidth()).toString());
+		//组织参数
+		source.setFmaterialRule(new StringBuffer().append(target.getFmateriallength()).append("*")
+				.append(target.getFmaterialwidth()).toString());
+		source.setFordertime(target.getFordertime());
+		source.setFdelivery(target.getFdelivery());
+		source.setFgroupgoodname(target.getFgroupgoodname());
+		source.setFflutetype(target.getFflutetype());
+		source.setFstatus(target.getFstatus());
+		source.setFmaterialname(target.getFmaterialname());
+		source.setFlnglat(target.getFlnglat());
+		source.setFpaymenttime(target.getFpaymenttime());
+		source.setFaddressdetail(target.getFaddressdetail());
+		source.setFcodeprovince(target.getFcodeprovince());
+		source.setFconsignee(target.getFconsignee());
+		source.setFcontactway(target.getFcontactway());
+		source.setFpusername(target.getFpusername());
+		source.setOrderId(source.getFchildorderid());
+		source.setAmount(source.getFamount());
+		source.setFamount(source.getAmount());
+		
+		return null;
+	}
 }

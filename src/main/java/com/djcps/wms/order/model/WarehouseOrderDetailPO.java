@@ -125,6 +125,33 @@ public class WarehouseOrderDetailPO implements Serializable{
 	private String fpusername;
 	
 	/**
+	 * 运单号
+	 */
+	private String fwaybill;
+	
+	/**
+	 * 提货单号
+	 */
+	private String fdeliveryorder;
+	
+	/**
+	 * 配货状态
+	 */
+	private String fwaybillstatus;
+	
+	
+	/**
+	 * 提货单状态
+	 */
+	private String fdeliveryorderstatus;
+	
+	/**
+	 * 车牌号
+	 */
+	private String licencePlate;
+	
+	
+	/**
 	 * =====================================================================
 	 */
 	
