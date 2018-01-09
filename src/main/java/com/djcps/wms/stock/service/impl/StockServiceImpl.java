@@ -141,7 +141,7 @@ public class StockServiceImpl implements StockService{
 		}else{
 			if(saveAmount > orderAmount){
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
-			}else if(saveAmount == orderAmount){
+			}else if(saveAmount.equals(orderAmount)){
 				//相等表示已入库修改订单状态
 				orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
 			}else{
