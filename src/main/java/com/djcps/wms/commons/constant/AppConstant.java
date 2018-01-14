@@ -28,6 +28,11 @@ public class AppConstant {
      * 装车台编号前缀
      */
     public static final String ZCT="ZCT";
+
+    /**
+     * 盘点任务编号前缀
+     */
+    public static final String TS="TS";
     
     /**
      * 仓库编码类型

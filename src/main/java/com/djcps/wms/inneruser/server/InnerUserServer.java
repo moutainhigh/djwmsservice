@@ -82,7 +82,6 @@ public class InnerUserServer {
                         HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                         return baseResult;
                     }
-
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                     e.printStackTrace();

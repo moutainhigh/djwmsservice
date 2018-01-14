@@ -65,7 +65,7 @@ public enum SysMsgEnum implements MsgInterface {
 	 * 订单状态修改失败
 	 */
 	ORDER_UPDATE_ERROR(880012, "订单状态修改失败,且入库失败,请联系管理员");
-	
+
     private int code;
     
     private String msg;

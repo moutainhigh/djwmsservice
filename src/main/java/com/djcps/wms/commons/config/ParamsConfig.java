@@ -56,6 +56,11 @@ public class ParamsConfig {
 	 * 订单服务
 	 */
 	public static String ORDER_SERVER = "";
+
+	/**
+	 * 零时订单服务(天伟提供)
+	 */
+	public static String order_lin="";
 	
 	/**
 	 * 临时天伟订单修改服务
@@ -112,5 +117,9 @@ public class ParamsConfig {
 
 	public static void setNumberServer(String numberServer) {
 		NUMBER_SERVER = numberServer;
+	}
+
+	public static void setOrder_lin(String order_lin) {
+		ParamsConfig.order_lin = order_lin;
 	}
 }
