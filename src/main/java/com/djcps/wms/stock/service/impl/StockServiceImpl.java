@@ -104,8 +104,8 @@ public class StockServiceImpl implements StockService{
 	}
 
 	@Override
-	public Map<String, Object> getOperationRecord(String string) {
-		HttpResult result = stockServer.getOperationRecord(string);
+	public Map<String, Object> getOperationRecord(OrderIdBO fromJson) {
+		HttpResult result = stockServer.getOperationRecord(fromJson);
 		return MsgTemplate.customMsg(result);
 	}
 

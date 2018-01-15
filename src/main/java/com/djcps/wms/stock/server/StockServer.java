@@ -11,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.MapAddressComponentPO;
 import com.djcps.wms.commons.request.MapHttpRequest;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.stock.dao.StockDao;
 import com.djcps.wms.stock.model.AddStockBO;
 import com.djcps.wms.stock.model.MapLocationPO;
@@ -85,10 +86,11 @@ public class StockServer {
         return verifyHttpResult(http);
 	}
 	
-	public HttpResult getOperationRecord(String param) {
+	public HttpResult getOperationRecord(OrderIdBO fromJson) {
 		//将请求参数转化为requestbody格式
-        System.out.println("---http请求参数转化为json格式---:"+param);
-        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),param);
+        String json = gson.toJson(fromJson);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = wmsForStockHttpRequest.getOperationRecord(rb);
         //校验请求是否成功

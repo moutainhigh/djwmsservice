@@ -202,9 +202,6 @@ public class OrderServiceImpl implements OrderService {
 		}
 		source.setFmaterialRule(new StringBuffer().append(target.getFmateriallength()).append("*")
 				.append(target.getFmaterialwidth()).toString());
-		//组织参数
-		source.setFmaterialRule(new StringBuffer().append(target.getFmateriallength()).append("*")
-				.append(target.getFmaterialwidth()).toString());
 		source.setFordertime(target.getFordertime());
 		source.setFdelivery(target.getFdelivery());
 		source.setFgroupgoodname(target.getFgroupgoodname());
@@ -218,10 +215,15 @@ public class OrderServiceImpl implements OrderService {
 		source.setFconsignee(target.getFconsignee());
 		source.setFcontactway(target.getFcontactway());
 		source.setFpusername(target.getFpusername());
-		source.setOrderId(source.getFchildorderid());
-		source.setAmount(source.getFamount());
-		source.setFamount(source.getAmount());
-		
-		return null;
+		if(!ObjectUtils.isEmpty(source.getFchildorderid())){
+			source.setOrderId(source.getFchildorderid());
+		}
+		if(!ObjectUtils.isEmpty(source.getFamount())){
+			source.setAmount(source.getFamount());
+		}
+		if(!ObjectUtils.isEmpty(source.getAmount())){
+			source.setFamount(source.getAmount());
+		}
+		return source;
 	}
 }
