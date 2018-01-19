@@ -24,9 +24,9 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.stock.model.AddStockBO;
 import com.djcps.wms.stock.model.MoveStockBO;
-import com.djcps.wms.stock.model.OperationRecordBO;
 import com.djcps.wms.stock.model.RecommendLocaBO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
@@ -88,11 +88,17 @@ public class StockController {
 	public Map<String, Object> getOperationRecord(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			String string = new JsonParser().parse(json).getAsJsonObject().get("orderId").toString();
-			if(ObjectUtils.isEmpty(string)){
-				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
+//			String string = new JsonParser().parse(json).getAsJsonObject().get("orderId").toString();
+			OrderIdBO fromJson = gson.fromJson(json, OrderIdBO.class);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(fromJson,
+							new HibernateSupportedValidator<OrderIdBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
 			}
-			return stockService.getOperationRecord(json);
+			return stockService.getOperationRecord(fromJson);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

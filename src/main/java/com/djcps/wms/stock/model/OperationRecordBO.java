@@ -48,6 +48,7 @@ public class OperationRecordBO extends BaseListBO implements Serializable{
 	 */
 	@NotBlank
 	private String event;
+	
 	public String getOperatorId() {
 		return operatorId;
 	}

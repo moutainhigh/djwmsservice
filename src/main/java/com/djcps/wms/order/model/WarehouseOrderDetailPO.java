@@ -69,11 +69,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 * 材料名称
 	 */
 	private String fmaterialname;
-
-	/**
-	 * 材料id
-	 */
-	private String materialId;
 	
 	/**
 	 * 下料规格
@@ -178,17 +173,17 @@ public class WarehouseOrderDetailPO implements Serializable{
 	/**
 	 * 已入库数量
 	 */
-	private String amountSaved;
+	private Integer amountSaved;
 	
 	/**
 	 * 订单数量
 	 */
-	private String famount;
+	private Integer famount;
 	
 	/**
 	 * 订单数量
 	 */
-	private String amount;
+	private Integer amount;
 	
 	/**
 	 * 仓库编号
@@ -215,12 +210,52 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.units = "片";
 	}
 
-	public String getMaterialId() {
-		return materialId;
+	public String getFboxlength() {
+		return fboxlength;
 	}
 
-	public void setMaterialId(String materialId) {
-		this.materialId = materialId;
+	public void setFboxlength(String fboxlength) {
+		this.fboxlength = fboxlength;
+	}
+
+	public String getFboxwidth() {
+		return fboxwidth;
+	}
+
+	public void setFboxwidth(String fboxwidth) {
+		this.fboxwidth = fboxwidth;
+	}
+
+	public String getFboxheight() {
+		return fboxheight;
+	}
+
+	public void setFboxheight(String fboxheight) {
+		this.fboxheight = fboxheight;
+	}
+
+	public String getFmateriallength() {
+		return fmateriallength;
+	}
+
+	public void setFmateriallength(String fmateriallength) {
+		this.fmateriallength = fmateriallength;
+	}
+
+	public String getFmaterialwidth() {
+		return fmaterialwidth;
+	}
+
+	public void setFmaterialwidth(String fmaterialwidth) {
+		this.fmaterialwidth = fmaterialwidth;
+	}
+
+	public Date getFordertime() {
+		return fordertime;
+	}
+
+	public void setFordertime(Date fordertime) {
+		this.fordertime = fordertime;
 	}
 
 	public Date getFpaymenttime() {
@@ -231,24 +266,12 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.fpaymenttime = fpaymenttime;
 	}
 
-	public String getFchildorderid() {
-		return fchildorderid;
-	}
-
-	public void setFchildorderid(String fchildorderid) {
-		this.fchildorderid = fchildorderid;
-	}
-
 	public Date getFdelivery() {
 		return fdelivery;
 	}
 
 	public void setFdelivery(Date fdelivery) {
 		this.fdelivery = fdelivery;
-	}
-
-	public void setFordertime(Date fordertime) {
-		this.fordertime = fordertime;
 	}
 
 	public String getFgroupgoodname() {
@@ -307,122 +330,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.fstatus = fstatus;
 	}
 
-	public String getAmountSaved() {
-		return amountSaved;
-	}
-
-	public void setAmountSaved(String amountSaved) {
-		this.amountSaved = amountSaved;
-	}
-
-	public String getFamount() {
-		return famount;
-	}
-
-	public void setFamount(String famount) {
-		this.famount = famount;
-	}
-
-	public String getWarehouseId() {
-		return warehouseId;
-	}
-
-	public void setWarehouseId(String warehouseId) {
-		this.warehouseId = warehouseId;
-	}
-
-	public String getWarehouseName() {
-		return warehouseName;
-	}
-
-	public void setWarehouseName(String warehouseName) {
-		this.warehouseName = warehouseName;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public List<WarehouseAreaBO> getAreaList() {
-		return areaList;
-	}
-
-	public void setAreaList(List<WarehouseAreaBO> areaList) {
-		this.areaList = areaList;
-	}
-
-	public String getFboxlength() {
-		return fboxlength;
-	}
-
-	public void setFboxlength(String fboxlength) {
-		this.fboxlength = fboxlength;
-	}
-
-	public String getFboxwidth() {
-		return fboxwidth;
-	}
-
-	public void setFboxwidth(String fboxwidth) {
-		this.fboxwidth = fboxwidth;
-	}
-
-	public String getFboxheight() {
-		return fboxheight;
-	}
-
-	public void setFboxheight(String fboxheight) {
-		this.fboxheight = fboxheight;
-	}
-
-	public String getFmateriallength() {
-		return fmateriallength;
-	}
-
-	public void setFmateriallength(String fmateriallength) {
-		this.fmateriallength = fmateriallength;
-	}
-
-	public String getFmaterialwidth() {
-		return fmaterialwidth;
-	}
-
-	public void setFmaterialwidth(String fmaterialwidth) {
-		this.fmaterialwidth = fmaterialwidth;
-	}
-	
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	public String getAmount() {
-		return amount;
-	}
-
-	public void setAmount(String amount) {
-		this.amount = amount;
-	}
-
-	public String getFlnglat() {
-		return flnglat;
-	}
-
-	public void setFlnglat(String flnglat) {
-		this.flnglat = flnglat;
-	}
-
-	public Date getFordertime() {
-		return fordertime;
-	}
-
 	public String getFconsignee() {
 		return fconsignee;
 	}
@@ -463,6 +370,126 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.fpusername = fpusername;
 	}
 
+	public String getFwaybill() {
+		return fwaybill;
+	}
+
+	public void setFwaybill(String fwaybill) {
+		this.fwaybill = fwaybill;
+	}
+
+	public String getFdeliveryorder() {
+		return fdeliveryorder;
+	}
+
+	public void setFdeliveryorder(String fdeliveryorder) {
+		this.fdeliveryorder = fdeliveryorder;
+	}
+
+	public String getFwaybillstatus() {
+		return fwaybillstatus;
+	}
+
+	public void setFwaybillstatus(String fwaybillstatus) {
+		this.fwaybillstatus = fwaybillstatus;
+	}
+
+	public String getFdeliveryorderstatus() {
+		return fdeliveryorderstatus;
+	}
+
+	public void setFdeliveryorderstatus(String fdeliveryorderstatus) {
+		this.fdeliveryorderstatus = fdeliveryorderstatus;
+	}
+
+	public String getLicencePlate() {
+		return licencePlate;
+	}
+
+	public void setLicencePlate(String licencePlate) {
+		this.licencePlate = licencePlate;
+	}
+
+	public String getFchildorderid() {
+		return fchildorderid;
+	}
+
+	public void setFchildorderid(String fchildorderid) {
+		this.fchildorderid = fchildorderid;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getFlnglat() {
+		return flnglat;
+	}
+
+	public void setFlnglat(String flnglat) {
+		this.flnglat = flnglat;
+	}
+
+	public Integer getAmountSaved() {
+		return amountSaved;
+	}
+
+	public void setAmountSaved(Integer amountSaved) {
+		this.amountSaved = amountSaved;
+	}
+
+	public Integer getFamount() {
+		return famount;
+	}
+
+	public void setFamount(Integer famount) {
+		this.famount = famount;
+	}
+
+	public Integer getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
+	public String getWarehouseId() {
+		return warehouseId;
+	}
+
+	public void setWarehouseId(String warehouseId) {
+		this.warehouseId = warehouseId;
+	}
+
+	public String getWarehouseName() {
+		return warehouseName;
+	}
+
+	public void setWarehouseName(String warehouseName) {
+		this.warehouseName = warehouseName;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public List<WarehouseAreaBO> getAreaList() {
+		return areaList;
+	}
+
+	public void setAreaList(List<WarehouseAreaBO> areaList) {
+		this.areaList = areaList;
+	}
+
 	@Override
 	public String toString() {
 		return "WarehouseOrderDetailPO [fboxlength=" + fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight="
@@ -472,10 +499,12 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", units="
 				+ units + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
 				+ ", fcodeprovince=" + fcodeprovince + ", faddressdetail=" + faddressdetail + ", fpusername="
-				+ fpusername + ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
+				+ fpusername + ", fwaybill=" + fwaybill + ", fdeliveryorder=" + fdeliveryorder + ", fwaybillstatus="
+				+ fwaybillstatus + ", fdeliveryorderstatus=" + fdeliveryorderstatus + ", licencePlate=" + licencePlate
+				+ ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
 				+ ", amountSaved=" + amountSaved + ", famount=" + famount + ", amount=" + amount + ", warehouseId="
 				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", areaList=" + areaList
-				+ ",materialId"+materialId+"]";
+				+ "]";
 	}
 	
 }

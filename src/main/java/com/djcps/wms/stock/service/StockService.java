@@ -2,6 +2,7 @@ package com.djcps.wms.stock.service;
 
 import java.util.Map;
 
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.stock.model.AddStockBO;
 import com.djcps.wms.stock.model.MoveStockBO;
 import com.djcps.wms.stock.model.RecommendLocaBO;
@@ -33,7 +34,7 @@ public interface StockService {
 	 * @author:zdx
 	 * @date:2017年12月20日
 	 */
-	Map<String, Object> getOperationRecord(String string);
+	Map<String, Object> getOperationRecord(OrderIdBO fromJson);
 
 	
 	/**
