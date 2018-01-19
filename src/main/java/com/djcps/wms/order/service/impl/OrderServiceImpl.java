@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
 			WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
 			//组织参数
 			getOrderDetail(fromJson,fromJson);
-			fromJson.setAmountSaved("0");
+			fromJson.setAmountSaved(0);
 			detailList.add(fromJson);
 		}
 		selectAreaByOrderId.setOrderIds(list);
@@ -130,7 +130,7 @@ public class OrderServiceImpl implements OrderService {
 			}else{
 				//组织参数
 				getOrderDetail(fromJson,fromJson);
-				fromJson.setAmountSaved("0");
+				fromJson.setAmountSaved(0);
 				return MsgTemplate.successMsg(fromJson);
 			}
 		}else{
