@@ -21,17 +21,17 @@ public class PdaStocktakingOrderBO {
     /**
      * 材料名称
      */
-    private String materialname;
+    private String materialName;
 
     /**
      * 下料规格长
      */
-    private String materiallength;
+    private String materialLength;
 
     /**
      * 下料规格宽
      */
-    private String materialwidth;
+    private String materialWidth;
 
     /**
      * 下料规格
@@ -47,7 +47,7 @@ public class PdaStocktakingOrderBO {
     /**
      * 盘点总数
      */
-    private Integer total;
+    private Integer totalNum;
 
     public String getOrderId() {
         return orderId;
@@ -65,28 +65,28 @@ public class PdaStocktakingOrderBO {
         this.productName = productName;
     }
 
-    public String getMaterialname() {
-        return materialname;
+    public String getMaterialName() {
+        return materialName;
     }
 
-    public void setMaterialname(String materialname) {
-        this.materialname = materialname;
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
-    public String getMateriallength() {
-        return materiallength;
+    public String getMaterialLength() {
+        return materialLength;
     }
 
-    public void setMateriallength(String materiallength) {
-        this.materiallength = materiallength;
+    public void setMaterialLength(String materialLength) {
+        this.materialLength = materialLength;
     }
 
-    public String getMaterialwidth() {
-        return materialwidth;
+    public String getMaterialWidth() {
+        return materialWidth;
     }
 
-    public void setMaterialwidth(String materialwidth) {
-        this.materialwidth = materialwidth;
+    public void setMaterialWidth(String materialWidth) {
+        this.materialWidth = materialWidth;
     }
 
     public String getMaterialRule() {
@@ -105,12 +105,12 @@ public class PdaStocktakingOrderBO {
         this.isInventoryProfit = isInventoryProfit;
     }
 
-    public Integer getTotal() {
-        return total;
+    public Integer getTotalNum() {
+        return totalNum;
     }
 
-    public void setTotal(Integer total) {
-        this.total = total;
+    public void setTotalNum(Integer totalNum) {
+        this.totalNum = totalNum;
     }
 
     @Override
@@ -118,12 +118,12 @@ public class PdaStocktakingOrderBO {
         return "PdaStocktakingOrderBO{" +
                 "orderId='" + orderId + '\'' +
                 ", productName='" + productName + '\'' +
-                ", materialname='" + materialname + '\'' +
-                ", materiallength='" + materiallength + '\'' +
-                ", materialwidth='" + materialwidth + '\'' +
+                ", materialName='" + materialName + '\'' +
+                ", materialLength='" + materialLength + '\'' +
+                ", materialWidth='" + materialWidth + '\'' +
                 ", materialRule='" + materialRule + '\'' +
                 ", isInventoryProfit='" + isInventoryProfit + '\'' +
-                ", total=" + total +
+                ", totalNum=" + totalNum +
                 '}';
     }
 }

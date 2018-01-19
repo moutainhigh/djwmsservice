@@ -69,6 +69,11 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 * 材料名称
 	 */
 	private String fmaterialname;
+
+	/**
+	 * 材料id
+	 */
+	private String materialId;
 	
 	/**
 	 * 下料规格
@@ -209,7 +214,15 @@ public class WarehouseOrderDetailPO implements Serializable{
 		super();
 		this.units = "片";
 	}
-	
+
+	public String getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(String materialId) {
+		this.materialId = materialId;
+	}
+
 	public Date getFpaymenttime() {
 		return fpaymenttime;
 	}
@@ -462,7 +475,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ fpusername + ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
 				+ ", amountSaved=" + amountSaved + ", famount=" + famount + ", amount=" + amount + ", warehouseId="
 				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", areaList=" + areaList
-				+ "]";
+				+ ",materialId"+materialId+"]";
 	}
 	
 }

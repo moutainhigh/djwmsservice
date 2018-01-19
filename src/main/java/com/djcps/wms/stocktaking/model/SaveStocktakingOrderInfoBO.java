@@ -1,6 +1,7 @@
 package com.djcps.wms.stocktaking.model;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * @title:保存盘点结果参数类
@@ -14,6 +15,11 @@ public class SaveStocktakingOrderInfoBO {
      * 关联编号
      */
     private String relativeId;
+
+    /**
+     * 作业id
+     */
+    private String jobId;
 
     /**
      * 合作方编号
@@ -83,6 +89,17 @@ public class SaveStocktakingOrderInfoBO {
      * 产品规格宽
      */
     private Double boxWidth;
+
+    /**
+     * 产品规格
+     */
+    private String productRule;
+
+    /**
+     * 下料规格
+     */
+    private String materialRule;
+
     /**
      * 库存数量
      */
@@ -99,11 +116,8 @@ public class SaveStocktakingOrderInfoBO {
     /**
      * 是否盘盈
      */
-    private String isInventoryProfit;
-    /**
-     * 备注
-     */
-    private String remark;
+    private Integer  isInventoryProfit;
+
     /**
      * 操作人
      */
@@ -112,6 +126,234 @@ public class SaveStocktakingOrderInfoBO {
      * 操作人编号
      */
     private String operatorId;
+
+    /**
+     * 下单时间
+     */
+    private Date ordertime;
+
+    /**
+     * 交期时间
+     */
+    private Date delivery;
+
+    /**
+     * 产品名称
+     */
+    private String groupgoodname;
+
+    /**
+     * 单位
+     */
+    private String units;
+
+
+    /**
+     * 订单状态(
+     *	已付款:2
+     *	已分发:3
+     * 	部分入库：21
+     已入库：22
+     已配货：23
+     已提货：24
+     已装车：25
+     已发车：26
+     )
+     */
+    private String status;
+
+    /**
+     * 材料名称
+     */
+    private String materialname;
+
+    /**
+     * 经纬度
+     */
+    private String lnglat;
+
+    /**
+     * 支付时间
+     */
+    private Date paymenttime;
+
+    /**
+     * 地址街道
+     */
+    private String addressdetail;
+
+    /**
+     * 省市区
+     */
+    private String codeprovince;
+
+
+    /**
+     * 联系人
+     */
+    private String consignee;
+
+    /**
+     * 联系方式
+     */
+    private String contactway;
+
+    /**
+     * 客户名称
+     */
+    private String pusername;
+
+    /**
+     * 订单号
+     */
+    private String childorderid;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 订单数量
+     */
+    private String amount;
+
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
+    }
+
+    public String getAddressdetail() {
+        return addressdetail;
+    }
+
+    public void setAddressdetail(String addressdetail) {
+        this.addressdetail = addressdetail;
+    }
+
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
+    }
+
+    public String getContactway() {
+        return contactway;
+    }
+
+    public void setContactway(String contactway) {
+        this.contactway = contactway;
+    }
+
+    public String getPusername() {
+        return pusername;
+    }
+
+    public void setPusername(String pusername) {
+        this.pusername = pusername;
+    }
+
+    public String getChildorderid() {
+        return childorderid;
+    }
+
+    public void setChildorderid(String childorderid) {
+        this.childorderid = childorderid;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getCodeprovince() {
+        return codeprovince;
+    }
+
+    public void setCodeprovince(String codeprovince) {
+        this.codeprovince = codeprovince;
+    }
+
+    public Date getPaymenttime() {
+        return paymenttime;
+    }
+
+    public void setPaymenttime(Date paymenttime) {
+        this.paymenttime = paymenttime;
+    }
+
+    public String getLnglat() {
+        return lnglat;
+    }
+
+    public void setLnglat(String lnglat) {
+        this.lnglat = lnglat;
+    }
+
+    public String getMaterialname() {
+        return materialname;
+    }
+
+    public void setMaterialname(String materialname) {
+        this.materialname = materialname;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGroupgoodname() {
+        return groupgoodname;
+    }
+
+    public void setGroupgoodname(String groupgoodname) {
+        this.groupgoodname = groupgoodname;
+    }
+
+    public Date getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Date delivery) {
+        this.delivery = delivery;
+    }
+
+    public String getProductRule() {
+        return productRule;
+    }
+
+    public void setProductRule(String productRule) {
+        this.productRule = productRule;
+    }
+
+    public String getMaterialRule() {
+        return materialRule;
+    }
+
+    public void setMaterialRule(String materialRule) {
+        this.materialRule = materialRule;
+    }
+
+    public Date getOrdertime() {
+        return ordertime;
+    }
+
+    public void setOrdertime(Date ordertime) {
+        this.ordertime = ordertime;
+    }
 
     public String getRelativeId() {
         return relativeId;
@@ -281,11 +523,11 @@ public class SaveStocktakingOrderInfoBO {
         this.differenceValue = differenceValue;
     }
 
-    public String getIsInventoryProfit() {
+    public Integer getIsInventoryProfit() {
         return isInventoryProfit;
     }
 
-    public void setIsInventoryProfit(String isInventoryProfit) {
+    public void setIsInventoryProfit(Integer isInventoryProfit) {
         this.isInventoryProfit = isInventoryProfit;
     }
 
@@ -313,10 +555,19 @@ public class SaveStocktakingOrderInfoBO {
         this.operatorId = operatorId;
     }
 
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
     @Override
     public String toString() {
         return "SaveStocktakingOrderInfoBO{" +
                 "relativeId='" + relativeId + '\'' +
+                ", jobId='" + jobId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
                 ", warehouseName='" + warehouseName + '\'' +
@@ -334,6 +585,8 @@ public class SaveStocktakingOrderInfoBO {
                 ", boxLength=" + boxLength +
                 ", boxHeight=" + boxHeight +
                 ", boxWidth=" + boxWidth +
+                ", productRule='" + productRule + '\'' +
+                ", materialRule='" + materialRule + '\'' +
                 ", instockAmount=" + instockAmount +
                 ", takeStockAmount=" + takeStockAmount +
                 ", differenceValue=" + differenceValue +
@@ -341,6 +594,21 @@ public class SaveStocktakingOrderInfoBO {
                 ", remark='" + remark + '\'' +
                 ", operator='" + operator + '\'' +
                 ", operatorId='" + operatorId + '\'' +
+                ", ordertime=" + ordertime +
+                ", delivery=" + delivery +
+                ", groupgoodname='" + groupgoodname + '\'' +
+                ", units='" + units + '\'' +
+                ", status='" + status + '\'' +
+                ", materialname='" + materialname + '\'' +
+                ", lnglat='" + lnglat + '\'' +
+                ", paymenttime=" + paymenttime +
+                ", addressdetail='" + addressdetail + '\'' +
+                ", codeprovince='" + codeprovince + '\'' +
+                ", consignee='" + consignee + '\'' +
+                ", contactway='" + contactway + '\'' +
+                ", pusername='" + pusername + '\'' +
+                ", childorderid='" + childorderid + '\'' +
+                ", amount='" + amount + '\'' +
                 '}';
     }
 }

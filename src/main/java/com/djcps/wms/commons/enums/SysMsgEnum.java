@@ -60,11 +60,23 @@ public enum SysMsgEnum implements MsgInterface {
 	 * 入库数量有误请重新核对
 	 */
 	SAVE_AMOUNT_ERROE(880011, "入库数量有误请重新核对"),
+
+//    /**
+//     * 订单已存在
+//     */
+//    ORDER_EXIST(880013, "订单已存在"),
+
+    /**
+     * 订单号错误
+     */
+    ORDER_WRONG(880014, "订单号错误"),
+
 	
 	/**
 	 * 订单状态修改失败
 	 */
 	ORDER_UPDATE_ERROR(880012, "订单状态修改失败,且入库失败,请联系管理员");
+
 
     private int code;
     

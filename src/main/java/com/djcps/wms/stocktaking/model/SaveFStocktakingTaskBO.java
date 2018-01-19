@@ -4,14 +4,13 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * @title:保存盘点任务
+ * @title:保存订单，服务端的参数都带f
  * @description:
  * @author:wzy
  * @company:djwms
- * @create:2018/1/14
+ * @create:2018/1/15
  **/
-public class SaveStocktakingTaskBO {
-
+public class SaveFStocktakingTaskBO {
     /**
      * 保存盘点类型1，2，3(只保存，保存并打印，保存并发起推送)
      */
@@ -19,23 +18,13 @@ public class SaveStocktakingTaskBO {
     private Integer saveStocktakingType;
 
     /** 作业单号
-    */
+     */
     private String jobId;
 
     /**
      * 合作方编号
      */
     private String partnerId;
-
-    /**
-     * 合作方名称
-     */
-    private String partnerName;
-
-    /**
-     * 合作方区域
-     */
-    private String partnerArea;
 
     /**
      * 盘点类型
@@ -71,41 +60,16 @@ public class SaveStocktakingTaskBO {
     private String remark;
 
     /**
-     * 仓库编号
-     */
-    private String warehouseId;
-    /**
-     * 仓库名称
-     */
-    private String warehouseName;
-
-    /**
      * 盘点订单信息集合
      */
-    private List<SaveStocktakingOrderInfoBO> stocktakingOrderInfo;
+    private List<StocktakingTaskNoF> stocktakingOrderInfo;
 
-    public String getPartnerArea() {
-        return partnerArea;
+    public Integer getSaveStocktakingType() {
+        return saveStocktakingType;
     }
 
-    public void setPartnerArea(String partnerArea) {
-        this.partnerArea = partnerArea;
-    }
-
-    public String getPartnerName() {
-        return partnerName;
-    }
-
-    public void setPartnerName(String partnerName) {
-        this.partnerName = partnerName;
-    }
-
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
+    public void setSaveStocktakingType(Integer saveStocktakingType) {
+        this.saveStocktakingType = saveStocktakingType;
     }
 
     public String getJobId() {
@@ -114,6 +78,14 @@ public class SaveStocktakingTaskBO {
 
     public void setJobId(String jobId) {
         this.jobId = jobId;
+    }
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
     }
 
     public Integer getType() {
@@ -180,46 +152,20 @@ public class SaveStocktakingTaskBO {
         this.remark = remark;
     }
 
-    public List<SaveStocktakingOrderInfoBO> getStocktakingOrderInfo() {
+    public List<StocktakingTaskNoF> getStocktakingOrderInfo() {
         return stocktakingOrderInfo;
     }
 
-    public void setStocktakingOrderInfo(List<SaveStocktakingOrderInfoBO> stocktakingOrderInfo) {
+    public void setStocktakingOrderInfo(List<StocktakingTaskNoF> stocktakingOrderInfo) {
         this.stocktakingOrderInfo = stocktakingOrderInfo;
-    }
-
-    public String getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
-    }
-
-    public String getWarehouseName() {
-        return warehouseName;
-    }
-
-    public void setWarehouseName(String warehouseName) {
-        this.warehouseName = warehouseName;
-    }
-
-    public Integer getSaveStocktakingType() {
-        return saveStocktakingType;
-    }
-
-    public void setSaveStocktakingType(Integer saveStocktakingType) {
-        this.saveStocktakingType = saveStocktakingType;
     }
 
     @Override
     public String toString() {
-        return "SaveStocktakingTaskBO{" +
+        return "SaveFStocktakingTaskBO{" +
                 "saveStocktakingType=" + saveStocktakingType +
                 ", jobId='" + jobId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
-                ", partnerName='" + partnerName + '\'' +
-                ", partnerArea='" + partnerArea + '\'' +
                 ", type=" + type +
                 ", status=" + status +
                 ", pdaStatus=" + pdaStatus +
@@ -228,8 +174,6 @@ public class SaveStocktakingTaskBO {
                 ", inventoryClerk='" + inventoryClerk + '\'' +
                 ", inventoryClerkId='" + inventoryClerkId + '\'' +
                 ", remark='" + remark + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
                 ", stocktakingOrderInfo=" + stocktakingOrderInfo +
                 '}';
     }

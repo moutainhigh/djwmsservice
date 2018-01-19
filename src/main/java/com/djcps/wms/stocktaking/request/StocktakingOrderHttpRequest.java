@@ -15,7 +15,7 @@ import rpc.plugin.http.RPCClientFields;
  * @return
  * @create  2018/1/10 18:00
  **/
-@RPCClientFields(urlfield = "order_lin", urlbean = ParamsConfig.class)
+@RPCClientFields(urlfield = "UPDATE_ORDER_SERVER", urlbean = ParamsConfig.class)
 public interface StocktakingOrderHttpRequest {
     /**
      * 批量获取订单详情
@@ -26,5 +26,5 @@ public interface StocktakingOrderHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("order/getInfoByChildIds.do")
-    public HTTPResponse getOrderDetailsList(@Body RequestBody json);
+    HTTPResponse getOrderDetailsList(@Body RequestBody json);
 }

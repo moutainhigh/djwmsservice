@@ -9,7 +9,6 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.stocktaking.model.*;
 import com.djcps.wms.stocktaking.service.StocktakingTaskService;
-import com.djcps.wms.warehouse.controller.AreaController;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,7 +33,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/Stocktaking")
 public class StocktakingTaskController {
-    private static final Logger logger = LoggerFactory.getLogger(AreaController.class);
+    private static final Logger logger = LoggerFactory.getLogger(StocktakingTaskController.class);
 
     @Autowired
     private StocktakingTaskService stocktakingTaskService;
@@ -156,7 +154,7 @@ public class StocktakingTaskController {
     }
 
     /**
-     * 保存盘点任务
+     * 保存新增盘点任务
      * @author  wzy
      * @param
      * @return
@@ -189,9 +187,18 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="请求盘点任务信息",value = "/stocktakingOrderInfoList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> stocktakingOrderInfoList(@RequestBody(required = false) String json, HttpServletRequest request){
-        Map<String,Object> map=gson.fromJson(json,Map.class);
-        String jobId=(String)(map.get("jobId"));
-        return stocktakingTaskService.stocktakingOrderInfoList(jobId);
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=gson.fromJson(json,PdaGetStocktakingOrderBO.class);
+        BeanUtils.copyProperties(partnerInfoBo,pdaGetStocktakingOrderBO);
+        ComplexResult ret = FluentValidator.checkAll().failFast()
+                .on(pdaGetStocktakingOrderBO,
+                        new HibernateSupportedValidator<PdaGetStocktakingOrderBO>()
+                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                .doValidate().result(ResultCollectors.toComplex());
+        if (!ret.isSuccess()) {
+            return MsgTemplate.failureMsg(ret);
+        }
+        return stocktakingTaskService.stocktakingOrderInfoList(pdaGetStocktakingOrderBO);
     }
 
     /**
@@ -224,7 +231,7 @@ public class StocktakingTaskController {
      * @company:djwms
      * @create:2018/1/14
      **/
-    @RequestMapping(name="保存盘盈录入信息/保存单条PDA盘点结果",value = "/saveInventoryProfitInfo", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(name="PDA保存盘盈录入信息/Web保存盘盈录入信息",value = "/saveInventoryProfitInfo", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> saveInventoryProfitInfo(@RequestBody(required = false) String json, HttpServletRequest request){
         try{
         SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO=gson.fromJson(json,SaveStocktakingOrderInfoBO.class);
@@ -244,7 +251,7 @@ public class StocktakingTaskController {
         e.printStackTrace();
         logger.error(e.getMessage());
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
-    }
+     }
     }
 
     /**
@@ -257,6 +264,7 @@ public class StocktakingTaskController {
     @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> pdaInventorySurplus(@RequestBody(required = false) String json, HttpServletRequest request){
         StocktakingTaskBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO.class);
+        //PdaStocktakingOrderInfo pdaStocktakingOrderInfo=gson.fromJson(json,PdaStocktakingOrderInfo.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
         ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -277,10 +285,11 @@ public class StocktakingTaskController {
      * @return
      * @create  2018/1/12 14:38
      **/
-    @RequestMapping(name="暂存盘点结果请求",value = "/saveStocktaking", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(name="Web暂存盘点结果请求",value = "/saveStocktaking", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> saveStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
-        List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList=gson.fromJson(json,List.class);
-        return stocktakingTaskService.saveStocktakingResult(saveStocktakingOrderInfoBOList);
+        SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList=gson.fromJson(json,SaveStocktakingOrderInfoList.class);
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        return stocktakingTaskService.saveStocktakingResult(saveStocktakingOrderInfoBOList,partnerInfoBo);
     }
 
     /**
@@ -292,20 +301,19 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="Web保存盘点结果请求",value = "/completeStocktaking", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> completeStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
-        List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList=gson.fromJson(json,List.class);
+       SaveStocktakingOrderInfoList saveStocktakingOrderInfoList=gson.fromJson(json,SaveStocktakingOrderInfoList.class);
+        //List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList=gson.fromJson(json,List.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         ComplexResult ret = FluentValidator.checkAll().failFast()
-                .on(saveStocktakingOrderInfoBOList,
-                        new HibernateSupportedValidator<List<SaveStocktakingOrderInfoBO>>()
+                .on(saveStocktakingOrderInfoList,
+                        new HibernateSupportedValidator<SaveStocktakingOrderInfoList>()
                                 .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                 .doValidate().result(ResultCollectors.toComplex());
         if (!ret.isSuccess()) {
             return MsgTemplate.failureMsg(ret);
         }
-        return stocktakingTaskService.completeStocktakingTask(saveStocktakingOrderInfoBOList,partnerInfoBo.getPartnerId());
+        return stocktakingTaskService.completeStocktakingTask(saveStocktakingOrderInfoList,partnerInfoBo);
     }
-
-
 
     /**
      * PDA获取盘点任务列表
@@ -396,7 +404,8 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
-    
+
+
     /**
      * PDA保存盘点结果
      * @author  wzy
@@ -434,8 +443,8 @@ public class StocktakingTaskController {
      * @return 
      * @create  2018/1/13 17:17
      **/
-    @RequestMapping(name="PDA完成盘点请求",value = "/pdaCompleteStocktaking", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> pdaCompleteStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
+    @RequestMapping(name="PDA获取盘点订单各个状态数量",value = "/getOrderAmount", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> getOrderAmount(@RequestBody(required = false) String json, HttpServletRequest request){
         try{
             PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
             PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=gson.fromJson(json,PdaGetStocktakingOrderBO.class);
@@ -458,38 +467,35 @@ public class StocktakingTaskController {
     }
 
 
-
-//    /**
-//     * PDA完成盘点更新状态
-//     * @author  wzy
-//     * @param
-//     * @return
-//     * @create  2018/1/13 15:25
-//     **/
-//    @RequestMapping(name="PDA完成盘点更新状态",value = "/pdaCompleteStocktaking", method = RequestMethod.POST, produces = "application/json")
-//    public Map<String, Object> pdaCompleteStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
-//       try{
-//        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
-//        PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=gson.fromJson(json,PdaGetStocktakingOrderBO.class);
-//        BeanUtils.copyProperties(partnerInfoBo,pdaGetStocktakingOrderBO);
-//        ComplexResult ret = FluentValidator.checkAll().failFast()
-//                .on(pdaGetStocktakingOrderBO,
-//                        new HibernateSupportedValidator<PdaGetStocktakingOrderBO>()
-//                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//                .doValidate().result(ResultCollectors.toComplex());
-//        if (!ret.isSuccess()) {
-//            return MsgTemplate.failureMsg(ret);
-//        }
-//        return stocktakingTaskService.pdaCompleteStocktaking(pdaGetStocktakingOrderBO);
-//    }
-//        catch (Exception e){
-//        e.printStackTrace();
-//        logger.error(e.getMessage());
-//        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
-//    }
-//    }
-
-
+    /**
+     * PDA完成盘点更新状态
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/13 15:25
+     **/
+    @RequestMapping(name="PDA完成盘点更新状态",value = "/pdaCompleteStocktaking", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> pdaCompleteStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
+       try{
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=gson.fromJson(json,PdaGetStocktakingOrderBO.class);
+        BeanUtils.copyProperties(partnerInfoBo,pdaGetStocktakingOrderBO);
+        ComplexResult ret = FluentValidator.checkAll().failFast()
+                .on(pdaGetStocktakingOrderBO,
+                        new HibernateSupportedValidator<PdaGetStocktakingOrderBO>()
+                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                .doValidate().result(ResultCollectors.toComplex());
+        if (!ret.isSuccess()) {
+            return MsgTemplate.failureMsg(ret);
+        }
+        return stocktakingTaskService.pdaCompleteStocktaking(pdaGetStocktakingOrderBO);
+    }
+        catch (Exception e){
+        e.printStackTrace();
+        logger.error(e.getMessage());
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
+    }
 
     /**
      * 获取全部盘点任务列表
@@ -501,6 +507,8 @@ public class StocktakingTaskController {
     @RequestMapping(name=" 获取全部盘点任务列表",value = "/stocktakingTaskList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> stocktakingTaskList(@RequestBody(required = false) String json, HttpServletRequest request){
         GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
         ComplexResult ret = FluentValidator.checkAll().failFast()
                 .on(getStocktakingTaskBO,
                         new HibernateSupportedValidator<GetStocktakingTaskBO>()
@@ -521,7 +529,9 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 条件获取盘点任务列表",value = "/searchTaskList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> searchTaskList(@RequestBody(required = false) String json, HttpServletRequest request){
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
+        BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
         ComplexResult ret = FluentValidator.checkAll().failFast()
                 .on(getStocktakingTaskBO,
                         new HibernateSupportedValidator<GetStocktakingTaskBO>()
@@ -555,4 +565,35 @@ public class StocktakingTaskController {
         }
         return stocktakingTaskService.stocktakingResultList(pdaGetStocktakingOrderBO);
     }
+
+    /**
+     * 获取操作记录
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/17 10:43
+     **/
+    @RequestMapping(name=" 获取操作记录",value = "/operationRecordList", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> operationRecordList(@RequestBody(required = false) String json, HttpServletRequest request){
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
+        BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
+        return stocktakingTaskService.operationRecordList(getStocktakingTaskBO);
+    }
+
+    /**
+     * 查看盘点任务进行情况
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/17 10:54
+     **/
+    @RequestMapping(name=" 查看盘点任务进行情况",value = "/stocktakingCompleteStatus", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> stocktakingCompleteStatus(@RequestBody(required = false) String json, HttpServletRequest request){
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
+        BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
+        return stocktakingTaskService.stocktakingCompleteStatus(getStocktakingTaskBO);
+    }
+
 }

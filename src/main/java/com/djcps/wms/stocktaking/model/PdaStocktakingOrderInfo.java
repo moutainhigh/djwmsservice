@@ -25,7 +25,6 @@ public class PdaStocktakingOrderInfo {
     /**
      * 合作方编号
      */
-    @NotBlank
     private String partnerId;
 
     /**

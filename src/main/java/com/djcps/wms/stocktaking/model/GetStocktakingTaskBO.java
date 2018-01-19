@@ -36,6 +36,39 @@ public class GetStocktakingTaskBO {
      */
     private String endTime;
 
+    /**
+     * 合作方id
+     */
+    private String partnerId;
+
+    private String pageSize;
+
+    private String pageNo;
+
+    public String getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(String pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(String pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
     public String getWarehouseId() {
         return warehouseId;
     }
@@ -93,6 +126,9 @@ public class GetStocktakingTaskBO {
                 ", jobId='" + jobId + '\'' +
                 ", beginTime='" + beginTime + '\'' +
                 ", endTime='" + endTime + '\'' +
+                ", partnerId='" + partnerId + '\'' +
+                ", pageSize='" + pageSize + '\'' +
+                ", pageNo='" + pageNo + '\'' +
                 '}';
     }
 }

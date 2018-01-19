@@ -16,6 +16,27 @@ import rpc.plugin.http.RPCClientFields;
  **/
 @RPCClientFields(urlfield = "WMS_SERVER", urlbean = ParamsConfig.class)
 public interface WmsForStocktakingOrderHttpRequest {
+    /**
+     * 获取订单库位信息接口
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/18 17:58
+     **/
+    @Headers("content-type:application/json")
+    @POST("entry/orderWarehouseLocInfo.do")
+    public HTTPResponse orderWarehouseLocInfo(@Body RequestBody json);
+
+    /**
+     * 根据订单获取库位信息,判断是否是盘盈
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/19 10:51
+     **/
+    @Headers("content-type:application/json")
+    @POST("stock/getAreaByOrderId.do")
+    public HTTPResponse getAreaByOrderId(@Body RequestBody json);
 
 
 }

@@ -25,7 +25,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/10 8:47
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/increaseStoctakingTask.do")
+    @POST("takeStock/increaseTask.do")
     public HTTPResponse getAllStocktakingInfo(@Body RequestBody json);
 
     /**
@@ -36,7 +36,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/10 8:47
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/stoctakingByAreaAndLoc.do")
+    @POST("takeStock/increaseTaskByAreaAndLoc.do")
     public HTTPResponse getPartStocktakingInfo(@Body RequestBody json);
 
     /**
@@ -62,14 +62,14 @@ public interface WmsForStocktakingTaskHttpRequest {
     public HTTPResponse getInventoryclerk(@Body RequestBody json);
 
     /**
-     *确认订单
+     *保存盘点任务
      * @author  wzy
      * @param json
      * @return
      * @create  2018/1/10 8:47
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/savestoctakingTask.do")
+    @POST("takeStock/saveTask.do")
     public HTTPResponse saveSoctakingTask(@Body RequestBody json);
 
     /**
@@ -80,7 +80,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/12 9:36
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/stocktakingOrderInfoList.do")
+    @POST("takeStock/orderInfoList.do")
     public HTTPResponse stocktakingOrderInfoList(@Body RequestBody json);
 
     /**
@@ -102,7 +102,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/12 15:01
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/saveStocktakingResult.do")
+    @POST("takeStock/saveResult.do")
     public HTTPResponse saveStocktakingResult(@Body RequestBody json);
 
     /**
@@ -113,7 +113,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/12 15:02
      **/
     @Headers("content-type:application/json")
-    @POST("order/completeStocktakingTask.do")
+    @POST("takeStock/completeTask.do")
     public HTTPResponse completeStocktakingTask(@Body RequestBody json);
 
     /**
@@ -124,7 +124,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/12 16:18
      **/
     @Headers("content-type:application/json")
-    @POST("order/stocktakingTaskList.do")
+    @POST("takeStock/taskList.do")
     public HTTPResponse stocktakingTaskList(@Body RequestBody json);
 
     /**
@@ -135,7 +135,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/12 16:20
      **/
     @Headers("content-type:application/json")
-    @POST("order/searchTaskList.do")
+    @POST("takeStock/taskList.do")
     public HTTPResponse searchTaskList(@Body RequestBody json);
 
     /**
@@ -146,7 +146,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/13 13:50
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/pdaStocktakingTaskList.do")
+    @POST("takeStock/pdaTaskList.do")
     public HTTPResponse pdaStocktakingTaskList(@Body RequestBody json);
 
     /**
@@ -157,7 +157,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/13 14:43
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/pdaStocktakingOrderList.do")
+    @POST("takeStock/pdaOrderList.do")
     public HTTPResponse pdaStocktakingOrderList(@Body RequestBody json);
 
     /**
@@ -168,7 +168,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/13 15:39
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/pdaStocktakingOrderInfo.do")
+    @POST("takeStock/pdaOrderInfo.do")
     public HTTPResponse pdaStocktakingOrderInfo(@Body RequestBody json);
 
     /**
@@ -179,7 +179,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/13 16:12
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/savePdaStocktakingResult.do")
+    @POST("takeStock/savePdaResult.do")
     public HTTPResponse savePdaStocktakingResult(@Body RequestBody json);
 
 
@@ -191,7 +191,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      * @create  2018/1/13 15:33
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/completeStocktaking.do")
+    @POST("takeStock/completePdaTask.do")
     public HTTPResponse pdaCompleteStocktaking(@Body RequestBody json);
 
     /**
@@ -237,4 +237,26 @@ public interface WmsForStocktakingTaskHttpRequest {
     @Headers("content-type:application/json")
     @POST("takeStock/saveInventoryProfitInfo.do")
     public HTTPResponse saveInventoryProfitInfo(@Body RequestBody json);
+
+    /**
+     * 获取操作记录接口
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/17 10:29
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/operationRecordList.do")
+    public HTTPResponse operationRecordList(@Body RequestBody json);
+
+    /**
+     * 查看盘点任务进行情况接口
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/17 10:50
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/stocktakingCompleteStatus.do")
+    public HTTPResponse stocktakingCompleteStatus(@Body RequestBody json);
 }

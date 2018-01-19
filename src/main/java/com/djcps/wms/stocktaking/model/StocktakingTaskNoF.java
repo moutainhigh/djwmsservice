@@ -1,7 +1,5 @@
 package com.djcps.wms.stocktaking.model;
 
-import com.djcps.wms.order.model.WarehouseOrderDetailPO;
-
 import java.io.Serializable;
 
 /**
@@ -11,7 +9,7 @@ import java.io.Serializable;
  * @company:djwms
  * @create:2018/1/10
  **/
-public class StocktakingTaskBO implements Serializable{
+public class StocktakingTaskNoF implements Serializable{
 
     private static final long serialVersionUID = -1634478108422100258L;
 
@@ -48,8 +46,8 @@ public class StocktakingTaskBO implements Serializable{
 
 
     /**
-    * 仓库名称
-    */
+     * 仓库名称
+     */
     private String warehouseName;
 
 
@@ -68,30 +66,15 @@ public class StocktakingTaskBO implements Serializable{
      */
     private String warehouseLocId;
 
-
     /**
      * 库位名称
      */
     private String warehouseLocName;
 
     /**
-     * 在库数量
-     */
-    private Integer trueAmount;
-
-    /**
      * 库位关联订单详情列表
      */
-    private WarehouseOrderDetailPO orderDetail;
-
-
-    public Integer getTrueAmount() {
-        return trueAmount;
-    }
-
-    public void setTrueAmount(Integer trueAmount) {
-        this.trueAmount = trueAmount;
-    }
+    private SaveStocktakingOrderInfoBO orderDetail;
 
     public String getJobId() {
         return jobId;
@@ -181,14 +164,13 @@ public class StocktakingTaskBO implements Serializable{
         this.warehouseLocName = warehouseLocName;
     }
 
-    public WarehouseOrderDetailPO getOrderDetail() {
+    public SaveStocktakingOrderInfoBO getOrderDetail() {
         return orderDetail;
     }
 
-    public void setOrderDetail(WarehouseOrderDetailPO orderDetail) {
+    public void setOrderDetail(SaveStocktakingOrderInfoBO orderDetail) {
         this.orderDetail = orderDetail;
     }
-
 
     @Override
     public String toString() {
@@ -204,7 +186,6 @@ public class StocktakingTaskBO implements Serializable{
                 ", warehouseAreaName='" + warehouseAreaName + '\'' +
                 ", warehouseLocId='" + warehouseLocId + '\'' +
                 ", warehouseLocName='" + warehouseLocName + '\'' +
-                ", trueAmount=" + trueAmount +
                 ", orderDetail=" + orderDetail +
                 '}';
     }

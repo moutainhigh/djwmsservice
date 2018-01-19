@@ -19,7 +19,7 @@
         <!-- wms服务端 -->
       	<property name="wmsServer" value="http://192.168.12.81:8080/djwmsserver/" />
      	 <!-- <property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/>  -->
-        <property name="order_lin" value="http://192.168.2.73:8080/djorder/"/>
+        <!--<property name="order_lin" value="http://192.168.2.73:8080/djorder/"/>-->
      	<!-- 编号服务 -->
         <property name="numberServer" value="http://192.168.10.200:80/djnumserver/"/>
         <!-- 地址服务 -->

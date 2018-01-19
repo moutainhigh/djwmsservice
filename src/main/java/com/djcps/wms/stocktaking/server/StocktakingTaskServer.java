@@ -4,6 +4,8 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtable.request.NumberServerHttpRequest;
 import com.djcps.wms.stocktaking.model.*;
+import com.djcps.wms.stocktaking.orderresult.OrderResult;
+import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingTaskHttpRequest;
 import com.djcps.wms.warehouse.server.AreaServer;
 import com.google.gson.Gson;
@@ -12,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
-
-import java.util.List;
 
 /**
  * @title:盘点任务调用http服务
@@ -33,6 +33,9 @@ public class StocktakingTaskServer {
 
     @Autowired
     private WmsForStocktakingTaskHttpRequest stocktakingTaskHttpRequest;
+
+    @Autowired
+    private WmsForStocktakingOrderHttpRequest stocktakingOrderHttpRequest;
 
     public HttpResult getAllStocktakingInfo(AddStocktakingBO addStocktakingBO){
         String json = gson.toJson(addStocktakingBO);
@@ -96,8 +99,8 @@ public class StocktakingTaskServer {
         return verifyHttpResult(http);
     }
 
-    public HttpResult stocktakingOrderInfoList(String jobId){
-        String json = gson.toJson(jobId);
+    public HttpResult stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
+        String json = gson.toJson(pdaGetStocktakingOrderBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.stocktakingOrderInfoList(rb) ;
@@ -114,7 +117,14 @@ public class StocktakingTaskServer {
         return verifyHttpResult(http);
     }
 
-    public HttpResult saveStocktakingResult(List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList){
+    /**
+     * 暂存盘点结果
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/18 17:17
+     **/
+    public HttpResult saveStocktakingResult(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList){
         String json = gson.toJson(saveStocktakingOrderInfoBOList);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
@@ -123,7 +133,7 @@ public class StocktakingTaskServer {
         return verifyHttpResult(http);
     }
 
-    public HttpResult completeStocktakingTask(List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList){
+    public HttpResult completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList){
         String json = gson.toJson(saveStocktakingOrderInfoBOList);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
@@ -132,22 +142,63 @@ public class StocktakingTaskServer {
         return verifyHttpResult(http);
     }
 
-    public HttpResult stocktakingTaskList(GetStocktakingTaskBO getStocktakingTaskBO){
+    public OrderResult stocktakingTaskList(GetStocktakingTaskBO getStocktakingTaskBO){
         String json = gson.toJson(getStocktakingTaskBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.stocktakingTaskList(rb) ;
         //校验请求是否成功
-        return verifyHttpResult(http);
+        OrderResult result = null;
+        if(http.isSuccessful()){
+            result = gson.fromJson(http.getBodyString(), OrderResult.class);
+        }
+        if(result == null){
+            System.err.println("Http请求出错,HttpResult结果为null");
+            logger.error("Http请求出错,HttpResult结果为null");
+        }
+        return result;
     }
 
-    public HttpResult searchTaskList(GetStocktakingTaskBO getStocktakingTaskBO){
+    public OrderResult searchTaskList(GetStocktakingTaskBO getStocktakingTaskBO){
         String json = gson.toJson(getStocktakingTaskBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.searchTaskList(rb) ;
         //校验请求是否成功
-        return verifyHttpResult(http);
+        //校验请求是否成功
+        OrderResult result = null;
+        if(http.isSuccessful()){
+            result = gson.fromJson(http.getBodyString(), OrderResult.class);
+        }
+        if(result == null){
+            System.err.println("Http请求出错,HttpResult结果为null");
+            logger.error("Http请求出错,HttpResult结果为null");
+        }
+        return result;
+    }
+
+    /**
+     * 获取操作记录
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/17 10:31
+     **/
+    public OrderResult operationRecordList(GetStocktakingTaskBO getStocktakingTaskBO){
+        String json = gson.toJson(getStocktakingTaskBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.operationRecordList(rb) ;
+        //校验请求是否成功
+        OrderResult result = null;
+        if(http.isSuccessful()){
+            result = gson.fromJson(http.getBodyString(), OrderResult.class);
+        }
+        if(result == null){
+            System.err.println("Http请求出错,HttpResult结果为null");
+            logger.error("Http请求出错,HttpResult结果为null");
+        }
+        return result;
     }
 
     /**
@@ -291,6 +342,38 @@ public class StocktakingTaskServer {
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.saveInventoryProfitInfo(rb) ;
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
+     * 查看盘点任务进行情况
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/17 10:52
+     **/
+    public HttpResult stocktakingCompleteStatus(GetStocktakingTaskBO getStocktakingTaskBO){
+        String json = gson.toJson(getStocktakingTaskBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.stocktakingCompleteStatus(rb) ;
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
+     * 获取库区订单信息
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/18 18:23
+     **/
+    public HttpResult orderWarehouseLocInfo(OrderWarehouseLocInfoBO orderWarehouseLocInfoBO){
+        String json = gson.toJson(orderWarehouseLocInfoBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingOrderHttpRequest.orderWarehouseLocInfo(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
     }

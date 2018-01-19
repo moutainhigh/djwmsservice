@@ -1,8 +1,8 @@
 package com.djcps.wms.stocktaking.service;
 
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.stocktaking.model.*;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,7 +75,7 @@ public interface StocktakingTaskService {
      * @return
      * @create  2018/1/12 9:37
      **/
-    Map<String,Object> stocktakingOrderInfoList(String jobId);
+    Map<String,Object> stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO);
 
     /**
      * 获取盘点任务订单信息，校验是否需要盘盈
@@ -102,7 +102,7 @@ public interface StocktakingTaskService {
      * @return 
      * @create  2018/1/12 15:06
      **/
-    Map<String,Object> saveStocktakingResult(List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList);
+    Map<String,Object> saveStocktakingResult(SaveStocktakingOrderInfoList saveStocktakingOrderInfoList,PartnerInfoBO partnerInfoBO);
 
     /**
      * 保存盘点结果
@@ -111,7 +111,7 @@ public interface StocktakingTaskService {
      * @return
      * @create  2018/1/12 15:22
      **/
-    Map<String,Object> completeStocktakingTask(List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList,String partentId);
+    Map<String,Object> completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoList, PartnerInfoBO partnerInfoBO);
 
     /**
      * 获取全部盘点任务列表
@@ -204,4 +204,30 @@ public interface StocktakingTaskService {
      **/
     Map<String,Object> stocktakingResultList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO);
 
+    /**
+     * 获取操作记录
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/17 10:33
+     **/
+    Map<String,Object> operationRecordList(GetStocktakingTaskBO getStocktakingTaskBO);
+
+    /**
+     * 查看盘点任务进行情况
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/17 10:52
+     **/
+    Map<String,Object> stocktakingCompleteStatus(GetStocktakingTaskBO getStocktakingTaskBO);
+
+    /**
+     * 获取库位订单信息
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/18 18:24
+     **/
+    Map<String,Object> orderWarehouseLocInfo(OrderWarehouseLocInfoBO orderWarehouseLocInfoBO);
 }

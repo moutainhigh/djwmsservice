@@ -18,6 +18,11 @@ public class PdaGetStocktakingOrderBO {
     private String jobId;
 
     /**
+     * 关联id
+     */
+    private String relativeId;
+
+    /**
      * 合作方编号
      */
     @NotBlank
@@ -26,8 +31,17 @@ public class PdaGetStocktakingOrderBO {
     /**
      * 仓库编号
      */
-    @NotBlank
     private String warehouseId;
+
+    /**
+     * 操作人id
+     */
+    private String operatorId;
+
+    /**
+     * 操作人名称
+     */
+    private String operator;
 
     /**
      * 页面显示数量
@@ -38,6 +52,30 @@ public class PdaGetStocktakingOrderBO {
      *当前页
      **/
     private String pageNo;
+
+    public String getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public String getRelativeId() {
+        return relativeId;
+    }
+
+    public void setRelativeId(String relativeId) {
+        this.relativeId = relativeId;
+    }
 
     public String getJobId() {
         return jobId;
@@ -83,8 +121,11 @@ public class PdaGetStocktakingOrderBO {
     public String toString() {
         return "PdaGetStocktakingOrderBO{" +
                 "jobId='" + jobId + '\'' +
+                ", relativeId='" + relativeId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
+                ", operatorId='" + operatorId + '\'' +
+                ", operator='" + operator + '\'' +
                 ", pageSize='" + pageSize + '\'' +
                 ", pageNo='" + pageNo + '\'' +
                 '}';
