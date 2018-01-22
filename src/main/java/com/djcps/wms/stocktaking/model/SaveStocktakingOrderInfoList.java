@@ -19,6 +19,8 @@ public class SaveStocktakingOrderInfoList {
 
     private String operatorId;
 
+    List<SaveStocktakingOrderInfoBO> saveStocktaking;
+
     public String getJobId() {
         return jobId;
     }
@@ -51,7 +53,7 @@ public class SaveStocktakingOrderInfoList {
         this.operatorId = operatorId;
     }
 
-    List<SaveStocktakingOrderInfoBO> saveStocktaking;
+
 
     public List<SaveStocktakingOrderInfoBO> getSaveStocktaking() {
         return saveStocktaking;

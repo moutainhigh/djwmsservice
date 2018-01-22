@@ -379,6 +379,22 @@ public class StocktakingTaskServer {
     }
 
     /**
+     * 获取库区库位的在库数量
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/19 12:37
+     **/
+    public HttpResult getAmount(GetAmountBO amountBO){
+        String json = gson.toJson(amountBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingOrderHttpRequest.getAmount(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
      *验证
      * @author  wzy
      * @param http

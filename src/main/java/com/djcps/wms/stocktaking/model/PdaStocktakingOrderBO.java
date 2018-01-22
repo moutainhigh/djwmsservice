@@ -43,11 +43,20 @@ public class PdaStocktakingOrderBO {
      */
     private String isInventoryProfit;
 
+    private Integer takeStockAmount;
 
     /**
      * 盘点总数
      */
     private Integer totalNum;
+
+    public Integer getTakeStockAmount() {
+        return takeStockAmount;
+    }
+
+    public void setTakeStockAmount(Integer takeStockAmount) {
+        this.takeStockAmount = takeStockAmount;
+    }
 
     public String getOrderId() {
         return orderId;

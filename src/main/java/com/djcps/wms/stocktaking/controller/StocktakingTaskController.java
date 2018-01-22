@@ -289,6 +289,7 @@ public class StocktakingTaskController {
     public Map<String, Object> saveStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
         SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList=gson.fromJson(json,SaveStocktakingOrderInfoList.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        BeanUtils.copyProperties(partnerInfoBo,saveStocktakingOrderInfoBOList);
         return stocktakingTaskService.saveStocktakingResult(saveStocktakingOrderInfoBOList,partnerInfoBo);
     }
 
@@ -302,7 +303,6 @@ public class StocktakingTaskController {
     @RequestMapping(name="Web保存盘点结果请求",value = "/completeStocktaking", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> completeStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
        SaveStocktakingOrderInfoList saveStocktakingOrderInfoList=gson.fromJson(json,SaveStocktakingOrderInfoList.class);
-        //List<SaveStocktakingOrderInfoBO> saveStocktakingOrderInfoBOList=gson.fromJson(json,List.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         ComplexResult ret = FluentValidator.checkAll().failFast()
                 .on(saveStocktakingOrderInfoList,
@@ -404,7 +404,6 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
-
 
     /**
      * PDA保存盘点结果

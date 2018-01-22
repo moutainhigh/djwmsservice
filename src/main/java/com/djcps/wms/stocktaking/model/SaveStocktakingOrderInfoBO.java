@@ -11,6 +11,12 @@ import java.util.Date;
  * @create:2018/1/12
  **/
 public class SaveStocktakingOrderInfoBO {
+
+    /**
+     * 是否正常新增 1是，2不是
+     */
+    private String isAdd;
+
     /**
      * 关联编号
      */
@@ -114,7 +120,7 @@ public class SaveStocktakingOrderInfoBO {
      */
     private Integer differenceValue;
     /**
-     * 是否盘盈
+     * 是否盘盈1 是，2不是盘盈
      */
     private Integer  isInventoryProfit;
 
@@ -146,6 +152,16 @@ public class SaveStocktakingOrderInfoBO {
      * 单位
      */
     private String units;
+
+    /**
+     * 盘点员名
+     */
+    private String inventoryClerk;
+
+    /**
+     * 盘点员id
+     */
+    private String inventoryClerkId;
 
 
     /**
@@ -563,10 +579,35 @@ public class SaveStocktakingOrderInfoBO {
         this.jobId = jobId;
     }
 
+    public String getInventoryClerk() {
+        return inventoryClerk;
+    }
+
+    public void setInventoryClerk(String inventoryClerk) {
+        this.inventoryClerk = inventoryClerk;
+    }
+
+    public String getInventoryClerkId() {
+        return inventoryClerkId;
+    }
+
+    public void setInventoryClerkId(String inventoryClerkId) {
+        this.inventoryClerkId = inventoryClerkId;
+    }
+
+    public String getIsAdd() {
+        return isAdd;
+    }
+
+    public void setIsAdd(String isAdd) {
+        this.isAdd = isAdd;
+    }
+
     @Override
     public String toString() {
         return "SaveStocktakingOrderInfoBO{" +
-                "relativeId='" + relativeId + '\'' +
+                "isAdd='" + isAdd + '\'' +
+                ", relativeId='" + relativeId + '\'' +
                 ", jobId='" + jobId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
@@ -590,14 +631,15 @@ public class SaveStocktakingOrderInfoBO {
                 ", instockAmount=" + instockAmount +
                 ", takeStockAmount=" + takeStockAmount +
                 ", differenceValue=" + differenceValue +
-                ", isInventoryProfit='" + isInventoryProfit + '\'' +
-                ", remark='" + remark + '\'' +
+                ", isInventoryProfit=" + isInventoryProfit +
                 ", operator='" + operator + '\'' +
                 ", operatorId='" + operatorId + '\'' +
                 ", ordertime=" + ordertime +
                 ", delivery=" + delivery +
                 ", groupgoodname='" + groupgoodname + '\'' +
                 ", units='" + units + '\'' +
+                ", inventoryClerk='" + inventoryClerk + '\'' +
+                ", inventoryClerkId='" + inventoryClerkId + '\'' +
                 ", status='" + status + '\'' +
                 ", materialname='" + materialname + '\'' +
                 ", lnglat='" + lnglat + '\'' +
@@ -608,6 +650,7 @@ public class SaveStocktakingOrderInfoBO {
                 ", contactway='" + contactway + '\'' +
                 ", pusername='" + pusername + '\'' +
                 ", childorderid='" + childorderid + '\'' +
+                ", remark='" + remark + '\'' +
                 ", amount='" + amount + '\'' +
                 '}';
     }

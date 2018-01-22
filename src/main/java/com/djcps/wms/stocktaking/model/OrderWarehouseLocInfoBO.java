@@ -6,7 +6,7 @@ import java.util.List;
 public class OrderWarehouseLocInfoBO {
     private String version;
 
-    private List<String> orderIds;
+    private List<OrderIdBO> orderIds;
 
     public String getVersion() {
         return version;
@@ -16,11 +16,12 @@ public class OrderWarehouseLocInfoBO {
         this.version = AppConstant.DEFAULT_VERSION;
     }
 
-    public List<String> getOrderIds() {
+
+    public List<OrderIdBO> getOrderIds() {
         return orderIds;
     }
 
-    public void setOrderIds(List<String> orderIds) {
+    public void setOrderIds(List<OrderIdBO> orderIds) {
         this.orderIds = orderIds;
     }
 }

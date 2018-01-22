@@ -28,15 +28,14 @@ public interface WmsForStocktakingOrderHttpRequest {
     public HTTPResponse orderWarehouseLocInfo(@Body RequestBody json);
 
     /**
-     * 根据订单获取库位信息,判断是否是盘盈
+     * 获取库区库位订单的库存数量
      * @author  wzy
      * @param
      * @return
      * @create  2018/1/19 10:51
      **/
     @Headers("content-type:application/json")
-    @POST("stock/getAreaByOrderId.do")
-    public HTTPResponse getAreaByOrderId(@Body RequestBody json);
-
+    @POST("entry/getAmount.do")
+    public HTTPResponse getAmount(@Body RequestBody json);
 
 }
