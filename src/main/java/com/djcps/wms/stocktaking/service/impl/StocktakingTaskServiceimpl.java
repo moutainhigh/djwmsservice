@@ -48,6 +48,7 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> getAllStocktakingInfo(AddStocktakingBO addStocktakingBO) {
+        long start = System.currentTimeMillis();
         //获取库位关联订单信息
         HttpResult result=stocktakingTaskServer.getAllStocktakingInfo(addStocktakingBO);
         if(!result.isSuccess()){
@@ -83,7 +84,9 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
         }
         //组装参数
         List<StocktakingTaskBO> stocktakingTaskBOList=getStocktakingOrderDetail(asJsonArray,orderJsonArray0);
+        System.out.println("解析耗时：" + (System.currentTimeMillis() - start) + "ms");
         return MsgTemplate.successMsg(stocktakingTaskBOList);
+
     }
 
     /**
@@ -271,15 +274,18 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
             //组装盘点任务仓库id
             String warehouseId=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseId").getAsString();
             String warehouseName=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseName").getAsString();
-
+            String warehouseAreaId=null;
+            String warehouseAreaName=null;
+            String warehouseLocId=null;
+            String warehouseLocName=null;
             if(warehouseElement.getAsJsonObject().get("orderAreaAndLocDetailInfo")!=null){
             JsonObject warehouseAreaInfo=warehouseElement.getAsJsonObject().get("orderAreaAndLocDetailInfo").getAsJsonObject();
                 //组装盘点任务库区id
-                String warehouseAreaId=warehouseAreaInfo.get("warehouseAreaId").getAsString();
-                String warehouseAreaName=warehouseAreaInfo.get("warehouseAreaName").getAsString();
+                warehouseAreaId=warehouseAreaInfo.get("warehouseAreaId").getAsString();
+                warehouseAreaName=warehouseAreaInfo.get("warehouseAreaName").getAsString();
                //组装盘点任务库位id
-                String warehouseLocId=warehouseAreaInfo.get("warehouseLocId").getAsString();
-                String warehouseLocName=warehouseAreaInfo.get("warehouseLocName").getAsString();
+                warehouseLocId=warehouseAreaInfo.get("warehouseLocId").getAsString();
+                warehouseLocName=warehouseAreaInfo.get("warehouseLocName").getAsString();
                 Integer trueAmount=warehouseAreaInfo.get("trueAmount").getAsInt();
                 StocktakingTaskBO stocktakingTaskBO=new StocktakingTaskBO();
                 stocktakingTaskBO.setWarehouseId(warehouseId);
@@ -291,6 +297,8 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
                 if(trueAmount!=null){
                     stocktakingTaskBO.setTrueAmount(trueAmount);
                 }
+                //打印A：warehouseId + warehouseName + stocktakingTaskBO｛setWarehouseName setWarehouseAreaName setWarehouseLocName｝
+                System.out.println(stocktakingTaskBO);
                 //组装盘点任务订单详情
                 for (JsonElement orderElement:orderJsonArray0){
                     String fchildorderid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fchildorderid").getAsString();
@@ -308,6 +316,7 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
                 }
             }
         }
+        //打印stocktakingTaskBOList
         return stocktakingTaskBOList;
     }
 
