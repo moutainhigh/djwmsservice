@@ -1,5 +1,6 @@
 package com.djcps.wms.push.model;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -12,11 +13,13 @@ public class PushMsgBO implements Serializable{
     /**
      * 用户id列表
      */
+    @NotNull
     private String userid;
 
     /**
      * 消息内容
      */
+    @NotNull
     private String msg;
 
     /**
@@ -57,6 +60,7 @@ public class PushMsgBO implements Serializable{
     /**
      * 业务id
      */
+    @NotNull
     private String mid;
 
     public String getUserid() {

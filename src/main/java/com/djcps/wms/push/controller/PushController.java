@@ -105,11 +105,10 @@ public class PushController {
     /**
      * 消息推送
      * @param json
-     * @param innerUser
      * @return
      */
     @RequestMapping(name="发送消息",value = "/send", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> send(@RequestBody(required = false) String json, @InnerUser UserInfoVo  innerUser){
+    public Map<String, Object> send(@RequestBody(required = false) String json){
         try {
             PushMsgBO param= gson.fromJson(json,PushMsgBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -120,7 +119,6 @@ public class PushController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            param.setUserid(innerUser.getUids());
             param.setAppSystem(AppConstant.WMS);
             return pushService.sendAppMsg(param);
         }

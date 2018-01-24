@@ -1,5 +1,6 @@
 package com.djcps.wms.push.model;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -18,11 +19,13 @@ public class PushAppBO implements Serializable{
     /**
      * 设备别名
      */
+    @NotNull
     private String devicetoken;
 
     /**
      * 操作系统
      */
+    @NotNull
     private String fOS;
 
     /**
