@@ -30,4 +30,15 @@ public interface UpdateOrderHttpRequest {
 	@POST("order/changeOrderStatus.do")
 	public HTTPResponse updateOrderStatus(@Body RequestBody rb);
 	
+	/**
+	 * 根据订单号批量获取订单详情
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2017年12月29日
+	 */
+	@Headers("content-type:application/json")
+	@POST("order/getInfoByChildIds.do")
+	public HTTPResponse getOrderByOrderIds(@Body RequestBody rb);
+	
 }

@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
 		resultMap.put("success", true);
 		resultMap.put("code", 100000);
 		resultMap.put("msg", "");
-		resultMap.put("total", result.getTotalCount());
+		resultMap.put("total", resultList.size());
 		resultMap.put("data", resultList);
 		return resultMap;
 	}
@@ -192,7 +192,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @author:zdx
 	 * @date:2018年1月8日
 	 */
-	private WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target){
+	public WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target){
 		//规格长宽高都不为null,才进行拼接
 		if(!ObjectUtils.isEmpty(target.getFboxlength()) && !ObjectUtils.isEmpty(target.getFboxwidth()) &&
 				!ObjectUtils.isEmpty(target.getFboxheight())){

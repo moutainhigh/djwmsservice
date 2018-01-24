@@ -125,33 +125,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 	private String fpusername;
 	
 	/**
-	 * 运单号
-	 */
-	private String fwaybill;
-	
-	/**
-	 * 提货单号
-	 */
-	private String fdeliveryorder;
-	
-	/**
-	 * 配货状态
-	 */
-	private String fwaybillstatus;
-	
-	
-	/**
-	 * 提货单状态
-	 */
-	private String fdeliveryorderstatus;
-	
-	/**
-	 * 车牌号
-	 */
-	private String licencePlate;
-	
-	
-	/**
 	 * =====================================================================
 	 */
 	
@@ -205,9 +178,68 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private List<WarehouseAreaBO> areaList;
 	
+	/**
+	 * =====================================================================
+	 */
+	
+	/**
+	 * 运单号
+	 */
+	private String waybillId;
+	/**
+	 * 提货单号
+	 */
+	private String deliveryId;
+	/**
+	 * 车牌号
+	 */
+	private String plateNumber;
+	/**
+	 * 订单提醒
+	 */
+	private String remind;
+	/**
+	 * 提货单状态
+	 */
+	private String deliveryIdStatus;
+	/**
+	 * 装车顺序
+	 */
+	private String sequence;
+	
+	/**
+	 * 提货员id
+	 */
+	private String pickerId;
+	/**
+	 * 提货员名称
+	 */
+	private String pickerName;
+	/**
+	 * 装车员id
+	 */
+	private String loadingPersonId;
+	/**
+	 * 装车员名称
+	 */
+	private String loadingPersonName;
+	
+	/**
+	 * 提货数量
+	 */
+	private String deliveryAmount;
+	
 	public WarehouseOrderDetailPO() {
 		super();
 		this.units = "片";
+	}
+
+	public String getDeliveryAmount() {
+		return deliveryAmount;
+	}
+
+	public void setDeliveryAmount(String deliveryAmount) {
+		this.deliveryAmount = deliveryAmount;
 	}
 
 	public String getFboxlength() {
@@ -370,46 +402,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.fpusername = fpusername;
 	}
 
-	public String getFwaybill() {
-		return fwaybill;
-	}
-
-	public void setFwaybill(String fwaybill) {
-		this.fwaybill = fwaybill;
-	}
-
-	public String getFdeliveryorder() {
-		return fdeliveryorder;
-	}
-
-	public void setFdeliveryorder(String fdeliveryorder) {
-		this.fdeliveryorder = fdeliveryorder;
-	}
-
-	public String getFwaybillstatus() {
-		return fwaybillstatus;
-	}
-
-	public void setFwaybillstatus(String fwaybillstatus) {
-		this.fwaybillstatus = fwaybillstatus;
-	}
-
-	public String getFdeliveryorderstatus() {
-		return fdeliveryorderstatus;
-	}
-
-	public void setFdeliveryorderstatus(String fdeliveryorderstatus) {
-		this.fdeliveryorderstatus = fdeliveryorderstatus;
-	}
-
-	public String getLicencePlate() {
-		return licencePlate;
-	}
-
-	public void setLicencePlate(String licencePlate) {
-		this.licencePlate = licencePlate;
-	}
-
 	public String getFchildorderid() {
 		return fchildorderid;
 	}
@@ -490,6 +482,86 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.areaList = areaList;
 	}
 
+	public String getWaybillId() {
+		return waybillId;
+	}
+
+	public void setWaybillId(String waybillId) {
+		this.waybillId = waybillId;
+	}
+
+	public String getDeliveryId() {
+		return deliveryId;
+	}
+
+	public void setDeliveryId(String deliveryId) {
+		this.deliveryId = deliveryId;
+	}
+
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+
+	public String getRemind() {
+		return remind;
+	}
+
+	public void setRemind(String remind) {
+		this.remind = remind;
+	}
+
+	public String getDeliveryIdStatus() {
+		return deliveryIdStatus;
+	}
+
+	public void setDeliveryIdStatus(String deliveryIdStatus) {
+		this.deliveryIdStatus = deliveryIdStatus;
+	}
+
+	public String getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getPickerId() {
+		return pickerId;
+	}
+
+	public void setPickerId(String pickerId) {
+		this.pickerId = pickerId;
+	}
+
+	public String getPickerName() {
+		return pickerName;
+	}
+
+	public void setPickerName(String pickerName) {
+		this.pickerName = pickerName;
+	}
+
+	public String getLoadingPersonId() {
+		return loadingPersonId;
+	}
+
+	public void setLoadingPersonId(String loadingPersonId) {
+		this.loadingPersonId = loadingPersonId;
+	}
+
+	public String getLoadingPersonName() {
+		return loadingPersonName;
+	}
+
+	public void setLoadingPersonName(String loadingPersonName) {
+		this.loadingPersonName = loadingPersonName;
+	}
+
 	@Override
 	public String toString() {
 		return "WarehouseOrderDetailPO [fboxlength=" + fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight="
@@ -499,12 +571,13 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", units="
 				+ units + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
 				+ ", fcodeprovince=" + fcodeprovince + ", faddressdetail=" + faddressdetail + ", fpusername="
-				+ fpusername + ", fwaybill=" + fwaybill + ", fdeliveryorder=" + fdeliveryorder + ", fwaybillstatus="
-				+ fwaybillstatus + ", fdeliveryorderstatus=" + fdeliveryorderstatus + ", licencePlate=" + licencePlate
-				+ ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
+				+ fpusername + ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
 				+ ", amountSaved=" + amountSaved + ", famount=" + famount + ", amount=" + amount + ", warehouseId="
 				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", areaList=" + areaList
-				+ "]";
+				+ ", waybillId=" + waybillId + ", deliveryId=" + deliveryId + ", plateNumber=" + plateNumber
+				+ ", remind=" + remind + ", deliveryIdStatus=" + deliveryIdStatus + ", sequence=" + sequence
+				+ ", pickerId=" + pickerId + ", pickerName=" + pickerName + ", loadingPersonId=" + loadingPersonId
+				+ ", loadingPersonName=" + loadingPersonName + ", deliveryAmount=" + deliveryAmount + "]";
 	}
-	
+
 }
