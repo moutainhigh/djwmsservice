@@ -55,7 +55,7 @@ public class PushMsgBO implements Serializable{
     /**
      * 自定义参数
      */
-    private String extraField;
+    private Object extraField;
 
     /**
      * 业务id
@@ -127,11 +127,11 @@ public class PushMsgBO implements Serializable{
         this.type = type;
     }
 
-    public String getExtraField() {
+    public Object getExtraField() {
         return extraField;
     }
 
-    public void setExtraField(String extraField) {
+    public void setExtraField(Object extraField) {
         this.extraField = extraField;
     }
 
