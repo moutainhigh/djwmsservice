@@ -99,6 +99,23 @@ public class StocktakingTaskServer {
         return verifyHttpResult(http);
     }
 
+//    public HttpResult stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
+//        String json = gson.toJson(pdaGetStocktakingOrderBO);
+//        System.out.println("---http请求参数转化为json格式---:"+json);
+//        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+//        HTTPResponse http =stocktakingTaskHttpRequest.stocktakingOrderInfoList(rb) ;
+//        //校验请求是否成功
+//        OrderInfoListResult result = null;
+//        if(http.isSuccessful()){
+//            result = gson.fromJson(http.getBodyString(), OrderInfoListResult.class);
+//        }
+//        if(result == null){
+//            System.err.println("Http请求出错,HttpResult结果为null");
+//            logger.error("Http请求出错,HttpResult结果为null");
+//        }
+//        return result;
+//    }
+
     public HttpResult stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
         String json = gson.toJson(pdaGetStocktakingOrderBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -390,6 +407,94 @@ public class StocktakingTaskServer {
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingOrderHttpRequest.getAmount(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
+     * web盘盈是获取相关库区库位
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/23 17:20
+     **/
+    public HttpResult areaAndLocInfo(JobAndWarehouseBO JobAndWarehouseBO){
+        String json = gson.toJson(JobAndWarehouseBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.areaAndLocInfo(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
+     * 获取所有库位
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/23 17:44
+     **/
+    public OrderResult getLocationAllList(JobAndWarehouseBO JobAndWarehouseBO){
+        String json = gson.toJson(JobAndWarehouseBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.getLocationAllList(rb);
+        //校验请求是否成功
+        OrderResult result = null;
+        if(http.isSuccessful()){
+            result = gson.fromJson(http.getBodyString(), OrderResult.class);
+        }
+        if(result == null){
+            System.err.println("Http请求出错,HttpResult结果为null");
+            logger.error("Http请求出错,HttpResult结果为null");
+        }
+        return result;
+    }
+
+    /**
+     * 优化新增部分盘点任务
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/24 14:58
+     **/
+    public HttpResult test(ListAddTaskByPartBO listAddTaskByPartBO){
+        String json = gson.toJson(listAddTaskByPartBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.test(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
+     * 优化新增全部盘点任务
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/24 14:58
+     **/
+    public HttpResult test1(AddTaskBO addTaskBO){
+        String json = gson.toJson(addTaskBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.test1(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
+     * 更新打印次数接口
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/25 9:32
+     **/
+    public HttpResult printCount(PrintCountBO printCountBO){
+        String json = gson.toJson(printCountBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.printCount(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
     }

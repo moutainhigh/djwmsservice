@@ -41,13 +41,21 @@ public class PdaOderInfoBO {
     private String updateTime;
     private String productRule;
     private String materialRule;
+    private String Units;
+
     /**
      * 库区list
      */
     private List<WarehouseAreaAndLocBO> orderAreaAndLocList;
 
 
+    public String getUnits() {
+        return Units;
+    }
 
+    public void setUnits(String units) {
+        Units = units;
+    }
 
     public String getProductRule() {
         return productRule;
@@ -322,6 +330,7 @@ public class PdaOderInfoBO {
                 ", updateTime='" + updateTime + '\'' +
                 ", productRule='" + productRule + '\'' +
                 ", materialRule='" + materialRule + '\'' +
+                ", Units='" + Units + '\'' +
                 ", orderAreaAndLocList=" + orderAreaAndLocList +
                 '}';
     }

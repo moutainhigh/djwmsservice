@@ -1,6 +1,5 @@
 package com.djcps.wms.stocktaking.model;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -15,7 +14,6 @@ public class SaveStocktakingTaskBO {
     /**
      * 保存盘点类型1，2，3(只保存，保存并打印，保存并发起推送)
      */
-    @NotNull
     private Integer saveStocktakingType;
 
     /** 作业单号

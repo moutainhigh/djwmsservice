@@ -30,6 +30,16 @@ public class StocktakingTaskConstant {
     public static final Integer CLOSE = 4;
 
     /**
+     * 作业状态未完成
+     */
+    public static final Integer Status_1 = 1;
+
+    /**
+     * 作业状态已完成
+     */
+    public static final Integer Status_3 = 3;
+
+    /**
      * 仅保存
      */
     public static final Integer CONFIRM_ONLY = 1;
@@ -43,4 +53,14 @@ public class StocktakingTaskConstant {
      * 保存并推送
      */
     public static final Integer CONFIRM_PUSH = 3;
+
+    /**
+     * PDA作业状态,未下发
+     */
+    public static final Integer PDASTATUS_0 = 0;
+
+    /**
+     * PDA作业状态,已下发
+     */
+    public static final Integer PDASTATUS_1 = 1;
 }

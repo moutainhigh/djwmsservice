@@ -74,7 +74,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 * 下料规格
 	 */
 	private String fmaterialRule;
-	
+
 	/**
 	 * 产品规格
 	 */

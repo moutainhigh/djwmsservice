@@ -1,10 +1,13 @@
 package com.djcps.wms.stocktaking.orderresult;
 
-public class InnerDate {
+import com.djcps.wms.stocktaking.model.SaveStocktakingOrderInfoBO;
 
+import java.util.List;
+
+public class TaskOrderInfo {
     private Integer total;
 
-    private Object result;
+    List<SaveStocktakingOrderInfoBO>  result;
 
     public Integer getTotal() {
         return total;
@@ -14,17 +17,17 @@ public class InnerDate {
         this.total = total;
     }
 
-    public Object getResult() {
+    public List<SaveStocktakingOrderInfoBO> getResult() {
         return result;
     }
 
-    public void setResult(Object result) {
+    public void setResult(List<SaveStocktakingOrderInfoBO> result) {
         this.result = result;
     }
 
     @Override
     public String toString() {
-        return "InnerDate{" +
+        return "TaskOrderInfo{" +
                 "total=" + total +
                 ", result=" + result +
                 '}';

@@ -33,6 +33,24 @@ public interface StocktakingTaskService {
     Map<String,Object> getPartStocktakingInfo(AddStocktakingBO addStocktakingBO);
 
     /**
+     * 优化版新增部分盘点
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/24 16:36
+     **/
+    Map<String,Object> addTaskByPart(AddStocktakingBO addStocktakingBO);
+
+    /**
+     * 优化版新增全盘
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/25 9:06
+     **/
+    Map<String,Object> addTaskByAll(AddTaskBO addTaskBO);
+
+    /**
      * 更新盘点状态
      * @author  wzy
      * @param
@@ -67,6 +85,7 @@ public interface StocktakingTaskService {
      * @create  2018/1/11 15:07
      **/
     Map<String,Object> saveSoctakingTask(SaveStocktakingTaskBO saveStocktakingTaskBO);
+
 
     /**
      * 请求盘点任务信息
@@ -230,4 +249,31 @@ public interface StocktakingTaskService {
      * @create  2018/1/18 18:24
      **/
     Map<String,Object> orderWarehouseLocInfo(OrderWarehouseLocInfoBO orderWarehouseLocInfoBO);
+
+    /**
+     * web盘盈是获取相关库区库位
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/23 17:20
+     **/
+    Map<String,Object> areaAndLocInfo(JobAndWarehouseBO jobAndWarehouseBO);
+
+    /**
+     * 获取所有库位
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/23 17:45
+     **/
+    Map<String,Object> getLocationAllList(JobAndWarehouseBO jobAndWarehouseBO);
+
+    /**
+     * 更新打印次数接口
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/25 9:34
+     **/
+    Map<String,Object> printCount(PrintCountBO printCountBO);
 }
