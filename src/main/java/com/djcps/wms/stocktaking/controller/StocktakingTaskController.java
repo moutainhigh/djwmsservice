@@ -69,6 +69,35 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
+    /**
+     * 优化版新增全盘
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/25 9:10
+     **/
+    @RequestMapping(name="优化新增全盘任务",value = "/addTaskByAll", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> addTaskByAll(@RequestBody(required = false) String json, HttpServletRequest request){
+        try {
+            PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+            AddTaskBO addStocktakingBO=gson.fromJson(json,AddTaskBO.class);
+            BeanUtils.copyProperties(partnerInfoBo,addStocktakingBO);
+            ComplexResult ret = FluentValidator.checkAll().failFast()
+                    .on(addStocktakingBO,
+                            new HibernateSupportedValidator<AddTaskBO>()
+                                    .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                    .doValidate().result(ResultCollectors.toComplex());
+            if (!ret.isSuccess()) {
+                return MsgTemplate.failureMsg(ret);
+            }
+            return stocktakingTaskService.addTaskByAll(addStocktakingBO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
+    }
 
     /**
      * 新增部分盘点任务
@@ -91,7 +120,7 @@ public class StocktakingTaskController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return stocktakingTaskService.getPartStocktakingInfo(addStocktakingBO);
+            return stocktakingTaskService.addTaskByPart(addStocktakingBO);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -99,6 +128,30 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
+
+
+//    @RequestMapping(name="优化新增部分盘点任务",value = "/testbypart", method = RequestMethod.POST, produces = "application/json")
+//    public Map<String, Object> testbypart(@RequestBody(required = false) String json, HttpServletRequest request){
+//        try {
+//            PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+//            AddStocktakingBO addStocktakingBO=gson.fromJson(json,AddStocktakingBO.class);
+//            BeanUtils.copyProperties(partnerInfoBo,addStocktakingBO);
+//            ComplexResult ret = FluentValidator.checkAll().failFast()
+//                    .on(addStocktakingBO,
+//                            new HibernateSupportedValidator<AddStocktakingBO>()
+//                                    .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//                    .doValidate().result(ResultCollectors.toComplex());
+//            if (!ret.isSuccess()) {
+//                return MsgTemplate.failureMsg(ret);
+//            }
+//            return stocktakingTaskService.addTaskByPart(addStocktakingBO);
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            logger.error(e.getMessage());
+//            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+//        }
+//    }
 
     /**
      *更新盘点状态
@@ -465,7 +518,6 @@ public class StocktakingTaskController {
         }
     }
 
-
     /**
      * PDA完成盘点更新状态
      * @author  wzy
@@ -595,4 +647,42 @@ public class StocktakingTaskController {
         return stocktakingTaskService.stocktakingCompleteStatus(getStocktakingTaskBO);
     }
 
+    @RequestMapping(name=" 获取盘点任务的库位信息",value = "/areaAndLocInfo", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> areaAndLocInfo(@RequestBody(required = false) String json, HttpServletRequest request){
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        JobAndWarehouseBO jobAndWarehouseBO=gson.fromJson(json,JobAndWarehouseBO.class);
+        BeanUtils.copyProperties(partnerInfoBo,jobAndWarehouseBO);
+        ComplexResult ret = FluentValidator.checkAll().failFast()
+                .on(jobAndWarehouseBO,
+                        new HibernateSupportedValidator<JobAndWarehouseBO>()
+                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                .doValidate().result(ResultCollectors.toComplex());
+        if (!ret.isSuccess()) {
+            return MsgTemplate.failureMsg(ret);
+        }
+        return stocktakingTaskService.areaAndLocInfo(jobAndWarehouseBO);
+    }
+
+    /**
+     * 更新打印次数接口
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/25 9:37
+     **/
+    @RequestMapping(name=" 更新打印次数接口",value = "/printCount", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> printCount(@RequestBody(required = false) String json, HttpServletRequest request){
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+       PrintCountBO printCountBO=gson.fromJson(json,PrintCountBO.class);
+        BeanUtils.copyProperties(partnerInfoBo,printCountBO);
+        ComplexResult ret = FluentValidator.checkAll().failFast()
+                .on(printCountBO,
+                        new HibernateSupportedValidator<PrintCountBO>()
+                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                .doValidate().result(ResultCollectors.toComplex());
+        if (!ret.isSuccess()) {
+            return MsgTemplate.failureMsg(ret);
+        }
+        return stocktakingTaskService.printCount(printCountBO);
+    }
 }

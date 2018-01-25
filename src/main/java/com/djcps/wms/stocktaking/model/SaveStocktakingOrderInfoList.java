@@ -19,7 +19,33 @@ public class SaveStocktakingOrderInfoList {
 
     private String operatorId;
 
+    /**
+     * 盘点员名
+     */
+    private String inventoryClerk;
+
+    /**
+     * 盘点员id
+     */
+    private String inventoryClerkId;
+
     List<SaveStocktakingOrderInfoBO> saveStocktaking;
+
+    public String getInventoryClerk() {
+        return inventoryClerk;
+    }
+
+    public void setInventoryClerk(String inventoryClerk) {
+        this.inventoryClerk = inventoryClerk;
+    }
+
+    public String getInventoryClerkId() {
+        return inventoryClerkId;
+    }
+
+    public void setInventoryClerkId(String inventoryClerkId) {
+        this.inventoryClerkId = inventoryClerkId;
+    }
 
     public String getJobId() {
         return jobId;
@@ -63,4 +89,16 @@ public class SaveStocktakingOrderInfoList {
         this.saveStocktaking = saveStocktaking;
     }
 
+    @Override
+    public String toString() {
+        return "SaveStocktakingOrderInfoList{" +
+                "jobId='" + jobId + '\'' +
+                ", partnerId='" + partnerId + '\'' +
+                ", operator='" + operator + '\'' +
+                ", operatorId='" + operatorId + '\'' +
+                ", inventoryClerk='" + inventoryClerk + '\'' +
+                ", inventoryClerkId='" + inventoryClerkId + '\'' +
+                ", saveStocktaking=" + saveStocktaking +
+                '}';
+    }
 }

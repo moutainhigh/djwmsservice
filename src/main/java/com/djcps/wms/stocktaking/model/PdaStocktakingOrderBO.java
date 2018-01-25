@@ -50,6 +50,19 @@ public class PdaStocktakingOrderBO {
      */
     private Integer totalNum;
 
+    /**
+     *订单状态 1未完成，3已完成
+     */
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Integer getTakeStockAmount() {
         return takeStockAmount;
     }
@@ -132,7 +145,9 @@ public class PdaStocktakingOrderBO {
                 ", materialWidth='" + materialWidth + '\'' +
                 ", materialRule='" + materialRule + '\'' +
                 ", isInventoryProfit='" + isInventoryProfit + '\'' +
+                ", takeStockAmount=" + takeStockAmount +
                 ", totalNum=" + totalNum +
+                ", status=" + status +
                 '}';
     }
 }

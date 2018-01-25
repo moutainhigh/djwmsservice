@@ -13,9 +13,10 @@ import java.util.Date;
 public class SaveStocktakingOrderInfoBO {
 
     /**
-     * 是否正常新增 1是，2不是
+     * 是否正常新增 0正常，1新增，2盘盈
      */
     private String isAdd;
+
 
     /**
      * 关联编号
@@ -165,18 +166,9 @@ public class SaveStocktakingOrderInfoBO {
 
 
     /**
-     * 订单状态(
-     *	已付款:2
-     *	已分发:3
-     * 	部分入库：21
-     已入库：22
-     已配货：23
-     已提货：24
-     已装车：25
-     已发车：26
-     )
+     *订单状态 1未完成，3已完成
      */
-    private String status;
+    private Integer status;
 
     /**
      * 材料名称
@@ -323,11 +315,11 @@ public class SaveStocktakingOrderInfoBO {
         this.materialname = materialname;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -28,6 +28,8 @@ public interface WmsForStocktakingTaskHttpRequest {
     @POST("takeStock/increaseTask.do")
     public HTTPResponse getAllStocktakingInfo(@Body RequestBody json);
 
+
+
     /**
      *获取部分盘点订单关联信息
      * @author  wzy
@@ -259,4 +261,60 @@ public interface WmsForStocktakingTaskHttpRequest {
     @Headers("content-type:application/json")
     @POST("takeStock/stocktakingCompleteStatus.do")
     public HTTPResponse stocktakingCompleteStatus(@Body RequestBody json);
+
+    /**
+     *
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/23 16:53
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/areaAndLocInfo.do")
+    public HTTPResponse areaAndLocInfo(@Body RequestBody json);
+
+    /**
+     * 获取所有库位
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/23 17:42
+     **/
+    @Headers("content-type:application/json")
+    @POST("warehouseLoc/list.do")
+    public HTTPResponse getLocationAllList(@Body RequestBody json);
+
+    /**
+     * 优化新增部分盘点
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/24 14:59
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/increaseTaskByAreaAndLoc.do")
+    public HTTPResponse test(@Body RequestBody json);
+
+    /**
+     * 优化新增全部盘点
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/25 9:28
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/test1.do")
+    public HTTPResponse test1(@Body RequestBody json);
+
+    /**
+     * 更新打印次数接口
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/25 9:30
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/printCount.do")
+    public HTTPResponse printCount(@Body RequestBody json);
+
 }

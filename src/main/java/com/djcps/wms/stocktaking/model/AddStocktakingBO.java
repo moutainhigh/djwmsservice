@@ -4,7 +4,6 @@ import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
      * 盘点类型，1，2(全盘，部分盘点)
      * @author  wzy
      **/
-    @NotNull
     private int ftype;
 
     /**
@@ -30,6 +28,9 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
      **/
     @NotBlank
     private String warehouseId;
+
+
+    private String  warehouseName;
 
     /**
      * 盘点数量
@@ -52,6 +53,13 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
      **/
     private List<WarehouseAreaBO> warehouseAreaInfoList;
 
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
 
     public int getFtype() {
         return ftype;
@@ -98,6 +106,7 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
         return "AddStocktakingBO{" +
                 "ftype=" + ftype +
                 ", warehouseId='" + warehouseId + '\'' +
+                ", warehouseName='" + warehouseName + '\'' +
                 ", ftakestockamount=" + ftakestockamount +
                 ", jobId='" + jobId + '\'' +
                 ", warehouseAreaInfoList=" + warehouseAreaInfoList +
