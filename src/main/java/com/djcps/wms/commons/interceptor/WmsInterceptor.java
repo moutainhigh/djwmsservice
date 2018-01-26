@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.djcps.wms.commons.base.RedisClient;
@@ -64,6 +65,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		String url = request.getRequestURI();
 		System.err.println("---访问URL:"+url+",请求方式:"+request.getMethod());
 		String contextPath = request.getContextPath();
+		String appLogin = request.getHeader("loginType").intern();
 		//删除下文根路径获取RequestMappingUrl
 		url = url.substring(contextPath.length());
 		//字符串分割去除.do
@@ -72,12 +74,12 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		SysUrlPO sysUrl = gson.fromJson(json,SysUrlPO.class);
 		//取不到url
 		if(sysUrl==null){
-			responseMsg(SysMsgEnum.SYSURL_NULL, response);
+			responseMsg(SysMsgEnum.SYSURL_NULL, response,appLogin);
 			return false;
 		}
 		//url失效
 		if(sysUrl.getEffect() == effect){
-			responseMsg(SysMsgEnum.URL_EXPIRE, response);
+			responseMsg(SysMsgEnum.URL_EXPIRE, response,appLogin);
 			return false;
 		}
 		//不需要登录
@@ -89,7 +91,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		String token = CookiesUtil.getCookieByName(request, "token");
 		// 用户token 是否过期 或者不存在
 		if (ObjectUtils.isEmpty(token)) {
-			responseMsg(SysMsgEnum.NOT_LOGIN, response);
+			responseMsg(SysMsgEnum.NOT_LOGIN, response,appLogin);
 			return false;
 		}
 		UserInfoVO userInfo = innerUserService.getInnerUserInfoFromRedis(token);
@@ -111,7 +113,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 			request.setAttribute("partnerInfo", partner);
 		}else{
 			//用户不存在也代表未登入
-			responseMsg(SysMsgEnum.NOT_LOGIN, response);
+			responseMsg(SysMsgEnum.NOT_LOGIN, response,appLogin);
 			return false;
 		}
 		
@@ -141,11 +143,17 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	 * @author:zdx
 	 * @date:2017年11月13日
 	 */
-	private void responseMsg(SysMsgEnum msg, HttpServletResponse response) {
+	private void responseMsg(SysMsgEnum msg, HttpServletResponse response,String appLogin) {
         logger.info(msg.getMsg());
         PrintWriter printWriter = null;
         if (!response.isCommitted()) {
-            Map<String, Object> result = (MsgTemplate.failureMsg(msg,ParamsConfig.INNER_USER_LOGIN_URL));
+            Map<String, Object> result;
+            if(!StringUtils.isEmpty(appLogin)){
+                result= (MsgTemplate.failureMsg(msg));
+            }else {
+                result= (MsgTemplate.failureMsg(msg,ParamsConfig.INNER_USER_LOGIN_URL));
+            }
+
             ObjectMapper mapper = new ObjectMapper();
             try {
                 String json = mapper.writeValueAsString(result);
