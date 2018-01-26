@@ -1,11 +1,11 @@
-package com.djcps.wms.stock.enums;
+package com.djcps.wms.commons.enums;
 
 /**
- * 入库类型
+ * 订单状态类型
  * @author Chengw
  * @since 2018/1/26 12:17.
  */
-public enum StockTypeEnum {
+public enum OrderStatusTypeEnum {
     /**
      * 部分入库
      */
@@ -17,7 +17,7 @@ public enum StockTypeEnum {
 
     private String value;
 
-    StockTypeEnum(String value){
+    OrderStatusTypeEnum(String value){
         this.value = value;
     }
 
@@ -27,7 +27,7 @@ public enum StockTypeEnum {
 
     @Override
     public String toString() {
-        return "StockTypeEnum{" +
+        return "OrderStatusTypeEnum{" +
                 "value='" + value + '\'' +
                 '}';
     }

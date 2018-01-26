@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.djcps.wms.stock.enums.StockTypeEnum;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -124,20 +124,20 @@ public class StockServiceImpl implements StockService{
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(trueAmount+saveAmount==orderAmount){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(StockTypeEnum.ALL_ADD_STOCK.getValue());
+				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(StockTypeEnum.LESS_ADD_STOCK.getValue());
+				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
 			}
 		}else{
 			if(saveAmount > orderAmount){
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(saveAmount.equals(orderAmount)){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(StockTypeEnum.ALL_ADD_STOCK.getValue());
+				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(StockTypeEnum.LESS_ADD_STOCK.getValue());
+				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
 			}
 		}
 		HttpResult updateOrderResult = orderServer.updateOrderStatus(orderIdBO);
