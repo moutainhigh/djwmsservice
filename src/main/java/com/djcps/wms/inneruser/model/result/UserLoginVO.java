@@ -5,7 +5,7 @@ package com.djcps.wms.inneruser.model.result;
  * @author Chengw
  * @since 2017/12/4 14:58.
  */
-public class UserLoginVo{
+public class UserLoginVO {
 
     /**
      * token

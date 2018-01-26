@@ -1,14 +1,12 @@
 package com.djcps.wms.inneruser.redis;
 
 import com.djcps.wms.commons.base.RedisClient;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
-import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisPool;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
@@ -32,16 +30,16 @@ public class InnerUserRedisDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public UserInfoVo getInnerUserInfo(String token) throws Exception {
+	public UserInfoVO getInnerUserInfo(String token) throws Exception {
 		if (StringUtils.isNotBlank(token)) {
 			String userInfoStr = redisClient.get(token);
-			UserInfoVo userInfoVo = gson.fromJson(userInfoStr, UserInfoVo.class);
-			if (ObjectUtils.isEmpty(userInfoVo)) {
+			UserInfoVO userInfoVO = gson.fromJson(userInfoStr, UserInfoVO.class);
+			if (ObjectUtils.isEmpty(userInfoVO)) {
 				return null;
 			}
-			userInfoStr = redisClient.get("userInfo" + userInfoVo.getId());
-			userInfoVo = gson.fromJson(userInfoStr, UserInfoVo.class);
-			return userInfoVo;
+			userInfoStr = redisClient.get("userInfo" + userInfoVO.getId());
+			userInfoVO = gson.fromJson(userInfoStr, UserInfoVO.class);
+			return userInfoVO;
 		}
 		return null;
 	}
