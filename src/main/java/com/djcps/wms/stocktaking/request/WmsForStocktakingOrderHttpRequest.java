@@ -25,7 +25,7 @@ public interface WmsForStocktakingOrderHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("entry/orderWarehouseLocInfo.do")
-    public HTTPResponse orderWarehouseLocInfo(@Body RequestBody json);
+    HTTPResponse orderWarehouseLocInfo(@Body RequestBody json);
 
     /**
      * 获取库区库位订单的库存数量
@@ -36,6 +36,6 @@ public interface WmsForStocktakingOrderHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("entry/getAmount.do")
-    public HTTPResponse getAmount(@Body RequestBody json);
+    HTTPResponse getAmount(@Body RequestBody json);
 
 }

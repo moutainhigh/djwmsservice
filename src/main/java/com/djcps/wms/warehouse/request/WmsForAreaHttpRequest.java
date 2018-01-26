@@ -27,7 +27,7 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/save.do")
-	public HTTPResponse addArea(@Body RequestBody json);
+	HTTPResponse addArea(@Body RequestBody json);
 	
 	/**
 	 * 仓库库区修改http请求接口
@@ -38,7 +38,7 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/modify.do")
-	public HTTPResponse modifyArea(@Body RequestBody json);
+	HTTPResponse modifyArea(@Body RequestBody json);
 	
 	/**
 	 * 仓库库区删除http请求接口
@@ -49,7 +49,7 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/delete.do")
-	public HTTPResponse deleteArea(@Body RequestBody json);
+	HTTPResponse deleteArea(@Body RequestBody json);
 	
 	/**
 	 * 获取所有仓库库区请求接口
@@ -60,7 +60,7 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/list.do")
-	public HTTPResponse getAreaAllList(@Body RequestBody json);
+	HTTPResponse getAreaAllList(@Body RequestBody json);
 	
 	/**
 	 * 根据id获取仓库库区请求接口
@@ -71,7 +71,7 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/getById.do")
-	public HTTPResponse getAreaById(@Body RequestBody json);
+	HTTPResponse getAreaById(@Body RequestBody json);
 
 	/**
 	 * 编码确认
@@ -82,7 +82,7 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("code/verifyCode.do")
-	public HTTPResponse verifyCode(@Body RequestBody rb);
+	HTTPResponse verifyCode(@Body RequestBody rb);
 	
 	/**
 	 * 删除编码
@@ -93,7 +93,7 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("code/delCode.do")
-	public HTTPResponse deleteCode(@Body RequestBody rb);
+	HTTPResponse deleteCode(@Body RequestBody rb);
 	
 	/**
 	 * 获取库区编码
@@ -116,5 +116,5 @@ public interface WmsForAreaHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseArea/isUsedStreet.do")
-	public HTTPResponse isUsedStreet(@Body RequestBody rb);
+	HTTPResponse isUsedStreet(@Body RequestBody rb);
 }

@@ -26,7 +26,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/increaseTask.do")
-    public HTTPResponse getAllStocktakingInfo(@Body RequestBody json);
+    HTTPResponse getAllStocktakingInfo(@Body RequestBody json);
 
 
 
@@ -39,7 +39,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/increaseTaskByAreaAndLoc.do")
-    public HTTPResponse getPartStocktakingInfo(@Body RequestBody json);
+    HTTPResponse getPartStocktakingInfo(@Body RequestBody json);
 
     /**
      *更新盘点状态
@@ -50,7 +50,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/updateTaskStatus.do")
-    public HTTPResponse updateTaskState(@Body RequestBody json);
+    HTTPResponse updateTaskState(@Body RequestBody json);
 
     /**
      *获取可用盘点人员列表
@@ -61,7 +61,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/xx.do")
-    public HTTPResponse getInventoryclerk(@Body RequestBody json);
+    HTTPResponse getInventoryclerk(@Body RequestBody json);
 
     /**
      *保存盘点任务
@@ -72,7 +72,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/saveTask.do")
-    public HTTPResponse saveSoctakingTask(@Body RequestBody json);
+    HTTPResponse saveSoctakingTask(@Body RequestBody json);
 
     /**
      * 请求盘点任务信息多条
@@ -83,7 +83,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/orderInfoList.do")
-    public HTTPResponse stocktakingOrderInfoList(@Body RequestBody json);
+    HTTPResponse stocktakingOrderInfoList(@Body RequestBody json);
 
     /**
      * 请求盘点任务订单信息一条
@@ -94,7 +94,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/stocktakingOrderInfoByOrderId.do")
-    public HTTPResponse stocktakingOrderInfoByOrderId(@Body RequestBody json);
+    HTTPResponse stocktakingOrderInfoByOrderId(@Body RequestBody json);
 
     /**
      * 暂存盘点结果
@@ -105,7 +105,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/saveResult.do")
-    public HTTPResponse saveStocktakingResult(@Body RequestBody json);
+    HTTPResponse saveStocktakingResult(@Body RequestBody json);
 
     /**
      * 保存盘点结果
@@ -116,7 +116,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/completeTask.do")
-    public HTTPResponse completeStocktakingTask(@Body RequestBody json);
+    HTTPResponse completeStocktakingTask(@Body RequestBody json);
 
     /**
      * 获取全部盘点任务列表
@@ -127,7 +127,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/taskList.do")
-    public HTTPResponse stocktakingTaskList(@Body RequestBody json);
+    HTTPResponse stocktakingTaskList(@Body RequestBody json);
 
     /**
      * 条件获取盘点任务列表
@@ -138,7 +138,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/taskList.do")
-    public HTTPResponse searchTaskList(@Body RequestBody json);
+    HTTPResponse searchTaskList(@Body RequestBody json);
 
     /**
      * PDA请求盘点任务列表
@@ -149,7 +149,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/pdaTaskList.do")
-    public HTTPResponse pdaStocktakingTaskList(@Body RequestBody json);
+    HTTPResponse pdaStocktakingTaskList(@Body RequestBody json);
 
     /**
      * PDA获取盘点任务订单列表
@@ -160,7 +160,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/pdaOrderList.do")
-    public HTTPResponse pdaStocktakingOrderList(@Body RequestBody json);
+    HTTPResponse pdaStocktakingOrderList(@Body RequestBody json);
 
     /**
      * PDA盘点订单详情接口
@@ -171,7 +171,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/pdaOrderInfo.do")
-    public HTTPResponse pdaStocktakingOrderInfo(@Body RequestBody json);
+    HTTPResponse pdaStocktakingOrderInfo(@Body RequestBody json);
 
     /**
      * PDA保存盘点结果
@@ -182,7 +182,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/savePdaResult.do")
-    public HTTPResponse savePdaStocktakingResult(@Body RequestBody json);
+    HTTPResponse savePdaStocktakingResult(@Body RequestBody json);
 
 
     /**
@@ -194,7 +194,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/completePdaTask.do")
-    public HTTPResponse pdaCompleteStocktaking(@Body RequestBody json);
+    HTTPResponse pdaCompleteStocktaking(@Body RequestBody json);
 
     /**
      * PDA获取盘点订单各个状态数量
@@ -205,7 +205,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/getOrderAmount.do")
-    public HTTPResponse getOrderAmount(@Body RequestBody json);
+    HTTPResponse getOrderAmount(@Body RequestBody json);
 
     /**
      * 盘盈时获取相关订单库区库位信息
@@ -216,7 +216,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/warehouseAreaAndLocInfo.do")
-    public HTTPResponse warehouseAreaAndLocInfo(@Body RequestBody json);
+    HTTPResponse warehouseAreaAndLocInfo(@Body RequestBody json);
     
     /**
      * 查看盘点结果列表
@@ -227,7 +227,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/stocktakingResultList.do")
-    public HTTPResponse stocktakingResultList(@Body RequestBody json);
+    HTTPResponse stocktakingResultList(@Body RequestBody json);
 
     /**
      * 保存盘盈录入信息
@@ -238,7 +238,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/saveInventoryProfitInfo.do")
-    public HTTPResponse saveInventoryProfitInfo(@Body RequestBody json);
+    HTTPResponse saveInventoryProfitInfo(@Body RequestBody json);
 
     /**
      * 获取操作记录接口
@@ -249,7 +249,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/operationRecordList.do")
-    public HTTPResponse operationRecordList(@Body RequestBody json);
+    HTTPResponse operationRecordList(@Body RequestBody json);
 
     /**
      * 查看盘点任务进行情况接口
@@ -260,7 +260,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/stocktakingCompleteStatus.do")
-    public HTTPResponse stocktakingCompleteStatus(@Body RequestBody json);
+    HTTPResponse stocktakingCompleteStatus(@Body RequestBody json);
 
     /**
      *
@@ -271,7 +271,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/areaAndLocInfo.do")
-    public HTTPResponse areaAndLocInfo(@Body RequestBody json);
+    HTTPResponse areaAndLocInfo(@Body RequestBody json);
 
     /**
      * 获取所有库位
@@ -282,7 +282,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("warehouseLoc/list.do")
-    public HTTPResponse getLocationAllList(@Body RequestBody json);
+    HTTPResponse getLocationAllList(@Body RequestBody json);
 
     /**
      * 优化新增部分盘点
@@ -293,7 +293,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/increaseTaskByAreaAndLoc.do")
-    public HTTPResponse test(@Body RequestBody json);
+    HTTPResponse test(@Body RequestBody json);
 
     /**
      * 优化新增全部盘点
@@ -304,7 +304,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/test1.do")
-    public HTTPResponse test1(@Body RequestBody json);
+    HTTPResponse test1(@Body RequestBody json);
 
     /**
      * 更新打印次数接口
@@ -315,6 +315,6 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/printCount.do")
-    public HTTPResponse printCount(@Body RequestBody json);
+    HTTPResponse printCount(@Body RequestBody json);
 
 }
