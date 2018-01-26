@@ -33,13 +33,11 @@ public class OrderParamBO implements Serializable{
 	/**
 	 * 页数
 	 */
-	@NotBlank
 	private String pageNum;
 	
 	/**
 	 * 行数
 	 */
-	@NotBlank
 	private String pageSize;
 	
 	/**

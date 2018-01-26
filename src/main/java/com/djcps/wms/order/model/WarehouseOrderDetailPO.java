@@ -199,16 +199,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 * 备注
 	 */
 	private String remark;
-
-	/**
-	 * 材料id
-	 */
-	private String materialId;
-
-	/**
-	 * 库存数量
-	 */
-	private Integer  instockAmount;
 	
 	/**
 	 * 库区list
@@ -218,22 +208,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 	public WarehouseOrderDetailPO() {
 		super();
 		this.units = "片";
-	}
-
-	public Integer getInstockAmount() {
-		return instockAmount;
-	}
-
-	public void setInstockAmount(Integer instockAmount) {
-		this.instockAmount = instockAmount;
-	}
-
-	public String getMaterialId() {
-		return materialId;
-	}
-
-	public void setMaterialId(String materialId) {
-		this.materialId = materialId;
 	}
 
 	public String getFboxlength() {
