@@ -20,7 +20,7 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
      * 盘点类型，1，2(全盘，部分盘点)
      * @author  wzy
      **/
-    private int ftype;
+    private Integer ftype;
 
     /**
      * 仓库编码
@@ -37,7 +37,7 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
      * @author  wzy
      * @create  2018/1/10 10:54
      **/
-    private int ftakestockamount;
+    private Integer ftakestockamount;
 
     /**
      * 作业单号
@@ -61,11 +61,11 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
         this.warehouseName = warehouseName;
     }
 
-    public int getFtype() {
+    public Integer getFtype() {
         return ftype;
     }
 
-    public void setFtype(int ftype) {
+    public void setFtype(Integer ftype) {
         this.ftype = ftype;
     }
 

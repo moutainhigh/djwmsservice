@@ -5,6 +5,12 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * 新增盘点任务对象
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class AddTaskBO implements Serializable{
 
     private static final long serialVersionUID = -5923264610557525728L;
@@ -13,7 +19,7 @@ public class AddTaskBO implements Serializable{
      * @author  wzy
      **/
     @NotNull
-    private int ftype;
+    private Integer ftype;
 
     /**
      * 仓库编码

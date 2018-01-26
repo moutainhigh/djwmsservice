@@ -77,7 +77,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 请求盘点任务信息多条
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 9:36
      **/
@@ -88,7 +88,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 请求盘点任务订单信息一条
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 11:05
      **/
@@ -99,7 +99,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 暂存盘点结果
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 15:01
      **/
@@ -110,7 +110,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 保存盘点结果
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 15:02
      **/
@@ -121,7 +121,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 获取全部盘点任务列表
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/12 16:18
      **/
@@ -132,7 +132,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 条件获取盘点任务列表
      * @author  wzy
-     * @param
+     * @param json \
      * @return 
      * @create  2018/1/12 16:20
      **/
@@ -143,7 +143,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * PDA请求盘点任务列表
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/13 13:50
      **/
@@ -154,7 +154,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * PDA获取盘点任务订单列表
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/13 14:43
      **/
@@ -165,7 +165,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * PDA盘点订单详情接口
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 15:39
      **/
@@ -176,7 +176,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * PDA保存盘点结果
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 16:12
      **/
@@ -188,7 +188,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * PDA完成盘点更新状态
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/13 15:33
      **/
@@ -199,7 +199,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * PDA获取盘点订单各个状态数量
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 16:41
      **/
@@ -210,7 +210,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 盘盈时获取相关订单库区库位信息
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 19:52
      **/
@@ -221,7 +221,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 查看盘点结果列表
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/14 13:22
      **/
@@ -232,7 +232,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 保存盘盈录入信息
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/14 22:33
      **/
@@ -243,7 +243,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 获取操作记录接口
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/17 10:29
      **/
@@ -254,7 +254,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 查看盘点任务进行情况接口
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/17 10:50
      **/
@@ -265,7 +265,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      *
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/23 16:53
      **/
@@ -276,7 +276,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 获取所有库位
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/23 17:42
      **/
@@ -287,7 +287,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 优化新增部分盘点
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/24 14:59
      **/
@@ -298,23 +298,34 @@ public interface WmsForStocktakingTaskHttpRequest {
     /**
      * 优化新增全部盘点
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/25 9:28
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/test1.do")
-    public HTTPResponse test1(@Body RequestBody json);
+    @POST("takeStock/increaseTask.do")
+    public HTTPResponse increaseTask(@Body RequestBody json);
 
     /**
      * 更新打印次数接口
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/25 9:30
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/printCount.do")
     public HTTPResponse printCount(@Body RequestBody json);
+
+    /**
+     * 获取未下发作业订单信息接口
+     * @author  wzy
+     * @param json
+     * @return 
+     * @create  2018/1/25 15:25
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/noSendOrderInfo.do")
+    public HTTPResponse noSendOrderInfo(@Body RequestBody json);
 
 }

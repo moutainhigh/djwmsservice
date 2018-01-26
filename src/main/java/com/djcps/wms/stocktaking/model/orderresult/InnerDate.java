@@ -1,5 +1,11 @@
-package com.djcps.wms.stocktaking.orderresult;
+package com.djcps.wms.stocktaking.model.orderresult;
 
+/**
+ * 特殊的http参数接收
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class InnerDate {
 
     private Integer total;

@@ -30,7 +30,6 @@ public class PdaOderInfoBO {
     private String boxHeight;
     private String boxWidth;
     private String instockAmount;
-    //private String takeStockAmount;
     private String differenceValue;
     private String isInventoryProfit;
     private String remark;

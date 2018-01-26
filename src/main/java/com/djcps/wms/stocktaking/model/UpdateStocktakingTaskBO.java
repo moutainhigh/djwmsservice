@@ -2,7 +2,6 @@ package com.djcps.wms.stocktaking.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -18,7 +17,6 @@ public class UpdateStocktakingTaskBO implements Serializable{
     /**
      * 作业状态 1,2,3,4(待作业，作业中，已完成，已关闭)
      */
-    @NotNull
     private Integer status;
 
     /**
@@ -29,8 +27,20 @@ public class UpdateStocktakingTaskBO implements Serializable{
 
     private String warehouseId;
 
-
     private String partnerId;
+
+    /**
+     * pda作业状态
+     */
+    private Integer pdaStatus;
+
+    public Integer getPdaStatus() {
+        return pdaStatus;
+    }
+
+    public void setPdaStatus(Integer pdaStatus) {
+        this.pdaStatus = pdaStatus;
+    }
 
     public Integer getStatus() {
         return status;
@@ -71,6 +81,7 @@ public class UpdateStocktakingTaskBO implements Serializable{
                 ", jobId='" + jobId + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
+                ", pdaStatus='" + pdaStatus + '\'' +
                 '}';
     }
 }

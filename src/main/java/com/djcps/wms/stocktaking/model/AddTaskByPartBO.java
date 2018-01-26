@@ -1,5 +1,11 @@
 package com.djcps.wms.stocktaking.model;
 
+/**
+ * 新增部分盘点实体类
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class AddTaskByPartBO {
     /**
      * 仓库编号

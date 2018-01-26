@@ -3,6 +3,12 @@ package com.djcps.wms.stocktaking.model;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 新增全盘的参数接收类
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class AddTaskByAllPO implements Serializable{
 
     private static final long serialVersionUID = -410380581666472359L;

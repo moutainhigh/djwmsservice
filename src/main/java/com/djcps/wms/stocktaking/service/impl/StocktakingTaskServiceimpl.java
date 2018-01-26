@@ -10,9 +10,9 @@ import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.stocktaking.constant.StocktakingTaskConstant;
 import com.djcps.wms.stocktaking.model.*;
-import com.djcps.wms.stocktaking.orderresult.InnerDate;
-import com.djcps.wms.stocktaking.orderresult.OrderInfoListResult;
-import com.djcps.wms.stocktaking.orderresult.OrderResult;
+import com.djcps.wms.stocktaking.model.orderresult.InnerDate;
+import com.djcps.wms.stocktaking.model.orderresult.OrderInfoListResult;
+import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.djcps.wms.stocktaking.server.StocktakingOrderServer;
 import com.djcps.wms.stocktaking.server.StocktakingTaskServer;
 import com.djcps.wms.stocktaking.service.StocktakingTaskService;
@@ -105,7 +105,7 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
     public Map<String, Object> addTaskByAll(AddTaskBO addTaskBO){
         long start = System.currentTimeMillis();
         //Http获取库位关联订单信息
-        HttpResult result=stocktakingTaskServer.test1(addTaskBO);
+        HttpResult result=stocktakingTaskServer.increaseTask(addTaskBO);
         String warehouseId=addTaskBO.getPartnerId();
         String warehouseName=addTaskBO.getWarehouseName();
         //获取订单库位信息list
@@ -274,6 +274,20 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> updateTaskState(UpdateStocktakingTaskBO updateStocktakingTaskBO) {
+        HttpResult result=stocktakingTaskServer.updateTaskState(updateStocktakingTaskBO);
+        return MsgTemplate.customMsg(result);
+    }
+
+    /**
+     * 单独更新
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/26 9:49
+     **/
+    @Override
+    public Map<String, Object> updatePdaStatus(UpdateStocktakingTaskBO updateStocktakingTaskBO) {
+        updateStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_1);
         HttpResult result=stocktakingTaskServer.updateTaskState(updateStocktakingTaskBO);
         return MsgTemplate.customMsg(result);
     }
@@ -482,6 +496,13 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
                     fOrderInfoBO.setFmaterialRule(new StringBuffer().append(fOrderInfoBO.getFmateriallength()).append("*")
                             .append(fOrderInfoBO.getFmaterialwidth()).toString());
                     BeanUtils.copyProperties(fOrderInfoBO,orderDetailPO);
+                    orderDetailPO.setOrderId(fOrderInfoBO.getFchildorderid());
+                    orderDetailPO.setMaterialId(fOrderInfoBO.getFmateriafid());
+                    orderDetailPO.setFboxlength(fOrderInfoBO.getFboxlength().toString());
+                    orderDetailPO.setFboxwidth(fOrderInfoBO.getFboxwidth().toString());
+                    orderDetailPO.setFboxheight(fOrderInfoBO.getFboxheight().toString());
+                    orderDetailPO.setFmateriallength(fOrderInfoBO.getFmateriallength().toString());
+                    orderDetailPO.setFmaterialwidth(fOrderInfoBO.getFmaterialwidth().toString());
                     //组织参数
                     stocktakingTaskBO.setOrderDetail(orderDetailPO);
                     stocktakingTaskBOList.add(stocktakingTaskBO);
@@ -573,41 +594,6 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
     }
 
     /**
-     * 带f的规格参数组装
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/23 14:42
-     **/
-//    private FOrderInfoBO getOrderDetail(FOrderInfoBO source,FOrderInfoBO target){
-//        //规格长宽高都不为null,才进行拼接
-//        if(!ObjectUtils.isEmpty(target.getFboxlength()) && !ObjectUtils.isEmpty(target.getFboxwidth()) &&
-//                !ObjectUtils.isEmpty(target.getFboxheight())){
-//            //拼接字符串,拼接成产品规格和下料规格
-//            source.setFproductRule(new StringBuffer().append(target.getFboxlength()).append("*")
-//                    .append(target.getFboxwidth()).append("*").append(target.getFboxheight()).toString());
-//        }
-//        source.setFmaterialRule(new StringBuffer().append(target.getFmateriallength()).append("*")
-//                .append(target.getFmaterialwidth()).toString());
-//        //组织参数
-//        source.setFordertime(target.getFordertime());
-//        source.setFdeliveryorder((target.getFdeliveryorder());
-//        source.setFgroupgoodname(target.getFgroupgoodname());
-//        source.setFflutetype(target.getFflutetype());
-//        source.setFstatus(target.getFstatus());
-//        source.setFmaterialname(target.getFmaterialname());
-//        source.setFlnglat(target.getFlnglat());
-//        source.setFpaymenttime(target.getFpaymenttime());
-//        source.setFaddressdetail(target.getFaddressdetail());
-//        source.setFcodeprovince(target.getFcodeprovince());
-//        source.setFconsignee(target.getFconsignee());
-//        source.setFcontactway(target.getFcontactway());
-//        source.setFpusername(target.getFpusername());
-//        source.setAmount(source.getAmount());
-//        return null;
-//    }
-
-    /**
      * 保存新增的盘点任务
      * @author  wzy
      * @param
@@ -637,21 +623,32 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
                 list.get(i).setInstockAmount(trueAmount);
             }
             if(ObjectUtils.isEmpty(list.get(i).getTakeStockAmount())){
-                list.get(i).setStatus(StocktakingTaskConstant.Status_1);
+                list.get(i).setStatus(StocktakingTaskConstant.STATUS_1);
             }
             else{
-                list.get(i).setStatus(StocktakingTaskConstant.Status_3);
+                list.get(i).setStatus(StocktakingTaskConstant.STATUS_3);
             }
         }
-        if(saveStocktakingTaskBO.getSaveStocktakingType().equals(3)){
+        //判断是否下发，修改pda作业状态
+        if(saveStocktakingTaskBO.getSaveStocktakingType().equals(StocktakingTaskConstant.CONFIRM_PUSH)){
             saveStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_1);
+        }
+        else if (saveStocktakingTaskBO.getSaveStocktakingType().equals(StocktakingTaskConstant.CONFIRM_PRINT)){
+            saveStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_0);
+        }
+        else {
+            saveStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_0);
         }
         saveStocktakingTaskBO.setStocktakingOrderInfo(list);
         HttpResult result=stocktakingTaskServer.saveSoctakingTask(saveStocktakingTaskBO);
-        if(!result.isSuccess()){
-            HttpResult otherResult = new HttpResult();
-            BeanUtils.copyProperties(result, otherResult);
-            return MsgTemplate.customMsg(otherResult);
+        if(result.isSuccess()){
+            //修改打印次数
+            if (saveStocktakingTaskBO.getSaveStocktakingType().equals(StocktakingTaskConstant.CONFIRM_PRINT)){
+                PrintCountBO printCountBO=new PrintCountBO();
+                printCountBO.setPartnerId(saveStocktakingTaskBO.getPartnerId());
+                printCountBO.setJobId(saveStocktakingTaskBO.getJobId());
+                Map<String, Object> printCountmap=printCount(printCountBO);
+            }
         }
         return  MsgTemplate.customMsg(result);
     }
@@ -675,7 +672,6 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
         if(ObjectUtils.isEmpty(result.getData())){
             return MsgTemplate.successMsg(null);
         }
-
         List<SaveStocktakingOrderInfoBO> list=new ArrayList<SaveStocktakingOrderInfoBO>();
         JsonObject resultObject = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonObject();
         OrderInfoListResult orderInfoListResult=gson.fromJson(resultObject,OrderInfoListResult.class);
@@ -685,15 +681,7 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
             list.add(saveStocktakingOrderInfoBO);
         }
         orderInfoListResult.getTaskOrderInfo().setResult(list);
-        //JsonArray OrderInfoJsonArray=resultObject.get("result").getAsJsonArray();
-//        for (JsonElement jsonElement : OrderInfoJsonArray){
-//               StocktakingTaskBO stocktakingTaskBO=gson.fromJson(jsonElement,StocktakingTaskBO.class);
- //              SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO=gson.fromJson(jsonElement,SaveStocktakingOrderInfoBO.class);
-//               saveStocktakingOrderInfoBO.setUnits("片");
- //              getOrderDetail(saveStocktakingOrderInfoBO,saveStocktakingOrderInfoBO);
-//               list.add(saveStocktakingOrderInfoBO);
-//            }
-            return  MsgTemplate.successMsg(orderInfoListResult);
+        return  MsgTemplate.successMsg(orderInfoListResult);
     }
 
     /**
@@ -714,8 +702,6 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
             OrderWarehouseLocInfoBO orderWarehouseLocInfoBO=new OrderWarehouseLocInfoBO();
             orderWarehouseLocInfoBO.setOrderIds(listorderid);
             //HttpResult orderWarehouseResult=stocktakingTaskServer.orderWarehouseLocInfo(orderWarehouseLocInfoBO);
-
-
             String orderId=stocktakingTaskBO.getOrderId();
             List<String> list=new ArrayList<String>();
             list.add(orderId);
@@ -742,22 +728,6 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
                     orderDetailPO.setUnits("片");
                     stocktakingTaskBO.setOrderDetail(orderDetailPO);
             }
-
-//        if(!ObjectUtils.isEmpty(orderWarehouseResult.getData())){
-//            JsonArray asJsonArray = new JsonParser().parse(gson.toJson(orderWarehouseResult.getData())).getAsJsonArray();
-//            for (JsonElement jsonElement:asJsonArray){
-//                JsonObject amount=new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject();
-//                JsonArray warehouseAreaInfo = new JsonParser().parse(gson.toJson(amount)).getAsJsonArray();
-//                for (JsonElement areajsonelement:warehouseAreaInfo){
-//                    JsonObject LocInfo=new JsonParser().parse(gson.toJson(areajsonelement)).getAsJsonObject();
-//                    JsonArray locinfo= new JsonParser().parse(gson.toJson(LocInfo)).getAsJsonArray();
-//                    for (JsonElement locjsonelement:locinfo){
-//                        int tureAmount =new JsonParser().parse(gson.toJson(locjsonelement)).getAsJsonObject().get("trueAmount").getAsInt();
-//                        stocktakingTaskBO.setTrueAmount(tureAmount);
-//                    }
-//                }
-//            }
-//        }
             return MsgTemplate.successMsg(stocktakingTaskBO);
     }
 
@@ -857,7 +827,7 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
             orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());
         }
         map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
+        //Http获取批量订单信息列表
         HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
         JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
         //筛选fdblflag为0的订单信息
@@ -868,68 +838,111 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
                 orderJsonArray0.add(jsonElement);
             }
         }
-        //拼接盘点任务订单+详细信息
-        for (JsonElement jsonElement : orderJsonArray0){
-            String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
-            for(int i=0;i<saveStocktakingOrderInfoList.getSaveStocktaking().size();i++){
-                //比对订单号
-                if(orderId.equals(saveStocktakingOrderInfoList.getSaveStocktaking().get(i).getOrderId())){
-                    FOrderInfoBO fOrderInfoBO=gson.fromJson(jsonElement,FOrderInfoBO.class);
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setOperatorId(partnerInfoBO.getOperatorId());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setOperator(partnerInfoBO.getOperator());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setRelativeId(saveStocktakingOrderInfoList.getJobId());
-                    BeanUtils.copyProperties(partnerInfoBO,saveStocktakingOrderInfoList.getSaveStocktaking().get(i));
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setMaterialLength(fOrderInfoBO.getFmateriallength());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setMaterialWidth(fOrderInfoBO.getFmaterialwidth());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setBoxLength(fOrderInfoBO.getFboxlength());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setBoxWidth(fOrderInfoBO.getFboxwidth());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setBoxHeight(fOrderInfoBO.getFboxheight());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setProductName(fOrderInfoBO.getFgroupgoodname());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setMaterialName(fOrderInfoBO.getFmaterialname());
-                    saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setMaterialId(fOrderInfoBO.getFmateriafid());
-                    if(ObjectUtils.isEmpty(saveStocktakingOrderInfoList.getSaveStocktaking().get(i).getTakeStockAmount())){
-                        saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setStatus(StocktakingTaskConstant.Status_1);
+        PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=new PdaGetStocktakingOrderBO();
+        pdaGetStocktakingOrderBO.setPartnerId(saveStocktakingOrderInfoList.getPartnerId());
+        pdaGetStocktakingOrderBO.setJobId(saveStocktakingOrderInfoList.getJobId());
+        pdaGetStocktakingOrderBO.setWarehouseId(saveStocktakingOrderInfoList.getWarehouseId());
+        //Http获取订单列表
+        HttpResult result=stocktakingTaskServer.stocktakingResultList(pdaGetStocktakingOrderBO);
+        if(ObjectUtils.isEmpty(result)){
+            return MsgTemplate.successMsg(null);
+        }
+        JsonArray jsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
+        List<SaveStocktakingOrderInfoBO> list=new ArrayList<SaveStocktakingOrderInfoBO>();
+        for (JsonElement jsonElement : jsonArray){
+            SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO1=new SaveStocktakingOrderInfoBO();
+            saveStocktakingOrderInfoBO1=gson.fromJson(jsonElement,SaveStocktakingOrderInfoBO.class);
+            list.add(saveStocktakingOrderInfoBO1);
+        }
+        //遍历前台传来的
+        for (SaveStocktakingOrderInfoBO foresave:saveStocktakingOrderInfoList.getSaveStocktaking()){
+            //遍历后台获取的全部订单信息
+            for (SaveStocktakingOrderInfoBO backgroundsave:list){
+                //匹配同一库位的订单
+                if(foresave.getIsInventoryProfit().equals(2)){
+                if (foresave.getOrderId().equals(backgroundsave.getOrderId()) && foresave.getWarehouseAreaId().equals(backgroundsave.getWarehouseAreaId()) && foresave.getWarehouseLocId().equals(backgroundsave.getWarehouseLocId())){
+                    //保存盘点数量
+                    Integer takeStockAmount=null;
+                    String remark=foresave.getRemark();
+                    if(!ObjectUtils.isEmpty(foresave.getTakeStockAmount())){
+                        takeStockAmount=foresave.getTakeStockAmount();
+                    }
+                    Integer isInventoryProfit=foresave.getIsInventoryProfit();
+                    String warehouseId=foresave.getWarehouseId();
+                    String warehouseName=foresave.getWarehouseName();
+                    String warehouseAreaId=foresave.getWarehouseAreaId();
+                    String warehouseAreaName=foresave.getWarehouseAreaName();
+                    String warehouseLocId=foresave.getWarehouseLocId();
+                    String warehouseLocName=foresave.getWarehouseLocName();
+                    BeanUtils.copyProperties(backgroundsave,foresave);
+                    if(ObjectUtils.isEmpty(backgroundsave.getTakeStockAmount())){
+                        foresave.setStatus(StocktakingTaskConstant.STATUS_1);
                     }
                     else{
-                        saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setStatus(StocktakingTaskConstant.Status_3);
+                        foresave.setStatus(StocktakingTaskConstant.STATUS_3);
                     }
-
+                    foresave.setIsInventoryProfit(isInventoryProfit);
                     //计算差异量
-                    GetAmountBO getAmountBO=new GetAmountBO();
-                    getAmountBO.setOrderId(saveStocktakingOrderInfoList.getSaveStocktaking().get(i).getOrderId());
-                    getAmountBO.setWarehouseAreaId(saveStocktakingOrderInfoList.getSaveStocktaking().get(i).getWarehouseAreaId());
-                    getAmountBO.setWarehouseLocId(saveStocktakingOrderInfoList.getSaveStocktaking().get(i).getWarehouseLocId());
-                    //获取在库数量
-                    HttpResult amountResult=stocktakingTaskServer.getAmount(getAmountBO);
-                    if(!ObjectUtils.isEmpty(amountResult.getData())){
-                        int trueAmount = Integer.parseInt(new java.text.DecimalFormat("0").format(amountResult.getData()));
-                        saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setInstockAmount(trueAmount);
-                        if(!ObjectUtils.isEmpty(saveStocktakingOrderInfoBO.getTakeStockAmount()) && !ObjectUtils.isEmpty(trueAmount)){
-                            saveStocktakingOrderInfoList.getSaveStocktaking().get(i).setDifferenceValue(saveStocktakingOrderInfoBO.getTakeStockAmount()-trueAmount);
-                        }
+                    if(takeStockAmount!=null){
+                        foresave.setTakeStockAmount(takeStockAmount);
+                        foresave.setDifferenceValue(takeStockAmount-backgroundsave.getInstockAmount());
+                    }
+                    foresave.setWarehouseId(warehouseId);
+                    foresave.setWarehouseName(warehouseName);
+                    foresave.setWarehouseAreaId(warehouseAreaId);
+                    foresave.setWarehouseAreaName(warehouseAreaName);
+                    foresave.setWarehouseLocId(warehouseLocId);
+                    foresave.setWarehouseLocName(warehouseLocName);
+                    foresave.setPartnerId(partnerInfoBO.getPartnerId());
+                    foresave.setOperatorId(partnerInfoBO.getOperatorId());
+                    foresave.setOperator(partnerInfoBO.getOperator());
+                    foresave.setRelativeId(saveStocktakingOrderInfoList.getJobId());
+                    foresave.setRemark(remark);
+                }
+                }
+            }
+        }
+        //赋值盘盈的订单
+        for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO3:saveStocktakingOrderInfoList.getSaveStocktaking()){
+            if (saveStocktakingOrderInfoBO3.getIsInventoryProfit().equals(1)){
+                for (JsonElement jsonElement:orderJsonArray0){
+                    String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
+                    FOrderInfoBO fOrderInfoBO=gson.fromJson(jsonElement,FOrderInfoBO.class);
+                    if (saveStocktakingOrderInfoBO3.getOrderId().equals(orderId)){
+                        saveStocktakingOrderInfoBO3.setBoxLength(fOrderInfoBO.getFboxlength());
+                        saveStocktakingOrderInfoBO3.setBoxWidth(fOrderInfoBO.getFboxwidth());
+                        saveStocktakingOrderInfoBO3.setBoxHeight(fOrderInfoBO.getFboxheight());
+                        saveStocktakingOrderInfoBO3.setMaterialLength(fOrderInfoBO.getFmateriallength());
+                        saveStocktakingOrderInfoBO3.setMaterialWidth(fOrderInfoBO.getFmaterialwidth());
+                        saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
+                        saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
+                        saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
+                        saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoList.getJobId());
+                        saveStocktakingOrderInfoBO3.setInstockAmount(0);
+                        saveStocktakingOrderInfoBO3.setDifferenceValue(saveStocktakingOrderInfoBO3.getTakeStockAmount());
+                        saveStocktakingOrderInfoBO3.setMaterialId(fOrderInfoBO.getFmateriafid());
+                        saveStocktakingOrderInfoBO3.setMaterialName(fOrderInfoBO.getFmaterialname());
                     }
                 }
             }
         }
-        //添加是否在作业
-        for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO1:saveStocktakingOrderInfoList.getSaveStocktaking()){
-            if (ObjectUtils.isEmpty(saveStocktakingOrderInfoBO1.getTakeStockAmount())){
-                saveStocktakingOrderInfoBO1.setStatus(StocktakingTaskConstant.Status_1);
-            }
-            else{
-                saveStocktakingOrderInfoBO1.setStatus(StocktakingTaskConstant.Status_3);
-            }
+        HttpResult saveResult= stocktakingTaskServer.saveStocktakingResult(saveStocktakingOrderInfoList);
+        if (saveResult.isSuccess()){
+            UpdateStocktakingTaskBO updateStocktakingTaskBO=new UpdateStocktakingTaskBO();
+            updateStocktakingTaskBO.setJobId(saveStocktakingOrderInfoList.getJobId());
+            updateStocktakingTaskBO.setPartnerId(saveStocktakingOrderInfoList.getPartnerId());
+            updateStocktakingTaskBO.setStatus(StocktakingTaskConstant.WORKING);
+            Map<String,Object> upmap=updateTaskState(updateStocktakingTaskBO);
         }
-        HttpResult result= stocktakingTaskServer.saveStocktakingResult(saveStocktakingOrderInfoList);
-        return MsgTemplate.customMsg(result);
+        return MsgTemplate.customMsg(saveResult);
     }
 
     /**
-     * 保存盘点结果,获取库存量，计算差异量
+     * 完成盘点
      * @author  wzy
      * @param
      * @return
-     * @create  2018/1/12 15:22
+     * @create  2018/1/26 11:51
      **/
     @Override
     public Map<String, Object> completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList,PartnerInfoBO partnerInfoBO) {
@@ -942,90 +955,118 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
         for(int i=0;i<saveStocktakingOrderInfoBOList.getSaveStocktaking().size();i++){
             saveStocktakingOrderInfoBO=saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i);
             orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());
-            //jobId=saveStocktakingOrderInfoBO.getRelativeId();
             WarehouseId=saveStocktakingOrderInfoBO.getWarehouseId();
         }
         //校验是否盘点完毕
-        PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=new PdaGetStocktakingOrderBO();
-        pdaGetStocktakingOrderBO.setJobId(jobId);
-        pdaGetStocktakingOrderBO.setPartnerId(partnerInfoBO.getPartnerId());
-        pdaGetStocktakingOrderBO.setWarehouseId(WarehouseId);
-        HttpResult result=stocktakingTaskServer.getOrderAmount(pdaGetStocktakingOrderBO);
-        //JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
-        int unfinishedStocktakingAmount = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonObject().get("unfinishedStocktakingAmount").getAsInt();
-        //未盘点数量为0，全部盘点完了
-        //if(unfinishedStocktakingAmount==0){
-            map.put("childOrderIds",orderidlist);
-            //获取批量订单信息列表
-            HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-            JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-
-            //筛选fdblflag为0的订单信息
-            JsonArray orderJsonArray0=new JsonArray();
-            for (JsonElement jsonElement : orderJsonArray){
-                int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-                if(fdbflag==0){
-                    orderJsonArray0.add(jsonElement);
-                }
+        for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO1:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
+            if (ObjectUtils.isEmpty(saveStocktakingOrderInfoBO1.getTakeStockAmount())){
+                return MsgTemplate.successMsg(StocktakingTaskConstant.NOTCOMPLETE);
             }
-            //拼接盘点任务订单+详细信息
-            saveStocktakingOrderInfoBOList.setOperator(partnerInfoBO.getOperator());
-            saveStocktakingOrderInfoBOList.setOperatorId(partnerInfoBO.getOperatorId());
-            saveStocktakingOrderInfoBOList.setPartnerId(partnerInfoBO.getPartnerId());
-            for (JsonElement jsonElement : orderJsonArray0){
-                String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
-                for(int i=0;i<saveStocktakingOrderInfoBOList.getSaveStocktaking().size();i++){
-                    if(orderId.equals(saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).getOrderId())){
-                        FOrderInfoBO fOrderInfoBO=gson.fromJson(jsonElement,FOrderInfoBO.class);
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setOperatorId(partnerInfoBO.getOperatorId());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setOperator(partnerInfoBO.getOperator());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setRelativeId(saveStocktakingOrderInfoBOList.getJobId());
-                        BeanUtils.copyProperties(partnerInfoBO,saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i));
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setMaterialLength(fOrderInfoBO.getFmateriallength());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setMaterialWidth(fOrderInfoBO.getFmaterialwidth());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setBoxLength(fOrderInfoBO.getFboxlength());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setBoxWidth(fOrderInfoBO.getFboxwidth());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setBoxHeight(fOrderInfoBO.getFboxheight());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setProductName(fOrderInfoBO.getFgroupgoodname());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setMaterialName(fOrderInfoBO.getFmaterialname());
-                        saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setMaterialId(fOrderInfoBO.getFmateriafid());
-                        if(ObjectUtils.isEmpty( saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).getTakeStockAmount())){
-                            saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setStatus(StocktakingTaskConstant.Status_1);
+        }
+        map.put("childOrderIds",orderidlist);
+        //获取批量订单信息列表
+        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
+        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
+        //筛选fdblflag为0的订单信息
+        JsonArray orderJsonArray0=new JsonArray();
+        for (JsonElement jsonElement : orderJsonArray){
+            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
+            if(fdbflag==0){
+                orderJsonArray0.add(jsonElement);
+            }
+        }
+        PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO1=new PdaGetStocktakingOrderBO();
+        pdaGetStocktakingOrderBO1.setPartnerId(saveStocktakingOrderInfoBOList.getPartnerId());
+        pdaGetStocktakingOrderBO1.setJobId(saveStocktakingOrderInfoBOList.getJobId());
+        pdaGetStocktakingOrderBO1.setWarehouseId(saveStocktakingOrderInfoBOList.getWarehouseId());
+        //Http获取订单列表
+        HttpResult stocktakingResult=stocktakingTaskServer.stocktakingResultList(pdaGetStocktakingOrderBO1);
+        if(ObjectUtils.isEmpty(stocktakingResult.getData())){
+            return MsgTemplate.successMsg(null);
+        }
+        JsonArray jsonArray = new JsonParser().parse(gson.toJson(stocktakingResult.getData())).getAsJsonArray();
+        List<SaveStocktakingOrderInfoBO> orderResultlist=new ArrayList<SaveStocktakingOrderInfoBO>();
+        for (JsonElement jsonElement : jsonArray){
+            SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO2=new SaveStocktakingOrderInfoBO();
+            saveStocktakingOrderInfoBO2=gson.fromJson(jsonElement,SaveStocktakingOrderInfoBO.class);
+            orderResultlist.add(saveStocktakingOrderInfoBO2);
+        }
+        //遍历前台传来的
+        for (SaveStocktakingOrderInfoBO foresave:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
+            //遍历后台获取的全部订单信息
+            for (SaveStocktakingOrderInfoBO backgroundsave:orderResultlist) {
+                if (foresave.getIsInventoryProfit().equals(2)) {
+                    if (foresave.getOrderId().equals(backgroundsave.getOrderId()) && foresave.getWarehouseAreaId().equals(backgroundsave.getWarehouseAreaId()) && foresave.getWarehouseLocId().equals(backgroundsave.getWarehouseLocId())) {
+                        //保存盘点数量
+                        Integer takeStockAmount = null;
+                        String remark = foresave.getRemark();
+                        if (!ObjectUtils.isEmpty(foresave.getTakeStockAmount())) {
+                            takeStockAmount = foresave.getTakeStockAmount();
                         }
-                        else{
-                            saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setStatus(StocktakingTaskConstant.Status_3);
-                        }
+                        Integer isInventoryProfit = foresave.getIsInventoryProfit();
+                        String warehouseId = foresave.getWarehouseId();
+                        String warehouseName = foresave.getWarehouseName();
+                        String warehouseAreaId = foresave.getWarehouseAreaId();
+                        String warehouseAreaName = foresave.getWarehouseAreaName();
+                        String warehouseLocId = foresave.getWarehouseLocId();
+                        String warehouseLocName = foresave.getWarehouseLocName();
+                        //拷贝规格参数
+                        BeanUtils.copyProperties(backgroundsave, foresave);
+                        foresave.setIsInventoryProfit(isInventoryProfit);
                         //计算差异量
-                        GetAmountBO getAmountBO=new GetAmountBO();
-                        getAmountBO.setOrderId(saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).getOrderId());
-                        getAmountBO.setWarehouseAreaId(saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).getWarehouseAreaId());
-                        getAmountBO.setWarehouseLocId(saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).getWarehouseLocId());
-                        //获取在库数量
-                        HttpResult amountResult=stocktakingTaskServer.getAmount(getAmountBO);
-                        if(!ObjectUtils.isEmpty(amountResult.getData())){
-                            int trueAmount = Integer.parseInt(new java.text.DecimalFormat("0").format(amountResult.getData()));
-                            saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setInstockAmount(trueAmount);
-                            saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i).setDifferenceValue(saveStocktakingOrderInfoBO.getTakeStockAmount()-trueAmount);
+                        if (takeStockAmount != null) {
+                            foresave.setTakeStockAmount(takeStockAmount);
+                            foresave.setDifferenceValue(takeStockAmount - backgroundsave.getInstockAmount());
                         }
+                        foresave.setWarehouseId(warehouseId);
+                        foresave.setWarehouseName(warehouseName);
+                        foresave.setWarehouseAreaId(warehouseAreaId);
+                        foresave.setWarehouseAreaName(warehouseAreaName);
+                        foresave.setWarehouseLocId(warehouseLocId);
+                        foresave.setWarehouseLocName(warehouseLocName);
+                        foresave.setPartnerId(partnerInfoBO.getPartnerId());
+                        foresave.setOperatorId(partnerInfoBO.getOperatorId());
+                        foresave.setOperator(partnerInfoBO.getOperator());
+                        foresave.setRelativeId(saveStocktakingOrderInfoBOList.getJobId());
+                        foresave.setRemark(remark);
                     }
                 }
             }
+        }
+        //赋值盘盈的订单
+        for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO3:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
+            if (saveStocktakingOrderInfoBO3.getIsInventoryProfit().equals(1)){
+                for (JsonElement jsonElement:orderJsonArray0){
+                    String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
+                    FOrderInfoBO fOrderInfoBO=gson.fromJson(jsonElement,FOrderInfoBO.class);
+                    if (saveStocktakingOrderInfoBO3.getOrderId().equals(orderId)){
+                        saveStocktakingOrderInfoBO3.setBoxLength(fOrderInfoBO.getFboxlength());
+                        saveStocktakingOrderInfoBO3.setBoxWidth(fOrderInfoBO.getFboxwidth());
+                        saveStocktakingOrderInfoBO3.setBoxHeight(fOrderInfoBO.getFboxheight());
+                        saveStocktakingOrderInfoBO3.setMaterialLength(fOrderInfoBO.getFmateriallength());
+                        saveStocktakingOrderInfoBO3.setMaterialWidth(fOrderInfoBO.getFmaterialwidth());
+                        saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
+                        saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
+                        saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
+                        saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoBOList.getJobId());
+                        saveStocktakingOrderInfoBO3.setInstockAmount(0);
+                        saveStocktakingOrderInfoBO3.setMaterialId(fOrderInfoBO.getFmateriafid());
+                        saveStocktakingOrderInfoBO3.setMaterialName(fOrderInfoBO.getFmaterialname());
+                    }
+                }
+            }
+        }
         //添加是否在作业
         for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO1:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
             if (ObjectUtils.isEmpty(saveStocktakingOrderInfoBO1.getTakeStockAmount())){
-                saveStocktakingOrderInfoBO1.setStatus(StocktakingTaskConstant.Status_1);
+                saveStocktakingOrderInfoBO1.setStatus(StocktakingTaskConstant.STATUS_1);
             }
             else{
-                saveStocktakingOrderInfoBO1.setStatus(StocktakingTaskConstant.Status_3);
+                saveStocktakingOrderInfoBO1.setStatus(StocktakingTaskConstant.STATUS_3);
             }
         }
-            HttpResult saveresult= stocktakingTaskServer.completeStocktakingTask(saveStocktakingOrderInfoBOList);
-            return MsgTemplate.customMsg(saveresult);
-       // }
-        //有未盘点的订单
-//        else {
-//            return MsgTemplate.customMsg(stocktakingTaskServer.getOrderAmount(pdaGetStocktakingOrderBO));
-//        }
+        HttpResult saveresult= stocktakingTaskServer.completeStocktakingTask(saveStocktakingOrderInfoBOList);
+        return MsgTemplate.customMsg(saveresult);
     }
 
     /**
@@ -1130,17 +1171,17 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
         }
         List<PdaStocktakingOrderBO> pdaorderlist2=new ArrayList<PdaStocktakingOrderBO>();
         for(PdaStocktakingOrderBO pdaStocktakingOrderBO:pdaorderlist){
-            if(pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.Status_1)){
+            if(pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.STATUS_1)){
                 pdaorderlist2.add(pdaStocktakingOrderBO);
             }
         }
         for(PdaStocktakingOrderBO pdaStocktakingOrderBO:pdaorderlist) {
-            if (pdaStocktakingOrderBO.getIsInventoryProfit().equals("1.0") && pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.Status_3)) {
+            if (pdaStocktakingOrderBO.getIsInventoryProfit().equals("1.0") && pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.STATUS_3)) {
                 pdaorderlist2.add(pdaStocktakingOrderBO);
             }
         }
         for(PdaStocktakingOrderBO pdaStocktakingOrderBO:pdaorderlist){
-            if (pdaStocktakingOrderBO.getIsInventoryProfit().equals("2.0") && pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.Status_3)) {
+            if (pdaStocktakingOrderBO.getIsInventoryProfit().equals("2.0") && pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.STATUS_3)) {
                 pdaorderlist2.add(pdaStocktakingOrderBO);
             }
         }
@@ -1224,14 +1265,13 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
         saveStocktakingOrderInfoBO.setMaterialId(materialId);
         saveStocktakingOrderInfoBO.setRelativeId(saveStocktakingOrderInfoBO.getJobId());
         if(ObjectUtils.isEmpty(saveStocktakingOrderInfoBO.getTakeStockAmount())){
-            saveStocktakingOrderInfoBO.setStatus(StocktakingTaskConstant.Status_1);
+            saveStocktakingOrderInfoBO.setStatus(StocktakingTaskConstant.STATUS_1);
         }
         else{
-            saveStocktakingOrderInfoBO.setStatus(StocktakingTaskConstant.Status_3);
+            saveStocktakingOrderInfoBO.setStatus(StocktakingTaskConstant.STATUS_3);
         }
-
         //是正常新增时做校验
-        if (saveStocktakingOrderInfoBO.getIsAdd().equals("1")){
+        if (saveStocktakingOrderInfoBO.getIsAdd().equals(StocktakingTaskConstant.ISADD_NEW)){
             //判断新增订单的库区库位是否已在盘点任务列表中
             PdaStocktakingOrderInfo pdaStocktakingOrderInfo=new PdaStocktakingOrderInfo();
             pdaStocktakingOrderInfo.setJobId(saveStocktakingOrderInfoBO.getJobId());
@@ -1277,11 +1317,21 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
             BeanUtils.copyProperties(result, otherResult);
             return MsgTemplate.customMsg(otherResult);
         }
+        else{
+            PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=new PdaGetStocktakingOrderBO();
+            pdaGetStocktakingOrderBO.setJobId(saveStocktakingOrderInfoBO.getJobId());
+            pdaGetStocktakingOrderBO.setPartnerId(saveStocktakingOrderInfoBO.getPartnerId());
+            pdaGetStocktakingOrderBO.setOperator(saveStocktakingOrderInfoBO.getOperator());
+            pdaGetStocktakingOrderBO.setOperatorId(saveStocktakingOrderInfoBO.getOperatorId());
+            pdaGetStocktakingOrderBO.setStatus(StocktakingTaskConstant.WORKING);
+            pdaGetStocktakingOrderBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_2);
+            Map<String,Object> upmap=pdaCompleteStocktaking(pdaGetStocktakingOrderBO);
+        }
         return MsgTemplate.customMsg(result);
     }
 
     /**
-     * PDA完成盘点请求，未完成返回盘点数
+     * 未完成返回盘点数
      * @author  wzy
      * @param
      * @return
@@ -1306,6 +1356,8 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> pdaCompleteStocktaking(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO) {
+        pdaGetStocktakingOrderBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_3);
+        pdaGetStocktakingOrderBO.setStatus(StocktakingTaskConstant.WORKING);
         HttpResult result=stocktakingTaskServer.pdaCompleteStocktaking(pdaGetStocktakingOrderBO);
         if(!result.isSuccess()){
             HttpResult otherResult = new HttpResult();
@@ -1420,7 +1472,7 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
     }
 
     /**
-     * 编辑时获取库位
+     * 盘盈编辑时获取库位
      * @author  wzy
      * @param
      * @return
@@ -1428,12 +1480,11 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> areaAndLocInfo(JobAndWarehouseBO jobAndWarehouseBO) {
-        //获取盘盈订单的所选库位信息
+        //Http获取盘盈订单的所选库位信息
        HttpResult result=stocktakingTaskServer.areaAndLocInfo(jobAndWarehouseBO);
        JsonArray jsonArray=new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
        List<AreaAndLocInfoByPartPO> list=new ArrayList<AreaAndLocInfoByPartPO>();
        for (JsonElement jsonElement:jsonArray){
-           //ListAreaAndLocInfoByPartPO listAreaAndLocInfoByPartPO=gson.fromJson(jsonArray,ListAreaAndLocInfoByPartPO.class);
            AreaAndLocInfoByPartPO areaAndLocInfoByPartPO=gson.fromJson(jsonElement,AreaAndLocInfoByPartPO.class);
            list.add(areaAndLocInfoByPartPO);
        }
@@ -1442,19 +1493,11 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
        for (AreaAndLocInfoByPartPO areaAndLocInfoByPartPO:list){
             warehouseAreaId=areaAndLocInfoByPartPO.getWarehouseAreaId();
             jobAndWarehouseBO.setWarehouseAreaId(warehouseAreaId);
-           //获取所有库位信息
+           //Http获取所有库位信息
           OrderResult LocationList=stocktakingTaskServer.getLocationAllList(jobAndWarehouseBO);
-           //HttpResult LocationList=stocktakingTaskServer.getLocationAllList(jobAndWarehouseBO);
            if(!ObjectUtils.isEmpty(LocationList.getData())){
-               //JsonArray asjson=new JsonParser().parse(gson.toJson(LocationList.getData().getResult())).getAsJsonArray();
                int total=new JsonParser().parse(gson.toJson(LocationList.getData().getTotal())).getAsInt();
-//               List<LocationInfo> locationlist=new ArrayList<LocationInfo>();
-//               for (JsonElement jsonElement:asjson){
-//                   LocationInfo locationInfo=gson.fromJson(jsonElement,LocationInfo.class);
-//                   locationlist.add(locationInfo);
-//               }
                if(areaAndLocInfoByPartPO.getLocationList().size()!=total){
-               //if(areaAndLocInfoByPartPO.getLocationList().size()!=locationlist.size()){
                    areaAndLocInfoByPartPO.setStatus(1);
                }
                else{
@@ -1470,9 +1513,29 @@ public class StocktakingTaskServiceimpl implements StocktakingTaskService {
         return null;
     }
 
+    /**
+     * 更新打印次数接口
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/25 15:45
+     **/
     @Override
     public Map<String, Object> printCount(PrintCountBO printCountBO) {
         HttpResult result=stocktakingTaskServer.printCount(printCountBO);
+        return MsgTemplate.customMsg(result);
+    }
+
+    /**
+     * 获取未下发作业订单信息
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/25 15:34
+     **/
+    @Override
+    public Map<String, Object> noSendOrderInfo(PrintCountBO printCountBO) {
+        HttpResult result=stocktakingTaskServer.noSendOrderInfo(printCountBO);
         return MsgTemplate.customMsg(result);
     }
 }

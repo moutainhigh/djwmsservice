@@ -19,6 +19,8 @@ public class SaveStocktakingOrderInfoList {
 
     private String operatorId;
 
+    private String warehouseId;
+
     /**
      * 盘点员名
      */
@@ -30,6 +32,14 @@ public class SaveStocktakingOrderInfoList {
     private String inventoryClerkId;
 
     List<SaveStocktakingOrderInfoBO> saveStocktaking;
+
+    public String getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
     public String getInventoryClerk() {
         return inventoryClerk;
@@ -96,6 +106,7 @@ public class SaveStocktakingOrderInfoList {
                 ", partnerId='" + partnerId + '\'' +
                 ", operator='" + operator + '\'' +
                 ", operatorId='" + operatorId + '\'' +
+                ", warehouseId='" + warehouseId + '\'' +
                 ", inventoryClerk='" + inventoryClerk + '\'' +
                 ", inventoryClerkId='" + inventoryClerkId + '\'' +
                 ", saveStocktaking=" + saveStocktaking +

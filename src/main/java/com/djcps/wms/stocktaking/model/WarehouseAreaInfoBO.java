@@ -3,6 +3,12 @@ package com.djcps.wms.stocktaking.model;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 库区库位信息实体类
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class WarehouseAreaInfoBO implements Serializable{
 
     private static final long serialVersionUID = -440569053456467512L;

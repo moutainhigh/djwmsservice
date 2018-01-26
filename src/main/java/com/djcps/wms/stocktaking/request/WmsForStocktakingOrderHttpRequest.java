@@ -19,7 +19,7 @@ public interface WmsForStocktakingOrderHttpRequest {
     /**
      * 获取订单库位信息接口
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/18 17:58
      **/
@@ -30,7 +30,7 @@ public interface WmsForStocktakingOrderHttpRequest {
     /**
      * 获取库区库位订单的库存数量
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/19 10:51
      **/

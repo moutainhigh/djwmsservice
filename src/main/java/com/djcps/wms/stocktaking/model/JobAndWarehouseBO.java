@@ -2,6 +2,12 @@ package com.djcps.wms.stocktaking.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+/**
+ * 获取盘点任务参数实体
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class JobAndWarehouseBO {
 
     @NotBlank

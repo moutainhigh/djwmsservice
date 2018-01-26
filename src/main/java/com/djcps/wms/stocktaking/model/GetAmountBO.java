@@ -1,5 +1,11 @@
 package com.djcps.wms.stocktaking.model;
 
+/**
+ * 获取已盘点数信息
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class GetAmountBO {
 
     private String warehouseAreaId;

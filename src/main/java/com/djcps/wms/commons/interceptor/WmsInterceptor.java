@@ -1,22 +1,7 @@
 package com.djcps.wms.commons.interceptor;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
 import com.djcps.wms.commons.base.RedisClient;
 import com.djcps.wms.commons.config.ParamsConfig;
-import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -27,6 +12,19 @@ import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 
 /**
@@ -37,25 +35,25 @@ import com.google.gson.Gson;
  * @date:2017年11月13日
  */
 public class WmsInterceptor extends HandlerInterceptorAdapter{
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(WmsInterceptor.class);
-	
+
 	@Autowired
 	@Qualifier("redisClientCluster")
 	RedisClient redisClient;
-	
+
 	@Autowired
 	@Qualifier("redisClientSingle")
 	RedisClient userRedisClient;
-	
+
 	@Autowired
-    private InnerUserService innerUserService;
-	
+	private InnerUserService innerUserService;
+
 	private Gson gson = new Gson();
-	
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
-			Object handler) throws Exception {
+							 Object handler) throws Exception {
 		//url状态,0:失效,1:生效(默认)
 		int effect = 0;
 		//0:需要用户登录(默认),1:不需要登录
@@ -65,6 +63,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		String url = request.getRequestURI();
 		System.err.println("---访问URL:"+url+",请求方式:"+request.getMethod());
 		String contextPath = request.getContextPath();
+		String appLogin = request.getHeader("loginType");
 		//删除下文根路径获取RequestMappingUrl
 		url = url.substring(contextPath.length());
 		//字符串分割去除.do
@@ -73,24 +72,24 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		SysUrlPO sysUrl = gson.fromJson(json,SysUrlPO.class);
 		//取不到url
 		if(sysUrl==null){
-			responseMsg(SysMsgEnum.SYSURL_NULL, response);
+			responseMsg(SysMsgEnum.SYSURL_NULL, response,appLogin);
 			return false;
 		}
 		//url失效
 		if(sysUrl.getEffect() == effect){
-			responseMsg(SysMsgEnum.URL_EXPIRE, response);
+			responseMsg(SysMsgEnum.URL_EXPIRE, response,appLogin);
 			return false;
 		}
 		//不需要登录
 		if(sysUrl.getLoginType() == loginType){
 			return true;
 		}
-		
+
 		//获取token认证
 		String token = CookiesUtil.getCookieByName(request, "token");
 		// 用户token 是否过期 或者不存在
 		if (ObjectUtils.isEmpty(token)) {
-			responseMsg(SysMsgEnum.NOT_LOGIN, response);
+			responseMsg(SysMsgEnum.NOT_LOGIN, response,appLogin);
 			return false;
 		}
 		UserInfoVo userInfo = innerUserService.getInnerUserInfoFromRedis(token);
@@ -112,17 +111,17 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 			request.setAttribute("partnerInfo", partner);
 		}else{
 			//用户不存在也代表未登入
-			responseMsg(SysMsgEnum.NOT_LOGIN, response);
+			responseMsg(SysMsgEnum.NOT_LOGIN, response,appLogin);
 			return false;
 		}
-		
+
 //		//web端和app端请求用户控制
 //		String version = request.getParameter("version");
 //		if (version == null){
 //			responseMsg(InterceptorEnums.PARAMS_ERROR,response);
 //			return false;
 //		}
-			
+
 //		if ("web".equals(version)) {
 //			String vtoken = request.getParameter("vtoken");
 //			if (vtoken == null)
@@ -133,7 +132,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 //		}
 		return true;
 	}
-	
+
 	/**
 	 * @title:输出错误信息
 	 * @description:
@@ -142,27 +141,33 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	 * @author:zdx
 	 * @date:2017年11月13日
 	 */
-	private void responseMsg(SysMsgEnum msg, HttpServletResponse response) {
-        logger.info(msg.getMsg());
-        PrintWriter printWriter = null;
-        if (!response.isCommitted()) {
-            Map<String, Object> result = (MsgTemplate.failureMsg(msg,ParamsConfig.INNER_USER_LOGIN_URL));
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                String json = mapper.writeValueAsString(result);
-                if (!response.isCommitted()){
-                	response.setContentType("application/json; charset=utf-8");
-                    response.setCharacterEncoding("utf-8");
-                    printWriter = response.getWriter();
-                    printWriter.print(json);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally{
-            	if(printWriter!=null){
-            		printWriter.close();
-            	}
-            }
-        }
-    }
+	private void responseMsg(SysMsgEnum msg, HttpServletResponse response,String appLogin) {
+		logger.info(msg.getMsg());
+		PrintWriter printWriter = null;
+		if (!response.isCommitted()) {
+			Map<String, Object> result;
+			if(!StringUtils.isEmpty(appLogin)){
+				result= (MsgTemplate.failureMsg(msg));
+			}else {
+				result= (MsgTemplate.failureMsg(msg,ParamsConfig.INNER_USER_LOGIN_URL));
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				String json = mapper.writeValueAsString(result);
+				if (!response.isCommitted()){
+					response.setContentType("application/json; charset=utf-8");
+					response.setCharacterEncoding("utf-8");
+					printWriter = response.getWriter();
+					printWriter.print(json);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}finally{
+				if(printWriter!=null){
+					printWriter.close();
+				}
+			}
+		}
+	}
 }
