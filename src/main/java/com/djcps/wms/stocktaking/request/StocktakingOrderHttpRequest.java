@@ -19,6 +19,7 @@ public interface StocktakingOrderHttpRequest {
      * 批量获取订单详情
      * @author  wzy
      * @param json
+     * @return http
      * @create  2018/1/10 9:29
      **/
     @Headers("content-type:application/json")

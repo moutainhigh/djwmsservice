@@ -263,7 +263,7 @@ public interface WmsForStocktakingTaskHttpRequest {
     public HTTPResponse stocktakingCompleteStatus(@Body RequestBody json);
 
     /**
-     *
+     *web盘盈是获取相关库区库位
      * @author  wzy
      * @param json
      * @return 

@@ -62,6 +62,8 @@ public interface StocktakingTaskService {
     /**
      * 获取可用盘点人员列表
      * @author  wzy
+     * @param
+     * @return
      * @create  2018/1/11 15:07
      **/
     Map<String,Object> getInventoryclerk();
@@ -69,6 +71,8 @@ public interface StocktakingTaskService {
     /**
      * 获取随机编码生成作业单号
      * @author  wzy
+     * @param
+     * @return
      * @create  2018/1/11 15:07
      **/
     Map<String,Object> getNumber();
@@ -77,6 +81,7 @@ public interface StocktakingTaskService {
      * 确认盘点订单
      * @author  wzy
      * @param saveStocktakingTaskBO
+     * @return
      * @create  2018/1/11 15:07
      **/
     Map<String,Object> saveSoctakingTask(SaveStocktakingTaskBO saveStocktakingTaskBO);
@@ -86,6 +91,7 @@ public interface StocktakingTaskService {
      * 请求盘点任务信息
      * @author  wzy
      * @param pdaGetStocktakingOrderBO
+     * @return
      * @create  2018/1/12 9:37
      **/
     Map<String,Object> stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO);
@@ -94,6 +100,7 @@ public interface StocktakingTaskService {
      * 获取盘点任务订单信息，校验是否需要盘盈
      * @author  wzy
      * @param stocktakingTaskBO
+     * @return
      * @create  2018/1/12 9:37
      **/
     Map<String,Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO);
@@ -102,6 +109,7 @@ public interface StocktakingTaskService {
      * 保存盘盈录入信息/录入单挑盘点任务
      * @author  wzy
      * @param saveStocktakingOrderInfoBO
+     * @return
      * @create  2018/1/14 22:36
      **/
     Map<String,Object> saveInventoryProfitInfo(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO);
@@ -111,6 +119,7 @@ public interface StocktakingTaskService {
      * @author  wzy
      * @param saveStocktakingOrderInfoList
      * @param  partnerInfoBO
+     * @return
      * @create  2018/1/12 15:06
      **/
     Map<String,Object> saveStocktakingResult(SaveStocktakingOrderInfoList saveStocktakingOrderInfoList,PartnerInfoBO partnerInfoBO);
@@ -120,6 +129,7 @@ public interface StocktakingTaskService {
      * @author  wzy
      * @param saveStocktakingOrderInfoList
      * @param  partnerInfoBO
+     * @return
      * @create  2018/1/12 15:22
      **/
     Map<String,Object> completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoList, PartnerInfoBO partnerInfoBO);
