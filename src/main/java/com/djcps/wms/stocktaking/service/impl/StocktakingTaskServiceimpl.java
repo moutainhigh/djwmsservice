@@ -927,12 +927,10 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         Map<String,List<String>> map=new HashMap<String,List<String>>();
         SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO=null;
         String jobId=saveStocktakingOrderInfoBOList.getJobId();
-        String WarehouseId=null;
         //获取所有订单列表
         for(int i=0;i<saveStocktakingOrderInfoBOList.getSaveStocktaking().size();i++){
             saveStocktakingOrderInfoBO=saveStocktakingOrderInfoBOList.getSaveStocktaking().get(i);
             orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());
-            WarehouseId=saveStocktakingOrderInfoBO.getWarehouseId();
         }
         //校验是否盘点完毕
         for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO1:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
