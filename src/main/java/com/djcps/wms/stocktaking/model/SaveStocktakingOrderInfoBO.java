@@ -1,6 +1,5 @@
 package com.djcps.wms.stocktaking.model;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -114,7 +113,6 @@ public class SaveStocktakingOrderInfoBO {
     /**
      * 盘点数量
      */
-    @NotNull
     private Integer takeStockAmount;
     /**
      * 差异量

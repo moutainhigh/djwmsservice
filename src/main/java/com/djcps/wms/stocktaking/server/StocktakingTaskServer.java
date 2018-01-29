@@ -418,8 +418,8 @@ public class StocktakingTaskServer {
      * @return
      * @create  2018/1/23 17:20
      **/
-    public HttpResult areaAndLocInfo(JobAndWarehouseBO JobAndWarehouseBO){
-        String json = gson.toJson(JobAndWarehouseBO);
+    public HttpResult areaAndLocInfo(JobAndWarehouseBO jobAndWarehouseBO){
+        String json = gson.toJson(jobAndWarehouseBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.areaAndLocInfo(rb);
@@ -434,8 +434,8 @@ public class StocktakingTaskServer {
      * @return 
      * @create  2018/1/23 17:44
      **/
-    public OrderResult getLocationAllList(JobAndWarehouseBO JobAndWarehouseBO){
-        String json = gson.toJson(JobAndWarehouseBO);
+    public OrderResult getLocationAllList(JobAndWarehouseBO jobAndWarehouseBO){
+        String json = gson.toJson(jobAndWarehouseBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.getLocationAllList(rb);

@@ -83,7 +83,15 @@ public class StocktakingTaskConstant {
      * isadd是否正常新增 0正常，1新增，2盘盈
      */
     public static final Integer ISADD_NORMAL= 0;
+
+    /**
+     * 1新增
+     */
     public static final Integer ISADD_NEW= 1;
+
+    /**
+     * 2盘盈
+     */
     public static final Integer ISADD_SURPLUS= 2;
 
     /**
@@ -95,4 +103,5 @@ public class StocktakingTaskConstant {
      * 正常订单非盘盈
      */
     public static final String INVENTORY_NORMAL="2";
+
 }
