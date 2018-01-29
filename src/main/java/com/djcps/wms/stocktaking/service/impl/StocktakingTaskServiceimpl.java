@@ -33,7 +33,7 @@ import java.util.*;
  * @create:2018/1/10
  **/
 @Service
-public class StocktakingTaskServiceimpl implements StocktakingTaskService {
+public class StocktakingTaskServiceImpl implements StocktakingTaskService {
 
     @Autowired
     private StocktakingTaskServer stocktakingTaskServer;
