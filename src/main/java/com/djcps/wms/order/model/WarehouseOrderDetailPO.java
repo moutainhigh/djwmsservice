@@ -199,15 +199,80 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 * 备注
 	 */
 	private String remark;
-	
+
+	/**
+	 * 材料id
+	 */
+	private String materialId;
+
+	/**
+	 * 库存数量
+	 */
+	private Integer  instockAmount;
+
 	/**
 	 * 库区list
 	 */
 	private List<WarehouseAreaBO> areaList;
 	
+	/**
+	 * =====================================================================
+	 */
+
+	/**
+	 * 运单号
+	 */
+	private String waybillId;
+	/**
+	 * 提货单号
+	 */
+	private String deliveryId;
+	/**
+	 * 车牌号
+	 */
+	private String plateNumber;
+	/**
+	 * 订单提醒
+	 */
+	private String remind;
+	/**
+	 * 提货单状态
+	 */
+	private String deliveryIdStatus;
+	/**
+	 * 装车顺序
+	 */
+	private String sequence;
+
+	/**
+	 * 提货员id
+	 */
+	private String pickerId;
+	/**
+	 * 提货员名称
+	 */
+	private String pickerName;
+	/**
+	 * 装车员id
+	 */
+	private String loadingPersonId;
+	/**
+	 * 装车员名称
+	 */
+	private String loadingPersonName;
+
+	/**
+	 * 提货数量
+	 */
+	private String deliveryAmount;
+
 	public WarehouseOrderDetailPO() {
 		super();
 		this.units = "片";
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
 	}
 
 	public String getFboxlength() {
@@ -482,6 +547,22 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.remark = remark;
 	}
 
+	public String getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(String materialId) {
+		this.materialId = materialId;
+	}
+
+	public Integer getInstockAmount() {
+		return instockAmount;
+	}
+
+	public void setInstockAmount(Integer instockAmount) {
+		this.instockAmount = instockAmount;
+	}
+
 	public List<WarehouseAreaBO> getAreaList() {
 		return areaList;
 	}
@@ -490,21 +571,145 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.areaList = areaList;
 	}
 
+	public String getWaybillId() {
+		return waybillId;
+	}
+
+	public void setWaybillId(String waybillId) {
+		this.waybillId = waybillId;
+	}
+
+	public String getDeliveryId() {
+		return deliveryId;
+	}
+
+	public void setDeliveryId(String deliveryId) {
+		this.deliveryId = deliveryId;
+	}
+
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+
+	public String getRemind() {
+		return remind;
+	}
+
+	public void setRemind(String remind) {
+		this.remind = remind;
+	}
+
+	public String getDeliveryIdStatus() {
+		return deliveryIdStatus;
+	}
+
+	public void setDeliveryIdStatus(String deliveryIdStatus) {
+		this.deliveryIdStatus = deliveryIdStatus;
+	}
+
+	public String getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getPickerId() {
+		return pickerId;
+	}
+
+	public void setPickerId(String pickerId) {
+		this.pickerId = pickerId;
+	}
+
+	public String getPickerName() {
+		return pickerName;
+	}
+
+	public void setPickerName(String pickerName) {
+		this.pickerName = pickerName;
+	}
+
+	public String getLoadingPersonId() {
+		return loadingPersonId;
+	}
+
+	public void setLoadingPersonId(String loadingPersonId) {
+		this.loadingPersonId = loadingPersonId;
+	}
+
+	public String getLoadingPersonName() {
+		return loadingPersonName;
+	}
+
+	public void setLoadingPersonName(String loadingPersonName) {
+		this.loadingPersonName = loadingPersonName;
+	}
+
+	public String getDeliveryAmount() {
+		return deliveryAmount;
+	}
+
+	public void setDeliveryAmount(String deliveryAmount) {
+		this.deliveryAmount = deliveryAmount;
+	}
+
 	@Override
 	public String toString() {
-		return "WarehouseOrderDetailPO [fboxlength=" + fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight="
-				+ fboxheight + ", fmateriallength=" + fmateriallength + ", fmaterialwidth=" + fmaterialwidth
-				+ ", fordertime=" + fordertime + ", fpaymenttime=" + fpaymenttime + ", fdelivery=" + fdelivery
-				+ ", fgroupgoodname=" + fgroupgoodname + ", fflutetype=" + fflutetype + ", fmaterialname="
-				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", units="
-				+ units + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
-				+ ", fcodeprovince=" + fcodeprovince + ", faddressdetail=" + faddressdetail + ", fpusername="
-				+ fpusername + ", fwaybill=" + fwaybill + ", fdeliveryorder=" + fdeliveryorder + ", fwaybillstatus="
-				+ fwaybillstatus + ", fdeliveryorderstatus=" + fdeliveryorderstatus + ", licencePlate=" + licencePlate
-				+ ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
-				+ ", amountSaved=" + amountSaved + ", famount=" + famount + ", amount=" + amount + ", warehouseId="
-				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", areaList=" + areaList
-				+ "]";
+		return "WarehouseOrderDetailPO{" +
+				"fboxlength='" + fboxlength + '\'' +
+				", fboxwidth='" + fboxwidth + '\'' +
+				", fboxheight='" + fboxheight + '\'' +
+				", fmateriallength='" + fmateriallength + '\'' +
+				", fmaterialwidth='" + fmaterialwidth + '\'' +
+				", fordertime=" + fordertime +
+				", fpaymenttime=" + fpaymenttime +
+				", fdelivery=" + fdelivery +
+				", fgroupgoodname='" + fgroupgoodname + '\'' +
+				", fflutetype='" + fflutetype + '\'' +
+				", fmaterialname='" + fmaterialname + '\'' +
+				", fmaterialRule='" + fmaterialRule + '\'' +
+				", fproductRule='" + fproductRule + '\'' +
+				", units='" + units + '\'' +
+				", fstatus='" + fstatus + '\'' +
+				", fconsignee='" + fconsignee + '\'' +
+				", fcontactway='" + fcontactway + '\'' +
+				", fcodeprovince='" + fcodeprovince + '\'' +
+				", faddressdetail='" + faddressdetail + '\'' +
+				", fpusername='" + fpusername + '\'' +
+				", fwaybill='" + fwaybill + '\'' +
+				", fdeliveryorder='" + fdeliveryorder + '\'' +
+				", fwaybillstatus='" + fwaybillstatus + '\'' +
+				", fdeliveryorderstatus='" + fdeliveryorderstatus + '\'' +
+				", licencePlate='" + licencePlate + '\'' +
+				", fchildorderid='" + fchildorderid + '\'' +
+				", orderId='" + orderId + '\'' +
+				", flnglat='" + flnglat + '\'' +
+				", amountSaved=" + amountSaved +
+				", famount=" + famount +
+				", amount=" + amount +
+				", warehouseId='" + warehouseId + '\'' +
+				", warehouseName='" + warehouseName + '\'' +
+				", remark='" + remark + '\'' +
+				", materialId='" + materialId + '\'' +
+				", instockAmount=" + instockAmount +
+				", areaList=" + areaList +
+				", waybillId='" + waybillId + '\'' +
+				", deliveryId='" + deliveryId + '\'' +
+				", plateNumber='" + plateNumber + '\'' +
+				", remind='" + remind + '\'' +
+				", deliveryIdStatus='" + deliveryIdStatus + '\'' +
+				", sequence='" + sequence + '\'' +
+				", pickerId='" + pickerId + '\'' +
+				", pickerName='" + pickerName + '\'' +
+				", loadingPersonId='" + loadingPersonId + '\'' +
+				", loadingPersonName='" + loadingPersonName + '\'' +
+				", deliveryAmount='" + deliveryAmount + '\'' +
+				'}';
 	}
-	
 }

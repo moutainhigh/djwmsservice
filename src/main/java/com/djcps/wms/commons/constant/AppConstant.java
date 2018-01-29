@@ -33,7 +33,16 @@ public class AppConstant {
      * 盘点任务编号前缀
      */
     public static final String TS="TS";
-    
+
+    /**
+     * 部分入库
+     */
+    public static final String LESS_ADD_STOCK ="21";
+
+    /**
+     * 已入库
+     */
+    public static final String ALL_ADD_STOCK ="22";
     /**
      * 已配货
      */
