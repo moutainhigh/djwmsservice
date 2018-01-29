@@ -9,7 +9,7 @@ import java.util.Date;
  * @company:djwms
  * @create:2018/1/22
  **/
-public class FOrderInfoBO {
+public class ForderInfoBO {
     private String forderid;
 
     private String fchildorderid;

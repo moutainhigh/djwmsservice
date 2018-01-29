@@ -86,4 +86,13 @@ public class StocktakingTaskConstant {
     public static final Integer ISADD_NEW= 1;
     public static final Integer ISADD_SURPLUS= 2;
 
+    /**
+     * 是盘盈
+     */
+    public static final String INVENTORY_IS="1";
+
+    /**
+     * 正常订单非盘盈
+     */
+    public static final String INVENTORY_NORMAL="2";
 }
