@@ -247,6 +247,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         map.put("childOrderIds",orderidlist);
         //Http获取批量订单信息列表
         HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
+        //if(orderResult.getData())
         JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
         //筛选fdblflag为0的订单信息
         JsonArray orderJsonArray0=new JsonArray();
