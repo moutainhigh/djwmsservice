@@ -10,12 +10,12 @@ package com.djcps.wms.stocktaking.constant;
 public class StocktakingTaskConstant {
 
     /**
-     * 订单状态_待作业
+     * 待作业
      */
     public static final Integer ONT_WORK = 1;
 
     /**
-     * 订单状态_作业中
+     * 作业中
      */
     public static final Integer WORKING = 2;
 
@@ -32,12 +32,12 @@ public class StocktakingTaskConstant {
     /**
      * 作业状态未完成
      */
-    public static final Integer Status_1 = 1;
+    public static final Integer STATUS_1 = 1;
 
     /**
      * 作业状态已完成
      */
-    public static final Integer Status_3 = 3;
+    public static final Integer STATUS_3 = 3;
 
     /**
      * 仅保存
@@ -63,4 +63,27 @@ public class StocktakingTaskConstant {
      * PDA作业状态,已下发
      */
     public static final Integer PDASTATUS_1 = 1;
+
+    /**
+     * pda作业中
+     */
+    public static final Integer PDASTATUS_2 = 2;
+
+    /**
+     * pda已完成
+     */
+    public static final Integer PDASTATUS_3 = 3;
+
+    /**
+     * 有未完成盘点订单，无法完成盘点
+     */
+    public static final Integer NOTCOMPLETE= 1;
+
+    /**
+     * isadd是否正常新增 0正常，1新增，2盘盈
+     */
+    public static final Integer ISADD_NORMAL= 0;
+    public static final Integer ISADD_NEW= 1;
+    public static final Integer ISADD_SURPLUS= 2;
+
 }

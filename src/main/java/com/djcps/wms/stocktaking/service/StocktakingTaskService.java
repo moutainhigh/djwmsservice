@@ -17,7 +17,7 @@ public interface StocktakingTaskService {
     /**
      * 获取全盘仓库关联订单
      * @author  wzy
-     * @param
+     * @param addStocktakingBO
      * @return
      * @create  2018/1/10 9:53
      **/
@@ -26,7 +26,7 @@ public interface StocktakingTaskService {
     /**
      * 获取部分盘点仓库关联订单
      * @author  wzy
-     * @param
+     * @param addStocktakingBO
      * @return
      * @create  2018/1/11 9:57
      **/
@@ -35,7 +35,7 @@ public interface StocktakingTaskService {
     /**
      * 优化版新增部分盘点
      * @author  wzy
-     * @param
+     * @param addStocktakingBO
      * @return
      * @create  2018/1/24 16:36
      **/
@@ -44,7 +44,7 @@ public interface StocktakingTaskService {
     /**
      * 优化版新增全盘
      * @author  wzy
-     * @param
+     * @param addTaskBO
      * @return
      * @create  2018/1/25 9:06
      **/
@@ -53,7 +53,7 @@ public interface StocktakingTaskService {
     /**
      * 更新盘点状态
      * @author  wzy
-     * @param
+     * @param updateStocktakingTaskBO
      * @return
      * @create  2018/1/11 9:17
      **/
@@ -62,8 +62,6 @@ public interface StocktakingTaskService {
     /**
      * 获取可用盘点人员列表
      * @author  wzy
-     * @param
-     * @return
      * @create  2018/1/11 15:07
      **/
     Map<String,Object> getInventoryclerk();
@@ -71,8 +69,6 @@ public interface StocktakingTaskService {
     /**
      * 获取随机编码生成作业单号
      * @author  wzy
-     * @param
-     * @return
      * @create  2018/1/11 15:07
      **/
     Map<String,Object> getNumber();
@@ -80,8 +76,7 @@ public interface StocktakingTaskService {
     /**
      * 确认盘点订单
      * @author  wzy
-     * @param
-     * @return
+     * @param saveStocktakingTaskBO
      * @create  2018/1/11 15:07
      **/
     Map<String,Object> saveSoctakingTask(SaveStocktakingTaskBO saveStocktakingTaskBO);
@@ -90,8 +85,7 @@ public interface StocktakingTaskService {
     /**
      * 请求盘点任务信息
      * @author  wzy
-     * @param
-     * @return
+     * @param pdaGetStocktakingOrderBO
      * @create  2018/1/12 9:37
      **/
     Map<String,Object> stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO);
@@ -99,8 +93,7 @@ public interface StocktakingTaskService {
     /**
      * 获取盘点任务订单信息，校验是否需要盘盈
      * @author  wzy
-     * @param
-     * @return
+     * @param stocktakingTaskBO
      * @create  2018/1/12 9:37
      **/
     Map<String,Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO);
@@ -108,8 +101,7 @@ public interface StocktakingTaskService {
     /**
      * 保存盘盈录入信息/录入单挑盘点任务
      * @author  wzy
-     * @param
-     * @return
+     * @param saveStocktakingOrderInfoBO
      * @create  2018/1/14 22:36
      **/
     Map<String,Object> saveInventoryProfitInfo(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO);
@@ -117,8 +109,8 @@ public interface StocktakingTaskService {
     /**
      * 暂存盘点结果
      * @author  wzy
-     * @param
-     * @return 
+     * @param saveStocktakingOrderInfoList
+     * @param  partnerInfoBO
      * @create  2018/1/12 15:06
      **/
     Map<String,Object> saveStocktakingResult(SaveStocktakingOrderInfoList saveStocktakingOrderInfoList,PartnerInfoBO partnerInfoBO);
@@ -126,8 +118,8 @@ public interface StocktakingTaskService {
     /**
      * 保存盘点结果
      * @author  wzy
-     * @param
-     * @return
+     * @param saveStocktakingOrderInfoList
+     * @param  partnerInfoBO
      * @create  2018/1/12 15:22
      **/
     Map<String,Object> completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoList, PartnerInfoBO partnerInfoBO);
@@ -135,7 +127,7 @@ public interface StocktakingTaskService {
     /**
      * 获取全部盘点任务列表
      * @author  wzy
-     * @param
+     * @param getStocktakingTaskBO
      * @return
      * @create  2018/1/12 16:33
      **/
@@ -144,7 +136,7 @@ public interface StocktakingTaskService {
     /**
      * 条件获取盘点任务列表
      * @author  wzy
-     * @param
+     * @param getStocktakingTaskBO
      * @return
      * @create  2018/1/12 16:35
      **/
@@ -154,7 +146,7 @@ public interface StocktakingTaskService {
     /**
      * PDA请求盘点任务列表
      * @author  wzy
-     * @param
+     * @param pdaStocktakingTaskBO
      * @return
      * @create  2018/1/13 14:01
      **/
@@ -163,7 +155,7 @@ public interface StocktakingTaskService {
     /**
      *  PDA请求盘点任务订单列表
      * @author  wzy
-     * @param
+     * @param pdaGetStocktakingOrderBO
      * @return
      * @create  2018/1/13 14:46
      **/
@@ -172,7 +164,7 @@ public interface StocktakingTaskService {
     /**
      * PDA获取订单详情
      * @author  wzy
-     * @param
+     * @param pdaStocktakingOrderInfo
      * @return
      * @create  2018/1/13 15:49
      **/
@@ -181,7 +173,7 @@ public interface StocktakingTaskService {
     /**
      * PDA保存盘点结果
      * @author  wzy
-     * @param
+     * @param saveStocktakingOrderInfoBO
      * @return
      * @create  2018/1/13 16:17
      **/
@@ -190,7 +182,7 @@ public interface StocktakingTaskService {
     /**
      * PDA完成盘点请求
      * @author  wzy
-     * @param
+     * @param pdaGetStocktakingOrderBO
      * @return
      * @create  2018/1/13 16:54
      **/
@@ -199,7 +191,7 @@ public interface StocktakingTaskService {
     /**
      * PDA完成盘点更新状态
      * @author  wzy
-     * @param
+     * @param pdaGetStocktakingOrderBO
      * @return
      * @create  2018/1/13 15:35
      **/
@@ -208,7 +200,7 @@ public interface StocktakingTaskService {
     /**
      * PDA发起盘盈
      * @author  wzy
-     * @param
+     * @param stocktakingTaskBO
      * @return
      * @create  2018/1/13 19:44
      **/
@@ -217,7 +209,7 @@ public interface StocktakingTaskService {
     /**
      * 查看盘点结果列表
      * @author  wzy
-     * @param
+     * @param pdaGetStocktakingOrderBO
      * @return
      * @create  2018/1/14 13:37
      **/
@@ -226,7 +218,7 @@ public interface StocktakingTaskService {
     /**
      * 获取操作记录
      * @author  wzy
-     * @param
+     * @param getStocktakingTaskBO
      * @return
      * @create  2018/1/17 10:33
      **/
@@ -235,7 +227,7 @@ public interface StocktakingTaskService {
     /**
      * 查看盘点任务进行情况
      * @author  wzy
-     * @param
+     * @param getStocktakingTaskBO
      * @return 
      * @create  2018/1/17 10:52
      **/
@@ -244,7 +236,7 @@ public interface StocktakingTaskService {
     /**
      * 获取库位订单信息
      * @author  wzy
-     * @param
+     * @param orderWarehouseLocInfoBO
      * @return
      * @create  2018/1/18 18:24
      **/
@@ -253,7 +245,7 @@ public interface StocktakingTaskService {
     /**
      * web盘盈是获取相关库区库位
      * @author  wzy
-     * @param
+     * @param jobAndWarehouseBO
      * @return
      * @create  2018/1/23 17:20
      **/
@@ -262,7 +254,7 @@ public interface StocktakingTaskService {
     /**
      * 获取所有库位
      * @author  wzy
-     * @param
+     * @param jobAndWarehouseBO
      * @return
      * @create  2018/1/23 17:45
      **/
@@ -271,9 +263,27 @@ public interface StocktakingTaskService {
     /**
      * 更新打印次数接口
      * @author  wzy
-     * @param
+     * @param printCountBO
      * @return 
      * @create  2018/1/25 9:34
      **/
     Map<String,Object> printCount(PrintCountBO printCountBO);
+
+    /**
+     * 获取未下发作业订单信息
+     * @author  wzy
+     * @param printCountBO
+     * @return 
+     * @create  2018/1/25 15:29
+     **/
+    Map<String,Object> noSendOrderInfo(PrintCountBO printCountBO);
+
+    /**
+     * 单独的下发,更新pda作业状态
+     * @author  wzy
+     * @param updateStocktakingTaskBO
+     * @return
+     * @create  2018/1/26 9:41
+     **/
+    Map<String,Object> updatePdaStatus(UpdateStocktakingTaskBO updateStocktakingTaskBO);
 }

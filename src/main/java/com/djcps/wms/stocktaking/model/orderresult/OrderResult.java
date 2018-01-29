@@ -1,7 +1,13 @@
-package com.djcps.wms.stocktaking.orderresult;
+package com.djcps.wms.stocktaking.model.orderresult;
 
 import java.io.Serializable;
 
+/**
+ * 特殊的http参数接收类
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class OrderResult implements Serializable {
 
     private static final long serialVersionUID = -2121676855794908248L;

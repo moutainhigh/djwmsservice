@@ -4,7 +4,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtable.request.NumberServerHttpRequest;
 import com.djcps.wms.stocktaking.model.*;
-import com.djcps.wms.stocktaking.orderresult.OrderResult;
+import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingTaskHttpRequest;
 import com.djcps.wms.warehouse.server.AreaServer;
@@ -474,11 +474,11 @@ public class StocktakingTaskServer {
      * @return
      * @create  2018/1/24 14:58
      **/
-    public HttpResult test1(AddTaskBO addTaskBO){
+    public HttpResult increaseTask(AddTaskBO addTaskBO){
         String json = gson.toJson(addTaskBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        HTTPResponse http =stocktakingTaskHttpRequest.test1(rb);
+        HTTPResponse http =stocktakingTaskHttpRequest.increaseTask(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
     }
@@ -495,6 +495,22 @@ public class StocktakingTaskServer {
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.printCount(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+
+    /**
+     * 获取未下发作业订单信息
+     * @author  wzy
+     * @param
+     * @return 
+     * @create  2018/1/25 15:27
+     **/
+    public HttpResult noSendOrderInfo(PrintCountBO printCountBO){
+        String json = gson.toJson(printCountBO);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.noSendOrderInfo(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
     }

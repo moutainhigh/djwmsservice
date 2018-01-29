@@ -53,6 +53,26 @@ public class PdaGetStocktakingOrderBO {
      **/
     private String pageNo;
 
+    private Integer status;
+
+    private Integer pdaStatus;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getPdaStatus() {
+        return pdaStatus;
+    }
+
+    public void setPdaStatus(Integer pdaStatus) {
+        this.pdaStatus = pdaStatus;
+    }
+
     public String getOperatorId() {
         return operatorId;
     }
@@ -128,6 +148,8 @@ public class PdaGetStocktakingOrderBO {
                 ", operator='" + operator + '\'' +
                 ", pageSize='" + pageSize + '\'' +
                 ", pageNo='" + pageNo + '\'' +
+                ", status=" + status +
+                ", pdaStatus=" + pdaStatus +
                 '}';
     }
 }

@@ -1,5 +1,11 @@
 package com.djcps.wms.stocktaking.model;
 
+/**
+ * 库位信息列表参数接收
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class LocationListPO {
 
     private Integer trueAmount;

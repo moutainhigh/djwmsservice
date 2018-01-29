@@ -1,5 +1,11 @@
-package com.djcps.wms.stocktaking.orderresult;
+package com.djcps.wms.stocktaking.model.orderresult;
 
+/**
+ * 盘点任务信息列表参数接收类
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class OrderInfoListResult {
 
     private String inventoryClerkId;

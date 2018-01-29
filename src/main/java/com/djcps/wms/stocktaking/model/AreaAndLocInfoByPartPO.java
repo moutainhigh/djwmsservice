@@ -2,6 +2,12 @@ package com.djcps.wms.stocktaking.model;
 
 import java.util.List;
 
+/**
+ * 部分新增时的参数接收类
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class AreaAndLocInfoByPartPO {
 
     /**

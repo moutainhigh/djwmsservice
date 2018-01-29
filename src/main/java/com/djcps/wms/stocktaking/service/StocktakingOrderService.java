@@ -16,7 +16,7 @@ public interface StocktakingOrderService {
     /**
      * 批量获取订单详情
      * @author  wzy
-     * @param
+     * @param addStocktakingBO
      * @return
      * @create  2018/1/11 13:09
      **/

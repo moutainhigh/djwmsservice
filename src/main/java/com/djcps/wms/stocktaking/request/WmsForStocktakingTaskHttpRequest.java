@@ -26,7 +26,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/increaseTask.do")
-    HTTPResponse getAllStocktakingInfo(@Body RequestBody json);
+    public HTTPResponse getAllStocktakingInfo(@Body RequestBody json);
 
 
 
@@ -39,7 +39,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/increaseTaskByAreaAndLoc.do")
-    HTTPResponse getPartStocktakingInfo(@Body RequestBody json);
+    public HTTPResponse getPartStocktakingInfo(@Body RequestBody json);
 
     /**
      *更新盘点状态
@@ -50,7 +50,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/updateTaskStatus.do")
-    HTTPResponse updateTaskState(@Body RequestBody json);
+    public HTTPResponse updateTaskState(@Body RequestBody json);
 
     /**
      *获取可用盘点人员列表
@@ -61,7 +61,7 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/xx.do")
-    HTTPResponse getInventoryclerk(@Body RequestBody json);
+    public HTTPResponse getInventoryclerk(@Body RequestBody json);
 
     /**
      *保存盘点任务
@@ -72,249 +72,260 @@ public interface WmsForStocktakingTaskHttpRequest {
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/saveTask.do")
-    HTTPResponse saveSoctakingTask(@Body RequestBody json);
+    public HTTPResponse saveSoctakingTask(@Body RequestBody json);
 
     /**
      * 请求盘点任务信息多条
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 9:36
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/orderInfoList.do")
-    HTTPResponse stocktakingOrderInfoList(@Body RequestBody json);
+    public HTTPResponse stocktakingOrderInfoList(@Body RequestBody json);
 
     /**
      * 请求盘点任务订单信息一条
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 11:05
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/stocktakingOrderInfoByOrderId.do")
-    HTTPResponse stocktakingOrderInfoByOrderId(@Body RequestBody json);
+    public HTTPResponse stocktakingOrderInfoByOrderId(@Body RequestBody json);
 
     /**
      * 暂存盘点结果
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 15:01
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/saveResult.do")
-    HTTPResponse saveStocktakingResult(@Body RequestBody json);
+    public HTTPResponse saveStocktakingResult(@Body RequestBody json);
 
     /**
      * 保存盘点结果
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/12 15:02
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/completeTask.do")
-    HTTPResponse completeStocktakingTask(@Body RequestBody json);
+    public HTTPResponse completeStocktakingTask(@Body RequestBody json);
 
     /**
      * 获取全部盘点任务列表
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/12 16:18
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/taskList.do")
-    HTTPResponse stocktakingTaskList(@Body RequestBody json);
+    public HTTPResponse stocktakingTaskList(@Body RequestBody json);
 
     /**
      * 条件获取盘点任务列表
      * @author  wzy
-     * @param
+     * @param json \
      * @return 
      * @create  2018/1/12 16:20
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/taskList.do")
-    HTTPResponse searchTaskList(@Body RequestBody json);
+    public HTTPResponse searchTaskList(@Body RequestBody json);
 
     /**
      * PDA请求盘点任务列表
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/13 13:50
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/pdaTaskList.do")
-    HTTPResponse pdaStocktakingTaskList(@Body RequestBody json);
+    public HTTPResponse pdaStocktakingTaskList(@Body RequestBody json);
 
     /**
      * PDA获取盘点任务订单列表
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/13 14:43
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/pdaOrderList.do")
-    HTTPResponse pdaStocktakingOrderList(@Body RequestBody json);
+    public HTTPResponse pdaStocktakingOrderList(@Body RequestBody json);
 
     /**
      * PDA盘点订单详情接口
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 15:39
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/pdaOrderInfo.do")
-    HTTPResponse pdaStocktakingOrderInfo(@Body RequestBody json);
+    public HTTPResponse pdaStocktakingOrderInfo(@Body RequestBody json);
 
     /**
      * PDA保存盘点结果
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 16:12
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/savePdaResult.do")
-    HTTPResponse savePdaStocktakingResult(@Body RequestBody json);
+    public HTTPResponse savePdaStocktakingResult(@Body RequestBody json);
 
 
     /**
      * PDA完成盘点更新状态
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/13 15:33
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/completePdaTask.do")
-    HTTPResponse pdaCompleteStocktaking(@Body RequestBody json);
+    public HTTPResponse pdaCompleteStocktaking(@Body RequestBody json);
 
     /**
      * PDA获取盘点订单各个状态数量
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 16:41
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/getOrderAmount.do")
-    HTTPResponse getOrderAmount(@Body RequestBody json);
+    public HTTPResponse getOrderAmount(@Body RequestBody json);
 
     /**
      * 盘盈时获取相关订单库区库位信息
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/13 19:52
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/warehouseAreaAndLocInfo.do")
-    HTTPResponse warehouseAreaAndLocInfo(@Body RequestBody json);
+    public HTTPResponse warehouseAreaAndLocInfo(@Body RequestBody json);
     
     /**
      * 查看盘点结果列表
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/14 13:22
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/stocktakingResultList.do")
-    HTTPResponse stocktakingResultList(@Body RequestBody json);
+    public HTTPResponse stocktakingResultList(@Body RequestBody json);
 
     /**
      * 保存盘盈录入信息
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/14 22:33
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/saveInventoryProfitInfo.do")
-    HTTPResponse saveInventoryProfitInfo(@Body RequestBody json);
+    public HTTPResponse saveInventoryProfitInfo(@Body RequestBody json);
 
     /**
      * 获取操作记录接口
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/17 10:29
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/operationRecordList.do")
-    HTTPResponse operationRecordList(@Body RequestBody json);
+    public HTTPResponse operationRecordList(@Body RequestBody json);
 
     /**
      * 查看盘点任务进行情况接口
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/17 10:50
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/stocktakingCompleteStatus.do")
-    HTTPResponse stocktakingCompleteStatus(@Body RequestBody json);
+    public HTTPResponse stocktakingCompleteStatus(@Body RequestBody json);
 
     /**
      *
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/23 16:53
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/areaAndLocInfo.do")
-    HTTPResponse areaAndLocInfo(@Body RequestBody json);
+    public HTTPResponse areaAndLocInfo(@Body RequestBody json);
 
     /**
      * 获取所有库位
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/23 17:42
      **/
     @Headers("content-type:application/json")
     @POST("warehouseLoc/list.do")
-    HTTPResponse getLocationAllList(@Body RequestBody json);
+    public HTTPResponse getLocationAllList(@Body RequestBody json);
 
     /**
      * 优化新增部分盘点
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/24 14:59
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/increaseTaskByAreaAndLoc.do")
-    HTTPResponse test(@Body RequestBody json);
+    public HTTPResponse test(@Body RequestBody json);
 
     /**
      * 优化新增全部盘点
      * @author  wzy
-     * @param
+     * @param json
      * @return
      * @create  2018/1/25 9:28
      **/
     @Headers("content-type:application/json")
-    @POST("takeStock/test1.do")
-    HTTPResponse test1(@Body RequestBody json);
+    @POST("takeStock/increaseTask.do")
+    public HTTPResponse increaseTask(@Body RequestBody json);
 
     /**
      * 更新打印次数接口
      * @author  wzy
-     * @param
+     * @param json
      * @return 
      * @create  2018/1/25 9:30
      **/
     @Headers("content-type:application/json")
     @POST("takeStock/printCount.do")
-    HTTPResponse printCount(@Body RequestBody json);
+    public HTTPResponse printCount(@Body RequestBody json);
+
+    /**
+     * 获取未下发作业订单信息接口
+     * @author  wzy
+     * @param json
+     * @return 
+     * @create  2018/1/25 15:25
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/noSendOrderInfo.do")
+    public HTTPResponse noSendOrderInfo(@Body RequestBody json);
 
 }

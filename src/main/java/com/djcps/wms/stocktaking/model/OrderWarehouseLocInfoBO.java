@@ -3,6 +3,13 @@ import com.djcps.wms.commons.constant.AppConstant;
 
 import java.util.List;
 
+/**
+ * 检测是否需要盘盈参数类，已不用
+ * @author  wzy
+ * @param
+ * @return
+ * @create  2018/1/26 14:08
+ **/
 public class OrderWarehouseLocInfoBO {
     private String version;
 
@@ -23,5 +30,13 @@ public class OrderWarehouseLocInfoBO {
 
     public void setOrderIds(List<OrderIdBO> orderIds) {
         this.orderIds = orderIds;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderWarehouseLocInfoBO{" +
+                "version='" + version + '\'' +
+                ", orderIds=" + orderIds +
+                '}';
     }
 }

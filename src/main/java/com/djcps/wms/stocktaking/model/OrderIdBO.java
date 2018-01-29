@@ -1,5 +1,11 @@
 package com.djcps.wms.stocktaking.model;
 
+/**
+ * orderid实体类
+ * @author:wzy
+ * @company:djwms
+ * @create:2018/1/26
+ **/
 public class OrderIdBO {
     private String orderId;
 
