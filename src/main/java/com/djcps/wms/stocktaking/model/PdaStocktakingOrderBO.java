@@ -39,7 +39,7 @@ public class PdaStocktakingOrderBO {
     private String materialRule;
 
     /**
-     * 是否盘盈
+     * 是否盘盈 1盘盈，2正常
      */
     private String isInventoryProfit;
 

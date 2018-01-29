@@ -10,6 +10,7 @@ import java.util.Date;
  * @create:2018/1/22
  **/
 public class ForderInfoBO {
+
     private String forderid;
 
     private String fchildorderid;
@@ -346,7 +347,7 @@ public class ForderInfoBO {
 
     @Override
     public String toString() {
-        return "FOrderInfoBO{" +
+        return "ForderInfoBO{" +
                 "forderid='" + forderid + '\'' +
                 ", fchildorderid='" + fchildorderid + '\'' +
                 ", fcontactway='" + fcontactway + '\'' +

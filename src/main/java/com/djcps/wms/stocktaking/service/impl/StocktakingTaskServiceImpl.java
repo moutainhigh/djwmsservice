@@ -247,7 +247,9 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         map.put("childOrderIds",orderidlist);
         //Http获取批量订单信息列表
         HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        //if(orderResult.getData())
+        if(ObjectUtils.isEmpty(orderResult.getData())){
+            return MsgTemplate.successMsg();
+        }
         JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
         //筛选fdblflag为0的订单信息
         JsonArray orderJsonArray0=new JsonArray();
@@ -1173,8 +1175,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         orderidlist.add(pdaStocktakingOrderInfo.getOrderId());
         checkmap.put("childOrderIds",orderidlist);
         //获取批量订单信息列表,判断是不是作业单号写错了
-        HttpResult CheckorderResult=stocktakingOrderServer.getInfoByChildIds(checkmap);
-        if(ObjectUtils.isEmpty(CheckorderResult.getData()) ){
+        HttpResult checkOrderResult=stocktakingOrderServer.getInfoByChildIds(checkmap);
+        if(ObjectUtils.isEmpty(checkOrderResult.getData()) ){
             return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
         }
         //请求详细信息
@@ -1187,8 +1189,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         if(ObjectUtils.isEmpty(result.getData())){
             return MsgTemplate.successMsg(null);
         }
-        JsonObject JsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonObject();
-        PdaOderInfoBO pdaOderInfoBO=gson.fromJson(JsonArray,PdaOderInfoBO.class);
+        JsonObject jsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonObject();
+        PdaOderInfoBO pdaOderInfoBO=gson.fromJson(jsonArray,PdaOderInfoBO.class);
         pdaOderInfoBO.setProductRule(new StringBuffer().append(pdaOderInfoBO.getBoxLength()).append("*")
                 .append(pdaOderInfoBO.getBoxWidth()).append("*").append(pdaOderInfoBO.getBoxHeight()).toString());
         pdaOderInfoBO.setMaterialRule(new StringBuffer().append(pdaOderInfoBO.getMaterialLength()).append("*")
@@ -1250,8 +1252,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             HttpResult pdaStocktakingOrder=stocktakingTaskServer.pdaStocktakingOrderInfo(pdaStocktakingOrderInfo);
             //若该订单已存在
             if(!ObjectUtils.isEmpty(pdaStocktakingOrder.getData())){
-                JsonObject OrderJsonArray = new JsonParser().parse(gson.toJson(pdaStocktakingOrder.getData())).getAsJsonObject();
-                PdaOderInfoBO pdaOderInfoBO=gson.fromJson(OrderJsonArray,PdaOderInfoBO.class);
+                JsonObject pdaOrderJsonArray = new JsonParser().parse(gson.toJson(pdaStocktakingOrder.getData())).getAsJsonObject();
+                PdaOderInfoBO pdaOderInfoBO=gson.fromJson(pdaOrderJsonArray,PdaOderInfoBO.class);
                 for (WarehouseAreaAndLocBO warehouseAreaAndLocBO:pdaOderInfoBO.getOrderAreaAndLocList()){
                     if (saveStocktakingOrderInfoBO.getWarehouseAreaId().equals(warehouseAreaAndLocBO.getWarehouseAreaId()) && saveStocktakingOrderInfoBO.getWarehouseLocId().equals(warehouseAreaAndLocBO.getWarehouseLocId())){
                         //该新增订单已存在
@@ -1406,7 +1408,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         }
         JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
         List<StocktakingCompleteStatusPO> stocktakingCompleteStatusPOList=new ArrayList<StocktakingCompleteStatusPO>();
-        int Status=1;
+        int status=1;
         //拿到的
        List<StocktakingCompleteStatusPO> completeStatusPOList=gson.fromJson(asJsonArray,List.class);
         for (int i=0;i<completeStatusPOList.size();i++){
@@ -1419,9 +1421,9 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 int allStocktakingTaskAmount=locationListPO.getAllStocktakingTaskAmount();
                 int completeStocktakingTaskAmount=locationListPO.getCompleteStocktakingTaskAmount();
                 if(allStocktakingTaskAmount!=completeStocktakingTaskAmount){
-                    Status=2;
+                    status=2;
                 }
-                stocktakingCompleteStatusPO.setStatus(Status);
+                stocktakingCompleteStatusPO.setStatus(status);
             }
             stocktakingCompleteStatusPOList.add(stocktakingCompleteStatusPO);
         }
@@ -1464,9 +1466,9 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             warehouseAreaId=areaAndLocInfoByPartPO.getWarehouseAreaId();
             jobAndWarehouseBO.setWarehouseAreaId(warehouseAreaId);
            //Http获取所有库位信息
-          OrderResult LocationList=stocktakingTaskServer.getLocationAllList(jobAndWarehouseBO);
-           if(!ObjectUtils.isEmpty(LocationList.getData())){
-               int total=new JsonParser().parse(gson.toJson(LocationList.getData().getTotal())).getAsInt();
+          OrderResult locationList=stocktakingTaskServer.getLocationAllList(jobAndWarehouseBO);
+           if(!ObjectUtils.isEmpty(locationList.getData())){
+               int total=new JsonParser().parse(gson.toJson(locationList.getData().getTotal())).getAsInt();
                if(areaAndLocInfoByPartPO.getLocationList().size()!=total){
                    areaAndLocInfoByPartPO.setStatus(1);
                }
