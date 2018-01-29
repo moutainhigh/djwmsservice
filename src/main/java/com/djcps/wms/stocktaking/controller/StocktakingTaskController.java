@@ -287,7 +287,6 @@ public class StocktakingTaskController {
     @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> pdaInventorySurplus(@RequestBody(required = false) String json, HttpServletRequest request){
         StocktakingTaskBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO.class);
-        //PdaStocktakingOrderInfo pdaStocktakingOrderInfo=gson.fromJson(json,PdaStocktakingOrderInfo.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
         ComplexResult ret = FluentValidator.checkAll().failFast()
