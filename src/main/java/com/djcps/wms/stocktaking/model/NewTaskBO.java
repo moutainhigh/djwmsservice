@@ -73,7 +73,7 @@ public class NewTaskBO {
     private Integer trueAmount;
 
 
-    private FOrderInfoBO orderDetail;
+    private ForderInfoBO orderDetail;
 
     public String getRelativeId() {
         return relativeId;
@@ -171,11 +171,11 @@ public class NewTaskBO {
         this.trueAmount = trueAmount;
     }
 
-    public FOrderInfoBO getOrderDetail() {
+    public ForderInfoBO getOrderDetail() {
         return orderDetail;
     }
 
-    public void setOrderDetail(FOrderInfoBO orderDetail) {
+    public void setOrderDetail(ForderInfoBO orderDetail) {
         this.orderDetail = orderDetail;
     }
 
