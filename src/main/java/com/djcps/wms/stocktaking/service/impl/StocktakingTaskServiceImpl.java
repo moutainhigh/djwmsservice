@@ -62,7 +62,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         }
         // data数据为空将值赋值为null,这里取到的是空数组
         if(ObjectUtils.isEmpty(result.getData())){
-            return MsgTemplate.successMsg(null);
+            return MsgTemplate.successMsg();
         }
         JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
         //获取所有订单id
@@ -103,7 +103,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> addTaskByAll(AddTaskBO addTaskBO){
-        long start = System.currentTimeMillis();
         //Http获取库位关联订单信息
         HttpResult result=stocktakingTaskServer.increaseTask(addTaskBO);
         String warehouseId=addTaskBO.getPartnerId();
@@ -142,7 +141,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
             forderInfoBOList.add(forderInfoBO);
         }
-        System.out.println("解析耗时：" + (System.currentTimeMillis() - start) + "ms");
+
         return MsgTemplate.successMsg(getPartStocktakingOrderDetail(forderInfoBOList,locationOrderInfoBOList));
     }
 
@@ -1130,7 +1129,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         }
         // data数据为空将值赋值为null,这里取到的是空数组
         if(ObjectUtils.isEmpty(result.getData())){
-            return MsgTemplate.successMsg(null);
+            return MsgTemplate.successMsg();
         }
         JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
         List<PdaStocktakingOrderBO> pdaorderlist=new ArrayList<PdaStocktakingOrderBO>();
@@ -1285,19 +1284,25 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //保存盘点结果
         HttpResult result=stocktakingTaskServer.savePdaStocktakingResult(saveStocktakingOrderInfoBO);
         if(!result.isSuccess()){
-            HttpResult otherResult = new HttpResult();
-            BeanUtils.copyProperties(result, otherResult);
-            return MsgTemplate.customMsg(otherResult);
+            return MsgTemplate.customMsg(result);
         }
         else{
-            PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=new PdaGetStocktakingOrderBO();
-            pdaGetStocktakingOrderBO.setJobId(saveStocktakingOrderInfoBO.getJobId());
-            pdaGetStocktakingOrderBO.setPartnerId(saveStocktakingOrderInfoBO.getPartnerId());
-            pdaGetStocktakingOrderBO.setOperator(saveStocktakingOrderInfoBO.getOperator());
-            pdaGetStocktakingOrderBO.setOperatorId(saveStocktakingOrderInfoBO.getOperatorId());
-            pdaGetStocktakingOrderBO.setStatus(StocktakingTaskConstant.WORKING);
-            pdaGetStocktakingOrderBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_2);
-            Map<String,Object> upmap=pdaCompleteStocktaking(pdaGetStocktakingOrderBO);
+            UpdateStocktakingTaskBO updateStocktakingTaskBO=new UpdateStocktakingTaskBO();
+            updateStocktakingTaskBO.setPartnerId(saveStocktakingOrderInfoBO.getPartnerId());
+            updateStocktakingTaskBO.setJobId(saveStocktakingOrderInfoBO.getJobId());
+            updateStocktakingTaskBO.setStatus(StocktakingTaskConstant.WORKING);
+            updateStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_2);
+            updateStocktakingTaskBO.setWarehouseId(saveStocktakingOrderInfoBO.getWarehouseId());
+            Map<String,Object> upmap=updateTaskState(updateStocktakingTaskBO);
+            System.out.println(updateStocktakingTaskBO);
+//            PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=new PdaGetStocktakingOrderBO();
+//            pdaGetStocktakingOrderBO.setJobId(saveStocktakingOrderInfoBO.getJobId());
+//            pdaGetStocktakingOrderBO.setPartnerId(saveStocktakingOrderInfoBO.getPartnerId());
+//            pdaGetStocktakingOrderBO.setOperator(saveStocktakingOrderInfoBO.getOperator());
+//            pdaGetStocktakingOrderBO.setOperatorId(saveStocktakingOrderInfoBO.getOperatorId());
+//            pdaGetStocktakingOrderBO.setStatus(StocktakingTaskConstant.WORKING);
+//            pdaGetStocktakingOrderBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_2);
+//            Map<String,Object> upmap=pdaCompleteStocktaking(pdaGetStocktakingOrderBO);
         }
         return MsgTemplate.customMsg(result);
     }

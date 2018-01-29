@@ -14,7 +14,7 @@ public class SaveStocktakingOrderInfoBO {
     /**
      * 是否正常新增 0正常，1新增，2盘盈
      */
-    private String isAdd;
+    private Integer isAdd;
 
 
     /**
@@ -585,11 +585,11 @@ public class SaveStocktakingOrderInfoBO {
         this.inventoryClerkId = inventoryClerkId;
     }
 
-    public String getIsAdd() {
+    public Integer getIsAdd() {
         return isAdd;
     }
 
-    public void setIsAdd(String isAdd) {
+    public void setIsAdd(Integer isAdd) {
         this.isAdd = isAdd;
     }
 

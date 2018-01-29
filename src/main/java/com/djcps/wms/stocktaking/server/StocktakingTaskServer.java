@@ -55,6 +55,13 @@ public class StocktakingTaskServer {
         return verifyHttpResult(http);
     }
 
+    /**
+     * 更新盘点状态
+     * @author  wzy
+     * @param
+     * @return
+     * @create  2018/1/29 11:51
+     **/
     public HttpResult updateTaskState(UpdateStocktakingTaskBO updateStocktakingTaskBO){
         String json = gson.toJson(updateStocktakingTaskBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
@@ -98,23 +105,6 @@ public class StocktakingTaskServer {
         //校验请求是否成功
         return verifyHttpResult(http);
     }
-
-//    public HttpResult stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
-//        String json = gson.toJson(pdaGetStocktakingOrderBO);
-//        System.out.println("---http请求参数转化为json格式---:"+json);
-//        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-//        HTTPResponse http =stocktakingTaskHttpRequest.stocktakingOrderInfoList(rb) ;
-//        //校验请求是否成功
-//        OrderInfoListResult result = null;
-//        if(http.isSuccessful()){
-//            result = gson.fromJson(http.getBodyString(), OrderInfoListResult.class);
-//        }
-//        if(result == null){
-//            System.err.println("Http请求出错,HttpResult结果为null");
-//            logger.error("Http请求出错,HttpResult结果为null");
-//        }
-//        return result;
-//    }
 
     public HttpResult stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
         String json = gson.toJson(pdaGetStocktakingOrderBO);

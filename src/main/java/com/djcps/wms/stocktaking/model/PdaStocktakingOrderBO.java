@@ -41,7 +41,7 @@ public class PdaStocktakingOrderBO {
     /**
      * 是否盘盈 1盘盈，2正常
      */
-    private String isInventoryProfit;
+    private Integer isInventoryProfit;
 
     private Integer takeStockAmount;
 
@@ -119,11 +119,11 @@ public class PdaStocktakingOrderBO {
         this.materialRule = materialRule;
     }
 
-    public String getIsInventoryProfit() {
+    public Integer getIsInventoryProfit() {
         return isInventoryProfit;
     }
 
-    public void setIsInventoryProfit(String isInventoryProfit) {
+    public void setIsInventoryProfit(Integer isInventoryProfit) {
         this.isInventoryProfit = isInventoryProfit;
     }
 

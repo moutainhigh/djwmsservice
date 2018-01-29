@@ -453,7 +453,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("",e);
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
