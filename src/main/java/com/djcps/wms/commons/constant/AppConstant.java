@@ -142,4 +142,13 @@ public class AppConstant {
      */
     public static final String CARTON_ORDER ="3";
     
+    /**
+     * 运单前缀
+     */
+    public static final String WAYBILLID_PREFIX ="YD";
+    /**
+     * 提货单前缀
+     */
+    public static final String DELIVERYID_PREFIX ="TH";
+    
 }

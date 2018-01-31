@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.constant.AppConstant;
 
 /**
@@ -14,15 +15,10 @@ import com.djcps.wms.commons.constant.AppConstant;
  * @author:zdx
  * @date:2017年12月21日
  */
-public class OrderParamBO implements Serializable{
+public class OrderParamBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 3975618631995060948L;
 	
-	/**
-	 * 版本号
-	 */
-	@NotBlank
-	private String version;
 	
 	/**
 	 * 页数
@@ -43,17 +39,7 @@ public class OrderParamBO implements Serializable{
 	public OrderParamBO() {
 		super();
 		this.childOrderModel = new ChildOrderParamBO();
-		this.version = AppConstant.DEFAULT_VERSION;
 	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
 	public String getPageNum() {
 		return pageNum;
 	}
@@ -77,11 +63,11 @@ public class OrderParamBO implements Serializable{
 	public void setChildOrderModel(ChildOrderParamBO childOrderModel) {
 		this.childOrderModel = childOrderModel;
 	}
-
 	@Override
 	public String toString() {
-		return "OrderParamBO [version=" + version + ", pageNum=" + pageNum + ", pageSize=" + pageSize
-				+ ", childOrderModel=" + childOrderModel + "]";
+		return "OrderParamBO [pageNum=" + pageNum + ", pageSize=" + pageSize + ", childOrderModel=" + childOrderModel
+				+ "]";
 	}
+
 
 }

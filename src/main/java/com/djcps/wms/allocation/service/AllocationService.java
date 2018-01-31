@@ -205,4 +205,14 @@ public interface AllocationService {
 	 */
 	Map<String, Object> cancelAllocation(CancelAllocationBO param);
 
+
+	/**
+	 * 智能配货插入数据,假接口
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	Map<String, Object> addzhinengpeihuo();
+
 }

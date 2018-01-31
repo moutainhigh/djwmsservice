@@ -297,4 +297,36 @@ public interface WmsForAllocationHttpRequest {
 	@POST("allocation/getAddOrderList.do")
 	public HTTPResponse getAddOrderList(@Body RequestBody rb);
 
+	/**
+	 * 智能配货
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/addzhinengpeihuo.do")
+	public HTTPResponse addzhinengpeihuo(@Body RequestBody rb);
+
+	/**
+	 * 批量插入配货订单表数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/batchAddAllocationOrder.do")
+	public HTTPResponse batchAddAllocationOrder(@Body RequestBody rb);
+
+	/**
+	 * 根据配货id获取配货订单信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getOrderByAllocationId.do")
+	public HTTPResponse getOrderByAllocationId(@Body RequestBody rb);
 }

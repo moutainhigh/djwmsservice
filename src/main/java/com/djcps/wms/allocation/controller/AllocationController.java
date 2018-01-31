@@ -201,6 +201,36 @@ public class AllocationController {
 	}
 	
 	/**
+	 * 假智能配货接口
+	 * @param json
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(name="智能配货结果",value = "/addzhinengpeihuo", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> addzhinengpeihuo(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+//			GetIntelligentAllocaBO param = gson.fromJson(json, GetIntelligentAllocaBO.class);
+//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+//			BeanUtils.copyProperties(partnerInfoBean,param);
+//			//数据校验
+//			ComplexResult ret = FluentValidator.checkAll().failFast()
+//					.on(param,
+//							new HibernateSupportedValidator<GetIntelligentAllocaBO>()
+//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//					.doValidate().result(ResultCollectors.toComplex());
+//			if (!ret.isSuccess()) {
+//				return MsgTemplate.failureMsg(ret);
+//			}
+			return allocationService.addzhinengpeihuo();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
 	 * 确认配货
 	 * @param json
 	 * @param request
@@ -618,4 +648,5 @@ public class AllocationController {
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
+	
 }

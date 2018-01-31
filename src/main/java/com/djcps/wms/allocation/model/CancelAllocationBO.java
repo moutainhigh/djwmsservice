@@ -31,8 +31,8 @@ public class CancelAllocationBO extends BaseAddBO implements Serializable{
 	/**
 	 * 提货单号
 	 */
-	@NotBlank
-	private String deliveryId;
+	@NotEmpty
+	private List<String> deliveryId;
 	
 	/**
 	 * 提货单的确认状态
@@ -85,13 +85,12 @@ public class CancelAllocationBO extends BaseAddBO implements Serializable{
 	public void setWaybillId(String waybillId) {
 		this.waybillId = waybillId;
 	}
-	public String getDeliveryId() {
+	public List<String> getDeliveryId() {
 		return deliveryId;
 	}
-	public void setDeliveryId(String deliveryId) {
+	public void setDeliveryId(List<String> deliveryId) {
 		this.deliveryId = deliveryId;
 	}
-	
 	public String getAllocationId() {
 		return allocationId;
 	}

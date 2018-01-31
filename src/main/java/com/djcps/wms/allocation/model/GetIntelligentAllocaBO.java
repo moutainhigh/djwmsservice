@@ -24,20 +24,22 @@ public class GetIntelligentAllocaBO extends BaseBO implements Serializable{
 	/**
 	 * 提货单号
 	 */
-	private String deliveryId;
+	@NotBlank
+	private String allocatioId;
 
-	public String getDeliveryId() {
-		return deliveryId;
+	public String getAllocatioId() {
+		return allocatioId;
 	}
 
-	public void setDeliveryId(String deliveryId) {
-		this.deliveryId = deliveryId;
+	public void setAllocatioId(String allocatioId) {
+		this.allocatioId = allocatioId;
 	}
 
 	@Override
 	public String toString() {
-		return "GetIntelligentAllocaBO [deliveryId=" + deliveryId + "]";
+		return "GetIntelligentAllocaBO [allocatioId=" + allocatioId + "]";
 	}
+	
 	
 	/**
 	 * 订单状态

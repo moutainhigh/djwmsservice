@@ -29,6 +29,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.order.model.OrderParamBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
 import com.google.gson.Gson;
 
@@ -336,6 +337,36 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult addzhinengpeihuo() {
+		//将请求参数转化为requestbody格式
+//		String json = gson.toJson(param);
+//		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),"1");
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.addzhinengpeihuo(rb);
+		return verifyHttpResult(http);
+	}
+
+	public HttpResult batchAddAllocationOrder(List<WarehouseOrderDetailPO> param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.batchAddAllocationOrder(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult getOrderByAllocationId(GetIntelligentAllocaBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.getOrderByAllocationId(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -356,4 +387,5 @@ public class AllocationServer {
 		}
 		return result;
 	}
+
 }
