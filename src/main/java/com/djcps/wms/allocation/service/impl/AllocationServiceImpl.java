@@ -285,7 +285,7 @@ public class AllocationServiceImpl implements AllocationService {
 //		String remind = param.getRemind();
 		//参与智能配货的条件:订单提醒:异+不补,异+备;订单状态必须为已入库状态
 		//状态和提醒校验必须都通过,这里暂时先只做订单状态校验
-		HttpResult result = allocationServer.getOrderByAllocationId(param);
+		OtherHttpResult result = allocationServer.getOrderByAllocationId(param);
 		if(!ObjectUtils.isEmpty(result.getData())){
 			HttpResult number = allocationServer.getNumber(2);
 			if(!ObjectUtils.isEmpty(number.getData())){
@@ -297,7 +297,14 @@ public class AllocationServiceImpl implements AllocationService {
 			allocation.setDeliveryId(deliveryId);
 			allocation.setWaybillId(waybillId);
 			allocation.setCarInfo(new CarInfo());
-			return MsgTemplate.successMsg(allocation);
+			
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("success",true);
+			resultMap.put("code",100000);
+			resultMap.put("msg", "");
+			resultMap.put("data", allocation);
+			resultMap.put("total", result.getTotal());
+			return resultMap;
 		}else{
 			return MsgTemplate.successMsg();
 		}
@@ -402,8 +409,14 @@ public class AllocationServiceImpl implements AllocationService {
 			mapResult.put("success",true);
 			mapResult.put("code",100000);
 			mapResult.put("msg", "");
-			mapResult.put("data", orderDetailList);
-			mapResult.put("total", result.getTotal());
+			if(!ObjectUtils.isEmpty(orderDetailList)){
+				mapResult.put("data", orderDetailList);
+				mapResult.put("total", orderDetailList.size());
+			}else{
+				mapResult.put("data", null);
+				mapResult.put("total",0);
+			}
+			
 			return mapResult;
 		}else{
 			return MsgTemplate.successMsg();
@@ -615,14 +628,13 @@ public class AllocationServiceImpl implements AllocationService {
 	public Map<String, Object> addzhinengpeihuo() {
 		List<WarehouseOrderDetailPO> list = new ArrayList<>();
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<>();
+		//获取所有的在库信息id
 		HttpResult result = allocationServer.addzhinengpeihuo();
 		Object data = result.getData();
 		JsonArray asJsonArray = jsonParser.parse(gson.toJson(data)).getAsJsonArray();
 		List<String> orderIdsList =new  ArrayList<>();
 		for (JsonElement jsonElement : asJsonArray) {
 			String orderId = jsonElement.getAsJsonObject().get("orderId").getAsString();
-			WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-			map.put(fromJson.getOrderId(), fromJson);
 			orderIdsList.add(orderId);
 		}
 		OrderIdsBO param = new OrderIdsBO();
@@ -636,25 +648,37 @@ public class AllocationServiceImpl implements AllocationService {
 				//订单筛选,去除订单中双写的订单,取值为0的数据
 				if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
 					WarehouseOrderDetailPO orderDetail = gson.fromJson(orderIdsJsonArray.get(i), WarehouseOrderDetailPO.class);
-					WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderDetail.getFchildorderid());
-					//组织参数
-					orderDetail.setWarehouseId(warehouseOrderDetailPO.getWarehouseId());
-					orderDetail.setWarehouseName(warehouseOrderDetailPO.getWarehouseLocName());
-					orderDetail.setWarehouseAreaId(warehouseOrderDetailPO.getWarehouseAreaName());
-					orderDetail.setWarehouseAreaName(warehouseOrderDetailPO.getWarehouseAreaName());
-					orderDetail.setWarehouseLocId(warehouseOrderDetailPO.getWarehouseLocId());
-					orderDetail.setWarehouseLocName(warehouseOrderDetailPO.getWarehouseLocName());
-					orderDetail.setAllocationId(uuid);
-					orderDetail.setSequence(String.valueOf(i));
-					String add = orderDetail.getFcodeprovince()+orderDetail.getFaddressdetail();
-					orderDetail.setFaddressdetail(add);
-					list.add(orderDetail);
+					//将订单信息根据订单号存入到map中
+					map.put(orderDetail.getFchildorderid(), orderDetail);
 				}
 			}
-			HttpResult otherResult = allocationServer.batchAddAllocationOrder(list);
+			//遍历入库订单的在库信息
+			for (int i=0;i<asJsonArray.size();i++) {
+				WarehouseOrderDetailPO fromJson = gson.fromJson(asJsonArray.get(i), WarehouseOrderDetailPO.class);
+				WarehouseOrderDetailPO orderDetail = map.get(fromJson.getOrderId());
+				//组织参数
+				orderDetail.setWarehouseId(fromJson.getWarehouseId());
+				orderDetail.setWarehouseName(fromJson.getWarehouseLocName());
+				orderDetail.setWarehouseAreaId(fromJson.getWarehouseAreaId());
+				orderDetail.setWarehouseAreaName(fromJson.getWarehouseAreaName());
+				orderDetail.setWarehouseLocId(fromJson.getWarehouseLocId());
+				orderDetail.setWarehouseLocName(fromJson.getWarehouseLocName());
+				orderDetail.setAllocationId(uuid);
+				String address = orderDetail.getFcodeprovince()+orderDetail.getFaddressdetail();
+				orderDetail.setFaddressdetail(address);
+				BeanUtils.copyProperties(orderDetail, fromJson);
+				fromJson.setSequence(String.valueOf(i+1));
+				list.add(fromJson);
+			}
+			//调存入配货订单表接口,存入数据
+			HttpResult otherResult = allocationServer.addDeliAllocOrder(list);
+			if(otherResult.isSuccess()){
+				return MsgTemplate.successMsg(uuid);
+			}else{
+				return MsgTemplate.customMsg(otherResult);
+			}
 		}else{
-			uuid = null;
+			return MsgTemplate.successMsg();
 		}
-		return MsgTemplate.successMsg(uuid);
 	}
 }

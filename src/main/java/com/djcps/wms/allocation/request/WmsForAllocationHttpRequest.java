@@ -316,8 +316,8 @@ public interface WmsForAllocationHttpRequest {
 	 * @date:2018年1月23日
 	 */
 	@Headers("content-type:application/json")
-	@POST("allocation/batchAddAllocationOrder.do")
-	public HTTPResponse batchAddAllocationOrder(@Body RequestBody rb);
+	@POST("allocation/addDeliAllocOrder.do")
+	public HTTPResponse addDeliAllocOrder(@Body RequestBody rb);
 
 	/**
 	 * 根据配货id获取配货订单信息

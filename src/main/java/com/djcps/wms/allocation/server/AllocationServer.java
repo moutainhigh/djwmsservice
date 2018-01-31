@@ -347,24 +347,33 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 
-	public HttpResult batchAddAllocationOrder(List<WarehouseOrderDetailPO> param) {
+	public HttpResult addDeliAllocOrder(List<WarehouseOrderDetailPO> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
-		HTTPResponse http = allocationHttpRequest.batchAddAllocationOrder(rb);
+		HTTPResponse http = allocationHttpRequest.addDeliAllocOrder(rb);
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getOrderByAllocationId(GetIntelligentAllocaBO param) {
+	public OtherHttpResult getOrderByAllocationId(GetIntelligentAllocaBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getOrderByAllocationId(rb);
-		return verifyHttpResult(http);
+		OtherHttpResult result = null;
+		//校验请求是否成功
+		if(http.isSuccessful()){
+			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
+		}
+		if(result == null){
+			System.err.println("Http请求出错,HttpResult结果为null");
+			logger.error("Http请求出错,HttpResult结果为null");
+		}
+		return result;
 	}
 	
 	/**

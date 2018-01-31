@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.commons.base.BaseListBO;
 
 /**
  *	智能配货结果
@@ -12,7 +13,7 @@ import com.djcps.wms.commons.base.BaseBO;
  * @author:zdx
  * @date:2018年1月22日
  */
-public class GetIntelligentAllocaBO extends BaseBO implements Serializable{
+public class GetIntelligentAllocaBO extends BaseListBO implements Serializable{
 
 	private static final long serialVersionUID = 3848765538827058096L;
 	
@@ -25,21 +26,23 @@ public class GetIntelligentAllocaBO extends BaseBO implements Serializable{
 	 * 提货单号
 	 */
 	@NotBlank
-	private String allocatioId;
+	private String allocationId;
 
-	public String getAllocatioId() {
-		return allocatioId;
+
+	public String getAllocationId() {
+		return allocationId;
 	}
 
-	public void setAllocatioId(String allocatioId) {
-		this.allocatioId = allocatioId;
+
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
 	}
+
 
 	@Override
 	public String toString() {
-		return "GetIntelligentAllocaBO [allocatioId=" + allocatioId + "]";
+		return "GetIntelligentAllocaBO [allocationId=" + allocationId + "]";
 	}
-	
 	
 	/**
 	 * 订单状态

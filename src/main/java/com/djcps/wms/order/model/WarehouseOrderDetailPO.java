@@ -83,7 +83,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 	/**
 	 * 单位
 	 */
-	private String units;
+	private String unit;
 	
 	/**
 	 * 订单状态(
@@ -300,7 +300,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 
 	public WarehouseOrderDetailPO() {
 		super();
-		this.units = "片";
+		this.unit = "片";
 	}
 
 	public String getDeliveryAmount() {
@@ -415,12 +415,13 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.fproductRule = fproductRule;
 	}
 
-	public String getUnits() {
-		return units;
+
+	public String getUnit() {
+		return unit;
 	}
 
-	public void setUnits(String units) {
-		this.units = units;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public String getFstatus() {
@@ -646,7 +647,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ ", fordertime=" + fordertime + ", fpaymenttime=" + fpaymenttime + ", fdelivery=" + fdelivery
 				+ ", fgroupgoodname=" + fgroupgoodname + ", fflutetype=" + fflutetype + ", fmaterialname="
 				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", units="
-				+ units + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
+				+ unit + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
 				+ ", fcodeprovince=" + fcodeprovince + ", faddressdetail=" + faddressdetail + ", fpusername="
 				+ fpusername + ", fcusername=" + fcusername + ", fchildorderid=" + fchildorderid + ", orderId="
 				+ orderId + ", flnglat=" + flnglat + ", amountSaved=" + amountSaved + ", famount=" + famount
