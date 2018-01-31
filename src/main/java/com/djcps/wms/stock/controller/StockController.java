@@ -1,20 +1,5 @@
 package com.djcps.wms.stock.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
@@ -25,14 +10,21 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.order.model.OrderIdBO;
-import com.djcps.wms.stock.model.AddStockBO;
-import com.djcps.wms.stock.model.MoveStockBO;
-import com.djcps.wms.stock.model.RecommendLocaBO;
-import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
-import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
+import com.djcps.wms.stock.model.*;
 import com.djcps.wms.stock.service.StockService;
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.Map;
 
 
 /**
@@ -88,7 +80,6 @@ public class StockController {
 	public Map<String, Object> getOperationRecord(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-//			String string = new JsonParser().parse(json).getAsJsonObject().get("orderId").toString();
 			OrderIdBO fromJson = gson.fromJson(json, OrderIdBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(fromJson,
