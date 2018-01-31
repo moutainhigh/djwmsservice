@@ -29,17 +29,15 @@ import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
-import com.djcps.wms.allocation.model.GetAllocationResultBO;
-import com.djcps.wms.allocation.model.GetDeliveryByWaybillBO;
+import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
+import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.order.model.OrderIdBO;
-import com.djcps.wms.order.model.OrderParamBO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -50,11 +48,7 @@ import com.google.gson.reflect.TypeToken;
  * @author:zdx
  * @date:2017年12月8日
  */
-/**
- * @company:djwms
- * @author:zdx
- * @date:2018年1月23日
- */
+
 @RestController
 @RequestMapping(value = "/allocation")
 public class AllocationController {
@@ -154,13 +148,13 @@ public class AllocationController {
 	public Map<String, Object> getAllocationResultList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			GetAllocationResultBO param = gson.fromJson(json, GetAllocationResultBO.class);
+			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<GetAllocationResultBO>()
+							new HibernateSupportedValidator<GetRedundantByAttributeBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -250,22 +244,12 @@ public class AllocationController {
 	public Map<String, Object> moveOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			OrderIdBO param = gson.fromJson(json, OrderIdBO.class);
-			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			BeanUtils.copyProperties(partnerInfoBean,param);
+			String[] orderIds = gson.fromJson(json,String[].class);
 			//数据校验
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(param,
-							new HibernateSupportedValidator<OrderIdBO>()
-							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
-			if (ObjectUtils.isEmpty(param.getOrderId())) {
+			if (ObjectUtils.isEmpty(orderIds)) {
 				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
 			}
-			return allocationService.moveOrder(param);
+			return allocationService.moveOrder(orderIds);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -285,13 +269,14 @@ public class AllocationController {
 	public Map<String, Object> getAddOrderList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			OrderParamBO param = gson.fromJson(json, OrderParamBO.class);
+//			OrderParamBO param = gson.fromJson(json, OrderParamBO.class);
+			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<OrderParamBO>()
+							new HibernateSupportedValidator<GetRedundantByAttributeBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -313,7 +298,7 @@ public class AllocationController {
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	@RequestMapping(name="确认追加订单",value = "/getAddOrderList", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="确认追加订单",value = "/verifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> verifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -355,13 +340,13 @@ public class AllocationController {
 	public Map<String, Object> getAllocationManageList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			GetAllocationResultBO param = gson.fromJson(json, GetAllocationResultBO.class);
+			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<GetAllocationResultBO>()
+							new HibernateSupportedValidator<GetRedundantByAttributeBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -376,30 +361,30 @@ public class AllocationController {
 	}
 	
 	/**
-	 * 根据运单号获取提货单明细
+	 * 获取运单明细
 	 * @param json
 	 * @param request
 	 * @return
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
-	@RequestMapping(name="根据运单号获取提货单明细",value = "/getDeliveryByWaybill", method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> getDeliveryByWaybill(@RequestBody(required = false) String json, HttpServletRequest request) {
+	@RequestMapping(name="获取运单明细",value = "/getWaybillDetailByWayId", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getWaybillDetailByWayId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			GetDeliveryByWaybillBO param = gson.fromJson(json, GetDeliveryByWaybillBO.class);
+			GetDeliveryByWaybillIdsBO  param = gson.fromJson(json, GetDeliveryByWaybillIdsBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<GetDeliveryByWaybillBO>()
+							new HibernateSupportedValidator<GetDeliveryByWaybillIdsBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return allocationService.getDeliveryByWaybill(param);
+			return allocationService.getWaybillDetailByWayId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -483,17 +468,18 @@ public class AllocationController {
 	public Map<String, Object> againVerifyAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			AgainVerifyAllocationBO param = gson.fromJson(json, AgainVerifyAllocationBO.class);
-			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			BeanUtils.copyProperties(partnerInfoBean,param);
-			//数据校验
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(param,
-							new HibernateSupportedValidator<AgainVerifyAllocationBO>()
-							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
+			List<AgainVerifyAllocationBO> param = gson.fromJson(json, new TypeToken<ArrayList<AgainVerifyAllocationBO>>(){}.getType());
+			for (AgainVerifyAllocationBO againVerifyAllocationBO : param) {
+				PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+				BeanUtils.copyProperties(partnerInfoBean,againVerifyAllocationBO);
+				ComplexResult ret = FluentValidator.checkAll().failFast()
+						.on(againVerifyAllocationBO,
+								new HibernateSupportedValidator<AgainVerifyAllocationBO>()
+								.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+						.doValidate().result(ResultCollectors.toComplex());
+				if (!ret.isSuccess()) {
+					return MsgTemplate.failureMsg(ret);
+				}
 			}
 			return allocationService.againVerifyAllocation(param);
 		} catch (Exception e) {

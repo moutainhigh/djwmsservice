@@ -22,7 +22,7 @@ public class CancelAllocationBO extends BaseAddBO implements Serializable{
 	 * 所有的订单号
 	 */
 	@NotEmpty
-	private List<OrderIdBO> orderIds;
+	private List<String> orderIds;
 	/**
 	 * 运单号
 	 */
@@ -35,15 +35,48 @@ public class CancelAllocationBO extends BaseAddBO implements Serializable{
 	private String deliveryId;
 	
 	/**
+	 * 提货单的确认状态
+	 */
+	private String deliveryIdEffect;
+	
+	/**
 	 * 智能配货id
 	 */
 	@NotBlank
 	private String allocationId;
 	
-	public List<OrderIdBO> getOrderIds() {
+	/**
+	 * 智能配货确认状态
+	 */
+	private String allocationIdEffect;
+	
+	/**
+	 * 订单状态
+	 */
+	private String orderStatus;
+	
+	public String getDeliveryIdEffect() {
+		return deliveryIdEffect;
+	}
+	public void setDeliveryIdEffect(String deliveryIdEffect) {
+		this.deliveryIdEffect = deliveryIdEffect;
+	}
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	public String getAllocationIdEffect() {
+		return allocationIdEffect;
+	}
+	public void setAllocationIdEffect(String allocationIdEffect) {
+		this.allocationIdEffect = allocationIdEffect;
+	}
+	public List<String> getOrderIds() {
 		return orderIds;
 	}
-	public void setOrderIds(List<OrderIdBO> orderIds) {
+	public void setOrderIds(List<String> orderIds) {
 		this.orderIds = orderIds;
 	}
 	public String getWaybillId() {
@@ -68,7 +101,8 @@ public class CancelAllocationBO extends BaseAddBO implements Serializable{
 	@Override
 	public String toString() {
 		return "CancelAllocationBO [orderIds=" + orderIds + ", waybillId=" + waybillId + ", deliveryId=" + deliveryId
-				+ ", allocationId=" + allocationId + "]";
+				+ ", deliveryIdEffect=" + deliveryIdEffect + ", allocationId=" + allocationId + ", allocationIdEffect="
+				+ allocationIdEffect + ", orderStatus=" + orderStatus + "]";
 	}
 	
 }

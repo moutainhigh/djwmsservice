@@ -120,9 +120,14 @@ public class WarehouseOrderDetailPO implements Serializable{
 	private String faddressdetail;
 	
 	/**
-	 * 客户名称
+	 * 母账号名称
 	 */
 	private String fpusername;
+	
+	/**
+	 * 子账号名称
+	 */
+	private String fcusername;
 	
 	/**
 	 * =====================================================================
@@ -157,16 +162,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 * 订单数量
 	 */
 	private Integer amount;
-	
-	/**
-	 * 仓库编号
-	 */
-	private String warehouseId;
-	
-	/**
-	 * 仓库名称
-	 */
-	private String warehouseName;
 	
 	/**
 	 * 备注
@@ -229,6 +224,80 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String deliveryAmount;
 	
+	/**
+	 * ============================================================
+	 */
+	
+	/**
+	 * 仓库编码
+	 */
+	private String warehouseId;
+	/**
+	 * 仓库名称
+	 */
+	private String warehouseName;
+	/**
+	 * 库区编码
+	 */
+	private String warehouseAreaId;
+	/**
+	 * 库区名称
+	 */
+	private String warehouseAreaName;
+	/**
+	 * 库位编码
+	 */
+	private String warehouseLocId;
+	/**
+	 * 库位名称
+	 */
+	private String warehouseLocName;
+	
+	/**
+	 * 智能配货id
+	 */
+	private String allocationId;
+	
+	public String getWarehouseAreaId() {
+		return warehouseAreaId;
+	}
+
+	public void setWarehouseAreaId(String warehouseAreaId) {
+		this.warehouseAreaId = warehouseAreaId;
+	}
+
+	public String getWarehouseAreaName() {
+		return warehouseAreaName;
+	}
+
+	public void setWarehouseAreaName(String warehouseAreaName) {
+		this.warehouseAreaName = warehouseAreaName;
+	}
+
+	public String getWarehouseLocId() {
+		return warehouseLocId;
+	}
+
+	public void setWarehouseLocId(String warehouseLocId) {
+		this.warehouseLocId = warehouseLocId;
+	}
+
+	public String getWarehouseLocName() {
+		return warehouseLocName;
+	}
+
+	public void setWarehouseLocName(String warehouseLocName) {
+		this.warehouseLocName = warehouseLocName;
+	}
+
+	public String getAllocationId() {
+		return allocationId;
+	}
+
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
+	}
+
 	public WarehouseOrderDetailPO() {
 		super();
 		this.units = "片";
@@ -562,6 +631,14 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.loadingPersonName = loadingPersonName;
 	}
 
+	public String getFcusername() {
+		return fcusername;
+	}
+
+	public void setFcusername(String fcusername) {
+		this.fcusername = fcusername;
+	}
+
 	@Override
 	public String toString() {
 		return "WarehouseOrderDetailPO [fboxlength=" + fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight="
@@ -571,13 +648,16 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", units="
 				+ units + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
 				+ ", fcodeprovince=" + fcodeprovince + ", faddressdetail=" + faddressdetail + ", fpusername="
-				+ fpusername + ", fchildorderid=" + fchildorderid + ", orderId=" + orderId + ", flnglat=" + flnglat
-				+ ", amountSaved=" + amountSaved + ", famount=" + famount + ", amount=" + amount + ", warehouseId="
-				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", areaList=" + areaList
-				+ ", waybillId=" + waybillId + ", deliveryId=" + deliveryId + ", plateNumber=" + plateNumber
-				+ ", remind=" + remind + ", deliveryIdStatus=" + deliveryIdStatus + ", sequence=" + sequence
-				+ ", pickerId=" + pickerId + ", pickerName=" + pickerName + ", loadingPersonId=" + loadingPersonId
-				+ ", loadingPersonName=" + loadingPersonName + ", deliveryAmount=" + deliveryAmount + "]";
+				+ fpusername + ", fcusername=" + fcusername + ", fchildorderid=" + fchildorderid + ", orderId="
+				+ orderId + ", flnglat=" + flnglat + ", amountSaved=" + amountSaved + ", famount=" + famount
+				+ ", amount=" + amount + ", remark=" + remark + ", areaList=" + areaList + ", waybillId=" + waybillId
+				+ ", deliveryId=" + deliveryId + ", plateNumber=" + plateNumber + ", remind=" + remind
+				+ ", deliveryIdStatus=" + deliveryIdStatus + ", sequence=" + sequence + ", pickerId=" + pickerId
+				+ ", pickerName=" + pickerName + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName="
+				+ loadingPersonName + ", deliveryAmount=" + deliveryAmount + ", warehouseId=" + warehouseId
+				+ ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName="
+				+ warehouseAreaName + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName
+				+ ", allocationId=" + allocationId + "]";
 	}
 
 }

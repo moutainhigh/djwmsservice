@@ -1,10 +1,10 @@
 package com.djcps.wms.stock.service.impl;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -119,6 +119,7 @@ public class StockServiceImpl implements StockService{
 		//订单数量
 		Integer orderAmount = param.getAmount();
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+		BeanUtils.copyProperties(param, selectAreaByOrderId);
 		OrderIdBO orderIdBO = new OrderIdBO();
 		orderIdBO.setOrderId(orderId);
 		list.add(orderIdBO);

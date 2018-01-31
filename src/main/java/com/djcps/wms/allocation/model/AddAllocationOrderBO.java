@@ -60,22 +60,17 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	 * 商品名称
 	 */
 	@NotBlank
-	private String groupGoodName;
+	private String productName;
 	/**
 	 * 材料名称
 	 */
 	@NotBlank
 	private String materialName;
 	/**
-	 * 商品规格
-	 */
-	@NotBlank
-	private String productSize;
-	/**
 	 * 客户名称(母账户名称或者子账户名称)
 	 */
 	@NotBlank
-	private String clientName;
+	private String customerName;
 	/**
 	 * 联系人
 	 */
@@ -106,6 +101,13 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	 */
 	@NotBlank
 	private String unit;
+	
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
 	public String getOrderId() {
 		return orderId;
 	}
@@ -154,29 +156,11 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	public void setWarehouseLocName(String warehouseLocName) {
 		this.warehouseLocName = warehouseLocName;
 	}
-	public String getGroupGoodName() {
-		return groupGoodName;
-	}
-	public void setGroupGoodName(String groupGoodName) {
-		this.groupGoodName = groupGoodName;
-	}
 	public String getMaterialName() {
 		return materialName;
 	}
 	public void setMaterialName(String materialName) {
 		this.materialName = materialName;
-	}
-	public String getProductSize() {
-		return productSize;
-	}
-	public void setProductSize(String productSize) {
-		this.productSize = productSize;
-	}
-	public String getClientName() {
-		return clientName;
-	}
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
 	}
 	public String getContacts() {
 		return contacts;
@@ -214,15 +198,21 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 	@Override
 	public String toString() {
 		return "AddAllocationOrderBO [orderId=" + orderId + ", allocationId=" + allocationId + ", warehouseId="
 				+ warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId
 				+ ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
-				+ ", warehouseLocName=" + warehouseLocName + ", groupGoodName=" + groupGoodName + ", materialName="
-				+ materialName + ", productSize=" + productSize + ", clientName=" + clientName + ", contacts="
-				+ contacts + ", deliveryTime=" + deliveryTime + ", sequence=" + sequence + ", orderAmount="
-				+ orderAmount + ", address=" + address + ", unit=" + unit + "]";
+				+ ", warehouseLocName=" + warehouseLocName + ", productName=" + productName + ", materialName="
+				+ materialName + ", customerName=" + customerName + ", contacts=" + contacts + ", deliveryTime="
+				+ deliveryTime + ", sequence=" + sequence + ", orderAmount=" + orderAmount + ", address=" + address
+				+ ", unit=" + unit + "]";
 	}
 	
 }

@@ -10,15 +10,13 @@ import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
-import com.djcps.wms.allocation.model.GetAllocationResultBO;
-import com.djcps.wms.allocation.model.GetDeliveryByWaybillBO;
+import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
+import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.order.model.OrderIdBO;
-import com.djcps.wms.order.model.OrderParamBO;
 
 
 /**
@@ -68,7 +66,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	Map<String, Object> getAllocationResultList(GetAllocationResultBO param);
+	Map<String, Object> getAllocationResultList(GetRedundantByAttributeBO param);
 
 
 	/**
@@ -98,7 +96,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	Map<String, Object> moveOrder(OrderIdBO param);
+	Map<String, Object> moveOrder(String[] orderIds);
 
 
 	/**
@@ -108,7 +106,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	Map<String, Object> getAddOrderList(OrderParamBO param);
+	Map<String, Object> getAddOrderList(GetRedundantByAttributeBO param);
 
 
 	/**
@@ -128,7 +126,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	Map<String, Object> getAllocationManageList(GetAllocationResultBO param);
+	Map<String, Object> getAllocationManageList(GetRedundantByAttributeBO param);
 
 
 	/**
@@ -138,7 +136,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
-	Map<String, Object> getDeliveryByWaybill(GetDeliveryByWaybillBO param);
+	Map<String, Object> getWaybillDetailByWayId(GetDeliveryByWaybillIdsBO param);
 
 
 	/**
@@ -168,7 +166,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
-	Map<String, Object> againVerifyAllocation(AgainVerifyAllocationBO param);
+	Map<String, Object> againVerifyAllocation(List<AgainVerifyAllocationBO> param);
 
 
 	/**

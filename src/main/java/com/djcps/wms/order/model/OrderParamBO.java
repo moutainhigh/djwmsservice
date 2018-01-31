@@ -19,12 +19,6 @@ public class OrderParamBO implements Serializable{
 	private static final long serialVersionUID = 3975618631995060948L;
 	
 	/**
-	 * 仓库类型,1,2,3,4,5(纸板，纸箱，积分商城仓库，物料仓库，退货仓库)
-	 */
-	@NotBlank
-	private String warehouseType;
-	
-	/**
 	 * 版本号
 	 */
 	@NotBlank
@@ -83,19 +77,11 @@ public class OrderParamBO implements Serializable{
 	public void setChildOrderModel(ChildOrderParamBO childOrderModel) {
 		this.childOrderModel = childOrderModel;
 	}
-	
-	public String getWarehouseType() {
-		return warehouseType;
-	}
-
-	public void setWarehouseType(String warehouseType) {
-		this.warehouseType = warehouseType;
-	}
 
 	@Override
 	public String toString() {
-		return "OrderParamBO [warehouseType=" + warehouseType + ", version=" + version + ", pageNum=" + pageNum
-				+ ", pageSize=" + pageSize + ", childOrderModel=" + childOrderModel + "]";
+		return "OrderParamBO [version=" + version + ", pageNum=" + pageNum + ", pageSize=" + pageSize
+				+ ", childOrderModel=" + childOrderModel + "]";
 	}
-	
+
 }
