@@ -14,10 +14,19 @@ public class WarehouseAreaAndLocBO {
     private String  warehouseAreaName;
     private String  warehouseLocId;
     private String  warehouseLocName;
+    private String remark;
     /**
      * 盘点数量
      */
     private String takeStockAmount;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public Integer getIsInventoryProfit() {
         return isInventoryProfit;
@@ -84,6 +93,7 @@ public class WarehouseAreaAndLocBO {
                 ", warehouseAreaName='" + warehouseAreaName + '\'' +
                 ", warehouseLocId='" + warehouseLocId + '\'' +
                 ", warehouseLocName='" + warehouseLocName + '\'' +
+                ", remark='" + remark + '\'' +
                 ", takeStockAmount='" + takeStockAmount + '\'' +
                 '}';
     }
