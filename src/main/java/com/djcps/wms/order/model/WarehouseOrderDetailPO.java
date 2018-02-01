@@ -97,7 +97,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 		已发车：26
 		)
 	 */
-	private String fstatus;
+	private Integer fstatus;
 	
 	/**
 	 * 联系人
@@ -258,6 +258,14 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String allocationId;
 	
+	public Integer getFstatus() {
+		return fstatus;
+	}
+
+	public void setFstatus(Integer fstatus) {
+		this.fstatus = fstatus;
+	}
+
 	public String getWarehouseAreaId() {
 		return warehouseAreaId;
 	}
@@ -422,14 +430,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 
 	public void setUnit(String unit) {
 		this.unit = unit;
-	}
-
-	public String getFstatus() {
-		return fstatus;
-	}
-
-	public void setFstatus(String fstatus) {
-		this.fstatus = fstatus;
 	}
 
 	public String getFconsignee() {

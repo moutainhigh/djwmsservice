@@ -48,7 +48,6 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	/**
 	 * 运单创建时间
 	 */
-	@NotBlank
 	private String waybillIdCreateTime;
 	
 	/**
@@ -98,10 +97,22 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	@NotBlank
 	private String loadingPersonName;
 	
+	/**
+	 * 提货单创建时间
+	 */
+	private String deliveryCreateTime;
+	
 	public String getWaybillIdCreateTime() {
 		return waybillIdCreateTime;
 	}
 
+	public String getDeliveryCreateTime() {
+		return deliveryCreateTime;
+	}
+
+	public void setDeliveryCreateTime(String deliveryCreateTime) {
+		this.deliveryCreateTime = deliveryCreateTime;
+	}
 
 	public void setWaybillIdCreateTime(String waybillIdCreateTime) {
 		this.waybillIdCreateTime = waybillIdCreateTime;
@@ -247,7 +258,6 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 		this.loadingPersonName = loadingPersonName;
 	}
 
-
 	@Override
 	public String toString() {
 		return "VerifyAllocationBO [orderIds=" + orderIds + ", allocationId=" + allocationId + ", allocationIdEffect="
@@ -255,7 +265,8 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 				+ ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingtableId="
 				+ loadingtableId + ", loadingtableName=" + loadingtableName + ", pickerId=" + pickerId + ", pickerName="
 				+ pickerName + ", plateNumber=" + plateNumber + ", deliveryIdEffect=" + deliveryIdEffect
-				+ ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName + "]";
+				+ ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
+				+ ", deliveryCreateTime=" + deliveryCreateTime + "]";
 	}
 	
 }

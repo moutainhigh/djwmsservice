@@ -1,5 +1,6 @@
 package com.djcps.wms.stock.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,14 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
+import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.djcps.wms.stock.model.AddStockBO;
 import com.djcps.wms.stock.model.MapLocationPO;
 import com.djcps.wms.stock.model.MoveStockBO;
@@ -47,7 +51,7 @@ public class StockServiceImpl implements StockService{
 	private OrderServer orderServer;
 	
 	@Autowired
-	private OrderService orderService;
+	private AllocationServer allocationServer;
 	
 	@Autowired
 	private StockService stockService;
@@ -151,13 +155,42 @@ public class StockServiceImpl implements StockService{
 			}
 		}
 		HttpResult updateOrderResult = orderServer.updateOrderStatus(orderIdBO);
+		//插入冗余表数据
+		String order = param.getOrderId();
+		OrderIdBO ord = new OrderIdBO();
+		ord.setChildOrderId(order);
+		HttpResult result = orderServer.getOrderByOrderId(ord);
+		if(!ObjectUtils.isEmpty(result)){
+			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//组织参数
+			WarehouseOrderDetailPO fromJson = gson.fromJson(gson.toJson(result.getData()), WarehouseOrderDetailPO.class);
+			AddOrderRedundantBO orderRedundant = new AddOrderRedundantBO();
+			BeanUtils.copyProperties(param, orderRedundant);
+			orderRedundant.setBoxHeight(fromJson.getFboxheight());
+			orderRedundant.setBoxLength(fromJson.getFboxlength());
+			orderRedundant.setBoxWidth(fromJson.getFboxwidth());
+			orderRedundant.setCustomerName(fromJson.getFcusername()==null?fromJson.getFpusername():fromJson.getFcusername());
+			orderRedundant.setDeliveryTime(sd.format(fromJson.getFdelivery()));
+			orderRedundant.setMaterialLength(fromJson.getFmateriallength());
+			orderRedundant.setMaterialWidth(fromJson.getFmaterialwidth());
+			orderRedundant.setMaterialName(fromJson.getFmaterialname());
+			orderRedundant.setOrderId(fromJson.getFchildorderid());
+			orderRedundant.setOrderTime(sd.format(fromJson.getFordertime()));
+			orderRedundant.setProductName(fromJson.getFgroupgoodname());
+			orderRedundant.setPaymentTime(sd.format(fromJson.getFpaymenttime()));
+			orderRedundant.setStatus(fromJson.getFstatus());
+			HttpResult orderRedundantResult = allocationServer.batchAddOrderRedundant(orderRedundant);
+			if(!orderRedundantResult.isSuccess()){
+				return MsgTemplate.failureMsg(SysMsgEnum.REDUNDANT_FAIL);
+			}
+		}
 		//订单状态修改失败
 		if(!updateOrderResult.isSuccess()){
 			return MsgTemplate.failureMsg(SysMsgEnum.ORDER_UPDATE_ERROR);
 		}
 		//入库
-		HttpResult result = stockServer.addStock(param);
-		return MsgTemplate.customMsg(result);
+		HttpResult addStockresult = stockServer.addStock(param);
+		return MsgTemplate.customMsg(addStockresult);
 	}
 
 	@Override

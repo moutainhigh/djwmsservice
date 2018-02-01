@@ -30,6 +30,8 @@ import com.djcps.wms.allocation.model.CarInfo;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.GetAllocationManageListPO;
 import com.djcps.wms.allocation.model.IntelligentAllocationPO;
+import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
@@ -325,7 +327,7 @@ public class AllocationServiceImpl implements AllocationService {
 				if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
 					WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
 					//已配货直接驳回
-					if(!AppConstant.ALL_ADD_STOCK.equals(fromJson.getFstatus())){
+					if(!AppConstant.ALL_ADD_STOCK.equals(String.valueOf(fromJson.getFstatus()))){
 						return MsgTemplate.failureMsg(SysMsgEnum.ORDER_ERROR_ALREADY_ALLOCATION);
 					}
 				}
@@ -338,9 +340,10 @@ public class AllocationServiceImpl implements AllocationService {
 		OrderIdBO orderId = new OrderIdBO();
 		for(int i=0;i<orderIds.size();i++){
 			orderId.setStatus(AppConstant.ORDER_ALREADY_ALLOCATION);
-			orderId.setChildOrderId(orderIds.get(i));
+			orderId.setOrderId(orderIds.get(i));
 			//判断修改成功才能继续往下走
 			HttpResult updateOrderResult = orderServer.updateOrderStatus(orderId);
+			System.out.println(updateOrderResult.getMsg());
 		}
 		//TODO 修改提货员和装车员的状态
 		//修改配货表中的标志，修改为确认配货,且插入提货单数据(插入提货单确认状态feffect为1)
@@ -349,15 +352,48 @@ public class AllocationServiceImpl implements AllocationService {
 		param.setAllocationIdEffect(AppConstant.ALLOCATION_EFFECT);
 		param.setAllocationIdEffectTime(time);
 		param.setWaybillIdCreateTime(time);
+		param.setDeliveryCreateTime(time);
 		param.setDeliveryIdEffect(AppConstant.DELIVERY_EFFEFT);
 		HttpResult result = allocationServer.verifyAllocation(param);
+		if(result.isSuccess()){
+			//冗余表中插入运单号,提货单号和车牌号,并且修改订单状态
+			List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
+			List<String> idsList = param.getOrderIds();
+			for (String string : idsList) {
+				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
+				update.setStatus(Integer.valueOf(AppConstant.ORDER_ALREADY_ALLOCATION));
+				update.setDeliveryId(param.getDeliveryId());
+				update.setWaybillId(param.getWaybillId());
+				update.setOrderId(string);
+				update.setPlateNumber(param.getPartnerName());
+				update.setPartnerId(param.getPartnerId());
+				updateList.add(update);
+			}
+			HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
+			return MsgTemplate.customMsg(updateOrderRedunResult);
+		}
 		return MsgTemplate.customMsg(result);
 		//最后通知提货员装车员
 	}
 
 	@Override
-	public Map<String, Object> moveOrder(String[] orderIds) {
-		HttpResult result = allocationServer.moveOrder(orderIds);
+	public Map<String, Object> moveOrder(MoveOrderPO param) {
+		HttpResult result = null;
+		//配货中移除订单flag为0,配货管理flag为1
+		if(param.getFlag().equals("0")){
+			result = allocationServer.moveOrder(param);
+		}else if(param.getFlag().equals("1")){
+			//通知订单服务修改订单状态
+			OrderIdBO orderIdBO = new OrderIdBO();
+			orderIdBO.setOrderId(param.getOrderIds().get(0));
+			orderIdBO.setStatus(AppConstant.ORDER_ALREADY_ALLOCATION);
+			HttpResult updateOrderStatus = orderServer.updateOrderStatus(orderIdBO);
+			if(updateOrderStatus.isSuccess()){
+				//移除订单修改订单状态为已配货
+				param.setStatus(Integer.valueOf(AppConstant.ALL_ADD_STOCK));
+				result = allocationServer.moveOrder(param);
+			}
+		}
 		return MsgTemplate.customMsg(result);
 	}
 

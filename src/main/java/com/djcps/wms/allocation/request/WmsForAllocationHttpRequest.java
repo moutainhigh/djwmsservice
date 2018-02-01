@@ -329,4 +329,26 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/getOrderByAllocationId.do")
 	public HTTPResponse getOrderByAllocationId(@Body RequestBody rb);
+
+	/**
+	 * 批量插入冗余订单数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/batchAddOrderRedundant.do")
+	public HTTPResponse batchAddOrderRedundant(@Body RequestBody rb);
+
+	/**
+	 * 批量修改冗余订单数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/batchUpdateOrderRedun.do")
+	public HTTPResponse batchUpdateOrderRedun(@Body RequestBody rb);
 }

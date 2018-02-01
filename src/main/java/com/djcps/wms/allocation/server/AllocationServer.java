@@ -19,6 +19,8 @@ import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetOrderIdByOrderType;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
+import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.ZhiNengHttpResult;
 import com.djcps.wms.allocation.request.NumberServerHttpRequest;
@@ -31,6 +33,7 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.order.model.OrderParamBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
+import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -138,7 +141,7 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult moveOrder(String[] param) {
+	public HttpResult moveOrder(MoveOrderPO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
@@ -376,6 +379,26 @@ public class AllocationServer {
 		return result;
 	}
 	
+	public HttpResult batchAddOrderRedundant(AddOrderRedundantBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.batchAddOrderRedundant(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult batchUpdateOrderRedun(List<UpdateOrderRedundantBO> param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.batchUpdateOrderRedun(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -396,5 +419,4 @@ public class AllocationServer {
 		}
 		return result;
 	}
-
 }

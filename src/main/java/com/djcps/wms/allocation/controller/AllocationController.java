@@ -33,6 +33,7 @@ import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
+import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -274,12 +275,19 @@ public class AllocationController {
 	public Map<String, Object> moveOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			String[] orderIds = gson.fromJson(json,String[].class);
+			MoveOrderPO param = gson.fromJson(json, MoveOrderPO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			//数据校验
-			if (ObjectUtils.isEmpty(orderIds)) {
-				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<MoveOrderPO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
 			}
-			return allocationService.moveOrder(orderIds);
+			return allocationService.moveOrder(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
