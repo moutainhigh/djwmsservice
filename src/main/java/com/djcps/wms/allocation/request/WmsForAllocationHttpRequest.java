@@ -351,4 +351,15 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/batchUpdateOrderRedun.do")
 	public HTTPResponse batchUpdateOrderRedun(@Body RequestBody rb);
+
+	/**
+	 * 配货表插入数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/addExcellentAllocation.do")
+	public HTTPResponse addExcellentAllocation(@Body RequestBody rb);
 }

@@ -258,6 +258,8 @@ public class AreaController {
 		try {
 			logger.debug("json : " + json);
 			SelectWarehouseByIdBO param = gson.fromJson(json, SelectWarehouseByIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<SelectWarehouseByIdBO>()

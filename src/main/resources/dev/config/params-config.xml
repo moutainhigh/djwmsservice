@@ -29,7 +29,8 @@
         <!-- 高德地图Web服务 -->
         <property name="mapServer" value="http://restapi.amap.com/v3/" />
         <!-- 订单服务 -->
-        <property name="orderServer" value="http://192.168.10.200/djorderserver/" />
+        <!-- <property name="orderServer" value="http://192.168.10.200/djorderserver/" /> -->
+        <property name="orderServer" value="http://192.168.2.73:8080/djorder/" />
         <!-- 郑天伟临时修改订单服务 -->
         <property name="updateOrderServer" value="http://192.168.2.73:8080/djorder/" />
     </bean>

@@ -199,6 +199,8 @@ public class ProviderController {
 		try {
 			logger.debug("json : " + json);
 			BaseListBO param = gson.fromJson(json, BaseListBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			return providerService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -50,6 +50,12 @@ public class OrderServer {
         OrderHttpResult result = null;
 		if(http.isSuccessful()){
 			result = gson.fromJson(http.getBodyString(), OrderHttpResult.class);
+		}else{
+			result = new OrderHttpResult();
+			result.setTotalCount(0);
+			result.setSuccess(true);
+			result.setCode(100000);
+			result.setMsg("");
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");

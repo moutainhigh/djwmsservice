@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,6 +212,9 @@ public class AllocationController {
 	public Map<String, Object> addzhinengpeihuo(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
+			BaseAddBO param = new BaseAddBO();
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 //			GetIntelligentAllocaBO param = gson.fromJson(json, GetIntelligentAllocaBO.class);
 //			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 //			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -223,7 +227,7 @@ public class AllocationController {
 //			if (!ret.isSuccess()) {
 //				return MsgTemplate.failureMsg(ret);
 //			}
-			return allocationService.addzhinengpeihuo();
+			return allocationService.addzhinengpeihuo(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

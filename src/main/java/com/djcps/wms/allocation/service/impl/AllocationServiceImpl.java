@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 import com.djcps.wms.commons.constant.AppConstant;
@@ -23,6 +24,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
+import com.djcps.wms.allocation.model.AddExcellentAllocationBO;
 import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
@@ -289,15 +291,15 @@ public class AllocationServiceImpl implements AllocationService {
 		//状态和提醒校验必须都通过,这里暂时先只做订单状态校验
 		OtherHttpResult result = allocationServer.getOrderByAllocationId(param);
 		if(!ObjectUtils.isEmpty(result.getData())){
-			HttpResult number = allocationServer.getNumber(2);
-			if(!ObjectUtils.isEmpty(number.getData())){
-				JsonArray asJsonArray = jsonParser.parse(gson.toJson(number.getData())).getAsJsonObject().get("numbers").getAsJsonArray();
-				deliveryId = new StringBuffer().append(AppConstant.DELIVERYID_PREFIX).append(asJsonArray.get(0).getAsString()).toString();
-				waybillId = new StringBuffer().append(AppConstant.WAYBILLID_PREFIX).append(asJsonArray.get(1).getAsString()).toString();
-			}
+//			HttpResult number = allocationServer.getNumber(2);
+//			if(!ObjectUtils.isEmpty(number.getData())){
+//				JsonArray asJsonArray = jsonParser.parse(gson.toJson(number.getData())).getAsJsonObject().get("numbers").getAsJsonArray();
+//				deliveryId = new StringBuffer().append(AppConstant.DELIVERYID_PREFIX).append(asJsonArray.get(0).getAsString()).toString();
+//				waybillId = new StringBuffer().append(AppConstant.WAYBILLID_PREFIX).append(asJsonArray.get(1).getAsString()).toString();
+//			}
 			allocation.setDate(result.getData());
-			allocation.setDeliveryId(deliveryId);
-			allocation.setWaybillId(waybillId);
+//			allocation.setDeliveryId(deliveryId);
+//			allocation.setWaybillId(waybillId);
 			allocation.setCarInfo(new CarInfo());
 			
 			Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -341,7 +343,7 @@ public class AllocationServiceImpl implements AllocationService {
 		for(int i=0;i<orderIds.size();i++){
 			orderId.setStatus(AppConstant.ORDER_ALREADY_ALLOCATION);
 			orderId.setOrderId(orderIds.get(i));
-			//判断修改成功才能继续往下走
+			//判断修改成功才能继续往下走(这里需要批量修改)
 			HttpResult updateOrderResult = orderServer.updateOrderStatus(orderId);
 			System.out.println(updateOrderResult.getMsg());
 		}
@@ -383,10 +385,10 @@ public class AllocationServiceImpl implements AllocationService {
 		if(param.getFlag().equals("0")){
 			result = allocationServer.moveOrder(param);
 		}else if(param.getFlag().equals("1")){
-			//通知订单服务修改订单状态
+			//通知订单服务修改订单状态为已配货
 			OrderIdBO orderIdBO = new OrderIdBO();
 			orderIdBO.setOrderId(param.getOrderIds().get(0));
-			orderIdBO.setStatus(AppConstant.ORDER_ALREADY_ALLOCATION);
+			orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
 			HttpResult updateOrderStatus = orderServer.updateOrderStatus(orderIdBO);
 			if(updateOrderStatus.isSuccess()){
 				//移除订单修改订单状态为已配货
@@ -431,6 +433,7 @@ public class AllocationServiceImpl implements AllocationService {
 				list.add(orderId);
 			}
 			selectAreaByOrderId.setOrderIds(list);
+			//获取在库信息
 			List<WarehouseOrderDetailPO> stockInfo = orderService.getStockInfo(selectAreaByOrderId);
 			if(!ObjectUtils.isEmpty(stockInfo)){
 				for (WarehouseOrderDetailPO warehouseOrderDetailPO : stockInfo) {
@@ -452,7 +455,6 @@ public class AllocationServiceImpl implements AllocationService {
 				mapResult.put("data", null);
 				mapResult.put("total",0);
 			}
-			
 			return mapResult;
 		}else{
 			return MsgTemplate.successMsg();
@@ -661,12 +663,16 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 
 	@Override
-	public Map<String, Object> addzhinengpeihuo() {
+	public Map<String, Object> addzhinengpeihuo(BaseAddBO base) {
 		List<WarehouseOrderDetailPO> list = new ArrayList<>();
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<>();
 		//获取所有的在库信息id
-		HttpResult result = allocationServer.addzhinengpeihuo();
+		HttpResult result = null;
+		result = allocationServer.addzhinengpeihuo();
 		Object data = result.getData();
+		if(ObjectUtils.isEmpty(data)){
+			return MsgTemplate.successMsg("没有已入库的订单所有就没有插入的数据");
+		}
 		JsonArray asJsonArray = jsonParser.parse(gson.toJson(data)).getAsJsonArray();
 		List<String> orderIdsList =new  ArrayList<>();
 		for (JsonElement jsonElement : asJsonArray) {
@@ -675,10 +681,10 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		OrderIdsBO param = new OrderIdsBO();
 		param.setChildOrderIds(orderIdsList);
-		HttpResult orderByOrderIds = orderServer.getOrderByOrderIds(param);
-		JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(orderByOrderIds.getData())).getAsJsonArray();
+		result = orderServer.getOrderByOrderIds(param);
+		JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(result.getData())).getAsJsonArray();
 		String uuid = UUID.randomUUID().toString();
-		if(!ObjectUtils.isEmpty(orderByOrderIds.getData())){
+		if(!ObjectUtils.isEmpty(result.getData())){
 			for(int i=0;i<orderIdsJsonArray.size();i++){
 				String fdblflag = orderIdsJsonArray.get(i).getAsJsonObject().get("fdblflag").getAsString();
 				//订单筛选,去除订单中双写的订单,取值为0的数据
@@ -706,15 +712,28 @@ public class AllocationServiceImpl implements AllocationService {
 				fromJson.setSequence(String.valueOf(i+1));
 				list.add(fromJson);
 			}
-			//调存入配货订单表接口,存入数据
-			HttpResult otherResult = allocationServer.addDeliAllocOrder(list);
-			if(otherResult.isSuccess()){
-				return MsgTemplate.successMsg(uuid);
-			}else{
-				return MsgTemplate.customMsg(otherResult);
+			String deliveryId = null;
+			String waybillId = null;
+			//调取订单服务获取单号并组织成运单号,提货单号
+			HttpResult number = allocationServer.getNumber(2);
+			if(!ObjectUtils.isEmpty(number.getData())){
+				JsonArray numberJsonArray = jsonParser.parse(gson.toJson(number.getData())).getAsJsonObject().get("numbers").getAsJsonArray();
+				deliveryId = new StringBuffer().append(AppConstant.DELIVERYID_PREFIX).append(numberJsonArray.get(0).getAsString()).toString();
+				waybillId = new StringBuffer().append(AppConstant.WAYBILLID_PREFIX).append(numberJsonArray.get(1).getAsString()).toString();
 			}
-		}else{
-			return MsgTemplate.successMsg();
+			AddExcellentAllocationBO allocationBO = new AddExcellentAllocationBO();
+			allocationBO.setCarId("car001");
+			allocationBO.setAllocationId(uuid);
+			allocationBO.setDeliveryId(deliveryId);
+			allocationBO.setWaybillId(waybillId);
+			BeanUtils.copyProperties(base,allocationBO);
+			//存入智能配货表数据
+			result = allocationServer.addExcellentAllocation(allocationBO);
+			if(result.isSuccess()){
+				//调存入配货订单表接口,存入数据
+				result = allocationServer.addDeliAllocOrder(list);
+			}
 		}
+		return MsgTemplate.successMsg(result);
 	}
 }

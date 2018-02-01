@@ -245,6 +245,8 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			BaseListBO param = gson.fromJson(json, BaseListBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			return warehouseService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -267,6 +269,8 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			SelectWarehouseByIdBO param = gson.fromJson(json, SelectWarehouseByIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<SelectWarehouseByIdBO>()
@@ -297,6 +301,8 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			SelectWarehouseByAttributeBO param = gson.fromJson(json, SelectWarehouseByAttributeBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			return warehouseService.getWarehouseByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();

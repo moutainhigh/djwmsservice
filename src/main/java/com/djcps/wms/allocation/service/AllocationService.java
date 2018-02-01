@@ -16,6 +16,7 @@ import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 
@@ -214,6 +215,6 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
-	Map<String, Object> addzhinengpeihuo();
+	Map<String, Object> addzhinengpeihuo(BaseAddBO param);
 
 }

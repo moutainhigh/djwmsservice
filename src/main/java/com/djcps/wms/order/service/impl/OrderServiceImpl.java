@@ -66,8 +66,8 @@ public class OrderServiceImpl implements OrderService {
 		JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();  
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 		BeanUtils.copyProperties(param, selectAreaByOrderId);
-		List list = new ArrayList<OrderIdBO>();
-		List detailList = new ArrayList<WarehouseOrderDetailPO>();
+		List<OrderIdBO> list = new ArrayList<OrderIdBO>();
+		List<WarehouseOrderDetailPO> detailList = new ArrayList<WarehouseOrderDetailPO>();
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
 		for (JsonElement jsonElement : asJsonArray) {
 			String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
@@ -79,6 +79,7 @@ public class OrderServiceImpl implements OrderService {
 			//组织参数
 			getOrderDetail(fromJson,fromJson);
 			detailList.add(fromJson);
+			map.put(fromJson.getFchildorderid(), fromJson);
 		}
 		selectAreaByOrderId.setOrderIds(list);
 		//根据id获取在库信息
@@ -88,15 +89,18 @@ public class OrderServiceImpl implements OrderService {
 		}
 		//根据id存入到map中
 		for (WarehouseOrderDetailPO warehouseOrderDetailPO : resultList) {
-			map.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
-		}
-		for (JsonElement jsonElement : asJsonArray) {
-			String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
-			WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
-			if(warehouseOrderDetailPO!=null){
-				WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
+			WarehouseOrderDetailPO detatil = map.get(warehouseOrderDetailPO.getOrderId());
+			if(detatil!=null){
 				//组织参数
-				getOrderDetail(warehouseOrderDetailPO,fromJson);
+				getOrderDetail(detatil,detatil);
+				detatil.setAreaList(warehouseOrderDetailPO.getAreaList());
+				detatil.setOrderId(warehouseOrderDetailPO.getOrderId());
+				detatil.setFchildorderid(warehouseOrderDetailPO.getOrderId());
+				detatil.setAmountSaved(warehouseOrderDetailPO.getAmountSaved());
+				detatil.setAmount(warehouseOrderDetailPO.getAmount());
+				detatil.setFamount(warehouseOrderDetailPO.getFamount());
+				detatil.setWarehouseId(warehouseOrderDetailPO.getWarehouseId());
+				detatil.setWarehouseName(warehouseOrderDetailPO.getWarehouseName());
 			}
 		}
 		//因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
@@ -104,8 +108,8 @@ public class OrderServiceImpl implements OrderService {
 		resultMap.put("success", true);
 		resultMap.put("code", 100000);
 		resultMap.put("msg", "");
-		resultMap.put("total", resultList.size());
-		resultMap.put("data", resultList);
+		resultMap.put("total", detailList.size());
+		resultMap.put("data", detailList);
 		return resultMap;
 	}
 
