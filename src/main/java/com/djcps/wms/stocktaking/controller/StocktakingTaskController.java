@@ -47,7 +47,7 @@ public class StocktakingTaskController {
      * @return
      * @create  2018/1/25 9:10
      **/
-    @RequestMapping(name="优化新增全盘任务",value = "/addAllTask", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(name="新增全盘任务",value = "/addAllTask", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> addTaskByAll(@RequestBody(required = false) String json, HttpServletRequest request){
         try {
             PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -65,7 +65,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("新增全盘任务失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -95,7 +95,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("新增部分任务失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -171,7 +171,7 @@ public class StocktakingTaskController {
             return stocktakingTaskService.getNumber();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("获取新增盘点任务作业单号失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -272,7 +272,7 @@ public class StocktakingTaskController {
     }
         catch (Exception e){
         e.printStackTrace();
-        logger.error(e.getMessage());
+        logger.error("",e.getMessage());
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
      }
     }
@@ -363,7 +363,7 @@ public class StocktakingTaskController {
     }
         catch (Exception e){
         e.printStackTrace();
-        logger.error(e.getMessage());
+        logger.error("PDA获取盘点任务列表失败",e.getMessage());
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -393,7 +393,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("PDA获取盘点任务订单列表失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -423,7 +423,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("PDA获取盘点任务订单详情失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -483,7 +483,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error("PDA获取盘点订单各个状态数量失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -513,7 +513,7 @@ public class StocktakingTaskController {
     }
         catch (Exception e){
         e.printStackTrace();
-        logger.error(e.getMessage());
+        logger.error("PDA完成盘点更新状态失败",e.getMessage());
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
