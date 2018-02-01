@@ -4,6 +4,7 @@ import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
      * 盘点类型，1，2(全盘，部分盘点)
      * @author  wzy
      **/
+    @NotNull
     private Integer ftype;
 
     /**
