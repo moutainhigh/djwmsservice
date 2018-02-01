@@ -248,7 +248,7 @@ public class AllocationServiceImpl implements AllocationService {
 				WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
 				//已配货直接驳回
 				if(!AppConstant.ALL_ADD_STOCK.equals(fromJson.getFstatus())){
-					return MsgTemplate.failureMsg(SysMsgEnum.ORDER_ERROR_ALREADY_ALLOCATION);
+					return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
 				}
 			}
 		}
