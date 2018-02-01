@@ -43,57 +43,9 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
 
     Gson gson=new Gson();
 
-    /**
-     * 获取全盘仓库关联订单
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/10 9:55
-     **/
-    @Override
-    public Map<String, Object> getAllStocktakingInfo(AddStocktakingBO addStocktakingBO) {
-        long start = System.currentTimeMillis();
-        //获取库位关联订单信息
-        HttpResult result=stocktakingTaskServer.getAllStocktakingInfo(addStocktakingBO);
-        if(!result.isSuccess()){
-            HttpResult otherResult = new HttpResult();
-            BeanUtils.copyProperties(result, otherResult);
-            return MsgTemplate.customMsg(otherResult);
-        }
-        // data数据为空将值赋值为null,这里取到的是空数组
-        if(ObjectUtils.isEmpty(result.getData())){
-            return MsgTemplate.successMsg();
-        }
-        JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
-        //获取所有订单id
-        List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
-        for (JsonElement jsonElement : asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("orderId").getAsString();
-            orderidlist.add(orderId);
-        }
-        map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
-        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-
-        //筛选fdblflag为0的订单信息
-        JsonArray orderJsonArray0=new JsonArray();
-        for (JsonElement jsonElement : orderJsonArray){
-            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-            if(fdbflag==0){
-                orderJsonArray0.add(jsonElement);
-            }
-        }
-        //组装参数
-        List<StocktakingTaskBO> stocktakingTaskBOList=getStocktakingOrderDetail(asJsonArray,orderJsonArray0);
-        System.out.println("解析耗时：" + (System.currentTimeMillis() - start) + "ms");
-        return MsgTemplate.successMsg(stocktakingTaskBOList);
-    }
-
 
     /**
-     * 优化版新增全盘
+     * 新增全盘
      * @author  wzy
      * @param
      * @return
@@ -101,6 +53,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> addTaskByAll(AddTaskBO addTaskBO){
+        long start = System.currentTimeMillis();
         //Http获取库位关联订单信息
         HttpResult result=stocktakingTaskServer.increaseTask(addTaskBO);
         String warehouseId=addTaskBO.getPartnerId();
@@ -122,17 +75,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             orderidlist.add(locationOrderInfoBO.getOrderId());
         }
         map.put("childOrderIds",orderidlist);
-        //Http获取批量订单信息列表
-//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//        //筛选fdblflag为0的订单信息
-//        JsonArray orderJsonArray0=new JsonArray();
-//        for (JsonElement jsonElement : orderJsonArray){
-//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-//            if(fdbflag==0){
-//                orderJsonArray0.add(jsonElement);
-//            }
-//        }
         JsonArray orderJsonArray0=getInfoByChildIds(map);
         if (ObjectUtils.isEmpty(orderJsonArray0)){
             return MsgTemplate.successMsg();
@@ -143,61 +85,12 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
             forderInfoBOList.add(forderInfoBO);
         }
-
+        System.out.println("解析耗时：" + (System.currentTimeMillis() - start) + "ms");
         return MsgTemplate.successMsg(getPartStocktakingOrderDetail(forderInfoBOList,locationOrderInfoBOList));
     }
 
     /**
-     * 获取部分盘点关联订单
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/11 9:59
-     **/
-    @Override
-    public Map<String, Object> getPartStocktakingInfo(AddStocktakingBO addStocktakingBO) {
-        //获取库位关联订单信息
-        HttpResult result=stocktakingTaskServer.getPartStocktakingInfo(addStocktakingBO);
-        if(!result.isSuccess()){
-            HttpResult otherResult = new HttpResult();
-            BeanUtils.copyProperties(result, otherResult);
-            return MsgTemplate.customMsg(otherResult);
-        }
-        // data数据为空将值赋值为null,这里取到的是空数组
-        if(ObjectUtils.isEmpty(result.getData())){
-            return MsgTemplate.successMsg();
-        }
-        JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
-        //获取所有订单id
-        List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
-        for (JsonElement jsonElement : asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("orderId").getAsString();
-            orderidlist.add(orderId);
-        }
-        map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
-//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//        //筛选fdblflag为0的订单信息
-//        JsonArray orderJsonArray0=new JsonArray();
-//        for (JsonElement jsonElement : orderJsonArray){
-//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-//            if(fdbflag==0){
-//                orderJsonArray0.add(jsonElement);
-//            }
-//        }
-        JsonArray orderJsonArray0=getInfoByChildIds(map);
-        if (ObjectUtils.isEmpty(orderJsonArray0)){
-            return MsgTemplate.successMsg();
-        }
-        //组装参数
-        List<StocktakingTaskBO> stocktakingTaskBOList=getPartStocktakingOrderDetail(asJsonArray,orderJsonArray0);
-        return MsgTemplate.successMsg(stocktakingTaskBOList);
-    }
-
-    /**
-     * 优化版新增部分盘点
+     * 新增部分盘点
      * @author  wzy
      * @param
      * @return
@@ -227,7 +120,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         ListAddTaskByPartBO listAddTaskByPartBO1=new ListAddTaskByPartBO();
         listAddTaskByPartBO1.setTaskList(listAddTaskByPartBO);
         //Http获取所有订单库位信息
-        HttpResult result=stocktakingTaskServer.test(listAddTaskByPartBO1);
+        HttpResult result=stocktakingTaskServer.addTaskByPart(listAddTaskByPartBO1);
         if (ObjectUtils.isEmpty(result.getData())){
             return MsgTemplate.successMsg();
         }
@@ -252,19 +145,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         }
         map.put("childOrderIds",orderidlist);
         //Http获取批量订单信息列表
-        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        if(ObjectUtils.isEmpty(orderResult.getData())){
-            return MsgTemplate.successMsg();
-        }
-        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-        //筛选fdblflag为0的订单信息
-        JsonArray orderJsonArray0=new JsonArray();
-        for (JsonElement jsonElement : orderJsonArray){
-            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-            if(fdbflag==0){
-                orderJsonArray0.add(jsonElement);
-            }
-        }
+        JsonArray orderJsonArray0=getInfoByChildIds(map);
         //获取订单规格参数list
         List<ForderInfoBO> forderInfoBOList =new ArrayList<ForderInfoBO>();
         for (JsonElement jsonElement:orderJsonArray0){
@@ -346,131 +227,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 组装盘点订单
-     * @author  wzy
-     * @param asJsonArray 关联订单id信息的库位信息
-     * @param orderJsonArray0 筛选过后的订单详情列表
-     * @return
-     * @create  2018/1/11 12:58
-     **/
-    public List<StocktakingTaskBO> getStocktakingOrderDetail(JsonArray asJsonArray,JsonArray orderJsonArray0){
-        List<StocktakingTaskBO> stocktakingTaskBOList=new ArrayList<StocktakingTaskBO>();
-        //遍历库区库位
-        for (JsonElement warehouseElement: asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("orderId").getAsString();
-            //组装盘点任务仓库id
-            String warehouseId=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseId").getAsString();
-            String warehouseName=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseName").getAsString();
-
-            if(warehouseElement.getAsJsonObject().get("warehouseAreaInfo")!=null){
-                JsonArray warehouseAreaInfo=warehouseElement.getAsJsonObject().get("warehouseAreaInfo").getAsJsonArray();
-                String warehouseAreaId=null;
-                String warehouseAreaName=null;
-                for (JsonElement warehouseAreaElement:warehouseAreaInfo){
-                    //组装盘点任务库区id
-                    warehouseAreaId=new JsonParser().parse(gson.toJson(warehouseAreaElement)).getAsJsonObject().get("warehouseAreaId").getAsString();
-                    warehouseAreaName=new JsonParser().parse(gson.toJson(warehouseAreaElement)).getAsJsonObject().get("warehouseAreaName").getAsString();
-
-                    if(warehouseAreaElement.getAsJsonObject().get("locationList")!=null){
-                        JsonArray warehouseLocInfo=warehouseAreaElement.getAsJsonObject().get("locationList").getAsJsonArray();
-                        for(JsonElement warehouseLocElement:warehouseLocInfo){
-                            //组装盘点任务库位id
-                            String warehouseLocId=new JsonParser().parse(gson.toJson(warehouseLocElement)).getAsJsonObject().get("warehouseLocId").getAsString();
-                            String warehouseLocName=new JsonParser().parse(gson.toJson(warehouseLocElement)).getAsJsonObject().get("warehouseLocName").getAsString();
-                            Integer trueAmount=new JsonParser().parse(gson.toJson(warehouseLocElement)).getAsJsonObject().get("trueAmount").getAsInt();
-                            StocktakingTaskBO stocktakingTaskBO=new StocktakingTaskBO();
-                            stocktakingTaskBO.setWarehouseId(warehouseId);
-                            stocktakingTaskBO.setWarehouseName(warehouseName);
-                            stocktakingTaskBO.setWarehouseAreaId(warehouseAreaId);
-                            stocktakingTaskBO.setWarehouseAreaName(warehouseAreaName);
-                            stocktakingTaskBO.setWarehouseLocId(warehouseLocId);
-                            stocktakingTaskBO.setWarehouseLocName(warehouseLocName);
-                            //组装盘点任务订单详情
-                            for (JsonElement orderElement:orderJsonArray0){
-                                String fchildorderid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fchildorderid").getAsString();
-                                if (orderId.equals(fchildorderid)){
-                                    String fmaterialid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmateriafid").getAsString();
-                                    String fmaterialname=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmaterialname").getAsString();
-                                    WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
-                                    //订单参数拼接
-                                    orderDetailPO.setMaterialId(fmaterialid);
-                                    orderDetailPO.setFmaterialname(fmaterialname);
-                                    if(trueAmount!=null){
-                                        orderDetailPO.setInstockAmount(trueAmount);
-                                    }
-                                    getOrderDetail(orderDetailPO,orderDetailPO);
-                                    stocktakingTaskBO.setOrderDetail(orderDetailPO);
-                                    stocktakingTaskBOList.add(stocktakingTaskBO);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return stocktakingTaskBOList;
-    }
-
-    /**
-     * 组装部分部分盘点订单
-     * @author  wzy
-     * @param asJsonArray 关联订单id信息的库位信息
-     * @param orderJsonArray0 筛选过后的订单详情列表
-     * @return
-     * @create  2018/1/14 15:21
-     **/
-    public List<StocktakingTaskBO> getPartStocktakingOrderDetail(JsonArray asJsonArray,JsonArray orderJsonArray0){
-        List<StocktakingTaskBO> stocktakingTaskBOList=new ArrayList<StocktakingTaskBO>();
-        for (JsonElement warehouseElement: asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("orderId").getAsString();
-            //组装盘点任务仓库id
-            String warehouseId=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseId").getAsString();
-            String warehouseName=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseName").getAsString();
-            String warehouseAreaId=null;
-            String warehouseAreaName=null;
-            String warehouseLocId=null;
-            String warehouseLocName=null;
-            if(warehouseElement.getAsJsonObject().get("orderAreaAndLocDetailInfo")!=null){
-            JsonObject warehouseAreaInfo=warehouseElement.getAsJsonObject().get("orderAreaAndLocDetailInfo").getAsJsonObject();
-                //组装盘点任务库区id
-                warehouseAreaId=warehouseAreaInfo.get("warehouseAreaId").getAsString();
-                warehouseAreaName=warehouseAreaInfo.get("warehouseAreaName").getAsString();
-               //组装盘点任务库位id
-                warehouseLocId=warehouseAreaInfo.get("warehouseLocId").getAsString();
-                warehouseLocName=warehouseAreaInfo.get("warehouseLocName").getAsString();
-                Integer trueAmount=warehouseAreaInfo.get("trueAmount").getAsInt();
-                StocktakingTaskBO stocktakingTaskBO=new StocktakingTaskBO();
-                stocktakingTaskBO.setWarehouseId(warehouseId);
-                stocktakingTaskBO.setWarehouseName(warehouseName);
-                stocktakingTaskBO.setWarehouseAreaId(warehouseAreaId);
-                stocktakingTaskBO.setWarehouseAreaName(warehouseAreaName);
-                stocktakingTaskBO.setWarehouseLocId(warehouseLocId);
-                stocktakingTaskBO.setWarehouseLocName(warehouseLocName);
-                if(trueAmount!=null){
-                    stocktakingTaskBO.setTrueAmount(trueAmount);
-                }
-                //组装盘点任务订单详情
-                for (JsonElement orderElement:orderJsonArray0){
-                    String fchildorderid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fchildorderid").getAsString();
-                    if (orderId.equals(fchildorderid)){
-                        String fmaterialid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmateriafid").getAsString();
-                        String fmaterialname=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmaterialname").getAsString();
-                        WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
-                        //订单参数拼接
-                        orderDetailPO.setMaterialId(fmaterialid);
-                        orderDetailPO.setFmaterialname(fmaterialname);
-                        getOrderDetail(orderDetailPO,orderDetailPO);
-                        stocktakingTaskBO.setOrderDetail(orderDetailPO);
-                        stocktakingTaskBOList.add(stocktakingTaskBO);
-                    }
-                }
-            }
-        }
-        return stocktakingTaskBOList;
-    }
-
-    /**
-     * 优化版组装订单
+     * 组装订单
      * @author  wzy
      * @param
      * @return
@@ -562,7 +319,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 不带f的订单详细信息
+     * 不带f的订单详细信息参数拼接
      * @author  wzy
      * @param
      * @return
@@ -756,7 +513,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * PDA发起盘盈
+     * PDA发起盘盈，未使用
      * @author  wzy
      * @param
      * @return
@@ -1066,8 +823,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         if(ObjectUtils.isEmpty(orderResult.getData())){
             return MsgTemplate.successMsg();
         }
-        //Map<String, Object> resultMap=gson.fromJson(orderResult,Map.class)
-
         //因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
         InnerDate innerDate=new InnerDate();
         innerDate.setTotal(orderResult.getData().getTotal());
@@ -1085,7 +840,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     @Override
     public Map<String, Object> searchTaskList(GetStocktakingTaskBO getStocktakingTaskBO) {
         OrderResult orderResult=stocktakingTaskServer.searchTaskList(getStocktakingTaskBO);
-
         InnerDate innerDate=new InnerDate();
         innerDate.setTotal(orderResult.getData().getTotal());
         innerDate.setResult(orderResult.getData().getResult());
@@ -1143,6 +897,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             pdaorderlist.add(pdaStocktakingOrderBO);
         }
         List<PdaStocktakingOrderBO> pdaorderlist2=new ArrayList<PdaStocktakingOrderBO>();
+        //排序
         for(PdaStocktakingOrderBO pdaStocktakingOrderBO:pdaorderlist){
             if(pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.STATUS_1)){
                 pdaorderlist2.add(pdaStocktakingOrderBO);
@@ -1215,20 +970,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //获取所有订单列表
         orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());
         map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
-//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-//        if (ObjectUtils.isEmpty(orderResult.getData())){
-//            return MsgTemplate.successMsg();
-//        }
-//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//        //筛选fdblflag为0的订单信息
-//        JsonArray orderJsonArray0=new JsonArray();
-//        for (JsonElement jsonElement : orderJsonArray){
-//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-//            if(fdbflag==0){
-//                orderJsonArray0.add(jsonElement);
-//            }
-//        }
         JsonArray orderJsonArray0=getInfoByChildIds(map);
         for (JsonElement jsonElement : orderJsonArray0){
             ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
@@ -1507,7 +1248,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 批量从订单服务获取订单详情
+     * 批量从订单服务获取订单详情并筛选flag为0的
      * @author  wzy
      * @param
      * @return

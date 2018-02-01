@@ -448,7 +448,7 @@ public class StocktakingTaskServer {
      * @return
      * @create  2018/1/24 14:58
      **/
-    public HttpResult test(ListAddTaskByPartBO listAddTaskByPartBO){
+    public HttpResult addTaskByPart(ListAddTaskByPartBO listAddTaskByPartBO){
         String json = gson.toJson(listAddTaskByPartBO);
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);

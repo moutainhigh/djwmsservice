@@ -15,24 +15,6 @@ import java.util.Map;
 public interface StocktakingTaskService {
 
     /**
-     * 获取全盘仓库关联订单
-     * @author  wzy
-     * @param addStocktakingBO
-     * @return
-     * @create  2018/1/10 9:53
-     **/
-    Map<String,Object> getAllStocktakingInfo(AddStocktakingBO addStocktakingBO);
-
-    /**
-     * 获取部分盘点仓库关联订单
-     * @author  wzy
-     * @param addStocktakingBO
-     * @return
-     * @create  2018/1/11 9:57
-     **/
-    Map<String,Object> getPartStocktakingInfo(AddStocktakingBO addStocktakingBO);
-
-    /**
      * 优化版新增部分盘点
      * @author  wzy
      * @param addStocktakingBO
