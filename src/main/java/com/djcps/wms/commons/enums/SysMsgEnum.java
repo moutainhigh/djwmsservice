@@ -74,7 +74,16 @@ public enum SysMsgEnum implements MsgInterface {
     /**
      * 订单号错误
      */
-    ORDER_WRONG(880014, "订单号错误")
+    ORDER_WRONG(880014, "订单号错误"),
+    
+    /**
+	 * 订单有误请重新配货
+	 */
+	ORDER_ERROR_ALREADY_ALLOCATION(880015, "订单有误请重新配货"),
+	
+	ORDER_IS_NULL(880016, "查无此订单"),
+	
+	REDUNDANT_FAIL(880017, "冗余订单插入失败");
     ;
 
 

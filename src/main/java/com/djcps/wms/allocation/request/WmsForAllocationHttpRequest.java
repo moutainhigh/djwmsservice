@@ -61,8 +61,8 @@ public interface WmsForAllocationHttpRequest {
 	 * @date:2018年1月22日
 	 */
 	@Headers("content-type:application/json")
-	@POST("allocation/getOrderIdByWarsehouseId.do")
-	public HTTPResponse getOrderIdByWarsehouseId(@Body RequestBody rb);
+	@POST("allocation/getOrderIdByOrderType.do")
+	public HTTPResponse getOrderIdByOrderType(@Body RequestBody rb);
 	
 	/**
 	 * 根据订单号获取订单详情
@@ -74,28 +74,6 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/getOrderInfoByOrderId.do")
 	public HTTPResponse getOrderInfoByOrderId(@Body RequestBody rb);
-
-	/**
-	 * 根据提货单号获取运单信息
-	 * @param rb
-	 * @return
-	 * @author:zdx
-	 * @date:2018年1月22日
-	 */
-	@Headers("content-type:application/json")
-	@POST("allocation/getOrderInfoByOrderId.do")
-	public HTTPResponse getWaybillByDeliveryId(@Body RequestBody rb);
-
-	/**
-	 * 根据提货单号,effect等于2,查询提货单和关联的订单信息
-	 * @param rb
-	 * @return
-	 * @author:zdx
-	 * @date:2018年1月22日
-	 */
-	@Headers("content-type:application/json")
-	@POST("allocation/getIntelligentAllocaList.do")
-	public HTTPResponse getIntelligentAllocaList(@Body RequestBody rb);
 
 	/**
 	 * 智能配货接口
@@ -217,15 +195,160 @@ public interface WmsForAllocationHttpRequest {
 	@POST("allocation/getAllUserCarInfo.do")
 	public HTTPResponse getAllUserCarInfo();
 
+
 	/**
-	 * 根据运单号获取提货单详情
+	 * 根据提货单号获取订单信息
 	 * @param rb
 	 * @return
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
 	@Headers("content-type:application/json")
-	@POST("delivery/getDeliveryByWaybillId.do")
-	public HTTPResponse getDeliveryByWaybillId(@Body RequestBody rb);
+	@POST("allocation/getOrderByDeliveryId.do")
+	public HTTPResponse getOrderByDeliveryId(@Body RequestBody rb);
 
+	/**
+	 * 根据查询字段模糊查询获取订单号
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getRedundantAttribute.do")
+	public HTTPResponse getRedundantAttribute(@Body RequestBody rb);
+
+	/**
+	 * 根据订单号获取提货单信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("delivery/getDeliveryByOrderIds.do")
+	public HTTPResponse getDeliveryByOrderIds(@Body RequestBody rb);
+
+	/**
+	 * 根据提货单号获取运单信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getWaybillByDeliveryIds.do")
+	public HTTPResponse getWaybillByDeliveryIds(@Body RequestBody rb);
+
+
+	/**
+	 * 根据运单号获取提货单信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("delivery/getDeliveryByWaybillIds.do")
+	public HTTPResponse getDeliveryByWaybillIds(@Body RequestBody rb);
+
+	/**
+	 * 配货管理,模糊查询
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getAlloManageFuzzyQuery.do")
+	public HTTPResponse getAlloManageFuzzyQuery(@Body RequestBody rb);
+
+	
+	/**
+	 * 配货管理,直接查询
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getAlloManageQuery.do")
+	public HTTPResponse getAlloManageQuery(@Body RequestBody rb);
+
+	/**
+	 * 获取配货的配货订单类型
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getAllocationOrderTypes.do")
+	public HTTPResponse getAllocationOrderTypes(@Body RequestBody rb);
+
+	/**
+	 * 追加订单列表
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getAddOrderList.do")
+	public HTTPResponse getAddOrderList(@Body RequestBody rb);
+
+	/**
+	 * 智能配货
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/addzhinengpeihuo.do")
+	public HTTPResponse addzhinengpeihuo(@Body RequestBody rb);
+
+	/**
+	 * 批量插入配货订单表数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/addDeliAllocOrder.do")
+	public HTTPResponse addDeliAllocOrder(@Body RequestBody rb);
+
+	/**
+	 * 根据配货id获取配货订单信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getOrderByAllocationId.do")
+	public HTTPResponse getOrderByAllocationId(@Body RequestBody rb);
+
+	/**
+	 * 批量插入冗余订单数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/batchAddOrderRedundant.do")
+	public HTTPResponse batchAddOrderRedundant(@Body RequestBody rb);
+
+	/**
+	 * 批量修改冗余订单数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/batchUpdateOrderRedun.do")
+	public HTTPResponse batchUpdateOrderRedun(@Body RequestBody rb);
 }

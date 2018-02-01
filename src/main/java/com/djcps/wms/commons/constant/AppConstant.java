@@ -65,7 +65,7 @@ public class AppConstant {
     /**
      * 团购服务获取订单,double双写值
      */
-    public static final String GROUP_ORDER_DOUBLE ="0";
+    public static final String GROUP_ORDER_DOUBLE ="0.0";
     
     /**
      * 提货单确认状态,1确认
@@ -96,5 +96,48 @@ public class AppConstant {
      * 提货任务状态 0:未完成
      */
     public static final String DELIVERY_ORDER_UNSUCCESS ="0";
+    
+    /**
+     * 纸板仓库
+     */
+    public static final String PAPERBOARD_WAREHOUSE ="1";
+    /**
+     * 纸箱仓库
+     */
+    public static final String CARTON_WAREHOUSE ="2";
+    /**
+     * 积分商城仓库
+     */
+    public static final String INTEGRATED_STORE_WAREHOUSE ="3";
+    /**
+     * 物料仓库
+     */
+    public static final String SUPPLIES_WAREHOUSE ="4";
+    /**
+     * 退货仓库
+     */
+    public static final String SALES_RETURN_WAREHOUSE ="5";
+    
+    /**
+     * 平台纸板订单
+     */
+    public static final String PLATFORM_PAPERBOARD_ORDER ="1";
+    /**
+     * 线下纸板订单
+     */
+    public static final String OFFLINE_PAPERBOARD_ORDER ="2";
+    /**
+     * 纸箱订单
+     */
+    public static final String CARTON_ORDER ="3";
+    
+    /**
+     * 运单前缀
+     */
+    public static final String WAYBILLID_PREFIX ="YD";
+    /**
+     * 提货单前缀
+     */
+    public static final String DELIVERYID_PREFIX ="TH";
     
 }

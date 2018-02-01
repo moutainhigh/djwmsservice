@@ -17,6 +17,7 @@ import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.OrderParamBO;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
+import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;

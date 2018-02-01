@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -23,25 +24,70 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	/**
 	 * 提货单号
 	 */
-	@NotEmpty
-	private List<String> deliveryIds;
-	@NotEmpty
-	private List<SequenceBO> sequence;
-	public List<String> getDeliveryIds() {
-		return deliveryIds;
+	@NotBlank
+	private String deliveryId;
+	
+	/**
+	 * 提货单确认状态
+	 */
+	private String deliveryIdEffect;
+
+	/**
+	 * 订单号
+	 */
+	@NotBlank
+	private String orderId;
+	
+	/**
+	 * 装车顺序
+	 */
+	@NotBlank
+	private String sequence;
+
+	public String getDeliveryId() {
+		return deliveryId;
 	}
-	public void setDeliveryIds(List<String> deliveryIds) {
-		this.deliveryIds = deliveryIds;
+
+
+	public void setDeliveryId(String deliveryId) {
+		this.deliveryId = deliveryId;
 	}
-	public List<SequenceBO> getSequence() {
+
+
+	public String getDeliveryIdEffect() {
+		return deliveryIdEffect;
+	}
+
+
+	public void setDeliveryIdEffect(String deliveryIdEffect) {
+		this.deliveryIdEffect = deliveryIdEffect;
+	}
+
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+
+	public String getSequence() {
 		return sequence;
 	}
-	public void setSequence(List<SequenceBO> sequence) {
+
+
+	public void setSequence(String sequence) {
 		this.sequence = sequence;
 	}
+
+
 	@Override
 	public String toString() {
-		return "AgainVerifyAllocationBO [deliveryIds=" + deliveryIds + ", sequence=" + sequence + "]";
+		return "AgainVerifyAllocationBO [deliveryId=" + deliveryId + ", deliveryIdEffect=" + deliveryIdEffect
+				+ ", orderId=" + orderId + ", sequence=" + sequence + "]";
 	}
-	
+
 }

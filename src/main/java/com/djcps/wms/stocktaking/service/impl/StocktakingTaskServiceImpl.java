@@ -727,7 +727,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                     WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
                     //订单参数拼接
                     getOrderDetail(orderDetailPO,orderDetailPO);
-                    orderDetailPO.setUnits("片");
+                    orderDetailPO.setUnit("片");
                     stocktakingTaskBO.setOrderDetail(orderDetailPO);
             }
             return MsgTemplate.successMsg(stocktakingTaskBO);
