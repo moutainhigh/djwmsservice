@@ -1,8 +1,10 @@
 package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseAddBO;
 
@@ -21,12 +23,6 @@ public class ChangeCarInfoBO extends BaseAddBO implements Serializable{
 	 */
 	@NotBlank
 	private String allocationId;
-	
-	/**
-	 * 提货单号
-	 */
-	@NotBlank
-	private String deliveryId;
 	
 	/**
 	 * 车辆id
@@ -52,14 +48,6 @@ public class ChangeCarInfoBO extends BaseAddBO implements Serializable{
 
 	public void setAllocationId(String allocationId) {
 		this.allocationId = allocationId;
-	}
-
-	public String getDeliveryId() {
-		return deliveryId;
-	}
-
-	public void setDeliveryId(String deliveryId) {
-		this.deliveryId = deliveryId;
 	}
 
 	public String getCarId() {
@@ -88,8 +76,8 @@ public class ChangeCarInfoBO extends BaseAddBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "ChangeCarInfoBO [allocationId=" + allocationId + ", deliveryId=" + deliveryId + ", carId=" + carId
-				+ ", plateNumber=" + plateNumber + ", waybillId=" + waybillId + "]";
+		return "ChangeCarInfoBO [allocationId=" + allocationId + ", carId=" + carId + ", plateNumber=" + plateNumber
+				+ ", waybillId=" + waybillId + "]";
 	}
 	
 }
