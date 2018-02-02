@@ -43,4 +43,14 @@ public interface OrderService {
 	 * @date:2018年1月2日
 	 */
 	List<WarehouseOrderDetailPO> getStockInfo(SelectAreaByOrderIdBO param);
+	
+	/**
+	 * 参数拼接
+	 * @param source
+	 * @param target
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月8日
+	 */
+	WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target);
 }

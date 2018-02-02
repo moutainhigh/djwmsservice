@@ -1,5 +1,7 @@
 package com.djcps.wms.order.server;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,11 @@ import org.springframework.stereotype.Component;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OrderHttpResult;
 import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.OrderParamBO;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
+import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -61,6 +65,17 @@ public class OrderServer {
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = orderHttpRequest.getOrderByOrderId(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
+	
+	public HttpResult getOrderByOrderIds(OrderIdsBO param){
+        //将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        System.out.println("---http请求参数转化为json格式---:"+json);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = updateOrderHttpRequest.getOrderByOrderIds(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
     }

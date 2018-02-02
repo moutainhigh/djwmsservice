@@ -28,7 +28,7 @@ public interface WmsForLocationHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseLoc/save.do")
-	public HTTPResponse addLocation(@Body RequestBody rb);
+	HTTPResponse addLocation(@Body RequestBody rb);
 	
 	/**
 	 * 修改库位
@@ -39,7 +39,7 @@ public interface WmsForLocationHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseLoc/modify.do")
-	public HTTPResponse modifyLocation(@Body RequestBody rb);
+	HTTPResponse modifyLocation(@Body RequestBody rb);
 	
 	/**
 	 * 删除库位
@@ -50,7 +50,7 @@ public interface WmsForLocationHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseLoc/delete.do")
-	public HTTPResponse deleteLocation(@Body RequestBody rb);
+	HTTPResponse deleteLocation(@Body RequestBody rb);
 	
 	/**
 	 * 获取所有库位
@@ -61,7 +61,7 @@ public interface WmsForLocationHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseLoc/list.do")
-	public HTTPResponse getLocationAllList(@Body RequestBody rb);
+	HTTPResponse getLocationAllList(@Body RequestBody rb);
 	
 	/**
 	 * 根据库位属性模糊查询
@@ -72,7 +72,7 @@ public interface WmsForLocationHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouseLoc/search.do")
-	public HTTPResponse getLocationByAttribute(@Body RequestBody rb);
+	HTTPResponse getLocationByAttribute(@Body RequestBody rb);
 
 	/**
 	 * 获取库位编码
@@ -83,7 +83,7 @@ public interface WmsForLocationHttpRequest {
 	 **/
 	@Headers("content-type:application/json")
 	@POST("code/getCode.do")
-	public HTTPResponse getLocationCode(@Body RequestBody rb);
+	HTTPResponse getLocationCode(@Body RequestBody rb);
 	
 	/**
 	 * 编码确认
@@ -94,7 +94,7 @@ public interface WmsForLocationHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("code/verifyCode.do")
-	public HTTPResponse verifyCode(@Body RequestBody rb);
+	HTTPResponse verifyCode(@Body RequestBody rb);
 	
 	/**
 	 * 删除编码
@@ -105,6 +105,6 @@ public interface WmsForLocationHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("code/delCode.do")
-	public HTTPResponse deleteCode(@Body RequestBody rb);
+	HTTPResponse deleteCode(@Body RequestBody rb);
 	
 }

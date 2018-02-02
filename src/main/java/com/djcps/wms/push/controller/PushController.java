@@ -5,19 +5,15 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
-import com.djcps.wms.commons.aop.inneruser.annotation.InnerUserToken;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.push.model.PushAppBO;
 import com.djcps.wms.push.model.PushMsgBO;
 import com.djcps.wms.push.service.PushService;
-import com.djcps.wms.stocktaking.model.AddStocktakingBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,7 +46,7 @@ public class PushController {
      * @return
      */
     @RequestMapping(name="设备注册",value = "/register", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> register(@RequestBody(required = false) String json, @InnerUser UserInfoVo innerUser){
+    public Map<String, Object> register(@RequestBody(required = false) String json, @InnerUser UserInfoVO innerUser){
         try {
             PushAppBO param= gson.fromJson(json,PushAppBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -80,7 +76,7 @@ public class PushController {
      * @return
      */
     @RequestMapping(name="设备注销",value = "/logout", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> logout(@RequestBody(required = false) String json, @InnerUser UserInfoVo innerUser){
+    public Map<String, Object> logout(@RequestBody(required = false) String json, @InnerUser UserInfoVO innerUser){
         try {
             PushAppBO param= gson.fromJson(json,PushAppBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()

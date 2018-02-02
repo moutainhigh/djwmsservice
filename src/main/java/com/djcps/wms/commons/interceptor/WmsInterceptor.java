@@ -7,7 +7,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -92,7 +92,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 			responseMsg(SysMsgEnum.NOT_LOGIN, response,appLogin);
 			return false;
 		}
-		UserInfoVo userInfo = innerUserService.getInnerUserInfoFromRedis(token);
+		UserInfoVO userInfo = innerUserService.getInnerUserInfoFromRedis(token);
 		if(userInfo!=null){
 			//toke是否过期,过期重新设置过期时间
 			if(userRedisClient.ttl(token)>=0){

@@ -65,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 		JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();  
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+		BeanUtils.copyProperties(param, selectAreaByOrderId);
 		List list = new ArrayList<OrderIdBO>();
 		List detailList = new ArrayList<WarehouseOrderDetailPO>();
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
@@ -74,9 +75,9 @@ public class OrderServiceImpl implements OrderService {
 			orderIdBO.setOrderId(orderId);
 			list.add(orderIdBO);
 			WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
+			fromJson.setAmountSaved(0);
 			//组织参数
 			getOrderDetail(fromJson,fromJson);
-			fromJson.setAmountSaved(0);
 			detailList.add(fromJson);
 		}
 		selectAreaByOrderId.setOrderIds(list);
@@ -103,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
 		resultMap.put("success", true);
 		resultMap.put("code", 100000);
 		resultMap.put("msg", "");
-		resultMap.put("total", result.getTotalCount());
+		resultMap.put("total", resultList.size());
 		resultMap.put("data", resultList);
 		return resultMap;
 	}
@@ -114,6 +115,7 @@ public class OrderServiceImpl implements OrderService {
 		if(result.isSuccess()){
 			WarehouseOrderDetailPO paperOrder = new WarehouseOrderDetailPO();
 			SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+			BeanUtils.copyProperties(param, selectAreaByOrderId);
 			List list = new ArrayList<OrderIdBO>();
 			OrderIdBO orderIdBO = new OrderIdBO();
 			orderIdBO.setOrderId(new JsonParser().parse(gson.toJson(result.getData())).getAsJsonObject().get("fchildorderid").getAsString());
@@ -192,7 +194,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @author:zdx
 	 * @date:2018年1月8日
 	 */
-	private WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target){
+	public WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target){
 		//规格长宽高都不为null,才进行拼接
 		if(!ObjectUtils.isEmpty(target.getFboxlength()) && !ObjectUtils.isEmpty(target.getFboxwidth()) &&
 				!ObjectUtils.isEmpty(target.getFboxheight())){
@@ -200,8 +202,15 @@ public class OrderServiceImpl implements OrderService {
 			source.setFproductRule(new StringBuffer().append(target.getFboxlength()).append("*")
 					.append(target.getFboxwidth()).append("*").append(target.getFboxheight()).toString());
 		}
-		source.setFmaterialRule(new StringBuffer().append(target.getFmateriallength()).append("*")
-				.append(target.getFmaterialwidth()).toString());
+		if(!ObjectUtils.isEmpty(target.getFmateriallength()) && !ObjectUtils.isEmpty(target.getFmaterialwidth())){
+			source.setFmaterialRule(new StringBuffer().append(target.getFmateriallength()).append("*")
+					.append(target.getFmaterialwidth()).toString());
+		}
+		source.setFboxheight(target.getFboxheight());
+		source.setFboxlength(target.getFboxlength());
+		source.setFboxwidth(target.getFboxwidth());
+		source.setFmateriallength(target.getFmateriallength());
+		source.setFmaterialname(source.getFmaterialname());
 		source.setFordertime(target.getFordertime());
 		source.setFdelivery(target.getFdelivery());
 		source.setFgroupgoodname(target.getFgroupgoodname());

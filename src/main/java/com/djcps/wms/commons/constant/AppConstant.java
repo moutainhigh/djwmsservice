@@ -33,30 +33,111 @@ public class AppConstant {
      * 盘点任务编号前缀
      */
     public static final String TS="TS";
-    
-    /**
-     * 仓库编码类型
-     */
-    public static final String WAREHOUSE_CODE="1";
-    
-    /**
-     * 库区编码类型
-     */
-    public static final String WAREHOUSE_AREA_CODE ="2";
-    
-    /**
-     * 库位编码类型
-     */
-    public static final String WAREHOUSE_AREA_LOCA_CODE ="3";
 
     /**
      * 部分入库
      */
     public static final String LESS_ADD_STOCK ="21";
-    
+
     /**
      * 已入库
      */
     public static final String ALL_ADD_STOCK ="22";
+    /**
+     * 已配货
+     */
+    public static final String ORDER_ALREADY_ALLOCATION ="23";
+    
+    /**
+     * 已提货
+     */
+    public static final String ORDER_ALREADY_DELIVERY ="24";
+    
+    /**
+     * 已入库
+     */
+    public static final String ORDER_ALREADY_LOADING ="25";
+    /**
+     * 已发车
+     */
+    public static final String ORDER_ALREADY_GOTO ="26";
+    
+    /**
+     * 团购服务获取订单,double双写值
+     */
+    public static final String GROUP_ORDER_DOUBLE ="0.0";
+    
+    /**
+     * 提货单确认状态,1确认
+     */
+    public static final String DELIVERY_EFFEFT ="1";
+    
+    /**
+     * 提货单确认状态,2未确认
+     */
+    public static final String DELIVERY_UNEFFEFT ="2";
+    
+    /**
+     * 配货单确认状态,1确认
+     */
+    public static final String ALLOCATION_EFFECT ="1";
+    
+    /**
+     * 配货单确认状态,2未确认
+     */
+    public static final String ALLOCATION_UNEFFECT ="2";
+    
+    /**
+     * 提货任务状态 1:提货完成
+     */
+    public static final String DELIVERY_ORDER_SUCCESS ="1";
+    
+    /**
+     * 提货任务状态 0:未完成
+     */
+    public static final String DELIVERY_ORDER_UNSUCCESS ="0";
+    
+    /**
+     * 纸板仓库
+     */
+    public static final String PAPERBOARD_WAREHOUSE ="1";
+    /**
+     * 纸箱仓库
+     */
+    public static final String CARTON_WAREHOUSE ="2";
+    /**
+     * 积分商城仓库
+     */
+    public static final String INTEGRATED_STORE_WAREHOUSE ="3";
+    /**
+     * 物料仓库
+     */
+    public static final String SUPPLIES_WAREHOUSE ="4";
+    /**
+     * 退货仓库
+     */
+    public static final String SALES_RETURN_WAREHOUSE ="5";
+    
+    /**
+     * 平台纸板订单
+     */
+    public static final String PLATFORM_PAPERBOARD_ORDER ="1";
+    /**
+     * 线下纸板订单
+     */
+    public static final String OFFLINE_PAPERBOARD_ORDER ="2";
+    /**
+     * 纸箱订单
+     */
+    public static final String CARTON_ORDER ="3";
+    
+    /**
+     * 运单前缀
+     */
+    public static final String WAYBILLID_PREFIX ="YD";
+    /**
+     * 提货单前缀
+     */
+    public static final String DELIVERYID_PREFIX ="TH";
     
 }

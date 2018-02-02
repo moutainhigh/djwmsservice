@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.order.model.OrderIdBO;
 
 /**
  * 根据订单id获取库位
@@ -13,7 +15,7 @@ import com.djcps.wms.commons.base.BaseBO;
  * @author:zdx
  * @date:2017年12月20日
  */
-public class SelectAreaByOrderIdBO extends BaseBO implements Serializable{
+public class SelectAreaByOrderIdBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 4690212141709269272L;
 	
@@ -21,15 +23,17 @@ public class SelectAreaByOrderIdBO extends BaseBO implements Serializable{
 	 * 订单id
 	 */
 	@NotNull
-	private List orderIds;
+	private List<OrderIdBO> orderIds;
 
-	public List getOrderIds() {
+
+	public List<OrderIdBO> getOrderIds() {
 		return orderIds;
 	}
 
-	public void setOrderIds(List orderIds) {
+	public void setOrderIds(List<OrderIdBO> orderIds) {
 		this.orderIds = orderIds;
 	}
+
 
 	@Override
 	public String toString() {

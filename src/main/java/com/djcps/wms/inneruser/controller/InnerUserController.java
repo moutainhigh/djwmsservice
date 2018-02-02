@@ -11,9 +11,9 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.enums.InnerUserMsgEnum;
 import com.djcps.wms.inneruser.model.param.*;
-import com.djcps.wms.inneruser.model.result.UserExchangeTokenVo;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
-import com.djcps.wms.inneruser.model.result.UserLogoutVo;
+import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
+import com.djcps.wms.inneruser.model.result.UserLogoutVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -124,8 +124,8 @@ public class InnerUserController {
     @RequestMapping(name = "该接口用于获取用户信息",value = "/info",method = {RequestMethod.GET,RequestMethod.POST})
     @AddLog(module = "内部用户",value = "该接口用于获取用户信息")
     public Map<String, Object> getInfo(@InnerUserToken String token) {
-        UserInfoVo userInfoVo = innerUserService.getInnerUserInfoFromRedis(token);
-        return MsgTemplate.successMsg(userInfoVo);
+        UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(token);
+        return MsgTemplate.successMsg(userInfoVO);
     }
 
     /**
@@ -197,11 +197,11 @@ public class InnerUserController {
             if (StringUtils.isNotBlank(userTokenBO.getToken())) {
                 String token  = innerUserService.exchangeToken(userTokenBO.getToken());
                 if(StringUtils.isNotBlank(token)){
-                    UserExchangeTokenVo userExchangeTokenVo = new UserExchangeTokenVo(token);
-                    if(StringUtils.isNotBlank(userExchangeTokenVo.getToken())){
-                        if(innerUserService.setUserCookie(userExchangeTokenVo.getToken(),response)){
-                            UserInfoVo userInfoVo = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVo.getToken());
-                            return MsgTemplate.successMsg(userInfoVo);
+                    UserExchangeTokenVO userExchangeTokenVO = new UserExchangeTokenVO(token);
+                    if(StringUtils.isNotBlank(userExchangeTokenVO.getToken())){
+                        if(innerUserService.setUserCookie(userExchangeTokenVO.getToken(),response)){
+                            UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVO.getToken());
+                            return MsgTemplate.successMsg(userInfoVO);
                         }
                     }
                 }
@@ -225,8 +225,8 @@ public class InnerUserController {
         //无论是否成功退出内部统一登录系统，本系统内直接可以退出
         if(isSuccess) {
             CookiesUtil.setCookie(response,ParamsConfig.INNER_USER_COOKIE_NAME,"",0);
-            UserLogoutVo userLogoutVo = new UserLogoutVo(ParamsConfig.INNER_USER_LOGIN_URL);
-            return MsgTemplate.successMsg(userLogoutVo);
+            UserLogoutVO userLogoutVO = new UserLogoutVO(ParamsConfig.INNER_USER_LOGIN_URL);
+            return MsgTemplate.successMsg(userLogoutVO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }

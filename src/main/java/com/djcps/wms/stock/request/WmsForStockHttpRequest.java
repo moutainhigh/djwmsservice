@@ -27,7 +27,7 @@ public interface WmsForStockHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("entry/recommendWarehouseArea.do")
-	public HTTPResponse getRecommendLoca(@Body RequestBody rb);
+	HTTPResponse getRecommendLoca(@Body RequestBody rb);
 
 	/**
 	 * 获取操作记录
@@ -38,7 +38,7 @@ public interface WmsForStockHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("entry/operationRecordList.do")
-	public HTTPResponse getOperationRecord(@Body RequestBody rb);
+	HTTPResponse getOperationRecord(@Body RequestBody rb);
 
 	/**
 	 * 入库
@@ -49,7 +49,7 @@ public interface WmsForStockHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("entry/entryWarehouse.do")
-	public HTTPResponse addStock(@Body RequestBody rb);
+	HTTPResponse addStock(@Body RequestBody rb);
 
 	/**
 	 * 移库
@@ -60,7 +60,7 @@ public interface WmsForStockHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("entry/removeWarehouse.do")
-	public HTTPResponse moveStock(@Body RequestBody rb);
+	HTTPResponse moveStock(@Body RequestBody rb);
 
 	/**
 	 * 获取已入库的订单数量
@@ -71,7 +71,7 @@ public interface WmsForStockHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("entry/getOrderAmountSaved.do")
-	public HTTPResponse getSavedStockAmount(@Body RequestBody rb);
+	HTTPResponse getSavedStockAmount(@Body RequestBody rb);
 
 	/**
 	 * 根据订单获取库位信息
@@ -82,5 +82,5 @@ public interface WmsForStockHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("entry/orderWarehouseLocInfo.do")
-	public HTTPResponse getAreaByOrderId(@Body RequestBody rb);
+	HTTPResponse getAreaByOrderId(@Body RequestBody rb);
 }

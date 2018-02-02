@@ -2,6 +2,8 @@ package com.djcps.wms.commons.base;
 
 import java.io.Serializable;
 
+import com.djcps.wms.commons.constant.AppConstant;
+
 /**
  * 该类为 基础版本号 参数类
  * @author ztw
@@ -17,6 +19,10 @@ public class BaseBO implements Serializable{
      */
     private String version;
 
+    public BaseBO(){
+    	this.version = AppConstant.DEFAULT_VERSION;
+    }
+    
     public String getVersion() {
         return version;
     }

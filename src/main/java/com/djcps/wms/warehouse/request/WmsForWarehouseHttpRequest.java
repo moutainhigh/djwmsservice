@@ -27,7 +27,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/save.do")
-	public HTTPResponse add(@Body RequestBody json);
+	HTTPResponse add(@Body RequestBody json);
 	
 	/**
 	 * 仓库管理修改http请求接口
@@ -38,7 +38,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
     @POST("warehouse/modify.do")
-	public HTTPResponse modify(@Body RequestBody json);
+	HTTPResponse modify(@Body RequestBody json);
 	
 	/**
 	 * 仓库管理删除http请求接口
@@ -49,7 +49,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/delete.do")
-	public HTTPResponse delete(@Body RequestBody json);
+	HTTPResponse delete(@Body RequestBody json);
 	
 	/**
 	 * 获取所有仓库http请求接口
@@ -60,7 +60,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/list.do")
-	public HTTPResponse getAllList(@Body RequestBody json);
+	HTTPResponse getAllList(@Body RequestBody json);
 	
 	/**
 	 * 根据仓库属性模糊查询获取仓库http请求接口
@@ -71,7 +71,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/search.do")
-	public HTTPResponse getWarehouseByAttribute(@Body RequestBody json);
+	HTTPResponse getWarehouseByAttribute(@Body RequestBody json);
 	
 	/**
 	 * 根据仓库唯一id查询获取仓库http请求接口
@@ -82,7 +82,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/getById.do")
-	public HTTPResponse getWarehouseById(@Body RequestBody json);
+	HTTPResponse getWarehouseById(@Body RequestBody json);
 	
 	/**
 	 * 启用仓库
@@ -93,7 +93,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/enable.do")
-	public HTTPResponse enable(@Body RequestBody json);
+	HTTPResponse enable(@Body RequestBody json);
 	
 	/**
 	 * 禁用仓库
@@ -104,7 +104,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/disable.do")
-	public HTTPResponse disable(@Body RequestBody json);
+	HTTPResponse disable(@Body RequestBody json);
 
 	/**
 	 * 获取仓库类型
@@ -115,7 +115,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/builtType.do")
-	public HTTPResponse getWarehouseType(@Body RequestBody json);
+	HTTPResponse getWarehouseType(@Body RequestBody json);
 
 	/**
 	 * 获取所有仓库名称
@@ -126,7 +126,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("warehouse/warehouseName.do")
-	public HTTPResponse getAllWarehouseName(@Body RequestBody rb);
+	HTTPResponse getAllWarehouseName(@Body RequestBody rb);
 
 	/**
 	 * 获取仓库编码
@@ -137,7 +137,7 @@ public interface WmsForWarehouseHttpRequest {
 	 **/
 	@Headers("content-type:application/json")
 	@POST("code/getCode.do")
-	public HTTPResponse getWarehouseCode(@Body RequestBody rb);
+	HTTPResponse getWarehouseCode(@Body RequestBody rb);
 
 	
 	/**
@@ -149,7 +149,7 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("code/verifyCode.do")
-	public HTTPResponse verifyCode(@Body RequestBody rb);
+	HTTPResponse verifyCode(@Body RequestBody rb);
 
 	/**
 	 * 删除编码
@@ -160,5 +160,5 @@ public interface WmsForWarehouseHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("code/delCode.do")
-	public HTTPResponse deleteCode(@Body RequestBody rb);
+	HTTPResponse deleteCode(@Body RequestBody rb);
 }

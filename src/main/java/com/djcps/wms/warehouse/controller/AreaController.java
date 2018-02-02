@@ -4,13 +4,13 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
+import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.area.*;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
 import com.djcps.wms.warehouse.service.AreaService;
@@ -109,7 +109,7 @@ public class AreaController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(otherRet);
 			}
-			addArea.setCodeType(AppConstant.WAREHOUSE_AREA_CODE);
+			addArea.setCodeType(WareHouseTypeEnum.WAREHOUSE_AREA_CODE.getValue());
 			return areaService.addArea(addArea);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -211,7 +211,7 @@ public class AreaController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			param.setCodeType(AppConstant.WAREHOUSE_AREA_CODE);
+			param.setCodeType(WareHouseTypeEnum.WAREHOUSE_AREA_CODE.getValue());
 			return areaService.deleteArea(param);
 		} catch (Exception e) {
 			e.printStackTrace();

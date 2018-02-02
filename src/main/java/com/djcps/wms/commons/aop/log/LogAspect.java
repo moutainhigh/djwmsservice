@@ -2,7 +2,7 @@ package com.djcps.wms.commons.aop.log;
 
 import com.alibaba.fastjson.JSON;
 import com.djcps.wms.commons.config.ParamsConfig;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.ArrayUtils;
@@ -104,10 +104,10 @@ public class LogAspect {
             }
             String token = getToken(request);
             if (StringUtils.isNotEmpty(token)) {
-                UserInfoVo userInfoVo = innerUserService.getInnerUserInfoFromRedis(token);
-                if (userInfoVo!=null) {
-                    linkMap.put("userid", String.valueOf(userInfoVo.getId()));
-                    linkMap.put("username", userInfoVo.getUname());
+                UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(token);
+                if (userInfoVO !=null) {
+                    linkMap.put("userid", String.valueOf(userInfoVO.getId()));
+                    linkMap.put("username", userInfoVO.getUname());
                 }
             }
             String os = request.getHeader("User-Agent");
