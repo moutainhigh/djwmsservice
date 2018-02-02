@@ -532,6 +532,9 @@ public class AllocationServiceImpl implements AllocationService {
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<>();
 		//根据运单号获取提货单号
 		HttpResult result = allocationServer.getDeliveryByWaybillIds(param);
+		if(ObjectUtils.isEmpty(result.getData())){
+			return MsgTemplate.successMsg();
+		}
 		List<String> deliveryIdsList = new ArrayList<String>();
 		List<String> orderIdsList = new ArrayList<String>();
 		List<WarehouseOrderDetailPO> warehouseOrderDetailList = new ArrayList<WarehouseOrderDetailPO>();
@@ -552,11 +555,16 @@ public class AllocationServiceImpl implements AllocationService {
 					WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
 					map.put(orderId, fromJson);
 				}
+			}else{
+				return MsgTemplate.successMsg();
 			}
 			OrderIdsBO orderIds = new OrderIdsBO();
 			orderIds.setChildOrderIds(orderIdsList);
 			//根据订单号批量查询订单详情信息
 			HttpResult orderIdsResult = orderServer.getOrderByOrderIds(orderIds);
+			if(ObjectUtils.isEmpty(orderIdsResult.getData())){
+				return MsgTemplate.successMsg();
+			}
 			JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(orderIdsResult.getData())).getAsJsonArray();
 			for (JsonElement jsonElement : orderIdsJsonArray) {
 				String fdblflag = jsonElement.getAsJsonObject().get("fdblflag").getAsString();
@@ -597,6 +605,12 @@ public class AllocationServiceImpl implements AllocationService {
 		//计算装载率,判断装载率是否超出,超出直接驳回
 		//不超出,将订单数据存入订单表中,并重新生成提货单.提货员和装车员和原来的一致,装车顺序在原来的基础上递增
 		param.setDeliveryIdEffect(AppConstant.DELIVERY_UNEFFEFT);
+		HttpResult number = allocationServer.getNumber(1);
+		if(!ObjectUtils.isEmpty(number.getData())){
+			JsonArray numberJsonArray = jsonParser.parse(gson.toJson(number.getData())).getAsJsonObject().get("numbers").getAsJsonArray();
+			String deliveryId = new StringBuffer().append(AppConstant.DELIVERYID_PREFIX).append(numberJsonArray.get(0).getAsString()).toString();
+			param.setDeliveryId(deliveryId);
+		}
 		HttpResult result = allocationServer.againVerifyAddOrder(param);
 		return MsgTemplate.customMsg(result);
 	}
@@ -684,6 +698,7 @@ public class AllocationServiceImpl implements AllocationService {
 		result = orderServer.getOrderByOrderIds(param);
 		JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(result.getData())).getAsJsonArray();
 		String uuid = UUID.randomUUID().toString();
+		AddExcellentAllocationBO allocationBO = null;
 		if(!ObjectUtils.isEmpty(result.getData())){
 			for(int i=0;i<orderIdsJsonArray.size();i++){
 				String fdblflag = orderIdsJsonArray.get(i).getAsJsonObject().get("fdblflag").getAsString();
@@ -700,15 +715,15 @@ public class AllocationServiceImpl implements AllocationService {
 				WarehouseOrderDetailPO orderDetail = map.get(fromJson.getOrderId());
 				//组织参数
 				orderDetail.setWarehouseId(fromJson.getWarehouseId());
-				orderDetail.setWarehouseName(fromJson.getWarehouseLocName());
+				orderDetail.setWarehouseName(fromJson.getWarehouseName());
 				orderDetail.setWarehouseAreaId(fromJson.getWarehouseAreaId());
 				orderDetail.setWarehouseAreaName(fromJson.getWarehouseAreaName());
 				orderDetail.setWarehouseLocId(fromJson.getWarehouseLocId());
 				orderDetail.setWarehouseLocName(fromJson.getWarehouseLocName());
 				orderDetail.setAllocationId(uuid);
-				String address = orderDetail.getFcodeprovince()+orderDetail.getFaddressdetail();
-				orderDetail.setFaddressdetail(address);
 				BeanUtils.copyProperties(orderDetail, fromJson);
+				String address = orderDetail.getFcodeprovince()+orderDetail.getFaddressdetail();
+				fromJson.setFaddressdetail(address);
 				fromJson.setSequence(String.valueOf(i+1));
 				list.add(fromJson);
 			}
@@ -721,7 +736,7 @@ public class AllocationServiceImpl implements AllocationService {
 				deliveryId = new StringBuffer().append(AppConstant.DELIVERYID_PREFIX).append(numberJsonArray.get(0).getAsString()).toString();
 				waybillId = new StringBuffer().append(AppConstant.WAYBILLID_PREFIX).append(numberJsonArray.get(1).getAsString()).toString();
 			}
-			AddExcellentAllocationBO allocationBO = new AddExcellentAllocationBO();
+			allocationBO = new AddExcellentAllocationBO();
 			allocationBO.setCarId("car001");
 			allocationBO.setAllocationId(uuid);
 			allocationBO.setDeliveryId(deliveryId);
@@ -734,6 +749,6 @@ public class AllocationServiceImpl implements AllocationService {
 				result = allocationServer.addDeliAllocOrder(list);
 			}
 		}
-		return MsgTemplate.successMsg(result);
+		return MsgTemplate.successMsg(allocationBO);
 	}
 }

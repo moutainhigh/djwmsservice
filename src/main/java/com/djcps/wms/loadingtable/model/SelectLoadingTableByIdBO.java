@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 
 /**
@@ -13,7 +14,7 @@ import com.djcps.wms.commons.base.BaseBO;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class SelectLoadingTableByIdBO extends BaseBO implements Serializable{
+public class SelectLoadingTableByIdBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 631699184714543761L;
 	

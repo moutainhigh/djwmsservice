@@ -3,6 +3,7 @@ package com.djcps.wms.stock.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import org.hibernate.validator.constraints.NotBlank;
 

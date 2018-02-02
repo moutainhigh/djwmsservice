@@ -28,16 +28,6 @@ public class OrderIdBO extends BaseListBO implements Serializable{
 	
 	@NotBlank
 	private String fkeyarea;
-	
-	private String partnerId;
-	
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
 
 	public OrderIdBO() {
 		this.fkeyarea = "3303";
@@ -78,7 +68,8 @@ public class OrderIdBO extends BaseListBO implements Serializable{
 	@Override
 	public String toString() {
 		return "OrderIdBO [childOrderId=" + childOrderId + ", orderId=" + orderId + ", status=" + status + ", fkeyarea="
-				+ fkeyarea + ", partnerId=" + partnerId + "]";
+				+ fkeyarea + "]";
 	}
+
 
 }

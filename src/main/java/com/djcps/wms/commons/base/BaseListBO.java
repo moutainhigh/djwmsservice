@@ -15,6 +15,16 @@ public class BaseListBO extends BaseBO implements Serializable{
     private Integer pageSize;
     
     private Integer pageNo;
+    
+    private String partnerId;
+    
+	public String getPartnerId() {
+		return partnerId;
+	}
+
+	public void setPartnerId(String partnerId) {
+		this.partnerId = partnerId;
+	}
 
 	public Integer getPageSize() {
 		return pageSize;
@@ -34,7 +44,7 @@ public class BaseListBO extends BaseBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "BaseListBO [pageSize=" + pageSize + ", pageNo=" + pageNo + "]";
+		return "BaseListBO [pageSize=" + pageSize + ", pageNo=" + pageNo + ", partnerId=" + partnerId + "]";
 	}
     
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -194,13 +195,25 @@ public class StockServiceImpl implements StockService{
 						orderRedundant.setPaymentTime(sd.format(fromJson.getFpaymenttime()));
 					}
 					orderRedundant.setStatus(fromJson.getFstatus());
+					//插入冗余数据订单数据
 					result = allocationServer.batchAddOrderRedundant(orderRedundant);
+					if(result.isSuccess()){
+						if(AppConstant.ALL_ADD_STOCK.equals(orderIdBO.getStatus())){
+							//修改冗余表订单状态为已入库
+							List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
+							UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
+							update.setStatus(Integer.valueOf(AppConstant.ALL_ADD_STOCK));
+							update.setOrderId(param.getOrderId());
+							update.setPartnerId(param.getPartnerId());
+							updateList.add(update);
+							allocationServer.batchUpdateOrderRedun(updateList);
+						}
+					}
 					if(!result.isSuccess()){
 						return MsgTemplate.failureMsg(SysMsgEnum.REDUNDANT_FAIL);
 					}
 				}
 			}
-			
 		}
 		return MsgTemplate.customMsg(result);
 	}

@@ -18,12 +18,6 @@ public class SelectAllLocationListBO extends BaseListBO implements Serializable{
 	private static final long serialVersionUID = 3062314207607906888L;
 	
 	/**
-	 * 合作方id
-	 */
-	@NotBlank
-	private String partnerId;
-	
-	/**
 	 * 仓库编码
 	 */
 	@NotBlank
@@ -34,14 +28,6 @@ public class SelectAllLocationListBO extends BaseListBO implements Serializable{
 	 */
 	@NotBlank
 	private String warehouseAreaId;
-
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
 
 	public String getWarehouseId() {
 		return warehouseId;
@@ -61,8 +47,6 @@ public class SelectAllLocationListBO extends BaseListBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "SelectAllLocationList [partnerId=" + partnerId + ", warehouseId=" + warehouseId + ", warehouseAreaId="
-				+ warehouseAreaId + "]";
+		return "SelectAllLocationListBO [warehouseId=" + warehouseId + ", warehouseAreaId=" + warehouseAreaId + "]";
 	}
-	
 }
