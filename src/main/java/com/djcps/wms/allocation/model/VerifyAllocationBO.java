@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseAddBO;
 
@@ -18,9 +19,10 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	private static final long serialVersionUID = -5147017176184795518L;
 	
 	/**
-	 * 所有的订单号
+	 * 所有的装车顺序
 	 */
-	private List<String> orderIds;
+	@NotEmpty
+	private List<SequenceBO> orderIds;
 	
 	/**
 	 * 智能配货id
@@ -117,22 +119,17 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	public void setWaybillIdCreateTime(String waybillIdCreateTime) {
 		this.waybillIdCreateTime = waybillIdCreateTime;
 	}
-
-
-	public List<String> getOrderIds() {
+	public List<SequenceBO> getOrderIds() {
 		return orderIds;
 	}
 
-
-	public void setOrderIds(List<String> orderIds) {
+	public void setOrderIds(List<SequenceBO> orderIds) {
 		this.orderIds = orderIds;
 	}
-
 
 	public String getAllocationId() {
 		return allocationId;
 	}
-
 
 	public void setAllocationId(String allocationId) {
 		this.allocationId = allocationId;

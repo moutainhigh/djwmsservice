@@ -33,6 +33,7 @@ import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.GetAllocationManageListPO;
 import com.djcps.wms.allocation.model.IntelligentAllocationPO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.SequenceBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
@@ -316,8 +317,14 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> verifyAllocation(VerifyAllocationBO param) {
+		List<String> orderIds = new ArrayList<>();
+		List<SequenceBO> sequenceList = param.getOrderIds();
+		//取出所有的订单号
+		for (SequenceBO sequenceBO : sequenceList) {
+			BeanUtils.copyProperties(param, sequenceBO);
+			orderIds.add(sequenceBO.getOrderId());
+		}
 		//配货之前先确认配货结果是否是已配货，是的话直接全部驳回
-		List<String> orderIds = param.getOrderIds();
 		OrderIdsBO order = new OrderIdsBO();
 		order.setChildOrderIds(orderIds);
 		HttpResult orderResult = orderServer.getOrderByOrderIds(order);
@@ -349,7 +356,7 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		//TODO 修改提货员和装车员的状态
 		//修改配货表中的标志，修改为确认配货,且插入提货单数据(插入提货单确认状态feffect为1)
-		//并通过智能配货id,修改配货订单表中的提货单id(该id原先是为null的)
+		//并通过智能配货id,修改配货订单表中的提货单id(该id原先是为null的),修改装车顺序
 		String time  = sd.format(new Date());
 		param.setAllocationIdEffect(AppConstant.ALLOCATION_EFFECT);
 		param.setAllocationIdEffectTime(time);
@@ -360,8 +367,7 @@ public class AllocationServiceImpl implements AllocationService {
 		if(result.isSuccess()){
 			//冗余表中插入运单号,提货单号和车牌号,并且修改订单状态
 			List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
-			List<String> idsList = param.getOrderIds();
-			for (String string : idsList) {
+			for (String string : orderIds) {
 				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
 				update.setStatus(Integer.valueOf(AppConstant.ORDER_ALREADY_ALLOCATION));
 				update.setDeliveryId(param.getDeliveryId());
@@ -617,6 +623,10 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> againVerifyAllocation(List<AgainVerifyAllocationBO> param) {
+		//冗余表修改订单状态
+		//修改提货单确认状态修改为feffect为1
+		//修改配货订单表中订单的提货单号
+		//修改装车顺序
 		for (AgainVerifyAllocationBO againVerifyAllocationBO : param) {
 			againVerifyAllocationBO.setDeliveryIdEffect(AppConstant.DELIVERY_EFFEFT);
 		}
