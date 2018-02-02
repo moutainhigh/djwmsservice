@@ -263,6 +263,11 @@ public class ChildOrderBO {
      */
     private Integer fpaytype;
 
+    /**
+     * 是否分发
+     */
+    private Integer fdbflage;
+
     public String getForderId() {
         return forderId;
     }
@@ -685,6 +690,14 @@ public class ChildOrderBO {
 
     public void setFpaytype(Integer fpaytype) {
         this.fpaytype = fpaytype;
+    }
+
+    public Integer getFdbflage() {
+        return fdbflage;
+    }
+
+    public void setFdbflage(Integer fdbflage) {
+        this.fdbflage = fdbflage;
     }
 
     @Override
