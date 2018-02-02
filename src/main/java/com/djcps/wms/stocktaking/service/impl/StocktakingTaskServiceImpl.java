@@ -17,6 +17,8 @@ import com.djcps.wms.stocktaking.server.StocktakingOrderServer;
 import com.djcps.wms.stocktaking.server.StocktakingTaskServer;
 import com.djcps.wms.stocktaking.service.StocktakingTaskService;
 import com.google.gson.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ import java.util.*;
  **/
 @Service
 public class StocktakingTaskServiceImpl implements StocktakingTaskService {
+    private Logger logger = LoggerFactory.getLogger(StocktakingTaskService.class);
 
     @Autowired
     private StocktakingTaskServer stocktakingTaskServer;
