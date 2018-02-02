@@ -1,7 +1,10 @@
 package com.djcps.wms.order.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.alibaba.fastjson.JSONArray;
+import com.djcps.wms.order.model.ChildOrderBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,5 +113,20 @@ public class OrderServer {
 			logger.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
+	}
+
+	/**
+	 * 批量获取订单详细信息
+	 * @param param
+	 * @return
+	 */
+	public List<ChildOrderBO> getChildOrderList(OrderIdsBO param){
+		List<ChildOrderBO> childOrderBOList = new ArrayList<>();
+		HttpResult httpResult = getOrderByOrderIds(param);
+		if(httpResult.isSuccess()){
+			String data = gson.toJson(httpResult.getData());
+			childOrderBOList = JSONArray.parseArray(data,ChildOrderBO.class);
+		}
+		return  childOrderBOList;
 	}
 }
