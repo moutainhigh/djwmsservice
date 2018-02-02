@@ -373,7 +373,7 @@ public class AllocationServiceImpl implements AllocationService {
 				update.setDeliveryId(param.getDeliveryId());
 				update.setWaybillId(param.getWaybillId());
 				update.setOrderId(string);
-				update.setPlateNumber(param.getPartnerName());
+				update.setPlateNumber(param.getPlateNumber());
 				update.setPartnerId(param.getPartnerId());
 				updateList.add(update);
 			}
@@ -389,18 +389,22 @@ public class AllocationServiceImpl implements AllocationService {
 		HttpResult result = null;
 		//配货中移除订单flag为0,配货管理flag为1
 		if(param.getFlag().equals("0")){
-			result = allocationServer.moveOrder(param);
+			result = allocationServer.allocationMoveOrder(param);
 		}else if(param.getFlag().equals("1")){
 			//通知订单服务修改订单状态为已配货
-			OrderIdBO orderIdBO = new OrderIdBO();
-			orderIdBO.setOrderId(param.getOrderIds().get(0));
-			orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
-			HttpResult updateOrderStatus = orderServer.updateOrderStatus(orderIdBO);
-			if(updateOrderStatus.isSuccess()){
-				//移除订单修改订单状态为已配货
-				param.setStatus(Integer.valueOf(AppConstant.ALL_ADD_STOCK));
-				result = allocationServer.moveOrder(param);
+			List<String> orderIds = param.getOrderIds();
+			HttpResult updateOrderStatus = allocationServer.getAlreadyAllocOrder(orderIds);
+			List<String> list = (List<String>) updateOrderStatus.getData();
+			for (String order : list) {
+				OrderIdBO orderIdBO = new OrderIdBO();
+				orderIdBO.setOrderId(order);
+				orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
+				//通知订单服务修改,需要批量执行
+				HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
 			}
+			//需要订单服务修改订单状态成功情况下,移除订单表数据,并且修改冗余表订单状态(该逻辑在服务端)
+			param.setStatus(Integer.valueOf(AppConstant.ALL_ADD_STOCK));
+			result = allocationServer.managerMoveOrder(param);
 		}
 		return MsgTemplate.customMsg(result);
 	}

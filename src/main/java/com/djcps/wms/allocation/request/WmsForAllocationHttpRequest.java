@@ -98,17 +98,6 @@ public interface WmsForAllocationHttpRequest {
 	public HTTPResponse verifyAllocation(@Body RequestBody rb);
 
 	/**
-	 * 移除订单
-	 * @param rb
-	 * @return
-	 * @author:zdx
-	 * @date:2018年1月22日
-	 */
-	@Headers("content-type:application/json")
-	@POST("allocation/moveOrder.do")
-	public HTTPResponse moveOrder(@Body RequestBody rb);
-
-	/**
 	 * 确认追加订单
 	 * @param rb
 	 * @return
@@ -362,4 +351,37 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/addExcellentAllocation.do")
 	public HTTPResponse addExcellentAllocation(@Body RequestBody rb);
+
+	/**
+	 * 配货管理移除订单
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/managerMoveOrder.do")
+	public HTTPResponse managerMoveOrder(@Body RequestBody rb);
+
+	/**
+	 * 配货移除订单
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/allocationMoveOrder.do")
+	public HTTPResponse allocationMoveOrder(@Body RequestBody rb);
+
+	/**
+	 * 已确认配货订单号
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getAlreadyAllocOrder.do")
+	public HTTPResponse getAlreadyAllocOrder(@Body RequestBody rb);
 }

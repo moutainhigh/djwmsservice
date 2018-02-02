@@ -142,16 +142,6 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult moveOrder(MoveOrderPO param) {
-		//将请求参数转化为requestbody格式
-		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-		//调用借口获取信息
-		HTTPResponse http = allocationHttpRequest.moveOrder(rb);
-		return verifyHttpResult(http);
-	}
-	
 	public OtherHttpResult getAddOrderList(GetRedundantByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
@@ -410,6 +400,36 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult managerMoveOrder(MoveOrderPO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.managerMoveOrder(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult allocationMoveOrder(MoveOrderPO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.allocationMoveOrder(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult getAlreadyAllocOrder(List<String> param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.getAlreadyAllocOrder(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -430,5 +450,5 @@ public class AllocationServer {
 		}
 		return result;
 	}
-	
+
 }
