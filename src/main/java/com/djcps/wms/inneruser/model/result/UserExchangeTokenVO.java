@@ -5,13 +5,13 @@ package com.djcps.wms.inneruser.model.result;
  * @author Chengw
  * @since 2017/12/4 15:27.
  */
-public class UserExchangeTokenVo{
+public class UserExchangeTokenVO {
 
     private String token;
 
-    public UserExchangeTokenVo(){}
+    public UserExchangeTokenVO(){}
 
-    public UserExchangeTokenVo(String token){
+    public UserExchangeTokenVO(String token){
         this.token = token;
     }
 

@@ -9,8 +9,8 @@ import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordBO;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
-import com.djcps.wms.inneruser.model.result.UserLogoutVo;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
+import com.djcps.wms.inneruser.model.result.UserLogoutVO;
 import com.djcps.wms.inneruser.redis.InnerUserRedisDao;
 import com.djcps.wms.inneruser.server.InnerUserServer;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -90,9 +90,9 @@ public class InnerUserServiceImpl implements InnerUserService {
      */
     @Override
     public Map<String, Object> swap(UserSwitchSysBO userSwitchSysBO){
-        UserLogoutVo userLogoutVo = innerUserServer.swap(userSwitchSysBO);
-        if(StringUtils.isNotBlank(userLogoutVo.getUrl())){
-           return MsgTemplate.successMsg(userLogoutVo);
+        UserLogoutVO userLogoutVO = innerUserServer.swap(userSwitchSysBO);
+        if(StringUtils.isNotBlank(userLogoutVO.getUrl())){
+           return MsgTemplate.successMsg(userLogoutVO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
@@ -135,12 +135,12 @@ public class InnerUserServiceImpl implements InnerUserService {
     @Override
     public Map<String, Object> changeInnerUserPassword(InnerUserChangePasswordBO innerUserChangePasswordBO) {
         try{
-            UserInfoVo userInfoVo = innerUserRedisDao.getInnerUserInfo(innerUserChangePasswordBO.getToken());
-            String userCode = innerUserServer.getUserCode(userInfoVo.getUids());
-            if(!ObjectUtils.isEmpty(userInfoVo) && StringUtils.isNotBlank(userCode)){
+            UserInfoVO userInfoVO = innerUserRedisDao.getInnerUserInfo(innerUserChangePasswordBO.getToken());
+            String userCode = innerUserServer.getUserCode(userInfoVO.getUids());
+            if(!ObjectUtils.isEmpty(userInfoVO) && StringUtils.isNotBlank(userCode)){
                 String oldPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getOldPassword()+userCode);
                 String newPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getNewPassword()+userCode);
-                Boolean status = innerUserServer.changeUserPassword(String.valueOf(userInfoVo.getId()),oldPassword,newPassword);
+                Boolean status = innerUserServer.changeUserPassword(String.valueOf(userInfoVO.getId()),oldPassword,newPassword);
                 if(status){
                     return  MsgTemplate.successMsg();
                 }
@@ -153,15 +153,15 @@ public class InnerUserServiceImpl implements InnerUserService {
     }
 
     @Override
-    public UserInfoVo getInnerUserInfoFromRedis(String token) {
-        UserInfoVo userInfoVo = null;
+    public UserInfoVO getInnerUserInfoFromRedis(String token) {
+        UserInfoVO userInfoVO = null;
         try {
-            userInfoVo = innerUserRedisDao.getInnerUserInfo(token);
+            userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
         }catch (Exception e){
             e.printStackTrace();
             logger.error("内部用户信息 {}",e.getMessage());
         }
-        return userInfoVo;
+        return userInfoVO;
     }
 
     /**

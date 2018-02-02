@@ -4,7 +4,7 @@ import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordBO;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
@@ -84,7 +84,7 @@ public interface InnerUserService {
      * @param token
      * @return
      */
-    UserInfoVo getInnerUserInfoFromRedis(String token);
+    UserInfoVO getInnerUserInfoFromRedis(String token);
 
     /**
      * 设置用户信息到Cookie

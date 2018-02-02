@@ -5,7 +5,6 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListBO;
-import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
@@ -13,6 +12,7 @@ import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
+import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
@@ -80,7 +80,7 @@ public class WarehouseController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			param.setCodeType(AppConstant.WAREHOUSE_CODE);
+			param.setCodeType(WareHouseTypeEnum.WAREHOUSE_CODE.getValue());
 			return warehouseService.add(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,7 +156,7 @@ public class WarehouseController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			param.setCodeType(AppConstant.WAREHOUSE_CODE);
+			param.setCodeType(WareHouseTypeEnum.WAREHOUSE_CODE.getValue());
 			return warehouseService.delete(param);
 		} catch (Exception e) {
 			e.printStackTrace();

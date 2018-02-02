@@ -2,7 +2,7 @@ package com.djcps.wms.commons.aop.inneruser.aspect;
 
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.config.ParamsConfig;
-import com.djcps.wms.inneruser.model.result.UserInfoVo;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -33,7 +33,7 @@ public class InnerUserResolver implements HandlerMethodArgumentResolver{
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-        if(methodParameter.getParameterType().equals(UserInfoVo.class)) {
+        if(methodParameter.getParameterType().equals(UserInfoVO.class)) {
             Cookie[] cookies = nativeWebRequest.getNativeRequest(HttpServletRequest.class).getCookies();
             if(!ObjectUtils.isEmpty(cookies)){
                 for (Cookie cookie : cookies){

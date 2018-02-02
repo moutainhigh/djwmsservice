@@ -28,6 +28,7 @@ public class WarehouseAreaBO implements Serializable{
 	 */
 	private List<WarehouseLocationBO> locationList;
 
+
 	public String getWarehouseAreaId() {
 		return warehouseAreaId;
 	}

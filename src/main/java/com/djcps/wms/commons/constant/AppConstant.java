@@ -28,32 +28,21 @@ public class AppConstant {
      * 装车台编号前缀
      */
     public static final String ZCT="ZCT";
-    
+
     /**
-     * 仓库编码类型
+     * 盘点任务编号前缀
      */
-    public static final String WAREHOUSE_CODE="1";
-    
-    /**
-     * 库区编码类型
-     */
-    public static final String WAREHOUSE_AREA_CODE ="2";
-    
-    /**
-     * 库位编码类型
-     */
-    public static final String WAREHOUSE_AREA_LOCA_CODE ="3";
+    public static final String TS="TS";
 
     /**
      * 部分入库
      */
     public static final String LESS_ADD_STOCK ="21";
-    
+
     /**
      * 已入库
      */
     public static final String ALL_ADD_STOCK ="22";
-    
     /**
      * 已配货
      */

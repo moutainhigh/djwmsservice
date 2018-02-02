@@ -5,9 +5,9 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
-import com.djcps.wms.inneruser.model.result.UserCodeVo;
-import com.djcps.wms.inneruser.model.result.UserExchangeTokenVo;
-import com.djcps.wms.inneruser.model.result.UserLogoutVo;
+import com.djcps.wms.inneruser.model.result.UserCodeVO;
+import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
+import com.djcps.wms.inneruser.model.result.UserLogoutVO;
 import com.djcps.wms.inneruser.request.InnerUserRequest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -51,8 +51,8 @@ public class InnerUserServer {
 
                     HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                     String json = gson.toJson(baseResult.getData());
-                    UserCodeVo userCodeVo = gson.fromJson(json, UserCodeVo.class);
-                    return userCodeVo.getCode();
+                    UserCodeVO userCodeVO = gson.fromJson(json, UserCodeVO.class);
+                    return userCodeVO.getCode();
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -82,7 +82,6 @@ public class InnerUserServer {
                         HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                         return baseResult;
                     }
-
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                     e.printStackTrace();
@@ -127,7 +126,7 @@ public class InnerUserServer {
      * @autuor Chengw
      * @since 2017/12/4  15:10
      */
-    public UserLogoutVo swap(UserSwitchSysBO userSwitchSysBO) {
+    public UserLogoutVO swap(UserSwitchSysBO userSwitchSysBO) {
         HTTPResponse httpResponse = innerUserRequest.getTokenLogin(userSwitchSysBO.getOldToken(), userSwitchSysBO.getSys());
         if (httpResponse.isSuccessful()) {
             try {
@@ -136,8 +135,8 @@ public class InnerUserServer {
                     HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                     if (baseResult.isSuccess()) {
                         String json = gson.toJson(baseResult.getData());
-                        UserLogoutVo userLogoutVo = gson.fromJson(json, UserLogoutVo.class);
-                        return userLogoutVo;
+                        UserLogoutVO userLogoutVO = gson.fromJson(json, UserLogoutVO.class);
+                        return userLogoutVO;
                     }
                 }
             } catch (Exception e) {
@@ -190,8 +189,8 @@ public class InnerUserServer {
                     HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                     if (baseResult.isSuccess()) {
                         String json = gson.toJson(baseResult.getData());
-                        UserExchangeTokenVo userExchangeTokenVo = gson.fromJson(json, UserExchangeTokenVo.class);
-                        return userExchangeTokenVo.getToken();
+                        UserExchangeTokenVO userExchangeTokenVO = gson.fromJson(json, UserExchangeTokenVO.class);
+                        return userExchangeTokenVO.getToken();
                     }
                 } catch (Exception e) {
                     logger.error(e.getMessage());

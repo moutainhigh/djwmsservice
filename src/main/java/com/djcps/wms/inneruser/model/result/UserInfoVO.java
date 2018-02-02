@@ -5,7 +5,7 @@ package com.djcps.wms.inneruser.model.result;
  * @author Chengw
  * @since 2017/12/4 16:09.
  */
-public class UserInfoVo{
+public class UserInfoVO {
 
     /**
      * 用户id，可用与用户权限
@@ -95,7 +95,7 @@ public class UserInfoVo{
     /**
      * 设置 用户id，可用与用户权限
      */
-    public UserInfoVo setId(int id) {
+    public UserInfoVO setId(int id) {
         this.id = id;
         return this;
     }
@@ -110,7 +110,7 @@ public class UserInfoVo{
     /**
      * 设置 用户邮箱
      */
-    public UserInfoVo setUemail(String uemail) {
+    public UserInfoVO setUemail(String uemail) {
         this.uemail = uemail;
         return this;
     }
@@ -125,7 +125,7 @@ public class UserInfoVo{
     /**
      * 设置 用户账号名称
      */
-    public UserInfoVo setUname(String uname) {
+    public UserInfoVO setUname(String uname) {
         this.uname = uname;
         return this;
     }
@@ -140,7 +140,7 @@ public class UserInfoVo{
     /**
      * 设置 工号
      */
-    public UserInfoVo setUids(String uids) {
+    public UserInfoVO setUids(String uids) {
         this.uids = uids;
         return this;
     }
@@ -155,7 +155,7 @@ public class UserInfoVo{
     /**
      * 设置 密码
      */
-    public UserInfoVo setPassword(String password) {
+    public UserInfoVO setPassword(String password) {
         this.password = password;
         return this;
     }
@@ -170,7 +170,7 @@ public class UserInfoVo{
     /**
      * 设置 平台名称
      */
-    public UserInfoVo setAppname(String appname) {
+    public UserInfoVO setAppname(String appname) {
         this.appname = appname;
         return this;
     }
@@ -185,7 +185,7 @@ public class UserInfoVo{
     /**
      * 设置 邮箱
      */
-    public UserInfoVo setEmail(String email) {
+    public UserInfoVO setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -200,7 +200,7 @@ public class UserInfoVo{
     /**
      *部门
      */
-    public UserInfoVo setDepartment(String department) {
+    public UserInfoVO setDepartment(String department) {
         this.department = department;
         return this;
     }
@@ -215,7 +215,7 @@ public class UserInfoVo{
     /**
      * 设置 部门id
      */
-    public UserInfoVo setDepartmentId(int departmentId) {
+    public UserInfoVO setDepartmentId(int departmentId) {
         this.departmentId = departmentId;
         return this;
     }
@@ -230,7 +230,7 @@ public class UserInfoVo{
     /**
      * 设置 ip
      */
-    public UserInfoVo setIp(String ip) {
+    public UserInfoVO setIp(String ip) {
         this.ip = ip;
         return this;
     }
@@ -245,7 +245,7 @@ public class UserInfoVo{
     /**
      * 设置 手机号码
      */
-    public UserInfoVo setPhone(String phone) {
+    public UserInfoVO setPhone(String phone) {
         this.phone = phone;
         return this;
     }
@@ -260,7 +260,7 @@ public class UserInfoVo{
     /**
      * 设置 性别
      */
-    public UserInfoVo setSex(int sex) {
+    public UserInfoVO setSex(int sex) {
         this.sex = sex;
         return this;
     }
@@ -352,7 +352,7 @@ public class UserInfoVo{
 
 	@Override
 	public String toString() {
-		return "UserInfoVo [id=" + id + ", uemail=" + uemail + ", uname=" + uname + ", uids=" + uids + ", password="
+		return "UserInfoVO [id=" + id + ", uemail=" + uemail + ", uname=" + uname + ", uids=" + uids + ", password="
 				+ password + ", appname=" + appname + ", email=" + email + ", department=" + department
 				+ ", departmentId=" + departmentId + ", ip=" + ip + ", phone=" + phone + ", sex=" + sex + ", ucompany="
 				+ ucompany + ", oname=" + oname + ", ocode=" + ocode + ", oprovince=" + oprovince + ", ocity=" + ocity

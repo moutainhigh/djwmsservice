@@ -36,24 +36,21 @@
     <rabbit:admin connection-factory="connectionFactory"/>
 
     <!--定义queue:队列 durable:持久化 auto-delete：当所有消费者断开链接，删除队列 exclusive: 仅创建者可以使用的私有队列，断开后自动删除 -->
-    <rabbit:queue name="message.server.balance.test" durable="true" auto-delete="false"
+    <rabbit:queue name="APPREGISTER" durable="true" auto-delete="false"
                   exclusive="false" auto-declare="true"/>
-    <rabbit:queue name="message.server.balance.frozen" durable="true" auto-delete="false"
+    <rabbit:queue name="APPPUSH" durable="true" auto-delete="false"
                   exclusive="false" auto-declare="true"/>
-    <rabbit:queue name="message.server.balance.update" durable="true" auto-delete="false"
-                  exclusive="false" auto-declare="true"/>
-    <rabbit:queue name="message.balance.mall.confirm" durable="true" auto-delete="false"
+    <rabbit:queue name="APPLOGOUT" durable="true" auto-delete="false"
                   exclusive="false" auto-declare="true"/>
 
     <!-- 定义direct exchange：交换器,路由器 durable:持久化 auto-delete:当所有绑定队列都不再使用时，是否自动删除该交换机
         绑定queueTest -->
-    <rabbit:direct-exchange name="exchangeBalance" durable="true" auto-delete="false" auto-declare="true">
-        <!--<rabbit:bindings>-->
-            <!--<rabbit:binding queue="message.server.balance.test" key="queueTestBalanceServerKey"/>-->
-            <!--<rabbit:binding queue="message.server.balance.frozen" key="queueFrozenBalanceServerKey"/>-->
-            <!--<rabbit:binding queue="message.server.balance.update" key="queueUpdateBalanceServerKey"/>-->
-            <!--<rabbit:binding queue="message.balance.mall.confirm" key="queueConfirmBalanceMallKey" />-->
-        <!--</rabbit:bindings>-->
+    <rabbit:direct-exchange name="exchangeWms" durable="true" auto-delete="false" auto-declare="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="APPREGISTER" key="queueAppRegisterKey"/>
+            <rabbit:binding queue="APPPUSH" key="queueAppPushKey"/>
+            <rabbit:binding queue="APPLOGOUT" key="queueAppLogoutKey"/>
+        </rabbit:bindings>
     </rabbit:direct-exchange>
 
     <!--<rabbit:queue name="message.crm.balance.update" durable="true" auto-delete="false"-->

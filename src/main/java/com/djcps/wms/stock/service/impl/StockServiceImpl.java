@@ -215,7 +215,7 @@ public class StockServiceImpl implements StockService{
 				}
 			}
 		}
-		return MsgTemplate.customMsg(result);
+		return  MsgTemplate.customMsg(result);
 	}
 
 	@Override

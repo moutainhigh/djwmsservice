@@ -5,14 +5,14 @@ package com.djcps.wms.inneruser.model.result;
  * @author Chengw
  * @since 2017/12/4 15:12.
  */
-public class UserLogoutVo{
+public class UserLogoutVO {
 
     /**
      * url
      */
     private String url;
 
-    public UserLogoutVo(String url){
+    public UserLogoutVO(String url){
         this.url = url;
     }
 

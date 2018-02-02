@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.djcps.wms.stock.dao.StockDao">
 
-	<resultMap type="com.djcps.wms.stock.model.MapLocationPO" id="location">
+	<resultMap type="com.djcps.wms.stock.model.MapLocationPO" id="baseResultMap">
 		<result column="fid" property="id"/>
 		<result column="flnglat" property="lnglat"/>
 		<result column="fcountyname" property="countyName"/>
@@ -10,19 +10,25 @@
 		<result column="fstreetname" property="streetName"/>
 		<result column="fstreetcode" property="streetCode"/>
 	</resultMap>
+
+	<sql id="baseField">
+		fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode
+	</sql>
 	
 	<insert id="insertLocation">
-		insert into t_map_location(fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode) 
-		values (#{id},#{lnglat},#{countyName},#{countyCode},#{streetName},#{streetCode})
+		INSERT INTO t_map_location(fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode)
+		VALUES (#{id},#{lnglat},#{countyName},#{countyCode},#{streetName},#{streetCode})
 			
 	</insert>
 	
-	<select id="getAllLocation" resultMap="location">
-		select fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
+	<select id="getAllLocation" resultMap="baseResultMap">
+		SELECT <include refid="baseField" />
+		FROM t_map_location
 	</select>
 	
-	<select id="getLocationByLocation" resultMap="location">
-		select fid,flnglat,fcountyname,fcountycode,fstreetname,fstreetcode from t_map_location
-		where flnglat=#{flnglat}
+	<select id="getLocationByLocation" resultMap="baseResultMap">
+		SELECT <include refid="baseField" />
+		FROM t_map_location
+		WHERE flnglat= #{flnglat}
 	</select>
 </mapper>

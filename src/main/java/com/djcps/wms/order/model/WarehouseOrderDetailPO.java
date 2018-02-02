@@ -168,6 +168,16 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String remark;
 	
+	  /**
+	   * 材料id
+	   */
+	private String materialId;
+	
+	  /**
+	   * 库存数量
+	   */
+	private Integer  instockAmount;
+	
 	/**
 	 * 库区list
 	 */
@@ -258,6 +268,23 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String allocationId;
 	
+	
+	public String getMaterialId() {
+		return materialId;
+	}
+
+	public void setMaterialId(String materialId) {
+		this.materialId = materialId;
+	}
+
+	public Integer getInstockAmount() {
+		return instockAmount;
+	}
+
+	public void setInstockAmount(Integer instockAmount) {
+		this.instockAmount = instockAmount;
+	}
+
 	public Integer getFstatus() {
 		return fstatus;
 	}
@@ -646,19 +673,20 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ fboxheight + ", fmateriallength=" + fmateriallength + ", fmaterialwidth=" + fmaterialwidth
 				+ ", fordertime=" + fordertime + ", fpaymenttime=" + fpaymenttime + ", fdelivery=" + fdelivery
 				+ ", fgroupgoodname=" + fgroupgoodname + ", fflutetype=" + fflutetype + ", fmaterialname="
-				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", units="
+				+ fmaterialname + ", fmaterialRule=" + fmaterialRule + ", fproductRule=" + fproductRule + ", unit="
 				+ unit + ", fstatus=" + fstatus + ", fconsignee=" + fconsignee + ", fcontactway=" + fcontactway
 				+ ", fcodeprovince=" + fcodeprovince + ", faddressdetail=" + faddressdetail + ", fpusername="
 				+ fpusername + ", fcusername=" + fcusername + ", fchildorderid=" + fchildorderid + ", orderId="
 				+ orderId + ", flnglat=" + flnglat + ", amountSaved=" + amountSaved + ", famount=" + famount
-				+ ", amount=" + amount + ", remark=" + remark + ", areaList=" + areaList + ", waybillId=" + waybillId
-				+ ", deliveryId=" + deliveryId + ", plateNumber=" + plateNumber + ", remind=" + remind
-				+ ", deliveryIdStatus=" + deliveryIdStatus + ", sequence=" + sequence + ", pickerId=" + pickerId
-				+ ", pickerName=" + pickerName + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName="
-				+ loadingPersonName + ", deliveryAmount=" + deliveryAmount + ", warehouseId=" + warehouseId
-				+ ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName="
-				+ warehouseAreaName + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName
-				+ ", allocationId=" + allocationId + "]";
+				+ ", amount=" + amount + ", remark=" + remark + ", materialId=" + materialId + ", instockAmount="
+				+ instockAmount + ", areaList=" + areaList + ", waybillId=" + waybillId + ", deliveryId=" + deliveryId
+				+ ", plateNumber=" + plateNumber + ", remind=" + remind + ", deliveryIdStatus=" + deliveryIdStatus
+				+ ", sequence=" + sequence + ", pickerId=" + pickerId + ", pickerName=" + pickerName
+				+ ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
+				+ ", deliveryAmount=" + deliveryAmount + ", warehouseId=" + warehouseId + ", warehouseName="
+				+ warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+				+ ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", allocationId="
+				+ allocationId + "]";
 	}
 
 }
