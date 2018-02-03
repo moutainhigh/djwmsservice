@@ -8,6 +8,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.delivery.enums.DeliveryMsgEnum;
+import com.djcps.wms.delivery.enums.DeliveryStatusEnum;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.server.DeliveryServer;
 import com.djcps.wms.delivery.service.DeliveryService;
@@ -173,6 +174,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 if (orderList.isEmpty()) {
                     MsgTemplate.failureMsg(DeliveryMsgEnum.ORDER_NOT_EXIT);
                 }
+                orderList = setDeliveryStatus(orderList);
                 return MsgTemplate.successMsg(orderList);
             }
             return MsgTemplate.customMsg(result);
@@ -199,6 +201,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 if (orderList.isEmpty()) {
                     MsgTemplate.failureMsg(DeliveryMsgEnum.ORDER_NOT_EXIT);
                 }
+                orderList = setDeliveryStatus(orderList);
                 deliveryPO.setOrderList(orderList);
                 return MsgTemplate.successMsg(deliveryPO);
             }
@@ -273,5 +276,27 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
         }
         return deliveryOrderDetailPO;
+    }
+
+    /**
+     * 设置订单提货状态
+     * 库位提货状态为 1已提货 0为未提货
+     * @param orderList
+     * @return
+     */
+    private List<DeliveryOrderPO> setDeliveryStatus(List<DeliveryOrderPO> orderList) {
+        orderList.stream().forEach(order -> {
+            List<OrderDeliveryPO> warehouseLocs = order.getWarehouseLocs();
+            Long deliveryedCount = warehouseLocs.stream().filter(a -> a.getStatus().equals(1)).count();
+            Long deliveryCount = warehouseLocs.stream().filter(a -> a.getStatus().equals(0)).count();
+            if(!deliveryCount.equals(0L)&& !deliveryedCount.equals(0L)){
+                order.setDeliveryStatus(DeliveryStatusEnum.UNDONE_PART.getValue());
+            }else if(deliveryCount.equals(0L)&& !deliveryedCount.equals(0L)){
+                order.setDeliveryStatus(DeliveryStatusEnum.ACCOMPLISHED.getValue());
+            }else{
+                order.setDeliveryStatus(DeliveryStatusEnum.UNDONE.getValue());
+            }
+        });
+        return orderList;
     }
 }
