@@ -217,4 +217,10 @@ public interface AllocationService {
 	 */
 	Map<String, Object> addzhinengpeihuo(BaseAddBO param);
 
+
+	Map<String, Object> getPicker();
+
+
+	Map<String, Object> getLoadingPerson();
+
 }

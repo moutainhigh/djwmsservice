@@ -29,6 +29,7 @@ import com.djcps.wms.allocation.model.AddAllocationOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
+import com.djcps.wms.allocation.model.CarBO;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
@@ -575,19 +576,18 @@ public class AllocationController {
 	public Map<String, Object> getCarDetailById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			String id = "";
-//			AgainVerifyAllocationBO param = gson.fromJson(json, AgainVerifyAllocationBO.class);
-//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-//			BeanUtils.copyProperties(partnerInfoBean,param);
-//			//数据校验
-//			ComplexResult ret = FluentValidator.checkAll().failFast()
-//					.on(param,
-//							new HibernateSupportedValidator<AgainVerifyAllocationBO>()
-//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//					.doValidate().result(ResultCollectors.toComplex());
-//			if (!ret.isSuccess()) {
-//				return MsgTemplate.failureMsg(ret);
-//			}
+			CarBO param = gson.fromJson(json, CarBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			//数据校验
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<CarBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
 			return allocationService.getCarDetailById();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -654,6 +654,54 @@ public class AllocationController {
 				return MsgTemplate.failureMsg(ret);
 			}
 			return allocationService.cancelAllocation(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	@RequestMapping(name="获取提货员信息",value = "/getPicker", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getPicker(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
+//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+//			BeanUtils.copyProperties(partnerInfoBean,param);
+//			//数据校验
+//			ComplexResult ret = FluentValidator.checkAll().failFast()
+//					.on(param,
+//							new HibernateSupportedValidator<CancelAllocationBO>()
+//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//					.doValidate().result(ResultCollectors.toComplex());
+//			if (!ret.isSuccess()) {
+//				return MsgTemplate.failureMsg(ret);
+//			}
+			return allocationService.getPicker();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	@RequestMapping(name="获取装车员信息",value = "/getLoadingPerson", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getLoadingPerson(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
+//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+//			BeanUtils.copyProperties(partnerInfoBean,param);
+//			//数据校验
+//			ComplexResult ret = FluentValidator.checkAll().failFast()
+//					.on(param,
+//							new HibernateSupportedValidator<CancelAllocationBO>()
+//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//					.doValidate().result(ResultCollectors.toComplex());
+//			if (!ret.isSuccess()) {
+//				return MsgTemplate.failureMsg(ret);
+//			}
+			return allocationService.getLoadingPerson();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

@@ -32,7 +32,9 @@ import com.djcps.wms.allocation.model.CarInfo;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.GetAllocationManageListPO;
 import com.djcps.wms.allocation.model.IntelligentAllocationPO;
+import com.djcps.wms.allocation.model.LoadingPersonPO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.PickerPO;
 import com.djcps.wms.allocation.model.SequenceBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
@@ -764,5 +766,25 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 		}
 		return MsgTemplate.successMsg(allocationBO);
+	}
+
+	@Override
+	public Map<String, Object> getPicker() {
+		PickerPO picker1 = new PickerPO("977","周德星","15157780633","空闲");
+		PickerPO picker2 = new PickerPO("977","郑杰","15157780633","空闲");
+		List<PickerPO> list = new ArrayList<>();
+		list.add(picker1);
+		list.add(picker2);
+		return MsgTemplate.successMsg(list);
+	}
+
+	@Override
+	public Map<String, Object> getLoadingPerson() {
+		LoadingPersonPO picker1 = new LoadingPersonPO("977","郑天伟","15157780633","空闲");
+		LoadingPersonPO picker2 = new LoadingPersonPO("977","郭全凯","15157780633","空闲");
+		List<LoadingPersonPO> list = new ArrayList<>();
+		list.add(picker1);
+		list.add(picker2);
+		return MsgTemplate.successMsg(list);
 	}
 }

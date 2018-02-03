@@ -78,6 +78,11 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	@NotBlank
 	private String pickerName;
 	/**
+	 * 提货员联系方式
+	 */
+	@NotBlank
+	private String pickerPhone;
+	/**
 	 * 车牌号
 	 */
 	@NotBlank
@@ -98,12 +103,33 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	 */
 	@NotBlank
 	private String loadingPersonName;
+	/**
+	 * 装车员联系方式
+	 */
+	@NotBlank
+	private String loadingPersonPhone;
 	
 	/**
 	 * 提货单创建时间
 	 */
 	private String deliveryCreateTime;
 	
+	public String getPickerPhone() {
+		return pickerPhone;
+	}
+
+	public void setPickerPhone(String pickerPhone) {
+		this.pickerPhone = pickerPhone;
+	}
+
+	public String getLoadingPersonPhone() {
+		return loadingPersonPhone;
+	}
+
+	public void setLoadingPersonPhone(String loadingPersonPhone) {
+		this.loadingPersonPhone = loadingPersonPhone;
+	}
+
 	public String getWaybillIdCreateTime() {
 		return waybillIdCreateTime;
 	}
@@ -261,9 +287,10 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 				+ allocationIdEffect + ", allocationIdEffectTime=" + allocationIdEffectTime + ", waybillId=" + waybillId
 				+ ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingtableId="
 				+ loadingtableId + ", loadingtableName=" + loadingtableName + ", pickerId=" + pickerId + ", pickerName="
-				+ pickerName + ", plateNumber=" + plateNumber + ", deliveryIdEffect=" + deliveryIdEffect
-				+ ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
-				+ ", deliveryCreateTime=" + deliveryCreateTime + "]";
+				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
+				+ deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
+				+ ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime + "]";
 	}
+
 	
 }
