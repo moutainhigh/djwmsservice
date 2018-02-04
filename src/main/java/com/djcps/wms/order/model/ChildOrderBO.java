@@ -96,7 +96,7 @@ public class ChildOrderBO {
     private Double fboxheight;
 
     /**
-     * 料规格长加系数
+     * 下料规格长加系数
      */
     private Double fmateriallength;
 
