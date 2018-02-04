@@ -8,11 +8,21 @@ package com.djcps.wms.stocktaking.model;
  **/
 public class GetAmountBO {
 
+    private String partnerId;
+
     private String warehouseAreaId;
 
     private String warehouseLocId;
 
     private String orderId;
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
 
     public String getWarehouseAreaId() {
         return warehouseAreaId;
@@ -41,7 +51,8 @@ public class GetAmountBO {
     @Override
     public String toString() {
         return "GetAmountBO{" +
-                "warehouseAreaId='" + warehouseAreaId + '\'' +
+                "partnerId='" + partnerId + '\'' +
+                ", warehouseAreaId='" + warehouseAreaId + '\'' +
                 ", warehouseLocId='" + warehouseLocId + '\'' +
                 ", orderId='" + orderId + '\'' +
                 '}';
