@@ -2,12 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
     <!-- Activates annotation-based bean configuration -->
 
     <!--<context:annotation-dev.config/>-->
     <!-- Scans for application @Components to deploy -->
+    <context:annotation-config />
+    <aop:aspectj-autoproxy />
 
     <!-- 公共Redis配置文件读取 -->
     <context:property-placeholder location="classpath:config/properties/redis.properties" />
@@ -32,15 +37,15 @@
         <property name="minEvictableIdleTimeMillis" value="5000" />
     </bean>
 
-	<!-- 	集群redis -->
-	<bean class="com.djcps.wms.commons.base.RedisClientCluster" id="redisClientCluster">
-		<property name="jedisCluster" ref="jedisCluster"/>
-	</bean>
-	
-	<!-- 	单机redis -->
-	<bean class="com.djcps.wms.commons.base.RedisClientSingle" id="redisClientSingle">
-		<property name="jedisPool" ref="userJedisPool"/>
-	</bean>
+    <!-- 	集群redis -->
+    <bean class="com.djcps.wms.commons.redis.RedisClientCluster" id="redisClientCluster">
+        <property name="jedisCluster" ref="jedisCluster"/>
+    </bean>
+
+    <!-- 	单机redis -->
+    <bean class="com.djcps.wms.commons.redis.RedisClientSingle" id="redisClientSingle">
+        <property name="jedisPool" ref="userJedisPool"/>
+    </bean>
 
     <bean class="redis.clients.jedis.JedisCluster" id="jedisCluster">
         <constructor-arg>
@@ -87,6 +92,5 @@
         <constructor-arg name="password" value="${redis.user.password}"/>
         <constructor-arg name="database" value="${redis.userJedisPool.database}"/>
     </bean>
-
 
 </beans>
