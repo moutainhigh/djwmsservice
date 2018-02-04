@@ -16,11 +16,6 @@ public class GetRedundantByAttributeBO extends BaseListBO implements Serializabl
 
 	private static final long serialVersionUID = 7980143889127607252L;
 	/**
-	 * 合作方id
-	 */
-	@NotBlank
-	private String partnerId;
-	/**
 	 * 合作方名称
 	 */
 	@NotBlank
@@ -115,7 +110,31 @@ public class GetRedundantByAttributeBO extends BaseListBO implements Serializabl
 	 * 查询标记,flag为0,则表示没有查询条件,为1表中有查询条件
 	 */
 	private String flag;
+	/**
+	 * 配货开始时间
+	 */
+	private String deliveryCreateStartTime;
+	/**
+	 * 配货结束时间
+	 */
+	private String deliveryCreateEndTime;
 	
+	public String getDeliveryCreateStartTime() {
+		return deliveryCreateStartTime;
+	}
+
+	public void setDeliveryCreateStartTime(String deliveryCreateStartTime) {
+		this.deliveryCreateStartTime = deliveryCreateStartTime;
+	}
+
+	public String getDeliveryCreateEndTime() {
+		return deliveryCreateEndTime;
+	}
+
+	public void setDeliveryCreateEndTime(String deliveryCreateEndTime) {
+		this.deliveryCreateEndTime = deliveryCreateEndTime;
+	}
+
 	public String getFlag() {
 		return flag;
 	}
@@ -124,13 +143,6 @@ public class GetRedundantByAttributeBO extends BaseListBO implements Serializabl
 		this.flag = flag;
 	}
 
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
 
 	public String getPartnerName() {
 		return partnerName;
@@ -293,15 +305,16 @@ public class GetRedundantByAttributeBO extends BaseListBO implements Serializabl
 
 	@Override
 	public String toString() {
-		return "GetRedundantByAttributeBO [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea="
-				+ partnerArea + ", operatorId=" + operatorId + ", operator=" + operator + ", waybillId=" + waybillId
-				+ ", deliveryId=" + deliveryId + ", orderStatus=" + orderStatus + ", waybillIdStatus=" + waybillIdStatus
+		return "GetRedundantByAttributeBO [partnerName=" + partnerName + ", partnerArea=" + partnerArea
+				+ ", operatorId=" + operatorId + ", operator=" + operator + ", waybillId=" + waybillId + ", deliveryId="
+				+ deliveryId + ", orderStatus=" + orderStatus + ", waybillIdStatus=" + waybillIdStatus
 				+ ", fchildorderid=" + fchildorderid + ", customerName=" + customerName + ", productName=" + productName
 				+ ", materialName=" + materialName + ", orderEndTime=" + orderEndTime + ", orderStartTime="
 				+ orderStartTime + ", deliveryEndTime=" + deliveryEndTime + ", deliveryStartTime=" + deliveryStartTime
 				+ ", paymentEndTime=" + paymentEndTime + ", paymentStartTime=" + paymentStartTime
 				+ ", deliveryCreateTime=" + deliveryCreateTime + ", plateNumber=" + plateNumber + ", flag=" + flag
-				+ "]";
+				+ ", deliveryCreateStartTime=" + deliveryCreateStartTime + ", deliveryCreateEndTime="
+				+ deliveryCreateEndTime + "]";
 	}
 
 }

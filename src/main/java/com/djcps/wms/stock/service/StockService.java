@@ -30,7 +30,7 @@ public interface StockService {
 	/**
 	 * 获取操作记录
 	 * @param string
-	 * @return fromJson
+	 * @return
 	 * @author:zdx
 	 * @date:2017年12月20日
 	 */

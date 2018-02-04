@@ -81,6 +81,8 @@ public class StockController {
 		try {
 			logger.debug("json : " + json);
 			OrderIdBO fromJson = gson.fromJson(json, OrderIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,fromJson);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(fromJson,
 							new HibernateSupportedValidator<OrderIdBO>()
@@ -150,6 +152,8 @@ public class StockController {
 		try {
 			logger.debug("json : " + json);
 			SelectSavedStockAmountBO param = gson.fromJson(json, SelectSavedStockAmountBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<SelectSavedStockAmountBO>()
@@ -172,6 +176,8 @@ public class StockController {
 			logger.debug("json : " + json);
 			//参数就需要订单号和版本号,用这个参数也一样
 			SelectAreaByOrderIdBO param = gson.fromJson(json, SelectAreaByOrderIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<SelectAreaByOrderIdBO>()

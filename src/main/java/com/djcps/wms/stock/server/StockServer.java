@@ -60,18 +60,24 @@ public class StockServer {
 			HTTPResponse http = mapHttpRequest.getStreetCode(key, newLocation,output);
 			String bodyString = http.getBodyString();
 			JsonParser jsonParser = new JsonParser();
-			JsonElement jsonElement = jsonParser.parse(bodyString).getAsJsonObject().get("regeocode");
-			JsonElement jsonElement2 = jsonElement.getAsJsonObject().get("addressComponent");
-			MapAddressComponentPO fromJson = gson.fromJson(jsonElement2, MapAddressComponentPO.class);
-			MapLocationPO mapLocaTion = new MapLocationPO();
-			mapLocaTion.setId(UUID.randomUUID().toString());
-			mapLocaTion.setStreetCode(fromJson.getTowncode().substring(0,9));
-			mapLocaTion.setStreetName(fromJson.getTownship());
-			mapLocaTion.setCountyCode(fromJson.getAdcode());
-			mapLocaTion.setCountyName(fromJson.getDistrict());
-			mapLocaTion.setLnglat(newLocation);
-			stockDao.insertLocation(mapLocaTion);
-			return mapLocaTion;
+			try {
+				JsonElement jsonElement = jsonParser.parse(bodyString).getAsJsonObject().get("regeocode");
+				JsonElement jsonElement2 = jsonElement.getAsJsonObject().get("addressComponent");
+				MapAddressComponentPO fromJson = gson.fromJson(jsonElement2, MapAddressComponentPO.class);
+				MapLocationPO mapLocaTion = new MapLocationPO();
+				mapLocaTion.setId(UUID.randomUUID().toString());
+				mapLocaTion.setStreetCode(fromJson.getTowncode().substring(0,9));
+				mapLocaTion.setStreetName(fromJson.getTownship());
+				mapLocaTion.setCountyCode(fromJson.getAdcode());
+				mapLocaTion.setCountyName(fromJson.getDistrict());
+				mapLocaTion.setLnglat(newLocation);
+				stockDao.insertLocation(mapLocaTion);
+				return mapLocaTion;
+			} catch (Exception e) {
+				logger.error("高德地图调用失败,经纬度地址为空",e);
+				System.err.println("=============高德地图调用失败,经纬度地址为空:========="+e.getMessage());
+				return null;
+			}
 		}
 	}
 	

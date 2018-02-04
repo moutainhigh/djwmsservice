@@ -2,6 +2,7 @@ package com.djcps.wms.warehouse.model.warehouse;
 
 import java.io.Serializable;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -12,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class SelectWarehouseByIdBO extends BaseBO implements Serializable{
+public class SelectWarehouseByIdBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 2805736427438190741L;
 
