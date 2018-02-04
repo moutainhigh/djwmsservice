@@ -1,8 +1,8 @@
 package com.djcps.wms.commons.msg;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,8 +112,7 @@ public class MsgTemplate {
         result.put("msg", message);
         result.put("data", data);
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            logger.info("返回输出：", mapper.writeValueAsString(result));
+            logger.info("返回输出：", JSONObject.toJSONString(result));
         }catch (Exception e){
             e.printStackTrace();
         }

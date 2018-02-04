@@ -3,6 +3,8 @@ package com.djcps.wms.inneruser.controller;
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUserToken;
 import com.djcps.wms.commons.aop.log.AddLog;
 import com.djcps.wms.commons.config.ParamsConfig;
@@ -36,7 +38,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @ResponseBody
 public class InnerUserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(InnerUserController.class);
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(InnerUserController.class);
 
     @Autowired
     private InnerUserService innerUserService;
@@ -60,7 +62,7 @@ public class InnerUserController {
                 return result;
             }
         }catch (Exception e){
-            logger.error("app登录异常：{} ",e.getMessage());
+            LOGGER.error("app登录异常：{} ",e.getMessage());
             e.printStackTrace();
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
@@ -85,7 +87,7 @@ public class InnerUserController {
                 return result;
             }
         }catch (Exception e){
-            logger.error("app登录异常：{} ",e.getMessage());
+            LOGGER.error("app登录异常：{} ",e.getMessage());
             e.printStackTrace();
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
@@ -110,7 +112,7 @@ public class InnerUserController {
                 return result;
             }
         }catch (Exception e){
-            logger.error("app登录异常：{} ",e.getMessage());
+            LOGGER.error("app登录异常：{} ",e.getMessage());
             e.printStackTrace();
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
@@ -152,7 +154,7 @@ public class InnerUserController {
             }
         }catch (Exception e){
             e.printStackTrace();
-            logger.error("内部用户修改密码 {}",e.getMessage());
+            LOGGER.error("内部用户修改密码 {}",e.getMessage());
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
@@ -180,7 +182,7 @@ public class InnerUserController {
             }
         }catch (Exception e){
             e.printStackTrace();
-            logger.error("切换系统异常：{}",e.getMessage());
+            LOGGER.error("切换系统异常：{}",e.getMessage());
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
