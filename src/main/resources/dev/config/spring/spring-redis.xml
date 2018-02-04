@@ -38,12 +38,12 @@
     </bean>
     
 	<!-- 	集群redis -->
-	<bean class="com.djcps.redis.RedisClientCluster" id="redisClientCluster">
+	<bean class="com.djcps.wms.commons.redis.RedisClientCluster" id="redisClientCluster">
 		<property name="jedisCluster" ref="jedisCluster"/>
 	</bean>
 
 	<!-- 	单机redis -->
-	<bean class="com.djcps.redis.RedisClientSingle" id="redisClientSingle">
+	<bean class="com.djcps.wms.commons.redis.RedisClientSingle" id="redisClientSingle">
 		<property name="jedisPool" ref="userJedisPool"/>
 	</bean>
 	

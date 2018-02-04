@@ -1,4 +1,4 @@
-package com.djcps.redis;
+package com.djcps.wms.commons.redis;
 
 import java.util.List;
 import java.util.Map;
