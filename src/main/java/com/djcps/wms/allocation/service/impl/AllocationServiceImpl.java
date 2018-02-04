@@ -123,7 +123,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//订单号为空,直接查询在库信息
 		String flag = param.getFlag();
 		// 查询标记,flag为0,则表示没有查询条件,为1表中有查询条件
-		if(AllocationConstant.HAVE_QUERY_CONDITION.equals(flag)){
+		if(AllocationConstant.UNHAVE_QUERY_CONDITION.equals(flag)){
 			//先查询混合配货界面的数据,这里是根据仓库划分的
 			BaseUpdateAndDeleteBO base = new BaseUpdateAndDeleteBO();
 			BeanUtils.copyProperties(param, base);
