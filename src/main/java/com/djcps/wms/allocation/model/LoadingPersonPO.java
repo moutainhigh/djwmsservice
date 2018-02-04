@@ -2,6 +2,12 @@ package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
 
+/**
+ * 装车员
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
 public class LoadingPersonPO implements Serializable{
 	
 	/**

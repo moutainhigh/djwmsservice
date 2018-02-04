@@ -1,6 +1,7 @@
 package com.djcps.wms.warehouse.service;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
@@ -53,7 +54,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getAllList(BaseListBO baseListParam);
+	Map<String, Object> getAllList(BaseListPartnerIdBO baseListParam);
 	
 	/**
 	 * 根据仓库id查询获取仓库

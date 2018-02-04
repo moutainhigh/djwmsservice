@@ -122,6 +122,9 @@ public class ChildOrderParamBO implements Serializable{
 		this.manufacturerName = "温州东诚包装有限公司";
 		this.fprovince = "浙江省";
 		this.fcity = "温州市";
+		this.fboxheight="-1";
+		this.fboxlength="-1";
+		this.fboxwidth="-1";
 	}
 	
 	public String getPayStartTime() {
@@ -217,7 +220,11 @@ public class ChildOrderParamBO implements Serializable{
 	}
 
 	public void setFstatus(String fstatus) {
-		this.fstatus = fstatus;
+		if(fstatus==null){
+			this.fstatus="2";
+		}else{
+			this.fstatus=fstatus;
+		}
 	}
 
 	public String getOrderEndTime() {

@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
 /**
  *	智能配货结果
@@ -13,14 +14,9 @@ import com.djcps.wms.commons.base.BaseListBO;
  * @author:zdx
  * @date:2018年1月22日
  */
-public class GetIntelligentAllocaBO extends BaseListBO implements Serializable{
+public class GetIntelligentAllocaBO extends BaseListPartnerIdBO implements Serializable{
 
 	private static final long serialVersionUID = 3848765538827058096L;
-	
-	/**
-	 * 配货结果
-	 */
-//	private String effect;
 	
 	/**
 	 * 提货单号

@@ -14,6 +14,7 @@ import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
+import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseAddBO;
@@ -218,9 +219,42 @@ public interface AllocationService {
 	Map<String, Object> addzhinengpeihuo(BaseAddBO param);
 
 
+	/**
+	 * 获取提货员
+	 * @return
+	 * @author:zdx
+	 * @date:2018年2月4日
+	 */
 	Map<String, Object> getPicker();
 
 
+	/**
+	 * 获取装车员
+	 * @return
+	 * @author:zdx
+	 * @date:2018年2月4日
+	 */
 	Map<String, Object> getLoadingPerson();
+
+
+	/**
+	 * 装车优化再次确认配货
+	 * @param param
+	 * @param partnerInfoBean
+	 * @return
+	 * @author:zdx
+	 * @date:2018年2月4日
+	 */
+	Map<String, Object> againVerifyAllocation(MergeModelBO param, PartnerInfoBO partnerInfoBean);
+
+
+	/**
+	 * 装车优化确认追加订单
+	 * @return
+	 * @author:zdx
+	 * @date:2018年2月4日
+	 */
+	Map<String, Object> againVerifyAddOrder();
+
 
 }

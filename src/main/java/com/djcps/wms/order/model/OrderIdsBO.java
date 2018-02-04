@@ -5,6 +5,12 @@ import java.util.List;
 
 import com.djcps.wms.commons.base.BaseBO;
 
+/**
+ * 多个订单号对象
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
 public class OrderIdsBO extends BaseBO implements Serializable{
 
 	private static final long serialVersionUID = 7172144476115730320L;

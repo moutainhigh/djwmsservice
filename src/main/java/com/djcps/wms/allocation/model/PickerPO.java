@@ -2,6 +2,12 @@ package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
 
+/**
+ * 提货员
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
 public class PickerPO implements Serializable{
 	
 	/**

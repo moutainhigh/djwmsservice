@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
 /**
  * 配货和配货管理模糊查询属性
@@ -12,7 +13,7 @@ import com.djcps.wms.commons.base.BaseListBO;
  * @author:zdx
  * @date:2018年1月26日
  */
-public class GetRedundantByAttributeBO extends BaseListBO implements Serializable{
+public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Serializable{
 
 	private static final long serialVersionUID = 7980143889127607252L;
 	/**

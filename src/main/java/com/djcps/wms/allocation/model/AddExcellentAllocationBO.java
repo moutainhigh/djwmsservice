@@ -8,6 +8,12 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseAddBO;
 
+/**
+ * 新增智能配货
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
 public class AddExcellentAllocationBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 640662852507847681L;
