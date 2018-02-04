@@ -134,7 +134,6 @@ public class DeliveryController {
         try {
             logger.debug("json : " + json);
             SaveDeliveryBO param = gson.fromJson(json, SaveDeliveryBO.class);
-            param.setPartnerId(userInfoVO.getUcompany());
             param.setOperator(userInfoVO.getUname());
             param.setOperatorId(String.valueOf(userInfoVO.getId()));
             ComplexResult ret = FluentValidator.checkAll().failFast()

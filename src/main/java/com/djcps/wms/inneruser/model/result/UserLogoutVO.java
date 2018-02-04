@@ -23,4 +23,11 @@ public class UserLogoutVO {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    @Override
+    public String toString() {
+        return "UserLogoutVO{" +
+                "url='" + url + '\'' +
+                '}';
+    }
 }

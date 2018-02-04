@@ -23,4 +23,10 @@ public class UserExchangeTokenVO {
         this.token = token;
     }
 
+    @Override
+    public String toString() {
+        return "UserExchangeTokenVO{" +
+                "token='" + token + '\'' +
+                '}';
+    }
 }

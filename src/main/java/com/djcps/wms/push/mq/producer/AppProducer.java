@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 @Component
 public class AppProducer{
 
-    private Logger logger = LoggerFactory.getLogger(AppProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppProducer.class);
 
     @Resource
     private AmqpTemplate amqpTemplate;
