@@ -4,8 +4,15 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
-public class GetOrderIdByOrderType extends BaseListBO implements Serializable{
+/**
+ * 混合配货,根据混合订单类型获取订单号
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
+public class GetOrderIdByOrderType extends BaseListPartnerIdBO implements Serializable{
 	
 	private static final long serialVersionUID = -7511910228670196227L;
 	/**

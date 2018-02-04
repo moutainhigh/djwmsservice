@@ -3,6 +3,7 @@ package com.djcps.wms.loadingtable.model;
 import java.io.Serializable;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
 /**
  * @title:模糊查询装车台对象
@@ -11,7 +12,7 @@ import com.djcps.wms.commons.base.BaseListBO;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class SelectLoadingTableByAttributeBO extends BaseListBO implements Serializable{
+public class SelectLoadingTableByAttributeBO extends BaseListPartnerIdBO implements Serializable{
 	
 	private static final long serialVersionUID = -4024468423420020138L;
 	

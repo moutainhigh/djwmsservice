@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 import com.djcps.wms.commons.base.BaseAddBO;
 
+/**
+ * 装车顺序对象
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
 public class SequenceBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = 910056481885333624L;

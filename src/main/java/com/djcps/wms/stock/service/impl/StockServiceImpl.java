@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import com.djcps.wms.allocation.constant.AllocationConstant;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.constant.AppConstant;
@@ -145,20 +146,20 @@ public class StockServiceImpl implements StockService{
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(trueAmount+saveAmount==orderAmount){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
+				orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(AppConstant.LESS_ADD_STOCK);
+				orderIdBO.setStatus(AllocationConstant.LESS_ADD_STOCK);
 			}
 		}else{
 			if(saveAmount > orderAmount){
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(saveAmount.equals(orderAmount)){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
+				orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(AppConstant.LESS_ADD_STOCK);
+				orderIdBO.setStatus(AllocationConstant.LESS_ADD_STOCK);
 			}
 		}
 		HttpResult result = null;
@@ -198,11 +199,11 @@ public class StockServiceImpl implements StockService{
 					//插入冗余数据订单数据
 					result = allocationServer.batchAddOrderRedundant(orderRedundant);
 					if(result.isSuccess()){
-						if(AppConstant.ALL_ADD_STOCK.equals(orderIdBO.getStatus())){
+						if(AllocationConstant.ALL_ADD_STOCK.equals(orderIdBO.getStatus())){
 							//修改冗余表订单状态为已入库
 							List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
 							UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
-							update.setStatus(Integer.valueOf(AppConstant.ALL_ADD_STOCK));
+							update.setStatus(Integer.valueOf(AllocationConstant.ALL_ADD_STOCK));
 							update.setOrderId(param.getOrderId());
 							update.setPartnerId(param.getPartnerId());
 							updateList.add(update);

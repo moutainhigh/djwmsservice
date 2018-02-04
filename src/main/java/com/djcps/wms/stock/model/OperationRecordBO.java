@@ -3,6 +3,8 @@ package com.djcps.wms.stock.model;
 import java.io.Serializable;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -11,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author:zdx
  * @date:2018年1月3日
  */
-public class OperationRecordBO extends BaseListBO implements Serializable{
+public class OperationRecordBO extends BaseListPartnerIdBO implements Serializable{
 
 	private static final long serialVersionUID = 5996668621435889565L;
 	

@@ -203,6 +203,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @author:zdx
 	 * @date:2018年1月8日
 	 */
+	@Override
 	public WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target){
 		//规格长宽高都不为null,才进行拼接
 		if(!ObjectUtils.isEmpty(target.getFboxlength()) && !ObjectUtils.isEmpty(target.getFboxwidth()) &&

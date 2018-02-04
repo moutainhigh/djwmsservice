@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
 /**
  * 获取所有库位对象
@@ -13,7 +14,7 @@ import com.djcps.wms.commons.base.BaseListBO;
  * @author:zdx
  * @date:2017年12月12日
  */
-public class SelectAllLocationListBO extends BaseListBO implements Serializable{
+public class SelectAllLocationListBO extends BaseListPartnerIdBO implements Serializable{
 
 	private static final long serialVersionUID = 3062314207607906888L;
 	

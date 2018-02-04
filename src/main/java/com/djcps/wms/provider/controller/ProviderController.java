@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -198,7 +200,7 @@ public class ProviderController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListBO param = gson.fromJson(json, BaseListBO.class);
+			BaseListPartnerIdBO param = gson.fromJson(json, BaseListPartnerIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return providerService.getAllList(param);

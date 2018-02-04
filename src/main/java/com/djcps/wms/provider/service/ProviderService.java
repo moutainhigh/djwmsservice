@@ -3,6 +3,7 @@ package com.djcps.wms.provider.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
@@ -53,7 +54,7 @@ public interface ProviderService {
 	 * @author:zdx
 	 * @date:2017年11月30日
 	 */
-	Map<String, Object> getAllList(BaseListBO baseListParam);
+	Map<String, Object> getAllList(BaseListPartnerIdBO baseListParam);
 	
 	/**
 	 * 根据供应商属性模糊查询

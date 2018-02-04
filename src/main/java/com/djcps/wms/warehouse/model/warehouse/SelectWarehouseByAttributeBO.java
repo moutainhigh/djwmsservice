@@ -3,6 +3,7 @@ package com.djcps.wms.warehouse.model.warehouse;
 import java.io.Serializable;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
 /**
  * @title:模糊查询仓库对象
@@ -11,7 +12,7 @@ import com.djcps.wms.commons.base.BaseListBO;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class SelectWarehouseByAttributeBO extends BaseListBO implements Serializable{
+public class SelectWarehouseByAttributeBO extends BaseListPartnerIdBO implements Serializable{
 	
 	private static final long serialVersionUID = -5753645244313461096L;
 

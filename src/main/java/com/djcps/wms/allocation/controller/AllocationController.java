@@ -372,6 +372,18 @@ public class AllocationController {
 		}
 	}
 	
+	@RequestMapping(name="确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> againVerifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			return allocationService.againVerifyAddOrder();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
 	/**
 	 * 配货管理查询界面
 	 * @param json
