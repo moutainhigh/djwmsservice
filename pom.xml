@@ -85,7 +85,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>1.8</java-version>
         <org.springframework-version>4.3.8.RELEASE</org.springframework-version>
-        <org.aspectj-version>1.8.10</org.aspectj-version>
+        <org.aspectj-version>1.8.9</org.aspectj-version>
         <org.slf4j-version>1.7.25</org.slf4j-version>
         <project.web.name>/djwmsservice</project.web.name>
         <log4j.version>2.9.1</log4j.version>
