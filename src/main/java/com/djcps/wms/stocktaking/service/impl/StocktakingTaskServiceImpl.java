@@ -549,52 +549,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 获取盘点任务订单信息，前端校验是否需要盘盈 **待修改
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/12 11:26
-     **/
-//    @Override
-//    public Map<String, Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO) {
-//            Map<String,List<String>> map=new HashMap<String,List<String>>();
-//            OrderIdBO orderIdBO=new OrderIdBO();
-//           orderIdBO.setOrderId(stocktakingTaskBO.getOrderId());
-//            List<OrderIdBO> listorderid=new ArrayList<OrderIdBO>();
-//            listorderid.add(orderIdBO);
-//            //获取订单详情
-//            OrderWarehouseLocInfoBO orderWarehouseLocInfoBO=new OrderWarehouseLocInfoBO();
-//            orderWarehouseLocInfoBO.setOrderIds(listorderid);
-//            String orderId=stocktakingTaskBO.getOrderId();
-//            List<String> list=new ArrayList<String>();
-//            list.add(orderId);
-//            map.put("childOrderIds",list);
-//            //请求订单详细信息
-//            HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-//        if(ObjectUtils.isEmpty(orderResult.getData()) ){
-//            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
-//        }
-//            JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//            //筛选fdblflag为0的订单信息
-//            JsonArray orderJsonArray0=new JsonArray();
-//            for (JsonElement jsonElement : orderJsonArray){
-//                int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-//                if(fdbflag==0){
-//                    orderJsonArray0.add(jsonElement);
-//                }
-//            }
-//            //组装盘点任务订单详情
-//            for (JsonElement orderElement:orderJsonArray0){
-//                    WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
-//                    //订单参数拼接
-//                    getOrderDetail(orderDetailPO,orderDetailPO);
-//                    orderDetailPO.setUnit("片");
-//                    stocktakingTaskBO.setOrderDetail(orderDetailPO);
-//            }
-//            return MsgTemplate.successMsg(stocktakingTaskBO);
-//    }
-
-    /**
      * 修改版获取盘点任务订单信息，前端校验是否需要盘盈
      * @author  wzy
      * @param
@@ -1075,13 +1029,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
         }
 
-//        checkmap.put("childOrderIds",orderidlist);
-//        //获取批量订单信息列表,判断是不是作业单号写错了
-//        HttpResult checkOrderResult=stocktakingOrderServer.getInfoByChildIds(checkmap);
-//        if(ObjectUtils.isEmpty(checkOrderResult.getData()) ){
-//            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
-//        }
-        //请求详细信息
         HttpResult result=stocktakingTaskServer.pdaStocktakingOrderInfo(pdaStocktakingOrderInfo);
         if(!result.isSuccess()){
             HttpResult otherResult = new HttpResult();
@@ -1109,19 +1056,9 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> savePdaStocktakingResult(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO) {
-//        String materialName=null;
-//        String materialId=null;
         List<String> orderidlist=new ArrayList<String>();
-        //Map<String,List<String>> map=new HashMap<String,List<String>>();
         //获取所有订单列表
         orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());
-//        map.put("childOrderIds",orderidlist);
-//        JsonArray orderJsonArray0=getInfoByChildIds(map);
-//        for (JsonElement jsonElement : orderJsonArray0){
-//            ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
-//            materialName= forderInfoBO.getFmaterialname();
-//            materialId= forderInfoBO.getFmateriafid();
-//        }
 
         OrderIdsBO orderIdsBO = new OrderIdsBO();
         orderIdsBO.setChildOrderIds(orderidlist);
@@ -1133,8 +1070,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             saveStocktakingOrderInfoBO.setMaterialName(childOrderBO.getFmaterialname());
             saveStocktakingOrderInfoBO.setMaterialId(childOrderBO.getFmateriafid());
         }
-//        saveStocktakingOrderInfoBO.setMaterialName(materialName);
-//        saveStocktakingOrderInfoBO.setMaterialId(materialId);
         saveStocktakingOrderInfoBO.setRelativeId(saveStocktakingOrderInfoBO.getJobId());
         if(ObjectUtils.isEmpty(saveStocktakingOrderInfoBO.getTakeStockAmount())){
             saveStocktakingOrderInfoBO.setStatus(StocktakingTaskConstant.STATUS_1);

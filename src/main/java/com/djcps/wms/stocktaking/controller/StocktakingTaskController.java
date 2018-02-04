@@ -228,36 +228,13 @@ public class StocktakingTaskController {
     }
 
     /**
-     * 盘盈请求
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/12 10:31
-     **/
-//    @RequestMapping(name="发起盘盈",value = "/inventorySurplus2", method = RequestMethod.POST, produces = "application/json")
-//    public Map<String, Object> inventorySurplus2(@RequestBody(required = false) String json, HttpServletRequest request){
-//        StocktakingTaskBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO.class);
-//        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
-//        BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
-//        ComplexResult ret = FluentValidator.checkAll().failFast()
-//                .on(stocktakingTaskBO,
-//                        new HibernateSupportedValidator<StocktakingTaskBO>()
-//                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//                .doValidate().result(ResultCollectors.toComplex());
-//        if (!ret.isSuccess()) {
-//            return MsgTemplate.failureMsg(ret);
-//        }
-//        return stocktakingTaskService.inventorySurplus(stocktakingTaskBO);
-//    }
-
-    /**
      * web发起盘盈
      * @author  wzy
      * @param
      * @return
      * @date  2018/2/3 12:17
      **/
-    @RequestMapping(name="发起盘盈2",value = "/inventorySurplus", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(name="发起盘盈",value = "/inventorySurplus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> inventorySurplus(@RequestBody(required = false) String json, HttpServletRequest request){
         StocktakingTaskfBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskfBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -325,6 +302,7 @@ public class StocktakingTaskController {
         }
         return stocktakingTaskService.pdaInventorySurplus(stocktakingTaskBO);
     }
+
     /**
      * 优化版
      * @author  wzy

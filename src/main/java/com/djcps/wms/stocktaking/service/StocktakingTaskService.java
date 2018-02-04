@@ -204,7 +204,7 @@ public interface StocktakingTaskService {
     /**
      * 优化版pda发起盘盈，等pda拿回来测试无bug在更新
      * @author  wzy
-     * @param
+     * @param stocktakingTaskBO
      * @return
      * @date  2018/2/4 14:50
      **/
