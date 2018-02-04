@@ -87,7 +87,7 @@ public interface StocktakingTaskService {
      **/
     //Map<String,Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO);
 
-    Map<String,Object> inventorySurplus2(StocktakingTaskBO2 stocktakingTaskBO);
+    Map<String,Object> inventorySurplus2(StocktakingTaskFBO stocktakingTaskBO);
     /**
      * 保存盘盈录入信息/录入单挑盘点任务
      * @author  wzy
@@ -201,7 +201,14 @@ public interface StocktakingTaskService {
      **/
     Map<String,Object> pdaInventorySurplus(StocktakingTaskBO stocktakingTaskBO);
 
-    Map<String,Object> pdaInventorySurplus2(StocktakingTaskBO2 stocktakingTaskBO);
+    /**
+     * 优化版pda发起盘盈，等pda拿回来测试无bug在更新
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/4 14:50
+     **/
+    Map<String,Object> pdaInventorySurplus2(StocktakingTaskFBO stocktakingTaskBO);
 
     /**
      * 查看盘点结果列表

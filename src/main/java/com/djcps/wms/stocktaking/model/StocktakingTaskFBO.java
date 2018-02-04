@@ -1,11 +1,11 @@
 package com.djcps.wms.stocktaking.model;
 
 /**
- * 新增盘点任务对象
+ * 新增盘点任务对象,订单参数无f
  * @author:wzy
  * @date:2018/2/3
  **/
-public class StocktakingTaskBO2 {
+public class StocktakingTaskFBO {
     /**
      * 关联id
      */
@@ -181,7 +181,7 @@ public class StocktakingTaskBO2 {
 
     @Override
     public String toString() {
-        return "StocktakingTaskBO2{" +
+        return "StocktakingTaskFBO{" +
                 "relativeId='" + relativeId + '\'' +
                 ", jobId='" + jobId + '\'' +
                 ", partnerId='" + partnerId + '\'' +

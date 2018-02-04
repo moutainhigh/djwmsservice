@@ -259,12 +259,12 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="发起盘盈2",value = "/inventorySurplus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> inventorySurplus(@RequestBody(required = false) String json, HttpServletRequest request){
-        StocktakingTaskBO2 stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO2.class);
+        StocktakingTaskFBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskFBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
         ComplexResult ret = FluentValidator.checkAll().failFast()
                 .on(stocktakingTaskBO,
-                        new HibernateSupportedValidator<StocktakingTaskBO2>()
+                        new HibernateSupportedValidator<StocktakingTaskFBO>()
                                 .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                 .doValidate().result(ResultCollectors.toComplex());
         if (!ret.isSuccess()) {
@@ -334,12 +334,12 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus2", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> pdaInventorySurplus2(@RequestBody(required = false) String json, HttpServletRequest request){
-        StocktakingTaskBO2 stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO2.class);
+        StocktakingTaskFBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskFBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
         ComplexResult ret = FluentValidator.checkAll().failFast()
                 .on(stocktakingTaskBO,
-                        new HibernateSupportedValidator<StocktakingTaskBO2>()
+                        new HibernateSupportedValidator<StocktakingTaskFBO>()
                                 .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                 .doValidate().result(ResultCollectors.toComplex());
         if (!ret.isSuccess()) {

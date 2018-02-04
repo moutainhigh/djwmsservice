@@ -5,7 +5,7 @@ import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import java.io.Serializable;
 
 /**
- * @title:新增盘点任务对象
+ * @title:新增盘点任务对象，订单参数有f
  * @description:
  * @author:wzy
  * @company:djwms
