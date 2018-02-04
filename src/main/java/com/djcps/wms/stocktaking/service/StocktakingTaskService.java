@@ -85,7 +85,7 @@ public interface StocktakingTaskService {
      * @return
      * @create  2018/1/12 9:37
      **/
-    Map<String,Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO);
+    //Map<String,Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO);
 
     Map<String,Object> inventorySurplus2(StocktakingTaskBO2 stocktakingTaskBO);
     /**

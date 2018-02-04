@@ -325,23 +325,13 @@ public class StocktakingTaskController {
         }
         return stocktakingTaskService.pdaInventorySurplus(stocktakingTaskBO);
     }
-
-//    @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus2", method = RequestMethod.POST, produces = "application/json")
-//    public Map<String, Object> pdaInventorySurplus2(@RequestBody(required = false) String json, HttpServletRequest request){
-//        StocktakingTaskBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO.class);
-//        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
-//        BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
-//        ComplexResult ret = FluentValidator.checkAll().failFast()
-//                .on(stocktakingTaskBO,
-//                        new HibernateSupportedValidator<StocktakingTaskBO>()
-//                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//                .doValidate().result(ResultCollectors.toComplex());
-//        if (!ret.isSuccess()) {
-//            return MsgTemplate.failureMsg(ret);
-//        }
-//        return stocktakingTaskService.pdaInventorySurplus(stocktakingTaskBO);
-//    }
-
+    /**
+     * 优化版
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/4 9:07
+     **/
     @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus2", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> pdaInventorySurplus2(@RequestBody(required = false) String json, HttpServletRequest request){
         StocktakingTaskBO2 stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO2.class);
