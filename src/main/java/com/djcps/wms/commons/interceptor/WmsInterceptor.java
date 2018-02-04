@@ -2,7 +2,7 @@ package com.djcps.wms.commons.interceptor;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.redis.RedisClient;
+import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
