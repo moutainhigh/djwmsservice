@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<Appenders>
+	
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{yyyy.MM.dd HH:mm:ss z} %-5level %class{36}.%M()/%L - %msg%xEx%n"/>
+        </Console>
+
+	</Appenders>
+
+	<Loggers>
+		<!-- 项目统一运行日志输出配置 -->
+		<root  level="DEBUG" >
+			<appender-ref ref="Console" additivity="false"/>
+		</root >
+		<Logger level="INFO" name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer">
+           <appender-ref ref="Console" additivity="false"/>
+        </Logger>
+	</Loggers>
+</configuration>

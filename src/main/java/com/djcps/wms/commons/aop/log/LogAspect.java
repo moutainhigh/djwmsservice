@@ -1,6 +1,8 @@
 package com.djcps.wms.commons.aop.log;
 
 import com.alibaba.fastjson.JSON;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
@@ -10,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -33,7 +33,7 @@ import java.util.Map;
 @Component
 public class LogAspect {
 
-    private static Logger logger = LoggerFactory.getLogger(LogAspect.class);
+    private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(LogAspect.class);
 
     @Autowired
     private InnerUserService innerUserService;
@@ -45,9 +45,9 @@ public class LogAspect {
     public Object validIdentityAndSecure(ProceedingJoinPoint pjp, AddLog addLog) throws Throwable {
         long start = System.currentTimeMillis();
         Object proceed = pjp.proceed();
-        System.out.println("addLog 执行了");
+        LOGGER.info("addLog 执行了");
         long end = System.currentTimeMillis();
-        System.out.println("方法运行时间：" + (end - start));
+        LOGGER.info("方法运行时间：" + (end - start));
         try {
             getParameter(pjp, addLog,proceed);
         }catch (Exception e){
@@ -80,7 +80,7 @@ public class LogAspect {
 
     public void getParameter(ProceedingJoinPoint pjp, AddLog addLog,Object proceed) throws InterruptedException, IOException {
         HttpServletRequest request = getRequest(pjp);
-        Map<String, String> linkMap = new LinkedHashMap<>();
+        Map<String, String> linkMap = new LinkedHashMap<>(15);
         Gson gson = new Gson();
         if (request != null) {
             // ip
@@ -126,7 +126,7 @@ public class LogAspect {
         // 系统模块
         String module = addLog.module();
         linkMap.put("systemModule", module);
-        logger.info(JSON.toJSONString(linkMap));
+        LOGGER.info(JSON.toJSONString(linkMap));
     }
 
     /**

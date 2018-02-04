@@ -1,24 +1,26 @@
-package com.djcps.wms.commons.base;
+package com.djcps.redis;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.GeoUnit;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
 /**
+ * Redis客户端-单机版
  * 
- * @ClassName: RedisSingle 
- * @Description: TODO
- * @author 叶千阁
- * @date 2017年12月21日 下午3:23:12
+ *
  */
 public class RedisClientSingle implements RedisClient {
-    
+
+    @Autowired
     private JedisPool jedisPool;
-    
 
     public void setJedisPool(JedisPool jedisPool) {
         this.jedisPool = jedisPool;
@@ -29,9 +31,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.set(key, value);
-        } finally{
-            if (jedis!=null) {
+            String result = jedis.set(key, value);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -42,9 +45,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.get(key);
-        } finally{
-            if (jedis!=null) {
+            String result = jedis.get(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -55,9 +59,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.del(key);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.del(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -68,9 +73,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.hset(key, field, value);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.hset(key, field, value);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -81,9 +87,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.hget(key, field);
-        } finally{
-            if (jedis!=null) {
+            String result = jedis.hget(key, field);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -94,9 +101,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.hdel(key, fields);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.hdel(key, fields);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -107,9 +115,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.setnx(key, value);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.setnx(key, value);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -120,9 +129,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.hsetnx(key, field, value);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.hsetnx(key, field, value);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -133,9 +143,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.expire(key, seconds);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.expire(key, seconds);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -146,9 +157,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.incr(key);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.incr(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -159,9 +171,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.decr(key);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.decr(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -172,9 +185,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.exists(key);
-        } finally{
-            if (jedis!=null) {
+            Boolean result = jedis.exists(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -185,9 +199,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.persist(key);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.persist(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -198,9 +213,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.ttl(key);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.ttl(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -211,9 +227,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.lpush(key, strings);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.lpush(key, strings);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -224,9 +241,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.rpop(key);
-        } finally{
-            if (jedis!=null) {
+            String result = jedis.rpop(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -237,9 +255,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.sadd(key, strings);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.sadd(key, strings);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -250,9 +269,38 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.smembers(key);
-        } finally{
-            if (jedis!=null) {
+            Set<String> result = jedis.smembers(key);
+            return result;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    @Override
+    public List<String> lrange(String key, long start, long end) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            List<String> result = jedis.lrange(key, start, end);
+            return result;
+        } finally {
+            if (jedis != null) {
+                jedis.close();
+            }
+        }
+    }
+
+    @Override
+    public Map<String, String> hgetAll(String key) {
+        Jedis jedis = null;
+        try {
+            jedis = jedisPool.getResource();
+            Map<String, String> result = jedis.hgetAll(key);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -263,9 +311,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.geoadd(key, longitude, latitude, member);
-        } finally{
-            if (jedis!=null) {
+            Long result = jedis.geoadd(key, longitude, latitude, member);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -276,9 +325,10 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.geopos(key, members);
-        } finally{
-            if (jedis!=null) {
+            List<GeoCoordinate> result = jedis.geopos(key, members);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
@@ -289,38 +339,26 @@ public class RedisClientSingle implements RedisClient {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.geodist(key, member1, member2);
-        } finally{
-            if (jedis!=null) {
+            Double result = jedis.geodist(key, member1, member2);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
     }
 
     @Override
-    public List<GeoRadiusResponse> georadiusByMember(String key, String member, double radius) {
+    public List<GeoRadiusResponse> georadiusByMember(String key, String member, double radius, GeoUnit unit) {
         Jedis jedis = null;
         try {
             jedis = jedisPool.getResource();
-            return jedis.georadiusByMember(key, member, radius, GeoUnit.KM);
-        } finally{
-            if (jedis!=null) {
+            List<GeoRadiusResponse> result = jedis.georadiusByMember(key, member, radius, unit);
+            return result;
+        } finally {
+            if (jedis != null) {
                 jedis.close();
             }
         }
     }
-
-    @Override
-    public List<String> lgetall(String key) {
-        Jedis jedis = null;
-        try {
-            jedis = jedisPool.getResource();
-            return jedis.lrange(key, 0, -1);
-        } finally{
-            if (jedis!=null) {
-                jedis.close();
-            }
-        }
-    }
-
 }

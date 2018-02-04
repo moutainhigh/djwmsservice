@@ -1,6 +1,6 @@
 package com.djcps.wms.inneruser.redis;
 
-import com.djcps.wms.commons.base.RedisClient;
+import com.djcps.redis.RedisClient;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
