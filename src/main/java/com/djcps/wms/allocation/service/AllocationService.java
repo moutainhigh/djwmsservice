@@ -14,6 +14,7 @@ import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
+import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseAddBO;
@@ -222,5 +223,9 @@ public interface AllocationService {
 
 
 	Map<String, Object> getLoadingPerson();
+
+
+	Map<String, Object> againVerifyAllocation(MergeModelBO param, PartnerInfoBO partnerInfoBean);
+
 
 }

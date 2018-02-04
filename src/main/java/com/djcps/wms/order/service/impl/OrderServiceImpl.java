@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OrderHttpResult;
@@ -53,6 +55,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override 
 	public Map<String, Object> getAllOrderList(OrderParamBO param) {
+		if(StringUtils.isEmpty(param.getChildOrderModel().getFstatus())){
+			param.getChildOrderModel().setFstatus("2");
+		}
 		OrderHttpResult result = orderServer.getAllOrderList(param);
 		if(!result.isSuccess()){
 			HttpResult otherResult = new HttpResult();

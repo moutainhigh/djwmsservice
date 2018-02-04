@@ -33,6 +33,7 @@ import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.GetAllocationManageListPO;
 import com.djcps.wms.allocation.model.IntelligentAllocationPO;
 import com.djcps.wms.allocation.model.LoadingPersonPO;
+import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.PickerPO;
 import com.djcps.wms.allocation.model.SequenceBO;
@@ -613,7 +614,6 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> againVerifyAddOrder(AgainVerifyAddOrderBO param) {
-		//TODO
 		//计算装载率,判断装载率是否超出,超出直接驳回
 		//不超出,将订单数据存入订单表中,并重新生成提货单.提货员和装车员和原来的一致,装车顺序在原来的基础上递增
 		param.setDeliveryIdEffect(AppConstant.DELIVERY_UNEFFEFT);
@@ -786,5 +786,59 @@ public class AllocationServiceImpl implements AllocationService {
 		list.add(picker1);
 		list.add(picker2);
 		return MsgTemplate.successMsg(list);
+	}
+
+	@Override
+	public Map<String, Object> againVerifyAllocation(MergeModelBO param, PartnerInfoBO partnerInfoBean) {
+		//装车优化确认配货合并移除订单,确认追加订单,确认配货
+		//冗余表修改订单状态
+		//修改提货单确认状态修改为feffect为1
+		//修改配货订单表中订单的提货单号
+		//修改装车顺序
+		List<AgainVerifyAllocationBO> againVerifyAllocation = param.getAgainVerifyAllocation();
+		if(!ObjectUtils.isEmpty(againVerifyAllocation)){
+			for (AgainVerifyAllocationBO againVerifyAllocationBO : againVerifyAllocation) {
+				BeanUtils.copyProperties(partnerInfoBean,againVerifyAllocationBO);
+				againVerifyAllocationBO.setDeliveryIdEffect(AppConstant.DELIVERY_EFFEFT);
+			}
+		}
+		
+		//配货管理移除订单
+		MoveOrderPO moveOrder = param.getMoveOrder();
+		if(!ObjectUtils.isEmpty(moveOrder)){
+			BeanUtils.copyProperties(partnerInfoBean,moveOrder);
+			//配货管理移除订单
+			if(moveOrder.getFlag().equals("1")){
+				//通知订单服务修改订单状态为已配货
+				List<String> orderIds = moveOrder.getOrderIds();
+				HttpResult updateOrderStatus = allocationServer.getAlreadyAllocOrder(orderIds);
+				List<String> list = (List<String>) updateOrderStatus.getData();
+				for (String order : list) {
+					OrderIdBO orderIdBO = new OrderIdBO();
+					orderIdBO.setOrderId(order);
+					orderIdBO.setStatus(AppConstant.ALL_ADD_STOCK);
+					//通知订单服务修改,需要批量执行
+					HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
+				}
+				//需要订单服务修改订单状态成功情况下,移除订单表数据,并且修改冗余表订单状态(该逻辑在服务端)
+				moveOrder.setStatus(Integer.valueOf(AppConstant.ALL_ADD_STOCK));
+			}
+		}
+		//配货管理追加订单
+		AgainVerifyAddOrderBO againVerifyAddOrder = param.getAgainVerifyAddOrder();
+		if(!ObjectUtils.isEmpty(againVerifyAddOrder)){
+			BeanUtils.copyProperties(partnerInfoBean,againVerifyAddOrder);
+			//计算装载率,判断装载率是否超出,超出直接驳回
+			//不超出,将订单数据存入订单表中,并重新生成提货单.提货员和装车员和原来的一致,装车顺序在原来的基础上递增
+			againVerifyAddOrder.setDeliveryIdEffect(AppConstant.DELIVERY_UNEFFEFT);
+			HttpResult number = allocationServer.getNumber(1);
+			if(!ObjectUtils.isEmpty(number.getData())){
+				JsonArray numberJsonArray = jsonParser.parse(gson.toJson(number.getData())).getAsJsonObject().get("numbers").getAsJsonArray();
+				String deliveryId = new StringBuffer().append(AppConstant.DELIVERYID_PREFIX).append(numberJsonArray.get(0).getAsString()).toString();
+				againVerifyAddOrder.setDeliveryId(deliveryId);
+			}
+		}
+		HttpResult result = allocationServer.againVerifyAllocation(param);
+		return MsgTemplate.customMsg(result);
 	}
 }
