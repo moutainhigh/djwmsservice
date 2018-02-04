@@ -282,8 +282,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      * @return
      * @date  2018/2/2 17:04
      **/
-    public List<StocktakingTaskFBO> getStocktakingOrderDetail(List<ChildOrderBO> childOrderBOList, List<LocationOrderInfoBO> locationOrderInfoBOList){
-        List<StocktakingTaskFBO> stocktakingTaskBOList=new ArrayList<StocktakingTaskFBO>();
+    public List<StocktakingTaskfBO> getStocktakingOrderDetail(List<ChildOrderBO> childOrderBOList, List<LocationOrderInfoBO> locationOrderInfoBOList){
+        List<StocktakingTaskfBO> stocktakingTaskBOList=new ArrayList<StocktakingTaskfBO>();
         if (!childOrderBOList.isEmpty()) {
             locationOrderInfoBOList.stream().forEach(locationOrder -> {
                                     Optional optional= childOrderBOList.stream()
@@ -291,7 +291,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                                     .findFirst();
                 if(optional.isPresent()){
                     ChildOrderBO childOrderBO=(ChildOrderBO) optional.get();
-                    StocktakingTaskFBO stocktakingTaskBO=new StocktakingTaskFBO();
+                    StocktakingTaskfBO stocktakingTaskBO=new StocktakingTaskfBO();
                     stocktakingTaskBO.setWarehouseId(locationOrder.getWarehouseId());
                     stocktakingTaskBO.setWarehouseName(locationOrder.getWarehouseName());
                     stocktakingTaskBO.setWarehouseAreaId(locationOrder.getWarehouseAreaId());
@@ -602,7 +602,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      * @date  2018/2/3 12:25
      **/
     @Override
-    public Map<String, Object> inventorySurplus2(StocktakingTaskFBO stocktakingTaskBO) {
+    public Map<String, Object> inventorySurplus2(StocktakingTaskfBO stocktakingTaskBO) {
         String orderId=stocktakingTaskBO.getOrderId();
         List<String> list=new ArrayList<String>();
         list.add(orderId);
@@ -689,7 +689,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      * @date  2018/2/3 12:28
      **/
     @Override
-    public Map<String, Object> pdaInventorySurplus2(StocktakingTaskFBO stocktakingTaskBO) {
+    public Map<String, Object> pdaInventorySurplus2(StocktakingTaskfBO stocktakingTaskBO) {
         String orderId=stocktakingTaskBO.getOrderId();
         List<String> list=new ArrayList<String>();
         list.add(orderId);

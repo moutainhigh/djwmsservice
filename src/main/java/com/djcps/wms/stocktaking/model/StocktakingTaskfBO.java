@@ -5,7 +5,7 @@ package com.djcps.wms.stocktaking.model;
  * @author:wzy
  * @date:2018/2/3
  **/
-public class StocktakingTaskFBO {
+public class StocktakingTaskfBO {
     /**
      * 关联id
      */
@@ -181,7 +181,7 @@ public class StocktakingTaskFBO {
 
     @Override
     public String toString() {
-        return "StocktakingTaskFBO{" +
+        return "StocktakingTaskfBO{" +
                 "relativeId='" + relativeId + '\'' +
                 ", jobId='" + jobId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
