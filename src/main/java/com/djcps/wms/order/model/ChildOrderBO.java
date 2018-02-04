@@ -96,7 +96,7 @@ public class ChildOrderBO {
     private Double fboxheight;
 
     /**
-     * 料规格长加系数
+     * 下料规格长加系数
      */
     private Double fmateriallength;
 
@@ -262,6 +262,11 @@ public class ChildOrderBO {
      * 支付类型
      */
     private Integer fpaytype;
+
+    /**
+     * 是否分发
+     */
+    private Integer fdbflage;
 
     public String getForderId() {
         return forderId;
@@ -685,6 +690,14 @@ public class ChildOrderBO {
 
     public void setFpaytype(Integer fpaytype) {
         this.fpaytype = fpaytype;
+    }
+
+    public Integer getFdbflage() {
+        return fdbflage;
+    }
+
+    public void setFdbflage(Integer fdbflage) {
+        this.fdbflage = fdbflage;
     }
 
     @Override

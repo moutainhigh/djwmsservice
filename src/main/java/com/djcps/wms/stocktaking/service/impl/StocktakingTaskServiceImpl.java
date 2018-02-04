@@ -1,13 +1,14 @@
 package com.djcps.wms.stocktaking.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.order.model.WarehouseAreaBO;
-import com.djcps.wms.order.model.WarehouseLocationBO;
-import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.commons.utils.StringUtils;
+import com.djcps.wms.order.model.*;
+import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.stocktaking.constant.StocktakingTaskConstant;
 import com.djcps.wms.stocktaking.model.*;
 import com.djcps.wms.stocktaking.model.orderresult.InnerDate;
@@ -17,6 +18,8 @@ import com.djcps.wms.stocktaking.server.StocktakingOrderServer;
 import com.djcps.wms.stocktaking.server.StocktakingTaskServer;
 import com.djcps.wms.stocktaking.service.StocktakingTaskService;
 import com.google.gson.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,7 @@ import java.util.*;
  **/
 @Service
 public class StocktakingTaskServiceImpl implements StocktakingTaskService {
+    private Logger logger = LoggerFactory.getLogger(StocktakingTaskService.class);
 
     @Autowired
     private StocktakingTaskServer stocktakingTaskServer;
@@ -41,59 +45,13 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     @Autowired
     private StocktakingOrderServer stocktakingOrderServer;
 
+    @Autowired
+    private OrderServer orderServer;
+
     Gson gson=new Gson();
 
     /**
-     * 获取全盘仓库关联订单
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/10 9:55
-     **/
-    @Override
-    public Map<String, Object> getAllStocktakingInfo(AddStocktakingBO addStocktakingBO) {
-        long start = System.currentTimeMillis();
-        //获取库位关联订单信息
-        HttpResult result=stocktakingTaskServer.getAllStocktakingInfo(addStocktakingBO);
-        if(!result.isSuccess()){
-            HttpResult otherResult = new HttpResult();
-            BeanUtils.copyProperties(result, otherResult);
-            return MsgTemplate.customMsg(otherResult);
-        }
-        // data数据为空将值赋值为null,这里取到的是空数组
-        if(ObjectUtils.isEmpty(result.getData())){
-            return MsgTemplate.successMsg();
-        }
-        JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
-        //获取所有订单id
-        List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
-        for (JsonElement jsonElement : asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("orderId").getAsString();
-            orderidlist.add(orderId);
-        }
-        map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
-        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-
-        //筛选fdblflag为0的订单信息
-        JsonArray orderJsonArray0=new JsonArray();
-        for (JsonElement jsonElement : orderJsonArray){
-            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-            if(fdbflag==0){
-                orderJsonArray0.add(jsonElement);
-            }
-        }
-        //组装参数
-        List<StocktakingTaskBO> stocktakingTaskBOList=getStocktakingOrderDetail(asJsonArray,orderJsonArray0);
-        System.out.println("解析耗时：" + (System.currentTimeMillis() - start) + "ms");
-        return MsgTemplate.successMsg(stocktakingTaskBOList);
-    }
-
-
-    /**
-     * 优化版新增全盘
+     * 新增全盘
      * @author  wzy
      * @param
      * @return
@@ -101,103 +59,38 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> addTaskByAll(AddTaskBO addTaskBO){
+        String warehouseid=addTaskBO.getWarehouseId();
+        String warehousename=addTaskBO.getWarehouseName();
         //Http获取库位关联订单信息
         HttpResult result=stocktakingTaskServer.increaseTask(addTaskBO);
-        String warehouseId=addTaskBO.getPartnerId();
-        String warehouseName=addTaskBO.getWarehouseName();
-        //获取订单库位信息list
-        List<LocationOrderInfoBO> locationOrderInfoBOList=new ArrayList<LocationOrderInfoBO>();
-        JsonArray locListjsonArray=new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
-        for (JsonElement jsonElement:locListjsonArray){
-            JsonObject locJsonObject=jsonElement.getAsJsonObject();
-            LocationOrderInfoBO locationOrderInfoBO=gson.fromJson(locJsonObject,LocationOrderInfoBO.class);
-            locationOrderInfoBO.setWarehouseName(warehouseName);
-            locationOrderInfoBO.setWarehouseId(warehouseId);
-            locationOrderInfoBOList.add(locationOrderInfoBO);
+        if(ObjectUtils.isEmpty(result)){
+            return MsgTemplate.successMsg();
         }
+        //获取订单库位信息list
+        String data = gson.toJson(result.getData());
+        List<LocationOrderInfoBO> locationOrderInfoBOList = JSONArray.parseArray(data,LocationOrderInfoBO.class);
+        locationOrderInfoBOList.stream().forEach(locationOrderInfoBO -> {
+            locationOrderInfoBO.setWarehouseId(warehouseid);
+            locationOrderInfoBO.setWarehouseName(warehousename);
+        });
+
         //组装orderidlist
-        List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
+        List<String> orderidlist= new ArrayList<String>();
         for (LocationOrderInfoBO locationOrderInfoBO:locationOrderInfoBOList){
             orderidlist.add(locationOrderInfoBO.getOrderId());
         }
-        map.put("childOrderIds",orderidlist);
-        //Http获取批量订单信息列表
-//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//        //筛选fdblflag为0的订单信息
-//        JsonArray orderJsonArray0=new JsonArray();
-//        for (JsonElement jsonElement : orderJsonArray){
-//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-//            if(fdbflag==0){
-//                orderJsonArray0.add(jsonElement);
-//            }
-//        }
-        JsonArray orderJsonArray0=getInfoByChildIds(map);
-        if (ObjectUtils.isEmpty(orderJsonArray0)){
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(orderidlist);
+        //Http获取订单详细信息
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+        if(childOrderList.isEmpty()){
             return MsgTemplate.successMsg();
         }
-        //获取订单规格参数list
-        List<ForderInfoBO> forderInfoBOList =new ArrayList<ForderInfoBO>();
-        for (JsonElement jsonElement:orderJsonArray0){
-            ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
-            forderInfoBOList.add(forderInfoBO);
-        }
-
-        return MsgTemplate.successMsg(getPartStocktakingOrderDetail(forderInfoBOList,locationOrderInfoBOList));
+        return MsgTemplate.successMsg(getStocktakingOrderDetail(childOrderList,locationOrderInfoBOList));
     }
 
     /**
-     * 获取部分盘点关联订单
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/11 9:59
-     **/
-    @Override
-    public Map<String, Object> getPartStocktakingInfo(AddStocktakingBO addStocktakingBO) {
-        //获取库位关联订单信息
-        HttpResult result=stocktakingTaskServer.getPartStocktakingInfo(addStocktakingBO);
-        if(!result.isSuccess()){
-            HttpResult otherResult = new HttpResult();
-            BeanUtils.copyProperties(result, otherResult);
-            return MsgTemplate.customMsg(otherResult);
-        }
-        // data数据为空将值赋值为null,这里取到的是空数组
-        if(ObjectUtils.isEmpty(result.getData())){
-            return MsgTemplate.successMsg();
-        }
-        JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();
-        //获取所有订单id
-        List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
-        for (JsonElement jsonElement : asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("orderId").getAsString();
-            orderidlist.add(orderId);
-        }
-        map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
-//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//        //筛选fdblflag为0的订单信息
-//        JsonArray orderJsonArray0=new JsonArray();
-//        for (JsonElement jsonElement : orderJsonArray){
-//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-//            if(fdbflag==0){
-//                orderJsonArray0.add(jsonElement);
-//            }
-//        }
-        JsonArray orderJsonArray0=getInfoByChildIds(map);
-        if (ObjectUtils.isEmpty(orderJsonArray0)){
-            return MsgTemplate.successMsg();
-        }
-        //组装参数
-        List<StocktakingTaskBO> stocktakingTaskBOList=getPartStocktakingOrderDetail(asJsonArray,orderJsonArray0);
-        return MsgTemplate.successMsg(stocktakingTaskBOList);
-    }
-
-    /**
-     * 优化版新增部分盘点
+     * 新增部分盘点
      * @author  wzy
      * @param
      * @return
@@ -227,7 +120,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         ListAddTaskByPartBO listAddTaskByPartBO1=new ListAddTaskByPartBO();
         listAddTaskByPartBO1.setTaskList(listAddTaskByPartBO);
         //Http获取所有订单库位信息
-        HttpResult result=stocktakingTaskServer.test(listAddTaskByPartBO1);
+        HttpResult result=stocktakingTaskServer.addTaskByPart(listAddTaskByPartBO1);
         if (ObjectUtils.isEmpty(result.getData())){
             return MsgTemplate.successMsg();
         }
@@ -245,33 +138,18 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             }
         }
         //组装orderidlist
-        List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
+        List<String> orderidlist= new ArrayList<String>();
         for (LocationOrderInfoBO locationOrderInfoBO:locationOrderInfoBOList){
             orderidlist.add(locationOrderInfoBO.getOrderId());
         }
-        map.put("childOrderIds",orderidlist);
-        //Http获取批量订单信息列表
-        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        if(ObjectUtils.isEmpty(orderResult.getData())){
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(orderidlist);
+        //Http获取订单详细信息
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+        if(ObjectUtils.isEmpty(childOrderList)){
             return MsgTemplate.successMsg();
         }
-        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-        //筛选fdblflag为0的订单信息
-        JsonArray orderJsonArray0=new JsonArray();
-        for (JsonElement jsonElement : orderJsonArray){
-            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-            if(fdbflag==0){
-                orderJsonArray0.add(jsonElement);
-            }
-        }
-        //获取订单规格参数list
-        List<ForderInfoBO> forderInfoBOList =new ArrayList<ForderInfoBO>();
-        for (JsonElement jsonElement:orderJsonArray0){
-            ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
-            forderInfoBOList.add(forderInfoBO);
-        }
-        return MsgTemplate.successMsg(getPartStocktakingOrderDetail(forderInfoBOList,locationOrderInfoBOList));
+        return MsgTemplate.successMsg(getStocktakingOrderDetail(childOrderList,locationOrderInfoBOList));
     }
 
     /**
@@ -346,131 +224,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 组装盘点订单
-     * @author  wzy
-     * @param asJsonArray 关联订单id信息的库位信息
-     * @param orderJsonArray0 筛选过后的订单详情列表
-     * @return
-     * @create  2018/1/11 12:58
-     **/
-    public List<StocktakingTaskBO> getStocktakingOrderDetail(JsonArray asJsonArray,JsonArray orderJsonArray0){
-        List<StocktakingTaskBO> stocktakingTaskBOList=new ArrayList<StocktakingTaskBO>();
-        //遍历库区库位
-        for (JsonElement warehouseElement: asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("orderId").getAsString();
-            //组装盘点任务仓库id
-            String warehouseId=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseId").getAsString();
-            String warehouseName=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseName").getAsString();
-
-            if(warehouseElement.getAsJsonObject().get("warehouseAreaInfo")!=null){
-                JsonArray warehouseAreaInfo=warehouseElement.getAsJsonObject().get("warehouseAreaInfo").getAsJsonArray();
-                String warehouseAreaId=null;
-                String warehouseAreaName=null;
-                for (JsonElement warehouseAreaElement:warehouseAreaInfo){
-                    //组装盘点任务库区id
-                    warehouseAreaId=new JsonParser().parse(gson.toJson(warehouseAreaElement)).getAsJsonObject().get("warehouseAreaId").getAsString();
-                    warehouseAreaName=new JsonParser().parse(gson.toJson(warehouseAreaElement)).getAsJsonObject().get("warehouseAreaName").getAsString();
-
-                    if(warehouseAreaElement.getAsJsonObject().get("locationList")!=null){
-                        JsonArray warehouseLocInfo=warehouseAreaElement.getAsJsonObject().get("locationList").getAsJsonArray();
-                        for(JsonElement warehouseLocElement:warehouseLocInfo){
-                            //组装盘点任务库位id
-                            String warehouseLocId=new JsonParser().parse(gson.toJson(warehouseLocElement)).getAsJsonObject().get("warehouseLocId").getAsString();
-                            String warehouseLocName=new JsonParser().parse(gson.toJson(warehouseLocElement)).getAsJsonObject().get("warehouseLocName").getAsString();
-                            Integer trueAmount=new JsonParser().parse(gson.toJson(warehouseLocElement)).getAsJsonObject().get("trueAmount").getAsInt();
-                            StocktakingTaskBO stocktakingTaskBO=new StocktakingTaskBO();
-                            stocktakingTaskBO.setWarehouseId(warehouseId);
-                            stocktakingTaskBO.setWarehouseName(warehouseName);
-                            stocktakingTaskBO.setWarehouseAreaId(warehouseAreaId);
-                            stocktakingTaskBO.setWarehouseAreaName(warehouseAreaName);
-                            stocktakingTaskBO.setWarehouseLocId(warehouseLocId);
-                            stocktakingTaskBO.setWarehouseLocName(warehouseLocName);
-                            //组装盘点任务订单详情
-                            for (JsonElement orderElement:orderJsonArray0){
-                                String fchildorderid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fchildorderid").getAsString();
-                                if (orderId.equals(fchildorderid)){
-                                    String fmaterialid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmateriafid").getAsString();
-                                    String fmaterialname=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmaterialname").getAsString();
-                                    WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
-                                    //订单参数拼接
-                                    orderDetailPO.setMaterialId(fmaterialid);
-                                    orderDetailPO.setFmaterialname(fmaterialname);
-                                    if(trueAmount!=null){
-                                        orderDetailPO.setInstockAmount(trueAmount);
-                                    }
-                                    getOrderDetail(orderDetailPO,orderDetailPO);
-                                    stocktakingTaskBO.setOrderDetail(orderDetailPO);
-                                    stocktakingTaskBOList.add(stocktakingTaskBO);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return stocktakingTaskBOList;
-    }
-
-    /**
-     * 组装部分部分盘点订单
-     * @author  wzy
-     * @param asJsonArray 关联订单id信息的库位信息
-     * @param orderJsonArray0 筛选过后的订单详情列表
-     * @return
-     * @create  2018/1/14 15:21
-     **/
-    public List<StocktakingTaskBO> getPartStocktakingOrderDetail(JsonArray asJsonArray,JsonArray orderJsonArray0){
-        List<StocktakingTaskBO> stocktakingTaskBOList=new ArrayList<StocktakingTaskBO>();
-        for (JsonElement warehouseElement: asJsonArray){
-            String orderId = new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("orderId").getAsString();
-            //组装盘点任务仓库id
-            String warehouseId=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseId").getAsString();
-            String warehouseName=new JsonParser().parse(gson.toJson(warehouseElement)).getAsJsonObject().get("warehouseName").getAsString();
-            String warehouseAreaId=null;
-            String warehouseAreaName=null;
-            String warehouseLocId=null;
-            String warehouseLocName=null;
-            if(warehouseElement.getAsJsonObject().get("orderAreaAndLocDetailInfo")!=null){
-            JsonObject warehouseAreaInfo=warehouseElement.getAsJsonObject().get("orderAreaAndLocDetailInfo").getAsJsonObject();
-                //组装盘点任务库区id
-                warehouseAreaId=warehouseAreaInfo.get("warehouseAreaId").getAsString();
-                warehouseAreaName=warehouseAreaInfo.get("warehouseAreaName").getAsString();
-               //组装盘点任务库位id
-                warehouseLocId=warehouseAreaInfo.get("warehouseLocId").getAsString();
-                warehouseLocName=warehouseAreaInfo.get("warehouseLocName").getAsString();
-                Integer trueAmount=warehouseAreaInfo.get("trueAmount").getAsInt();
-                StocktakingTaskBO stocktakingTaskBO=new StocktakingTaskBO();
-                stocktakingTaskBO.setWarehouseId(warehouseId);
-                stocktakingTaskBO.setWarehouseName(warehouseName);
-                stocktakingTaskBO.setWarehouseAreaId(warehouseAreaId);
-                stocktakingTaskBO.setWarehouseAreaName(warehouseAreaName);
-                stocktakingTaskBO.setWarehouseLocId(warehouseLocId);
-                stocktakingTaskBO.setWarehouseLocName(warehouseLocName);
-                if(trueAmount!=null){
-                    stocktakingTaskBO.setTrueAmount(trueAmount);
-                }
-                //组装盘点任务订单详情
-                for (JsonElement orderElement:orderJsonArray0){
-                    String fchildorderid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fchildorderid").getAsString();
-                    if (orderId.equals(fchildorderid)){
-                        String fmaterialid=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmateriafid").getAsString();
-                        String fmaterialname=new JsonParser().parse(gson.toJson(orderElement)).getAsJsonObject().get("fmaterialname").getAsString();
-                        WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
-                        //订单参数拼接
-                        orderDetailPO.setMaterialId(fmaterialid);
-                        orderDetailPO.setFmaterialname(fmaterialname);
-                        getOrderDetail(orderDetailPO,orderDetailPO);
-                        stocktakingTaskBO.setOrderDetail(orderDetailPO);
-                        stocktakingTaskBOList.add(stocktakingTaskBO);
-                    }
-                }
-            }
-        }
-        return stocktakingTaskBOList;
-    }
-
-    /**
-     * 优化版组装订单
+     * 组装订单
      * @author  wzy
      * @param
      * @return
@@ -508,7 +262,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                     orderDetailPO.setFboxwidth(forderInfoBO.getFboxwidth().toString());
                     orderDetailPO.setFboxheight(forderInfoBO.getFboxheight().toString());
                     orderDetailPO.setFmateriallength(forderInfoBO.getFmateriallength().toString());
-                    orderDetailPO.setFmaterialwidth(forderInfoBO.getFmaterialwidth().toString());
+                    orderDetailPO.setFmaterialwidth(StringUtils.toString(forderInfoBO.getFmaterialwidth()));
                     //组织参数
                     stocktakingTaskBO.setOrderDetail(orderDetailPO);
                     stocktakingTaskBOList.add(stocktakingTaskBO);
@@ -522,13 +276,121 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 规格参数拼接
-     * @param source
-     * @param target
+     * 组装订单详情+订单仓库信息
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/2 17:04
+     **/
+    public List<StocktakingTaskBO2> getStocktakingOrderDetail(List<ChildOrderBO> childOrderBOList,List<LocationOrderInfoBO> locationOrderInfoBOList){
+        List<StocktakingTaskBO2> stocktakingTaskBOList=new ArrayList<StocktakingTaskBO2>();
+        if (!childOrderBOList.isEmpty()) {
+            locationOrderInfoBOList.stream().forEach(locationOrder -> {
+                                    Optional optional= childOrderBOList.stream()
+                                    .filter(b -> b.getFchildorderid().equals(locationOrder.getOrderId()))
+                                    .findFirst();
+                if(optional.isPresent()){
+                    ChildOrderBO childOrderBO=(ChildOrderBO) optional.get();
+                    StocktakingTaskBO2 stocktakingTaskBO=new StocktakingTaskBO2();
+                    stocktakingTaskBO.setWarehouseId(locationOrder.getWarehouseId());
+                    stocktakingTaskBO.setWarehouseName(locationOrder.getWarehouseName());
+                    stocktakingTaskBO.setWarehouseAreaId(locationOrder.getWarehouseAreaId());
+                    stocktakingTaskBO.setWarehouseAreaName(locationOrder.getWarehouseAreaName());
+                    stocktakingTaskBO.setWarehouseLocId(locationOrder.getWarehouseLocId());
+                    stocktakingTaskBO.setWarehouseLocName(locationOrder.getWarehouseLocName());
+                    if(locationOrder.getAmount()!=null){
+                        stocktakingTaskBO.setTrueAmount(locationOrder.getAmount());
+                    }
+                    //组装盘点任务订单详情
+                    OrderInfoBO orderInfoBO=new OrderInfoBO();
+                    if(!ObjectUtils.isEmpty(childOrderBO.getFboxlength()) && !ObjectUtils.isEmpty(childOrderBO.getFboxwidth()) &&
+                            !ObjectUtils.isEmpty(childOrderBO.getFboxheight())){
+                        orderInfoBO.setProductRule(new StringBuffer().append(childOrderBO.getFboxlength()).append("*")
+                                .append(childOrderBO.getFboxwidth()).append("*").append(childOrderBO.getFboxheight()).toString());
+                    }
+                    if(!ObjectUtils.isEmpty(childOrderBO.getFmateriallength()) && !ObjectUtils.isEmpty(childOrderBO.getFmaterialwidth())){
+                        orderInfoBO.setMaterialRule(new StringBuffer().append(childOrderBO.getFmateriallength()).append("*")
+                                .append(childOrderBO.getFmaterialwidth()).toString());
+                    }
+                    //BeanUtils.copyProperties(childOrderBO,orderInfoBO);
+                    orderInfoBO.setMaterialId(childOrderBO.getFmateriafid());
+                    orderInfoBO.setMaterialName(childOrderBO.getFmaterialname());
+                    orderInfoBO.setFluteType(childOrderBO.getFflutetype());
+                    orderInfoBO.setOrderId(childOrderBO.getFchildorderid());
+                    orderInfoBO.setMaterialId(childOrderBO.getFmateriafid());
+                    orderInfoBO.setGroupgoodName(childOrderBO.getFgroupgoodname());
+                    if(!ObjectUtils.isEmpty(childOrderBO.getFboxlength())){
+                        orderInfoBO.setBoxLength(childOrderBO.getFboxlength());
+                    }
+                    if(!ObjectUtils.isEmpty(childOrderBO.getFboxwidth())){
+                        orderInfoBO.setBoxWidth(childOrderBO.getFboxwidth());
+                    }
+                    if(!ObjectUtils.isEmpty(childOrderBO.getFboxheight())){
+                        orderInfoBO.setBoxHeight(childOrderBO.getFboxheight());
+                    }
+                    if(!ObjectUtils.isEmpty(childOrderBO.getFmateriallength())){
+                        orderInfoBO.setMaterialLength(childOrderBO.getFmateriallength());
+                    }
+                    if(!ObjectUtils.isEmpty(childOrderBO.getFmaterialwidth())){
+                        orderInfoBO.setMaterialWidth(childOrderBO.getFmaterialwidth());
+                    }
+                    //加入参数
+                    stocktakingTaskBO.setOrderDetail(orderInfoBO);
+                    stocktakingTaskBOList.add(stocktakingTaskBO);
+                }
+            });
+        }
+        return stocktakingTaskBOList;
+    }
+
+    /**
+     * 修改规格参数拼接
+     * @param childOrderBOList
      * @return
      * @author:zdx
      * @date:2018年1月8日
      */
+    private OrderInfoBO getOrderDetail(List<ChildOrderBO> childOrderBOList){
+        OrderInfoBO orderInfoBO=null;
+            Optional optional=childOrderBOList.stream().findFirst();
+            if(optional.isPresent()){
+                ChildOrderBO childOrderBO=(ChildOrderBO) optional.get();
+                //组装盘点任务订单详情
+                orderInfoBO=new OrderInfoBO();
+                if(!ObjectUtils.isEmpty(childOrderBO.getFboxlength()) && !ObjectUtils.isEmpty(childOrderBO.getFboxwidth()) &&
+                        !ObjectUtils.isEmpty(childOrderBO.getFboxheight())){
+                    orderInfoBO.setProductRule(new StringBuffer().append(childOrderBO.getFboxlength()).append("*")
+                            .append(childOrderBO.getFboxwidth()).append("*").append(childOrderBO.getFboxheight()).toString());
+                }
+                if(!ObjectUtils.isEmpty(childOrderBO.getFmateriallength()) && !ObjectUtils.isEmpty(childOrderBO.getFmaterialwidth())){
+                    orderInfoBO.setMaterialRule(new StringBuffer().append(childOrderBO.getFmateriallength()).append("*")
+                            .append(childOrderBO.getFmaterialwidth()).toString());
+                }
+                //组织参数
+                orderInfoBO.setGroupgoodName(childOrderBO.getFgroupgoodname());
+                orderInfoBO.setFluteType(childOrderBO.getFflutetype());
+                orderInfoBO.setStatus(childOrderBO.getFstatus());
+                orderInfoBO.setMaterialName(childOrderBO.getFmaterialname());
+                orderInfoBO.setMaterialId(childOrderBO.getFmateriafid());
+                orderInfoBO.setLnglat(childOrderBO.getFlnglat());
+                orderInfoBO.setAddressdetail(childOrderBO.getFaddressdetail());
+                orderInfoBO.setCodeprovince(childOrderBO.getFcodeprovince());
+                orderInfoBO.setConsignee(childOrderBO.getFconsignee());
+                orderInfoBO.setContactWay(childOrderBO.getFcontactway());
+                orderInfoBO.setPusername(childOrderBO.getFpusername());
+                orderInfoBO.setOrderId(childOrderBO.getFchildorderid());
+                orderInfoBO.setAmount(childOrderBO.getFamount());
+            }
+        return orderInfoBO;
+    }
+
+    /**
+     * 参数拼接
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/3 10:23
+     **/
     private WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source, WarehouseOrderDetailPO target){
         //规格长宽高都不为null,才进行拼接
         if(!ObjectUtils.isEmpty(target.getFboxlength()) && !ObjectUtils.isEmpty(target.getFboxwidth()) &&
@@ -560,9 +422,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         source.setFamount(source.getAmount());
         return null;
     }
-
     /**
-     * 不带f的订单详细信息
+     * 不带f的订单详细信息参数拼接
      * @author  wzy
      * @param
      * @return
@@ -619,6 +480,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             getAmountBO.setOrderId(list.get(i).getOrderId());
             getAmountBO.setWarehouseAreaId(list.get(i).getWarehouseAreaId());
             getAmountBO.setWarehouseLocId(list.get(i).getWarehouseLocId());
+            getAmountBO.setPartnerId(list.get(i).getPartnerId());
             //获取在库数量
             HttpResult amountResult=stocktakingTaskServer.getAmount(getAmountBO);
             if(!ObjectUtils.isEmpty(amountResult.getData())){
@@ -688,53 +550,78 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 获取盘点任务订单信息，校验是否需要盘盈
+     * 获取盘点任务订单信息，前端校验是否需要盘盈 **待修改
      * @author  wzy
      * @param
      * @return
      * @create  2018/1/12 11:26
      **/
+//    @Override
+//    public Map<String, Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO) {
+//            Map<String,List<String>> map=new HashMap<String,List<String>>();
+//            OrderIdBO orderIdBO=new OrderIdBO();
+//           orderIdBO.setOrderId(stocktakingTaskBO.getOrderId());
+//            List<OrderIdBO> listorderid=new ArrayList<OrderIdBO>();
+//            listorderid.add(orderIdBO);
+//            //获取订单详情
+//            OrderWarehouseLocInfoBO orderWarehouseLocInfoBO=new OrderWarehouseLocInfoBO();
+//            orderWarehouseLocInfoBO.setOrderIds(listorderid);
+//            String orderId=stocktakingTaskBO.getOrderId();
+//            List<String> list=new ArrayList<String>();
+//            list.add(orderId);
+//            map.put("childOrderIds",list);
+//            //请求订单详细信息
+//            HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
+//        if(ObjectUtils.isEmpty(orderResult.getData()) ){
+//            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
+//        }
+//            JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
+//            //筛选fdblflag为0的订单信息
+//            JsonArray orderJsonArray0=new JsonArray();
+//            for (JsonElement jsonElement : orderJsonArray){
+//                int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
+//                if(fdbflag==0){
+//                    orderJsonArray0.add(jsonElement);
+//                }
+//            }
+//            //组装盘点任务订单详情
+//            for (JsonElement orderElement:orderJsonArray0){
+//                    WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
+//                    //订单参数拼接
+//                    getOrderDetail(orderDetailPO,orderDetailPO);
+//                    orderDetailPO.setUnit("片");
+//                    stocktakingTaskBO.setOrderDetail(orderDetailPO);
+//            }
+//            return MsgTemplate.successMsg(stocktakingTaskBO);
+//    }
+
+    /**
+     * 修改版获取盘点任务订单信息，前端校验是否需要盘盈
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/3 12:25
+     **/
     @Override
-    public Map<String, Object> inventorySurplus(StocktakingTaskBO stocktakingTaskBO) {
-            Map<String,List<String>> map=new HashMap<String,List<String>>();
-            OrderIdBO orderIdBO=new OrderIdBO();
-           orderIdBO.setOrderId(stocktakingTaskBO.getOrderId());
-            List<OrderIdBO> listorderid=new ArrayList<OrderIdBO>();
-            listorderid.add(orderIdBO);
-            //获取订单详情
-            OrderWarehouseLocInfoBO orderWarehouseLocInfoBO=new OrderWarehouseLocInfoBO();
-            orderWarehouseLocInfoBO.setOrderIds(listorderid);
-            String orderId=stocktakingTaskBO.getOrderId();
-            List<String> list=new ArrayList<String>();
-            list.add(orderId);
-            map.put("childOrderIds",list);
-            //请求订单详细信息
-            HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        if(ObjectUtils.isEmpty(orderResult.getData()) ){
+    public Map<String, Object> inventorySurplus2(StocktakingTaskBO2 stocktakingTaskBO) {
+        String orderId=stocktakingTaskBO.getOrderId();
+        List<String> list=new ArrayList<String>();
+        list.add(orderId);
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(list);
+        //Http获取订单详细信息
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+        if(ObjectUtils.isEmpty(childOrderList) ){
             return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
         }
-            JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-            //筛选fdblflag为0的订单信息
-            JsonArray orderJsonArray0=new JsonArray();
-            for (JsonElement jsonElement : orderJsonArray){
-                int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-                if(fdbflag==0){
-                    orderJsonArray0.add(jsonElement);
-                }
-            }
-            //组装盘点任务订单详情
-            for (JsonElement orderElement:orderJsonArray0){
-                    WarehouseOrderDetailPO orderDetailPO=gson.fromJson(orderElement,WarehouseOrderDetailPO.class);
-                    //订单参数拼接
-                    getOrderDetail(orderDetailPO,orderDetailPO);
-                    orderDetailPO.setUnit("片");
-                    stocktakingTaskBO.setOrderDetail(orderDetailPO);
-            }
-            return MsgTemplate.successMsg(stocktakingTaskBO);
+        //组装订单信息
+        OrderInfoBO orderInfoBO=getOrderDetail(childOrderList);
+        stocktakingTaskBO.setOrderDetail(orderInfoBO);
+        return MsgTemplate.successMsg(stocktakingTaskBO);
     }
 
     /**
-     * PDA/Web保存盘盈录入信息
+     * PDA/Web保存盘盈录入信息 未使用
      * @author  wzy
      * @param
      * @return
@@ -756,7 +643,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * PDA发起盘盈
+     * PDA发起盘盈， **待修改
      * @author  wzy
      * @param
      * @return
@@ -796,6 +683,31 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
+     * 修改版PDA发起盘盈
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/3 12:28
+     **/
+    @Override
+    public Map<String, Object> pdaInventorySurplus2(StocktakingTaskBO2 stocktakingTaskBO) {
+        String orderId=stocktakingTaskBO.getOrderId();
+        List<String> list=new ArrayList<String>();
+        list.add(orderId);
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(list);
+        //Http获取订单详细信息
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+        if(ObjectUtils.isEmpty(childOrderList) ){
+            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
+        }
+        //组装订单信息
+        OrderInfoBO orderInfoBO=getOrderDetail(childOrderList);
+        stocktakingTaskBO.setOrderDetail(orderInfoBO);
+        return MsgTemplate.successMsg(stocktakingTaskBO);
+    }
+
+    /**
      * 暂存盘点结果,获取库存量，计算差异量
      * @author  wzy
      * @param
@@ -805,25 +717,30 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     @Override
     public Map<String, Object> saveStocktakingResult(SaveStocktakingOrderInfoList saveStocktakingOrderInfoList, PartnerInfoBO partnerInfoBO) {
         List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
+        //Map<String,List<String>> map=new HashMap<String,List<String>>();
         SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO=null;
         //获取所有订单列表
         for(int i=0;i<saveStocktakingOrderInfoList.getSaveStocktaking().size();i++){
             saveStocktakingOrderInfoBO=saveStocktakingOrderInfoList.getSaveStocktaking().get(i);
             orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());
         }
-        map.put("childOrderIds",orderidlist);
-        //Http获取批量订单信息列表
-        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-        //筛选fdblflag为0的订单信息
-        JsonArray orderJsonArray0=new JsonArray();
-        for (JsonElement jsonElement : orderJsonArray){
-            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-            if(fdbflag==0){
-                orderJsonArray0.add(jsonElement);
-            }
-        }
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(orderidlist);
+        //Http获取订单详细信息
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+
+//        map.put("childOrderIds",orderidlist);
+//        //Http获取批量订单信息列表
+//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
+//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
+//        //筛选fdblflag为0的订单信息
+//        JsonArray orderJsonArray0=new JsonArray();
+//        for (JsonElement jsonElement : orderJsonArray){
+//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
+//            if(fdbflag==0){
+//                orderJsonArray0.add(jsonElement);
+//            }
+//        }
         PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=new PdaGetStocktakingOrderBO();
         pdaGetStocktakingOrderBO.setPartnerId(saveStocktakingOrderInfoList.getPartnerId());
         pdaGetStocktakingOrderBO.setJobId(saveStocktakingOrderInfoList.getJobId());
@@ -891,27 +808,50 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //赋值盘盈的订单
         for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO3:saveStocktakingOrderInfoList.getSaveStocktaking()){
             if (saveStocktakingOrderInfoBO3.getIsInventoryProfit().equals(1)){
-                for (JsonElement jsonElement:orderJsonArray0){
-                    String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
-                    ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
-                    if (saveStocktakingOrderInfoBO3.getOrderId().equals(orderId)){
-                        saveStocktakingOrderInfoBO3.setBoxLength(forderInfoBO.getFboxlength());
-                        saveStocktakingOrderInfoBO3.setBoxWidth(forderInfoBO.getFboxwidth());
-                        saveStocktakingOrderInfoBO3.setBoxHeight(forderInfoBO.getFboxheight());
-                        saveStocktakingOrderInfoBO3.setMaterialLength(forderInfoBO.getFmateriallength());
-                        saveStocktakingOrderInfoBO3.setMaterialWidth(forderInfoBO.getFmaterialwidth());
-                        saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
-                        saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
-                        saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
-                        saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoList.getJobId());
-                        saveStocktakingOrderInfoBO3.setInstockAmount(0);
-                        saveStocktakingOrderInfoBO3.setDifferenceValue(saveStocktakingOrderInfoBO3.getTakeStockAmount());
-                        saveStocktakingOrderInfoBO3.setMaterialId(forderInfoBO.getFmateriafid());
-                        saveStocktakingOrderInfoBO3.setMaterialName(forderInfoBO.getFmaterialname());
-                    }
+                Optional optional= childOrderList.stream()
+                        .filter(b -> b.getFchildorderid().equals(saveStocktakingOrderInfoBO3.getOrderId()))
+                        .findFirst();
+                if(optional.isPresent()){
+                    ChildOrderBO forderInfoBO=(ChildOrderBO) optional.get();
+                    saveStocktakingOrderInfoBO3.setBoxLength(forderInfoBO.getFboxlength());
+                    saveStocktakingOrderInfoBO3.setBoxWidth(forderInfoBO.getFboxwidth());
+                    saveStocktakingOrderInfoBO3.setBoxHeight(forderInfoBO.getFboxheight());
+                    saveStocktakingOrderInfoBO3.setMaterialLength(forderInfoBO.getFmateriallength());
+                    saveStocktakingOrderInfoBO3.setMaterialWidth(forderInfoBO.getFmaterialwidth());
+                    saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
+                    saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
+                    saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
+                    saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoList.getJobId());
+                    saveStocktakingOrderInfoBO3.setInstockAmount(0);
+                    saveStocktakingOrderInfoBO3.setDifferenceValue(saveStocktakingOrderInfoBO3.getTakeStockAmount());
+                    saveStocktakingOrderInfoBO3.setMaterialId(forderInfoBO.getFmateriafid());
+                    saveStocktakingOrderInfoBO3.setMaterialName(forderInfoBO.getFmaterialname());
                 }
             }
         }
+//        for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO3:saveStocktakingOrderInfoList.getSaveStocktaking()){
+//            if (saveStocktakingOrderInfoBO3.getIsInventoryProfit().equals(1)){
+//                for (JsonElement jsonElement:orderJsonArray0){
+//                    String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
+//                    ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
+//                    if (saveStocktakingOrderInfoBO3.getOrderId().equals(orderId)){
+//                        saveStocktakingOrderInfoBO3.setBoxLength(forderInfoBO.getFboxlength());
+//                        saveStocktakingOrderInfoBO3.setBoxWidth(forderInfoBO.getFboxwidth());
+//                        saveStocktakingOrderInfoBO3.setBoxHeight(forderInfoBO.getFboxheight());
+//                        saveStocktakingOrderInfoBO3.setMaterialLength(forderInfoBO.getFmateriallength());
+//                        saveStocktakingOrderInfoBO3.setMaterialWidth(forderInfoBO.getFmaterialwidth());
+//                        saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
+//                        saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
+//                        saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
+//                        saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoList.getJobId());
+//                        saveStocktakingOrderInfoBO3.setInstockAmount(0);
+//                        saveStocktakingOrderInfoBO3.setDifferenceValue(saveStocktakingOrderInfoBO3.getTakeStockAmount());
+//                        saveStocktakingOrderInfoBO3.setMaterialId(forderInfoBO.getFmateriafid());
+//                        saveStocktakingOrderInfoBO3.setMaterialName(forderInfoBO.getFmaterialname());
+//                    }
+//                }
+//            }
+//        }
         HttpResult saveResult= stocktakingTaskServer.saveStocktakingResult(saveStocktakingOrderInfoList);
         if (saveResult.isSuccess()){
             UpdateStocktakingTaskBO updateStocktakingTaskBO=new UpdateStocktakingTaskBO();
@@ -933,7 +873,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     @Override
     public Map<String, Object> completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList,PartnerInfoBO partnerInfoBO) {
         List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
+        //Map<String,List<String>> map=new HashMap<String,List<String>>();
         SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO=null;
         String jobId=saveStocktakingOrderInfoBOList.getJobId();
         //获取所有订单列表
@@ -947,18 +887,22 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 return MsgTemplate.successMsg(StocktakingTaskConstant.NOTCOMPLETE);
             }
         }
-        map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
-        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-        //筛选fdblflag为0的订单信息
-        JsonArray orderJsonArray0=new JsonArray();
-        for (JsonElement jsonElement : orderJsonArray){
-            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-            if(fdbflag==0){
-                orderJsonArray0.add(jsonElement);
-            }
-        }
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(orderidlist);
+        //Http获取订单详细信息
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+//        map.put("childOrderIds",orderidlist);
+//        //获取批量订单信息列表
+//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
+//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
+//        //筛选fdblflag为0的订单信息
+//        JsonArray orderJsonArray0=new JsonArray();
+//        for (JsonElement jsonElement : orderJsonArray){
+//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
+//            if(fdbflag==0){
+//                orderJsonArray0.add(jsonElement);
+//            }
+//        }
         PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO1=new PdaGetStocktakingOrderBO();
         pdaGetStocktakingOrderBO1.setPartnerId(saveStocktakingOrderInfoBOList.getPartnerId());
         pdaGetStocktakingOrderBO1.setJobId(saveStocktakingOrderInfoBOList.getJobId());
@@ -1020,26 +964,49 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //赋值盘盈的订单
         for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO3:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
             if (saveStocktakingOrderInfoBO3.getIsInventoryProfit().equals(1)){
-                for (JsonElement jsonElement:orderJsonArray0){
-                    String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
-                    ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
-                    if (saveStocktakingOrderInfoBO3.getOrderId().equals(orderId)){
-                        saveStocktakingOrderInfoBO3.setBoxLength(forderInfoBO.getFboxlength());
-                        saveStocktakingOrderInfoBO3.setBoxWidth(forderInfoBO.getFboxwidth());
-                        saveStocktakingOrderInfoBO3.setBoxHeight(forderInfoBO.getFboxheight());
-                        saveStocktakingOrderInfoBO3.setMaterialLength(forderInfoBO.getFmateriallength());
-                        saveStocktakingOrderInfoBO3.setMaterialWidth(forderInfoBO.getFmaterialwidth());
-                        saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
-                        saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
-                        saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
-                        saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoBOList.getJobId());
-                        saveStocktakingOrderInfoBO3.setInstockAmount(0);
-                        saveStocktakingOrderInfoBO3.setMaterialId(forderInfoBO.getFmateriafid());
-                        saveStocktakingOrderInfoBO3.setMaterialName(forderInfoBO.getFmaterialname());
-                    }
+                Optional optional= childOrderList.stream()
+                        .filter(b -> b.getFchildorderid().equals(saveStocktakingOrderInfoBO3.getOrderId()))
+                        .findFirst();
+                if(optional.isPresent()){
+                    ChildOrderBO forderInfoBO=(ChildOrderBO) optional.get();
+                    saveStocktakingOrderInfoBO3.setBoxLength(forderInfoBO.getFboxlength());
+                    saveStocktakingOrderInfoBO3.setBoxWidth(forderInfoBO.getFboxwidth());
+                    saveStocktakingOrderInfoBO3.setBoxHeight(forderInfoBO.getFboxheight());
+                    saveStocktakingOrderInfoBO3.setMaterialLength(forderInfoBO.getFmateriallength());
+                    saveStocktakingOrderInfoBO3.setMaterialWidth(forderInfoBO.getFmaterialwidth());
+                    saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
+                    saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
+                    saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
+                    saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoBOList.getJobId());
+                    saveStocktakingOrderInfoBO3.setInstockAmount(0);
+                    saveStocktakingOrderInfoBO3.setDifferenceValue(saveStocktakingOrderInfoBO3.getTakeStockAmount());
+                    saveStocktakingOrderInfoBO3.setMaterialId(forderInfoBO.getFmateriafid());
+                    saveStocktakingOrderInfoBO3.setMaterialName(forderInfoBO.getFmaterialname());
                 }
             }
         }
+//        for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO3:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
+//            if (saveStocktakingOrderInfoBO3.getIsInventoryProfit().equals(1)){
+//                for (JsonElement jsonElement:orderJsonArray0){
+//                    String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
+//                    ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
+//                    if (saveStocktakingOrderInfoBO3.getOrderId().equals(orderId)){
+//                        saveStocktakingOrderInfoBO3.setBoxLength(forderInfoBO.getFboxlength());
+//                        saveStocktakingOrderInfoBO3.setBoxWidth(forderInfoBO.getFboxwidth());
+//                        saveStocktakingOrderInfoBO3.setBoxHeight(forderInfoBO.getFboxheight());
+//                        saveStocktakingOrderInfoBO3.setMaterialLength(forderInfoBO.getFmateriallength());
+//                        saveStocktakingOrderInfoBO3.setMaterialWidth(forderInfoBO.getFmaterialwidth());
+//                        saveStocktakingOrderInfoBO3.setPartnerId(partnerInfoBO.getPartnerId());
+//                        saveStocktakingOrderInfoBO3.setOperatorId(partnerInfoBO.getOperatorId());
+//                        saveStocktakingOrderInfoBO3.setOperator(partnerInfoBO.getOperator());
+//                        saveStocktakingOrderInfoBO3.setRelativeId(saveStocktakingOrderInfoBOList.getJobId());
+//                        saveStocktakingOrderInfoBO3.setInstockAmount(0);
+//                        saveStocktakingOrderInfoBO3.setMaterialId(forderInfoBO.getFmateriafid());
+//                        saveStocktakingOrderInfoBO3.setMaterialName(forderInfoBO.getFmaterialname());
+//                    }
+//                }
+//            }
+//        }
         //添加是否在作业
         for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO1:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
             if (ObjectUtils.isEmpty(saveStocktakingOrderInfoBO1.getTakeStockAmount())){
@@ -1066,8 +1033,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         if(ObjectUtils.isEmpty(orderResult.getData())){
             return MsgTemplate.successMsg();
         }
-        //Map<String, Object> resultMap=gson.fromJson(orderResult,Map.class)
-
         //因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
         InnerDate innerDate=new InnerDate();
         innerDate.setTotal(orderResult.getData().getTotal());
@@ -1085,7 +1050,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     @Override
     public Map<String, Object> searchTaskList(GetStocktakingTaskBO getStocktakingTaskBO) {
         OrderResult orderResult=stocktakingTaskServer.searchTaskList(getStocktakingTaskBO);
-
         InnerDate innerDate=new InnerDate();
         innerDate.setTotal(orderResult.getData().getTotal());
         innerDate.setResult(orderResult.getData().getResult());
@@ -1143,6 +1107,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             pdaorderlist.add(pdaStocktakingOrderBO);
         }
         List<PdaStocktakingOrderBO> pdaorderlist2=new ArrayList<PdaStocktakingOrderBO>();
+        //排序
         for(PdaStocktakingOrderBO pdaStocktakingOrderBO:pdaorderlist){
             if(pdaStocktakingOrderBO.getStatus().equals(StocktakingTaskConstant.STATUS_1)){
                 pdaorderlist2.add(pdaStocktakingOrderBO);
@@ -1172,14 +1137,22 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     public Map<String, Object> pdaStocktakingOrderInfo(PdaStocktakingOrderInfo pdaStocktakingOrderInfo) {
         //判断是否存在此单号
         List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> checkmap=new HashMap<String,List<String>>();
+        //Map<String,List<String>> checkmap=new HashMap<String,List<String>>();
         orderidlist.add(pdaStocktakingOrderInfo.getOrderId());
-        checkmap.put("childOrderIds",orderidlist);
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(orderidlist);
         //获取批量订单信息列表,判断是不是作业单号写错了
-        HttpResult checkOrderResult=stocktakingOrderServer.getInfoByChildIds(checkmap);
-        if(ObjectUtils.isEmpty(checkOrderResult.getData()) ){
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+        if(ObjectUtils.isEmpty(childOrderList) ){
             return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
         }
+
+//        checkmap.put("childOrderIds",orderidlist);
+//        //获取批量订单信息列表,判断是不是作业单号写错了
+//        HttpResult checkOrderResult=stocktakingOrderServer.getInfoByChildIds(checkmap);
+//        if(ObjectUtils.isEmpty(checkOrderResult.getData()) ){
+//            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
+//        }
         //请求详细信息
         HttpResult result=stocktakingTaskServer.pdaStocktakingOrderInfo(pdaStocktakingOrderInfo);
         if(!result.isSuccess()){
@@ -1208,35 +1181,32 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> savePdaStocktakingResult(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO) {
-        String materialName=null;
-        String materialId=null;
+//        String materialName=null;
+//        String materialId=null;
         List<String> orderidlist=new ArrayList<String>();
-        Map<String,List<String>> map=new HashMap<String,List<String>>();
+        //Map<String,List<String>> map=new HashMap<String,List<String>>();
         //获取所有订单列表
         orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());
-        map.put("childOrderIds",orderidlist);
-        //获取批量订单信息列表
-//        HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
-//        if (ObjectUtils.isEmpty(orderResult.getData())){
-//            return MsgTemplate.successMsg();
+//        map.put("childOrderIds",orderidlist);
+//        JsonArray orderJsonArray0=getInfoByChildIds(map);
+//        for (JsonElement jsonElement : orderJsonArray0){
+//            ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
+//            materialName= forderInfoBO.getFmaterialname();
+//            materialId= forderInfoBO.getFmateriafid();
 //        }
-//        JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//        //筛选fdblflag为0的订单信息
-//        JsonArray orderJsonArray0=new JsonArray();
-//        for (JsonElement jsonElement : orderJsonArray){
-//            int fdbflag =new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fdblflag").getAsInt();
-//            if(fdbflag==0){
-//                orderJsonArray0.add(jsonElement);
-//            }
-//        }
-        JsonArray orderJsonArray0=getInfoByChildIds(map);
-        for (JsonElement jsonElement : orderJsonArray0){
-            ForderInfoBO forderInfoBO =gson.fromJson(jsonElement,ForderInfoBO.class);
-            materialName= forderInfoBO.getFmaterialname();
-            materialId= forderInfoBO.getFmateriafid();
+
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(orderidlist);
+        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+        Optional optional=childOrderList.stream().filter(b -> b.getFdbflage().equals(0))
+                .findFirst();
+        if(optional.isPresent()){
+            ChildOrderBO childOrderBO=(ChildOrderBO) optional.get();
+            saveStocktakingOrderInfoBO.setMaterialName(childOrderBO.getFmaterialname());
+            saveStocktakingOrderInfoBO.setMaterialId(childOrderBO.getFmateriafid());
         }
-        saveStocktakingOrderInfoBO.setMaterialName(materialName);
-        saveStocktakingOrderInfoBO.setMaterialId(materialId);
+//        saveStocktakingOrderInfoBO.setMaterialName(materialName);
+//        saveStocktakingOrderInfoBO.setMaterialId(materialId);
         saveStocktakingOrderInfoBO.setRelativeId(saveStocktakingOrderInfoBO.getJobId());
         if(ObjectUtils.isEmpty(saveStocktakingOrderInfoBO.getTakeStockAmount())){
             saveStocktakingOrderInfoBO.setStatus(StocktakingTaskConstant.STATUS_1);
@@ -1507,7 +1477,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     }
 
     /**
-     * 批量从订单服务获取订单详情
+     * 批量从订单服务获取订单详情并筛选flag为0的
      * @author  wzy
      * @param
      * @return
@@ -1529,4 +1499,5 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         }
         return  orderJsonArray0;
     }
+
 }

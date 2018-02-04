@@ -74,9 +74,13 @@ public class DeliveryOrderPO {
      */
     private Integer sequence;
     /**
-     * 提货状态
+     * 订单状态
      */
     private Integer status;
+    /**
+     * 提货状态
+     */
+    private Integer deliveryStatus;
     /**
      * 订单数量
      */
@@ -143,6 +147,9 @@ public class DeliveryOrderPO {
      */
     private String fluteType;
 
+    /**
+     * 库位库存
+     */
     private List<OrderDeliveryPO> warehouseLocs;
 
 
@@ -393,6 +400,14 @@ public class DeliveryOrderPO {
 
     public void setWarehouseLocs(List<OrderDeliveryPO> warehouseLocs) {
         this.warehouseLocs = warehouseLocs;
+    }
+
+    public Integer getDeliveryStatus() {
+        return deliveryStatus;
+    }
+
+    public void setDeliveryStatus(Integer deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
     }
 
     @Override

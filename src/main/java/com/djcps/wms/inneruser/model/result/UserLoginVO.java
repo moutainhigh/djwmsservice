@@ -32,4 +32,12 @@ public class UserLoginVO {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
+    @Override
+    public String toString() {
+        return "UserLoginVO{" +
+                "token='" + token + '\'' +
+                ", msg='" + msg + '\'' +
+                '}';
+    }
 }

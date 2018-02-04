@@ -4,6 +4,7 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.wms.commons.aop.log.AddLog;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -47,6 +48,7 @@ public class StocktakingTaskController {
      * @return
      * @create  2018/1/25 9:10
      **/
+    @AddLog(value ="新增全盘任务",module = "盘点")
     @RequestMapping(name="新增全盘任务",value = "/addAllTask", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> addTaskByAll(@RequestBody(required = false) String json, HttpServletRequest request){
         try {
@@ -77,6 +79,7 @@ public class StocktakingTaskController {
      * @return
      * @create  2018/1/11 9:34
      **/
+    @AddLog(value = "新增部分盘点任务",module = "盘点")
     @RequestMapping(name="新增部分盘点任务",value = "/addPartTask", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> addPartTask(@RequestBody(required = false) String json, HttpServletRequest request){
         try {
@@ -231,20 +234,43 @@ public class StocktakingTaskController {
      * @return
      * @create  2018/1/12 10:31
      **/
-    @RequestMapping(name="发起盘盈",value = "/inventorySurplus", method = RequestMethod.POST, produces = "application/json")
+//    @RequestMapping(name="发起盘盈",value = "/inventorySurplus2", method = RequestMethod.POST, produces = "application/json")
+//    public Map<String, Object> inventorySurplus2(@RequestBody(required = false) String json, HttpServletRequest request){
+//        StocktakingTaskBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO.class);
+//        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+//        BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
+//        ComplexResult ret = FluentValidator.checkAll().failFast()
+//                .on(stocktakingTaskBO,
+//                        new HibernateSupportedValidator<StocktakingTaskBO>()
+//                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//                .doValidate().result(ResultCollectors.toComplex());
+//        if (!ret.isSuccess()) {
+//            return MsgTemplate.failureMsg(ret);
+//        }
+//        return stocktakingTaskService.inventorySurplus(stocktakingTaskBO);
+//    }
+
+    /**
+     * web发起盘盈
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/3 12:17
+     **/
+    @RequestMapping(name="发起盘盈2",value = "/inventorySurplus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> inventorySurplus(@RequestBody(required = false) String json, HttpServletRequest request){
-        StocktakingTaskBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO.class);
+        StocktakingTaskBO2 stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO2.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
         ComplexResult ret = FluentValidator.checkAll().failFast()
                 .on(stocktakingTaskBO,
-                        new HibernateSupportedValidator<StocktakingTaskBO>()
+                        new HibernateSupportedValidator<StocktakingTaskBO2>()
                                 .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                 .doValidate().result(ResultCollectors.toComplex());
         if (!ret.isSuccess()) {
             return MsgTemplate.failureMsg(ret);
         }
-        return stocktakingTaskService.inventorySurplus(stocktakingTaskBO);
+        return stocktakingTaskService.inventorySurplus2(stocktakingTaskBO);
     }
 
     /**
@@ -298,6 +324,28 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.pdaInventorySurplus(stocktakingTaskBO);
+    }
+    /**
+     * 优化版
+     * @author  wzy
+     * @param
+     * @return
+     * @date  2018/2/4 9:07
+     **/
+    @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus2", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> pdaInventorySurplus2(@RequestBody(required = false) String json, HttpServletRequest request){
+        StocktakingTaskBO2 stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO2.class);
+        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+        BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
+        ComplexResult ret = FluentValidator.checkAll().failFast()
+                .on(stocktakingTaskBO,
+                        new HibernateSupportedValidator<StocktakingTaskBO2>()
+                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                .doValidate().result(ResultCollectors.toComplex());
+        if (!ret.isSuccess()) {
+            return MsgTemplate.failureMsg(ret);
+        }
+        return stocktakingTaskService.pdaInventorySurplus2(stocktakingTaskBO);
     }
 
     /**
