@@ -19,6 +19,7 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -168,8 +169,10 @@ public class LoadingTableController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListBO baseListParam  = gson.fromJson(json, BaseListBO.class);
-			return loadingTableService.getAllList(baseListParam);
+			BaseListPartnerIdBO param  = gson.fromJson(json, BaseListPartnerIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			return loadingTableService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -190,16 +193,18 @@ public class LoadingTableController {
 	public Map<String, Object> getLoadingTableById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			SelectLoadingTableByIdBO loadingTable  = gson.fromJson(json, SelectLoadingTableByIdBO.class);
+			SelectLoadingTableByIdBO param  = gson.fromJson(json, SelectLoadingTableByIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(loadingTable,
+					.on(param,
 							new HibernateSupportedValidator<SelectLoadingTableByIdBO>()
 							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return loadingTableService.getLoadingTableById(loadingTable);
+			return loadingTableService.getLoadingTableById(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -220,8 +225,10 @@ public class LoadingTableController {
 	public Map<String, Object> getLoadingTableByAttribute(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			SelectLoadingTableByAttributeBO loadingTable  = gson.fromJson(json, SelectLoadingTableByAttributeBO.class);
-			return loadingTableService.getLoadingTableByAttribute(loadingTable);
+			SelectLoadingTableByAttributeBO param  = gson.fromJson(json, SelectLoadingTableByAttributeBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			return loadingTableService.getLoadingTableByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

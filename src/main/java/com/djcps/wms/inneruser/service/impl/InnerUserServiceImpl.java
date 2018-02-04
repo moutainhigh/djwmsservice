@@ -1,4 +1,4 @@
-package com.djcps.wms.inneruser.service;
+package com.djcps.wms.inneruser.service.impl;
 
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -13,6 +13,7 @@ import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
 import com.djcps.wms.inneruser.redis.InnerUserRedisDao;
 import com.djcps.wms.inneruser.server.InnerUserServer;
+import com.djcps.wms.inneruser.service.InnerUserService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

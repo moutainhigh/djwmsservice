@@ -1,20 +1,30 @@
 package com.djcps.wms.stock.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
- 
-import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
+
+import org.apache.poi.util.StringUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
+import com.djcps.wms.allocation.constant.AllocationConstant;
+import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
+import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.order.service.OrderService;
+import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.djcps.wms.stock.model.AddStockBO;
 import com.djcps.wms.stock.model.MapLocationPO;
 import com.djcps.wms.stock.model.MoveStockBO;
@@ -26,6 +36,7 @@ import com.djcps.wms.stock.server.StockServer;
 import com.djcps.wms.stock.service.StockService;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 /**
@@ -42,7 +53,13 @@ public class StockServiceImpl implements StockService{
 	
 	@Autowired
 	private OrderServer orderServer;
-
+	
+	@Autowired
+	private AllocationServer allocationServer;
+	
+	@Autowired
+	private StockService stockService;
+	
 	private JsonParser jsonParser = new JsonParser();
 	
 	private Gson gson = new Gson();
@@ -81,17 +98,21 @@ public class StockServiceImpl implements StockService{
 		String key=AppConstant.MAP_API_KEY;
 		String output="JSON";
 		MapLocationPO mapLocationPo = stockServer.getStreetCode(key,newLocation,output);
-		RecommendLocaParamBO rl = new RecommendLocaParamBO();
-		rl.setPartnerId(param.getPartnerId());
-		rl.setStreetCode(mapLocationPo.getStreetCode());
-		addList.add(rl);
-		param.setParam(addList);
-		HttpResult result = stockServer.getRecommendLoca(param);
-		if(!ObjectUtils.isEmpty(result.getData())){
-			ArrayList data = (ArrayList) result.getData();
-			result.setData(data.get(0));
+		if(mapLocationPo!=null){
+			RecommendLocaParamBO rl = new RecommendLocaParamBO();
+			rl.setPartnerId(param.getPartnerId());
+			rl.setStreetCode(mapLocationPo.getStreetCode());
+			addList.add(rl);
+			param.setParam(addList);
+			HttpResult result = stockServer.getRecommendLoca(param);
+			if(!ObjectUtils.isEmpty(result.getData())){
+				ArrayList data = (ArrayList) result.getData();
+				result.setData(data.get(0));
+			}
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.successMsg();
 		}
-		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
@@ -110,12 +131,13 @@ public class StockServiceImpl implements StockService{
 		//订单数量
 		Integer orderAmount = param.getAmount();
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+		BeanUtils.copyProperties(param, selectAreaByOrderId);
 		OrderIdBO orderIdBO = new OrderIdBO();
 		orderIdBO.setOrderId(orderId);
 		list.add(orderIdBO);
 		selectAreaByOrderId.setOrderIds(list);
 		//解析在库信息
-		Map<String, Object> areaByOrderIdMap = getAreaByOrderId(selectAreaByOrderId);
+		Map<String, Object> areaByOrderIdMap = stockService.getAreaByOrderId(selectAreaByOrderId);
 		Object object = areaByOrderIdMap.get("data");
 		if(!ObjectUtils.isEmpty(object)){
 			JsonArray asJsonArray = jsonParser.parse(gson.toJson(object)).getAsJsonArray();
@@ -124,30 +146,77 @@ public class StockServiceImpl implements StockService{
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(trueAmount+saveAmount==orderAmount){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+				orderIdBO.setStatus(AllocationConstant.LESS_ADD_STOCK);
 			}
 		}else{
 			if(saveAmount > orderAmount){
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(saveAmount.equals(orderAmount)){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+				orderIdBO.setStatus(AllocationConstant.LESS_ADD_STOCK);
 			}
 		}
-		HttpResult updateOrderResult = orderServer.updateOrderStatus(orderIdBO);
-		//订单状态修改失败
-		if(!updateOrderResult.isSuccess()){
-			return MsgTemplate.failureMsg(SysMsgEnum.ORDER_UPDATE_ERROR);
+		HttpResult result = null;
+		result = orderServer.updateOrderStatus(orderIdBO);
+		if(result.isSuccess()){
+			//入库
+			result = stockServer.addStock(param);
+			if(result.isSuccess()){
+				//插入冗余表数据
+				String order = param.getOrderId();
+				OrderIdBO ord = new OrderIdBO();
+				ord.setChildOrderId(order);
+				result = orderServer.getOrderByOrderId(ord);
+				if(!ObjectUtils.isEmpty(result)){
+					SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					//组织参数
+					WarehouseOrderDetailPO fromJson = gson.fromJson(gson.toJson(result.getData()), WarehouseOrderDetailPO.class);
+					AddOrderRedundantBO orderRedundant = new AddOrderRedundantBO();
+					BeanUtils.copyProperties(param, orderRedundant);
+					orderRedundant.setBoxHeight(fromJson.getFboxheight());
+					orderRedundant.setBoxLength(fromJson.getFboxlength());
+					orderRedundant.setBoxWidth(fromJson.getFboxwidth());
+					orderRedundant.setCustomerName(StringUtils.isEmpty(fromJson.getFcusername())?fromJson.getFpusername():fromJson.getFcusername());
+					if(!ObjectUtils.isEmpty(fromJson.getFdelivery())){
+						orderRedundant.setDeliveryTime(sd.format(fromJson.getFdelivery()));
+					}
+					orderRedundant.setMaterialLength(fromJson.getFmateriallength());
+					orderRedundant.setMaterialWidth(fromJson.getFmaterialwidth());
+					orderRedundant.setMaterialName(fromJson.getFmaterialname());
+					orderRedundant.setOrderId(fromJson.getFchildorderid());
+					orderRedundant.setOrderTime(sd.format(fromJson.getFordertime()));
+					orderRedundant.setProductName(fromJson.getFgroupgoodname());
+					if(!ObjectUtils.isEmpty(fromJson.getFpaymenttime())){
+						orderRedundant.setPaymentTime(sd.format(fromJson.getFpaymenttime()));
+					}
+					orderRedundant.setStatus(fromJson.getFstatus());
+					//插入冗余数据订单数据
+					result = allocationServer.batchAddOrderRedundant(orderRedundant);
+					if(result.isSuccess()){
+						if(AllocationConstant.ALL_ADD_STOCK.equals(orderIdBO.getStatus())){
+							//修改冗余表订单状态为已入库
+							List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
+							UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
+							update.setStatus(Integer.valueOf(AllocationConstant.ALL_ADD_STOCK));
+							update.setOrderId(param.getOrderId());
+							update.setPartnerId(param.getPartnerId());
+							updateList.add(update);
+							allocationServer.batchUpdateOrderRedun(updateList);
+						}
+					}
+					if(!result.isSuccess()){
+						return MsgTemplate.failureMsg(SysMsgEnum.REDUNDANT_FAIL);
+					}
+				}
+			}
 		}
-		//入库
-		HttpResult result = stockServer.addStock(param);
-		return MsgTemplate.customMsg(result);
+		return  MsgTemplate.customMsg(result);
 	}
 
 	@Override

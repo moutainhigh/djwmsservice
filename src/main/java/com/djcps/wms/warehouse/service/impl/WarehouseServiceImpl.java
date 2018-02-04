@@ -1,6 +1,7 @@
 package com.djcps.wms.warehouse.service.impl;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
@@ -124,7 +125,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 * @date:2017年11月29日
 	 */
 	@Override
-	public Map<String, Object> getAllList(BaseListBO baseListParam){
+	public Map<String, Object> getAllList(BaseListPartnerIdBO baseListParam){
 		HttpResult result = warehouseServer.getAllList(baseListParam);
 		return MsgTemplate.customMsg(result);
 	}

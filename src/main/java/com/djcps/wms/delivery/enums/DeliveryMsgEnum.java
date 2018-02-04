@@ -7,6 +7,9 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @since 2018/2/1 13:48.
  */
 public enum DeliveryMsgEnum implements MsgInterface {
+    /**
+     * 提货错误代码
+     */
     DELIVERY_NOT_EXIT(870001,"获取提货信息失败"),
     ORDER_NOT_EXIT(870002,"获取提货订单信息失败");
 

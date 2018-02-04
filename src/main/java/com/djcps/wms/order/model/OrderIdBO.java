@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.constant.AppConstant;
 
 /**
@@ -13,7 +14,7 @@ import com.djcps.wms.commons.constant.AppConstant;
  * @author:zdx
  * @date:2017年12月21日
  */
-public class OrderIdBO extends BaseListBO implements Serializable{
+public class OrderIdBO extends BaseListPartnerIdBO implements Serializable{
 	
 	private static final long serialVersionUID = -5616396253072660052L;
 
@@ -28,16 +29,6 @@ public class OrderIdBO extends BaseListBO implements Serializable{
 	
 	@NotBlank
 	private String fkeyarea;
-	
-	private String partnerId;
-	
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
 
 	public OrderIdBO() {
 		this.fkeyarea = "3303";
@@ -78,7 +69,8 @@ public class OrderIdBO extends BaseListBO implements Serializable{
 	@Override
 	public String toString() {
 		return "OrderIdBO [childOrderId=" + childOrderId + ", orderId=" + orderId + ", status=" + status + ", fkeyarea="
-				+ fkeyarea + ", partnerId=" + partnerId + "]";
+				+ fkeyarea + "]";
 	}
+
 
 }

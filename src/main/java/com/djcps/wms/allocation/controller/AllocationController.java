@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,13 @@ import com.djcps.wms.allocation.model.AddAllocationOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
+import com.djcps.wms.allocation.model.CarBO;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
+import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
@@ -211,6 +214,9 @@ public class AllocationController {
 	public Map<String, Object> addzhinengpeihuo(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
+			BaseAddBO param = new BaseAddBO();
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 //			GetIntelligentAllocaBO param = gson.fromJson(json, GetIntelligentAllocaBO.class);
 //			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 //			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -223,7 +229,7 @@ public class AllocationController {
 //			if (!ret.isSuccess()) {
 //				return MsgTemplate.failureMsg(ret);
 //			}
-			return allocationService.addzhinengpeihuo();
+			return allocationService.addzhinengpeihuo(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -271,7 +277,7 @@ public class AllocationController {
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	@RequestMapping(name="移除订单",value = "/moveOrder", method = RequestMethod.POST, produces = "application/json")
+	/*@RequestMapping(name="移除订单",value = "/moveOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> moveOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -293,7 +299,7 @@ public class AllocationController {
 			logger.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
-	}
+	}*/
 	
 	/**
 	 * 追加订单
@@ -359,6 +365,18 @@ public class AllocationController {
 			System.err.println("==========遍历校验花费的时间==========");
 			System.err.println(System.currentTimeMillis()-start);
 			return allocationService.verifyAddOrder(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	@RequestMapping(name="确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> againVerifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			return allocationService.againVerifyAddOrder();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -470,7 +488,7 @@ public class AllocationController {
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
-	@RequestMapping(name="装车优化确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
+	/*@RequestMapping(name="装车优化确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againVerifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -493,7 +511,7 @@ public class AllocationController {
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
-
+*/
 	/**
 	 * 装车优化再次确认配货
 	 * @param json
@@ -502,7 +520,31 @@ public class AllocationController {
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
+	
 	@RequestMapping(name="装车优化再次确认配货",value = "/againVerifyAllocation", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> againVerifyAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			MergeModelBO param = gson.fromJson(json, MergeModelBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<MergeModelBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return allocationService.againVerifyAllocation(param,partnerInfoBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/*@RequestMapping(name="装车优化再次确认配货",value = "/againVerifyAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againVerifyAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -525,7 +567,7 @@ public class AllocationController {
 			logger.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
-	}
+	}*/
 	
 	/**
 	 * 获取所有可用车辆的信息
@@ -571,19 +613,18 @@ public class AllocationController {
 	public Map<String, Object> getCarDetailById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			String id = "";
-//			AgainVerifyAllocationBO param = gson.fromJson(json, AgainVerifyAllocationBO.class);
-//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-//			BeanUtils.copyProperties(partnerInfoBean,param);
-//			//数据校验
-//			ComplexResult ret = FluentValidator.checkAll().failFast()
-//					.on(param,
-//							new HibernateSupportedValidator<AgainVerifyAllocationBO>()
-//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//					.doValidate().result(ResultCollectors.toComplex());
-//			if (!ret.isSuccess()) {
-//				return MsgTemplate.failureMsg(ret);
-//			}
+			CarBO param = gson.fromJson(json, CarBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			//数据校验
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<CarBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
 			return allocationService.getCarDetailById();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -650,6 +691,54 @@ public class AllocationController {
 				return MsgTemplate.failureMsg(ret);
 			}
 			return allocationService.cancelAllocation(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	@RequestMapping(name="获取提货员信息",value = "/getPicker", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getPicker(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
+//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+//			BeanUtils.copyProperties(partnerInfoBean,param);
+//			//数据校验
+//			ComplexResult ret = FluentValidator.checkAll().failFast()
+//					.on(param,
+//							new HibernateSupportedValidator<CancelAllocationBO>()
+//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//					.doValidate().result(ResultCollectors.toComplex());
+//			if (!ret.isSuccess()) {
+//				return MsgTemplate.failureMsg(ret);
+//			}
+			return allocationService.getPicker();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	@RequestMapping(name="获取装车员信息",value = "/getLoadingPerson", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getLoadingPerson(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
+//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+//			BeanUtils.copyProperties(partnerInfoBean,param);
+//			//数据校验
+//			ComplexResult ret = FluentValidator.checkAll().failFast()
+//					.on(param,
+//							new HibernateSupportedValidator<CancelAllocationBO>()
+//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//					.doValidate().result(ResultCollectors.toComplex());
+//			if (!ret.isSuccess()) {
+//				return MsgTemplate.failureMsg(ret);
+//			}
+			return allocationService.getLoadingPerson();
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

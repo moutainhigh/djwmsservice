@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtable.request.WmsForLoadingTableHttpRequest;
 import com.google.gson.Gson;
@@ -73,7 +74,7 @@ public class LoadingTableServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getAllList(BaseListBO baseListParam){
+	public HttpResult getAllList(BaseListPartnerIdBO baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
 		System.out.println("---http请求参数转化为json格式---:"+json);

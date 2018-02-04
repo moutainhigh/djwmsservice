@@ -18,7 +18,7 @@
     </mvc:annotation-driven>
 
     <!-- 自动扫描该包 -->
-    <context:component-scan base-package="com.djcps.wms"/>
+    <context:component-scan base-package="com.djcps"/>
     <context:component-scan base-package="com.djcps.health" />
     <!-- 激活自动代理功能 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>

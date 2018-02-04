@@ -2,6 +2,12 @@ package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
 
+/**
+ * 伪车辆信息
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
 public class CarInfo implements Serializable{
 	
 	private String cheliangguige;

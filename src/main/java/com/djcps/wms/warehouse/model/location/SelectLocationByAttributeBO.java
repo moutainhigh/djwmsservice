@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
 /**
  * @title:模糊查询仓库对象
@@ -13,7 +14,7 @@ import com.djcps.wms.commons.base.BaseListBO;
  * @author:zdx
  * @date:2017年11月27日
  */
-public class SelectLocationByAttributeBO extends BaseListBO implements Serializable{
+public class SelectLocationByAttributeBO extends BaseListPartnerIdBO implements Serializable{
 
 	private static final long serialVersionUID = 4482968502224906253L;
 	
@@ -42,12 +43,6 @@ public class SelectLocationByAttributeBO extends BaseListBO implements Serializa
 	 */
 	@NotBlank
 	private String warehouseId;
-	
-	/**
-	 * 合作方id
-	 */
-	@NotBlank
-	private String partnerId;
 
 	public String getType() {
 		return type;
@@ -89,19 +84,11 @@ public class SelectLocationByAttributeBO extends BaseListBO implements Serializa
 		this.warehouseId = warehouseId;
 	}
 
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
-
 	@Override
 	public String toString() {
 		return "SelectLocationByAttributeBO [type=" + type + ", warehouseLocId=" + warehouseLocId + ", name=" + name
-				+ ", warehouseAreaId=" + warehouseAreaId + ", warehouseId=" + warehouseId + ", partnerId=" + partnerId
-				+ "]";
+				+ ", warehouseAreaId=" + warehouseAreaId + ", warehouseId=" + warehouseId + "]";
 	}
+
 	
 }

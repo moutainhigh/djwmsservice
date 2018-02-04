@@ -1,6 +1,8 @@
 package com.djcps.wms.commons.interceptor;
 
-import com.djcps.wms.commons.base.RedisClient;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -12,8 +14,6 @@ import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.ObjectUtils;
@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class WmsInterceptor extends HandlerInterceptorAdapter{
 
-	private static final Logger logger = LoggerFactory.getLogger(WmsInterceptor.class);
+	private static final DjcpsLogger logger = DjcpsLoggerFactory.getLogger(WmsInterceptor.class);
 
 	@Autowired
 	@Qualifier("redisClientCluster")
@@ -115,21 +115,6 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 			return false;
 		}
 
-//		//web端和app端请求用户控制
-//		String version = request.getParameter("version");
-//		if (version == null){
-//			responseMsg(InterceptorEnums.PARAMS_ERROR,response);
-//			return false;
-//		}
-
-//		if ("web".equals(version)) {
-//			String vtoken = request.getParameter("vtoken");
-//			if (vtoken == null)
-//				return this.poClient(response, "107");
-//			if (!vtoken.equals(MD5Util.getMD5String((token + "oa")))) {
-//				return this.poClient(response, "109");
-//			}
-//		}
 		return true;
 	}
 

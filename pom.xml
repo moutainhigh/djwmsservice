@@ -85,10 +85,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>1.8</java-version>
         <org.springframework-version>4.3.8.RELEASE</org.springframework-version>
-        <org.aspectj-version>1.8.10</org.aspectj-version>
-        <org.slf4j-version>1.7.24</org.slf4j-version>
+        <org.aspectj-version>1.8.9</org.aspectj-version>
+        <org.slf4j-version>1.7.25</org.slf4j-version>
         <project.web.name>/djwmsservice</project.web.name>
-        <log4j.version>2.8.2</log4j.version>
+        <log4j.version>2.9.1</log4j.version>
         <jackson.version>2.8.6</jackson.version>
     </properties>
 
@@ -244,22 +244,12 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
         <!-- 桥接：告诉commons logging使用Log4j2 -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jcl</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
         </dependency>
 
@@ -410,6 +400,13 @@
             <groupId>com.djcps</groupId>
             <artifactId>djcpshealth</artifactId>
             <version>1.0</version>
+        </dependency>
+
+        <!-- DJCPS log4j-->
+        <dependency>
+            <groupId>com.djcps</groupId>
+            <artifactId>djcpslog4j</artifactId>
+            <version>1.3.0.RELEASE</version>
         </dependency>
 
     </dependencies>

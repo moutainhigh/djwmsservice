@@ -2,6 +2,12 @@ package com.djcps.wms.commons.httpclient;
 
 import java.io.Serializable;
 
+/**
+ * 带total的HttpResult的对象结果
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年2月4日
+ */
 public class OtherHttpResult implements Serializable{
 
 	private static final long serialVersionUID = -5254870905221060001L;

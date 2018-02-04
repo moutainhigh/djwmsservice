@@ -41,7 +41,7 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	/**
 	 * 装车顺序
 	 */
-	@NotBlank
+	@NotNull
 	private String sequence;
 
 	public String getDeliveryId() {

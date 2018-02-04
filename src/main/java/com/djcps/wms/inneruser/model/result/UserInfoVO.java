@@ -10,7 +10,7 @@ public class UserInfoVO {
     /**
      * 用户id，可用与用户权限
      */
-    private int id;
+    private Integer id;
     /**
      * 用户邮箱
      */
@@ -43,7 +43,7 @@ public class UserInfoVO {
     /**
      * 部门id
      */
-    private int departmentId;
+    private Integer departmentId;
     /**
      * ip
      */
@@ -55,7 +55,7 @@ public class UserInfoVO {
     /**
      * 性别
      */
-    private int sex;
+    private Integer sex;
     /**
      * 公司ID
      */
@@ -88,14 +88,14 @@ public class UserInfoVO {
     /**
      * 获取 用户id，可用与用户权限
      */
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
     /**
      * 设置 用户id，可用与用户权限
      */
-    public UserInfoVO setId(int id) {
+    public UserInfoVO setId(Integer id) {
         this.id = id;
         return this;
     }
@@ -208,14 +208,14 @@ public class UserInfoVO {
     /**
      * 获取 部门id
      */
-    public int getDepartmentId() {
+    public Integer getDepartmentId() {
         return this.departmentId;
     }
 
     /**
      * 设置 部门id
      */
-    public UserInfoVO setDepartmentId(int departmentId) {
+    public UserInfoVO setDepartmentId(Integer departmentId) {
         this.departmentId = departmentId;
         return this;
     }
@@ -253,14 +253,14 @@ public class UserInfoVO {
     /**
      * 获取 性别
      */
-    public int getSex() {
+    public Integer getSex() {
         return this.sex;
     }
 
     /**
      * 设置 性别
      */
-    public UserInfoVO setSex(int sex) {
+    public UserInfoVO setSex(Integer sex) {
         this.sex = sex;
         return this;
     }

@@ -5,6 +5,7 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.base.BaseListBO;
+import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
@@ -244,7 +245,9 @@ public class WarehouseController {
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			BaseListBO param = gson.fromJson(json, BaseListBO.class);
+			BaseListPartnerIdBO param = gson.fromJson(json, BaseListPartnerIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			return warehouseService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -267,6 +270,8 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			SelectWarehouseByIdBO param = gson.fromJson(json, SelectWarehouseByIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<SelectWarehouseByIdBO>()
@@ -297,6 +302,8 @@ public class WarehouseController {
 		try {
 			logger.debug("json : " + json);
 			SelectWarehouseByAttributeBO param = gson.fromJson(json, SelectWarehouseByAttributeBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 			return warehouseService.getWarehouseByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();

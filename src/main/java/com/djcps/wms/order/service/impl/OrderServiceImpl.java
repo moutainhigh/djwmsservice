@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OrderHttpResult;
@@ -53,6 +55,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override 
 	public Map<String, Object> getAllOrderList(OrderParamBO param) {
+		if(StringUtils.isEmpty(param.getChildOrderModel().getFstatus())){
+			param.getChildOrderModel().setFstatus("2");
+		}
 		OrderHttpResult result = orderServer.getAllOrderList(param);
 		if(!result.isSuccess()){
 			HttpResult otherResult = new HttpResult();
@@ -66,8 +71,8 @@ public class OrderServiceImpl implements OrderService {
 		JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();  
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 		BeanUtils.copyProperties(param, selectAreaByOrderId);
-		List list = new ArrayList<OrderIdBO>();
-		List detailList = new ArrayList<WarehouseOrderDetailPO>();
+		List<OrderIdBO> list = new ArrayList<OrderIdBO>();
+		List<WarehouseOrderDetailPO> detailList = new ArrayList<WarehouseOrderDetailPO>();
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
 		for (JsonElement jsonElement : asJsonArray) {
 			String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
@@ -79,6 +84,7 @@ public class OrderServiceImpl implements OrderService {
 			//组织参数
 			getOrderDetail(fromJson,fromJson);
 			detailList.add(fromJson);
+			map.put(fromJson.getFchildorderid(), fromJson);
 		}
 		selectAreaByOrderId.setOrderIds(list);
 		//根据id获取在库信息
@@ -88,15 +94,18 @@ public class OrderServiceImpl implements OrderService {
 		}
 		//根据id存入到map中
 		for (WarehouseOrderDetailPO warehouseOrderDetailPO : resultList) {
-			map.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
-		}
-		for (JsonElement jsonElement : asJsonArray) {
-			String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
-			WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
-			if(warehouseOrderDetailPO!=null){
-				WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
+			WarehouseOrderDetailPO detatil = map.get(warehouseOrderDetailPO.getOrderId());
+			if(detatil!=null){
 				//组织参数
-				getOrderDetail(warehouseOrderDetailPO,fromJson);
+				getOrderDetail(detatil,detatil);
+				detatil.setAreaList(warehouseOrderDetailPO.getAreaList());
+				detatil.setOrderId(warehouseOrderDetailPO.getOrderId());
+				detatil.setFchildorderid(warehouseOrderDetailPO.getOrderId());
+				detatil.setAmountSaved(warehouseOrderDetailPO.getAmountSaved());
+				detatil.setAmount(warehouseOrderDetailPO.getAmount());
+				detatil.setFamount(warehouseOrderDetailPO.getFamount());
+				detatil.setWarehouseId(warehouseOrderDetailPO.getWarehouseId());
+				detatil.setWarehouseName(warehouseOrderDetailPO.getWarehouseName());
 			}
 		}
 		//因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
@@ -104,8 +113,8 @@ public class OrderServiceImpl implements OrderService {
 		resultMap.put("success", true);
 		resultMap.put("code", 100000);
 		resultMap.put("msg", "");
-		resultMap.put("total", resultList.size());
-		resultMap.put("data", resultList);
+		resultMap.put("total", detailList.size());
+		resultMap.put("data", detailList);
 		return resultMap;
 	}
 
@@ -194,6 +203,7 @@ public class OrderServiceImpl implements OrderService {
 	 * @author:zdx
 	 * @date:2018年1月8日
 	 */
+	@Override
 	public WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target){
 		//规格长宽高都不为null,才进行拼接
 		if(!ObjectUtils.isEmpty(target.getFboxlength()) && !ObjectUtils.isEmpty(target.getFboxwidth()) &&
