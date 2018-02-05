@@ -8,6 +8,9 @@ import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.GeoUnit;
 
+/**
+ * @author
+ */
 public interface RedisClient {
 
     String set(String key, String value);

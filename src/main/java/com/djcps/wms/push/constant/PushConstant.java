@@ -12,7 +12,7 @@ public class PushConstant {
      * 消息交换器
      */
 
-    public static final String EXCHANG_WMS = "exchangeWms";
+    public static final String EXCHANGE_WMS = "exchangeWms";
 
 
     /**
