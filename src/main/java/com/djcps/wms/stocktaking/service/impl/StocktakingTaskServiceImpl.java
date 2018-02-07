@@ -604,7 +604,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> pdaInventorySurplus(StocktakingTaskBO stocktakingTaskBO) {
-            Map<String,List<String>> map=new HashMap<String,List<String>>();
+            Map<String,List<String>> map=new HashMap<String,List<String>>(16);
             String orderId=stocktakingTaskBO.getOrderId();
             List<String> list=new ArrayList<String>();
             list.add(orderId);
