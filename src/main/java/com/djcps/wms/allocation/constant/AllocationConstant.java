@@ -126,4 +126,23 @@ public class AllocationConstant {
      * 逗号分隔符
      */
     public static final String COMMA_SEPARATOR=",";
+    
+    /**
+     * redis装车优化追加订单前缀
+     */
+    public static final String AGAIN_VERIFY_ADDORDER="againVerifyAddOrder";
+    
+    /**
+     * redis移除订单订单前缀
+     */
+    public static final String REMOVE_ORDER="removeOrder";
+    
+    /**
+     * 有缓存
+     */
+    public static final String HAVING_CACHE="1";
+    /**
+     * 无缓存
+     */
+    public static final String UNHAVING_CACHE="0";
 }

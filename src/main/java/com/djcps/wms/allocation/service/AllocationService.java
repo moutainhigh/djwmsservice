@@ -254,7 +254,16 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年2月4日
 	 */
-	Map<String, Object> againVerifyAddOrder();
+	Map<String, Object> againVerifyAddOrder(List<String> orderIds);
+
+
+	/**
+	 * 装车优化取界面消配货
+	 * @return
+	 * @author:zdx
+	 * @date:2018年2月4日
+	 */
+	Map<String, Object> againCancelAllocation();
 
 
 }

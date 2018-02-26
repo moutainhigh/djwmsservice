@@ -1,6 +1,7 @@
 package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -21,6 +22,19 @@ public class GetExcellentLodingBO extends BaseAddBO implements Serializable{
 	 */
 	@NotBlank
 	private String waybillId;
+	
+	/**
+	 * 追加订单界面传来的新的提货单号
+	 */
+	private String deliveryId;
+
+	public String getDeliveryId() {
+		return deliveryId;
+	}
+
+	public void setDeliveryId(String deliveryId) {
+		this.deliveryId = deliveryId;
+	}
 
 	public String getWaybillId() {
 		return waybillId;
@@ -32,7 +46,7 @@ public class GetExcellentLodingBO extends BaseAddBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "GetExcellentLodingBO [waybillId=" + waybillId + "]";
+		return "GetExcellentLodingBO [waybillId=" + waybillId + ", deliveryId=" + deliveryId + "]";
 	}
 	
 }
