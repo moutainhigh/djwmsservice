@@ -43,6 +43,7 @@ import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -383,11 +384,8 @@ public class AllocationController {
 	public Map<String, Object> againVerifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			List<String> orderIds = null;
-			if(!StringUtils.isEmpty(json)){
-				orderIds = gson.fromJson(json, List.class);
-			}
-			return allocationService.againVerifyAddOrder(orderIds);
+			List<WarehouseOrderDetailPO> cacheList = gson.fromJson(json, new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+			return allocationService.againVerifyAddOrder(cacheList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -717,7 +715,7 @@ public class AllocationController {
 	 * @author:zdx
 	 * @date:2018年1月23日
 	 */
-	@RequestMapping(name="装车优化取界面消配货",value = "/cancelAllocation", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="装车优化取界面消配货",value = "/againCancelAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againCancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 //			logger.debug("json : " + json);

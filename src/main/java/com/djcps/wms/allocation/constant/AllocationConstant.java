@@ -133,6 +133,11 @@ public class AllocationConstant {
     public static final String AGAIN_VERIFY_ADDORDER="againVerifyAddOrder";
     
     /**
+     * redis装车优化追加订单前缀,此缓存装车优化确认配货需要使用
+     */
+    public static final String CACHE_AGAIN_VERIFY_ADDORDER="cacheAgainVerifyAddOrder";
+    
+    /**
      * redis移除订单订单前缀
      */
     public static final String REMOVE_ORDER="removeOrder";

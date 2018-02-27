@@ -23,6 +23,19 @@ public class SequenceBO extends BaseAddBO implements Serializable{
 	 * 装车顺序
 	 */
 	private Integer sequence;
+	
+	/**
+	 * 订单号
+	 */
+	private String deliveryId;
+
+	public String getDeliveryId() {
+		return deliveryId;
+	}
+
+	public void setDeliveryId(String deliveryId) {
+		this.deliveryId = deliveryId;
+	}
 
 	public String getOrderId() {
 		return orderId;
@@ -42,8 +55,7 @@ public class SequenceBO extends BaseAddBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "SequenceBO [orderId=" + orderId + ", sequence=" + sequence + "]";
+		return "SequenceBO [orderId=" + orderId + ", sequence=" + sequence + ", deliveryId=" + deliveryId + "]";
 	}
-	
-	
+
 }

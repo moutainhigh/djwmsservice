@@ -20,6 +20,7 @@ import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 
 
 /**
@@ -254,7 +255,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年2月4日
 	 */
-	Map<String, Object> againVerifyAddOrder(List<String> orderIds);
+	Map<String, Object> againVerifyAddOrder(List<WarehouseOrderDetailPO> detailList);
 
 
 	/**

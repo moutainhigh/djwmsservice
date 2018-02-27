@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseAddBO;
@@ -22,20 +23,106 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
 	/**
 	 * 装车优化确认配货
 	 */
-	@NotEmpty
 	private List<AgainVerifyAllocationBO> againVerifyAllocation;
 	
 	/**
 	 * 装车优化移除订单
 	 */
-	@NotNull
 	private MoveOrderPO moveOrder;
 	
 	/**
 	 * 装车优化再次追加订单
 	 */
-	@NotNull
 	private AgainVerifyAddOrderBO againVerifyAddOrder;
+	
+	/**
+	 * 装车顺序
+	 */
+	@NotEmpty
+	private List<SequenceBO> sequenceList;
+	
+	/**
+	 * 智能配货id
+	 */
+	@NotBlank
+	private String allocationId;
+	/**
+	 * 运单号
+	 */
+	@NotBlank
+	private String waybillId;
+	/**
+	 * 提货单号
+	 */
+	@NotBlank
+	private String newDeliveryId;
+	/**
+	 * 装车台id
+	 */
+	@NotBlank
+	private String loadingTableId;
+	/**
+	 * 装车台名称
+	 */
+	@NotBlank
+	private String loadingTableName;
+	/**
+	 * 提货员id
+	 */
+	@NotBlank
+	private String pickerId;
+	/**
+	 * 提货员名称
+	 */
+	@NotBlank
+	private String pickerName;
+	/**
+	 * 提货员联系方式
+	 */
+	@NotBlank
+	private String pickerPhone;
+	
+	/**
+	 * 车牌号
+	 */
+	@NotBlank
+	private String plateNumber;
+	/**
+	 * 装车员id
+	 */
+	@NotBlank
+	private String loadingPersonId;
+	/**
+	 * 装车员名称
+	 */
+	@NotBlank
+	private String loadingPersonName;
+	/**
+	 * 装车员联系方式
+	 */
+	@NotBlank
+	private String loadingPersonPhone;
+	
+	public List<SequenceBO> getSequenceList() {
+		return sequenceList;
+	}
+
+	public void setSequenceList(List<SequenceBO> sequenceList) {
+		this.sequenceList = sequenceList;
+	}
+	public String getAllocationId() {
+		return allocationId;
+	}
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
+	}
+	public String getNewDeliveryId() {
+		return newDeliveryId;
+	}
+
+	public void setNewDeliveryId(String newDeliveryId) {
+		this.newDeliveryId = newDeliveryId;
+	}
 
 	public List<AgainVerifyAllocationBO> getAgainVerifyAllocation() {
 		return againVerifyAllocation;
@@ -61,12 +148,95 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
 		this.againVerifyAddOrder = againVerifyAddOrder;
 	}
 
+	public String getWaybillId() {
+		return waybillId;
+	}
+
+	public void setWaybillId(String waybillId) {
+		this.waybillId = waybillId;
+	}
+
+	public String getLoadingTableId() {
+		return loadingTableId;
+	}
+
+	public void setLoadingTableId(String loadingTableId) {
+		this.loadingTableId = loadingTableId;
+	}
+
+	public String getLoadingTableName() {
+		return loadingTableName;
+	}
+
+	public void setLoadingTableName(String loadingTableName) {
+		this.loadingTableName = loadingTableName;
+	}
+
+	public String getPickerId() {
+		return pickerId;
+	}
+
+	public void setPickerId(String pickerId) {
+		this.pickerId = pickerId;
+	}
+
+	public String getPickerName() {
+		return pickerName;
+	}
+
+	public void setPickerName(String pickerName) {
+		this.pickerName = pickerName;
+	}
+
+	public String getPickerPhone() {
+		return pickerPhone;
+	}
+
+	public void setPickerPhone(String pickerPhone) {
+		this.pickerPhone = pickerPhone;
+	}
+
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+
+	public String getLoadingPersonId() {
+		return loadingPersonId;
+	}
+
+	public void setLoadingPersonId(String loadingPersonId) {
+		this.loadingPersonId = loadingPersonId;
+	}
+
+	public String getLoadingPersonName() {
+		return loadingPersonName;
+	}
+
+	public void setLoadingPersonName(String loadingPersonName) {
+		this.loadingPersonName = loadingPersonName;
+	}
+
+	public String getLoadingPersonPhone() {
+		return loadingPersonPhone;
+	}
+
+	public void setLoadingPersonPhone(String loadingPersonPhone) {
+		this.loadingPersonPhone = loadingPersonPhone;
+	}
+
 	@Override
 	public String toString() {
 		return "MergeModelBO [againVerifyAllocation=" + againVerifyAllocation + ", moveOrder=" + moveOrder
-				+ ", againVerifyAddOrder=" + againVerifyAddOrder + "]";
+				+ ", againVerifyAddOrder=" + againVerifyAddOrder + ", sequenceList=" + sequenceList + ", allocationId="
+				+ allocationId + ", waybillId=" + waybillId + ", newDeliveryId=" + newDeliveryId + ", loadingTableId="
+				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
+				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", loadingPersonId="
+				+ loadingPersonId + ", loadingPersonName=" + loadingPersonName + ", loadingPersonPhone="
+				+ loadingPersonPhone + "]";
 	}
-	
-	
-	
+
 }

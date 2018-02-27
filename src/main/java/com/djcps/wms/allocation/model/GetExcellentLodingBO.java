@@ -26,16 +26,7 @@ public class GetExcellentLodingBO extends BaseAddBO implements Serializable{
 	/**
 	 * 追加订单界面传来的新的提货单号
 	 */
-	private String deliveryId;
-
-	public String getDeliveryId() {
-		return deliveryId;
-	}
-
-	public void setDeliveryId(String deliveryId) {
-		this.deliveryId = deliveryId;
-	}
-
+//	private String deliveryId;
 	public String getWaybillId() {
 		return waybillId;
 	}
@@ -46,7 +37,7 @@ public class GetExcellentLodingBO extends BaseAddBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "GetExcellentLodingBO [waybillId=" + waybillId + ", deliveryId=" + deliveryId + "]";
+		return "GetExcellentLodingBO [waybillId=" + waybillId + "]";
 	}
 	
 }

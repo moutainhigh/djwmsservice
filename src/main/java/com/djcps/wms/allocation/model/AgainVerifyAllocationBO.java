@@ -28,6 +28,12 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	private String deliveryId;
 	
 	/**
+	 * 运单号
+	 */
+	@NotBlank
+	private String waybillId;
+	
+	/**
 	 * 提货单确认状态
 	 */
 	private String deliveryIdEffect;
@@ -43,6 +49,32 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	 */
 	@NotNull
 	private String sequence;
+	
+	/**
+	 * 订单状态
+	 */
+	private Integer status;
+
+	
+	public String getWaybillId() {
+		return waybillId;
+	}
+
+
+	public void setWaybillId(String waybillId) {
+		this.waybillId = waybillId;
+	}
+
+
+	public Integer getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
 
 	public String getDeliveryId() {
 		return deliveryId;
@@ -86,8 +118,8 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "AgainVerifyAllocationBO [deliveryId=" + deliveryId + ", deliveryIdEffect=" + deliveryIdEffect
-				+ ", orderId=" + orderId + ", sequence=" + sequence + "]";
+		return "AgainVerifyAllocationBO [deliveryId=" + deliveryId + ", waybillId=" + waybillId + ", deliveryIdEffect="
+				+ deliveryIdEffect + ", orderId=" + orderId + ", sequence=" + sequence + ", status=" + status + "]";
 	}
-
+	
 }
