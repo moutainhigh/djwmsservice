@@ -143,6 +143,11 @@ public class AllocationConstant {
     public static final String REMOVE_ORDER="removeOrder";
     
     /**
+     * redis,缓存的提货单号
+     */
+    public static final String DELIVERYID="deliveryId";
+    
+    /**
      * 有缓存
      */
     public static final String HAVING_CACHE="1";

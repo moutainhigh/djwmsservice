@@ -264,7 +264,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年2月4日
 	 */
-	Map<String, Object> againCancelAllocation();
+	Map<String, Object> againCancelAllocation(String waybillId);
 
 
 }

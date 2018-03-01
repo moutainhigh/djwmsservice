@@ -718,7 +718,11 @@ public class AllocationController {
 	@RequestMapping(name="装车优化取界面消配货",value = "/againCancelAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againCancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-//			logger.debug("json : " + json);
+			logger.debug("json : " + json);
+			String parameter = request.getParameter("waybillId");
+			if(StringUtils.isEmpty(parameter)){
+				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
+			}
 //			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
 //			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 //			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -731,7 +735,7 @@ public class AllocationController {
 //			if (!ret.isSuccess()) {
 //				return MsgTemplate.failureMsg(ret);
 //			}
-			return allocationService.againCancelAllocation();
+			return allocationService.againCancelAllocation(parameter);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

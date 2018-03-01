@@ -38,13 +38,11 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
 	/**
 	 * 装车顺序
 	 */
-	@NotEmpty
 	private List<SequenceBO> sequenceList;
 	
 	/**
 	 * 智能配货id
 	 */
-	@NotBlank
 	private String allocationId;
 	/**
 	 * 运单号
@@ -54,53 +52,43 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
 	/**
 	 * 提货单号
 	 */
-	@NotBlank
 	private String newDeliveryId;
 	/**
 	 * 装车台id
 	 */
-	@NotBlank
 	private String loadingTableId;
 	/**
 	 * 装车台名称
 	 */
-	@NotBlank
 	private String loadingTableName;
 	/**
 	 * 提货员id
 	 */
-	@NotBlank
 	private String pickerId;
 	/**
 	 * 提货员名称
 	 */
-	@NotBlank
 	private String pickerName;
 	/**
 	 * 提货员联系方式
 	 */
-	@NotBlank
 	private String pickerPhone;
 	
 	/**
 	 * 车牌号
 	 */
-	@NotBlank
 	private String plateNumber;
 	/**
 	 * 装车员id
 	 */
-	@NotBlank
 	private String loadingPersonId;
 	/**
 	 * 装车员名称
 	 */
-	@NotBlank
 	private String loadingPersonName;
 	/**
 	 * 装车员联系方式
 	 */
-	@NotBlank
 	private String loadingPersonPhone;
 	
 	public List<SequenceBO> getSequenceList() {

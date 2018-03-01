@@ -25,7 +25,7 @@ public class SequenceBO extends BaseAddBO implements Serializable{
 	private Integer sequence;
 	
 	/**
-	 * 订单号
+	 * 提货单号
 	 */
 	private String deliveryId;
 
