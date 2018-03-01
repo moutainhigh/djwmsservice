@@ -33,7 +33,23 @@ public class MoveOrderPO extends BaseAddBO implements Serializable{
 	 */
 	private Integer status;
 	
+	/**
+	 * 运单号
+	 */
 	private String waybillId;
+	
+	/**
+	 * 智能配货id
+	 */
+	private String allocationId;
+
+	public String getAllocationId() {
+		return allocationId;
+	}
+
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
+	}
 
 	public String getWaybillId() {
 		return waybillId;
@@ -70,7 +86,7 @@ public class MoveOrderPO extends BaseAddBO implements Serializable{
 	@Override
 	public String toString() {
 		return "MoveOrderPO [orderIds=" + orderIds + ", flag=" + flag + ", status=" + status + ", waybillId="
-				+ waybillId + "]";
+				+ waybillId + ", allocationId=" + allocationId + "]";
 	}
-	
+
 }

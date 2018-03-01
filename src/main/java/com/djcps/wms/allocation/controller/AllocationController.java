@@ -708,6 +708,28 @@ public class AllocationController {
 	}
 	
 	/**
+	 * 智能配货取消配货(清楚缓存)
+	 * @param json
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(name="智能配货取消配货(清楚缓存)",value = "/intelligentCancelAllocation", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> intelligentCancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			String parameter = request.getParameter("allocationId");
+			if (StringUtils.isEmpty(parameter)) {
+				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
+			}
+			return allocationService.intelligentCancelAllocation(parameter);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
 	 * 装车优化取界面消配货
 	 * @param json
 	 * @param request

@@ -267,4 +267,12 @@ public interface AllocationService {
 	Map<String, Object> againCancelAllocation(String waybillId);
 
 
+	/**
+	 * 智能配货取消配货(清楚缓存)
+	 * @param parameter
+	 * @return
+	 */
+	Map<String, Object> intelligentCancelAllocation(String parameter);
+
+
 }

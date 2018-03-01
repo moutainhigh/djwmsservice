@@ -384,4 +384,15 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/getAlreadyAllocOrder.do")
 	public HTTPResponse getAlreadyAllocOrder(@Body RequestBody rb);
+
+	/**
+	 * 查询冗余表根据订单号获取订单详情信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getOrderByOrderIds.do")
+	public HTTPResponse getOrderByOrderIds(@Body RequestBody rb);
 }

@@ -125,6 +125,16 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	 */
 	private String cache;
 	
+	private String allocationId;
+	
+	public String getAllocationId() {
+		return allocationId;
+	}
+
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
+	}
+
 	public String getCache() {
 		return cache;
 	}
@@ -328,7 +338,7 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 				+ ", paymentEndTime=" + paymentEndTime + ", paymentStartTime=" + paymentStartTime
 				+ ", deliveryCreateTime=" + deliveryCreateTime + ", plateNumber=" + plateNumber + ", flag=" + flag
 				+ ", deliveryCreateStartTime=" + deliveryCreateStartTime + ", deliveryCreateEndTime="
-				+ deliveryCreateEndTime + ", cache=" + cache + "]";
+				+ deliveryCreateEndTime + ", cache=" + cache + ", allocationId=" + allocationId + "]";
 	}
 
 }

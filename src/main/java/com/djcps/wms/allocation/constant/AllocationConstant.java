@@ -148,6 +148,36 @@ public class AllocationConstant {
     public static final String DELIVERYID="deliveryId";
     
     /**
+     * redis,缓存智能配货未确认结果
+     */
+    public static final String INTELLIGENT_ALLOCATION="IntelligentAllocation";
+    
+    /**
+     * redis,智能配货移除订单
+     */
+    public static final String INTELLIGENT_REMOVE_ORDER="IntelligentRemoveOrder";
+    
+    /**
+     * redis,智能配货追加订单
+     */
+    public static final String INTELLIGENT_ADD_ORDER="IntelligentAddOrder";
+    
+    /**
+     * redis,智能配货确认配货锁
+     */
+    public static final String VERIFY_ALLOCATION="verifyAllocation";
+    
+    /**
+     * redis,装车优化确认优化锁
+     */
+    public static final String AGAIN_VERIFY_ALLOCATION="againVerifyAllocation";
+    
+    /**
+     * redis,智能配货确认配货和装车优化确认优化,公共锁
+     */
+    public static final String COMMON_ALLOCATION_LOADING="commonAllocationLoading";
+    
+    /**
      * 有缓存
      */
     public static final String HAVING_CACHE="1";

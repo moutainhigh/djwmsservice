@@ -83,8 +83,16 @@ public enum SysMsgEnum implements MsgInterface {
 	
 	ORDER_IS_NULL(880016, "查无此订单"),
 	
-	REDUNDANT_FAIL(880017, "冗余订单插入失败");
-    ;
+	REDUNDANT_FAIL(880017, "冗余订单插入失败"),
+	
+	ORDER_STATUS_ERROR(880018,"订单状态有误"),
+	
+	COMMON_ALLOCATION_LOADING__ERROR(880019,"请勿同时操作确认配货或确认优化"),
+	
+//	AGAIN_VERIFY_ALLOCATION__ERROR(880020,"请勿同时操作确认优化"),
+	
+//	VERIFY_ALLOCATION__ERROR(880021,"请勿同时操作确认配货")
+	;
 
 
     private int code;
