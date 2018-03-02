@@ -171,6 +171,7 @@ public class AllocationServiceImpl implements AllocationService {
 			if(!ObjectUtils.isEmpty(data)){
 				total = ordersResult.getTotal();
 				//组织订单号
+				redundantOrderList = gson.fromJson(gson.toJson(data),ArrayList.class);
 				//根据订单查询在库信息组织对象
 				SelectAreaByOrderIdBO selectArea = new SelectAreaByOrderIdBO();
 				BeanUtils.copyProperties(param, selectArea);
