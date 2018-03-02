@@ -185,4 +185,25 @@ public class AllocationConstant {
      * 无缓存
      */
     public static final String UNHAVING_CACHE="0";
+    
+    /**
+     * 楞型
+    
+	"BC瓦"= 1
+    "BE瓦"= 2
+    "单C瓦"= 3
+    "单B瓦"= 4
+    "单E瓦"= 5
+    "EBC瓦"= 6
+    "EE瓦"= 7
+     */
+    public static final String FLUTE_TYPE_1="BC瓦";
+    public static final String FLUTE_TYPE_2="BE瓦";
+    public static final String FLUTE_TYPE_3="单C瓦";
+    public static final String FLUTE_TYPE_4="单B瓦";
+    public static final String FLUTE_TYPE_5="单E瓦";
+    public static final String FLUTE_TYPE_6="EBC瓦";
+    public static final String FLUTE_TYPE_7="EE瓦";
+    
+    
 }
