@@ -205,5 +205,10 @@ public class AllocationConstant {
     public static final String FLUTE_TYPE_6="EBC瓦";
     public static final String FLUTE_TYPE_7="EE瓦";
     
+    /**
+     * redis锁过期时间
+     */
+    public static final Integer REDIS_LOCK_TIME=60;
+    
     
 }

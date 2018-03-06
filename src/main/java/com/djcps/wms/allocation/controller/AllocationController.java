@@ -315,7 +315,6 @@ public class AllocationController {
 	public Map<String, Object> getAddOrderList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-//			OrderParamBO param = gson.fromJson(json, OrderParamBO.class);
 			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -337,14 +336,14 @@ public class AllocationController {
 	}
 	
 	/**
-	 * 确认追加订单
+	 * 智能配货确认追加订单
 	 * @param json
 	 * @param request
 	 * @return
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	@RequestMapping(name="确认追加订单",value = "/verifyAddOrder", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="智能配货确认追加订单",value = "/verifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> verifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);

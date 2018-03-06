@@ -318,7 +318,6 @@ public class AllocationServiceImpl implements AllocationService {
 			//将智能配货结果存入到缓存当中
 			if(!ObjectUtils.isEmpty(orderPoList)){
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+allocationId, gson.toJson(orderPoList));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+allocationId, 86400);
 			}
 			allocation.setDate(orderPoList);
 			allocation.setCarInfo(new CarInfo());
@@ -339,11 +338,11 @@ public class AllocationServiceImpl implements AllocationService {
 		try {
 			//确认配货,确认优化公共锁
 			Boolean setnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
-					"上锁", 86400);
+					"上锁", AllocationConstant.REDIS_LOCK_TIME);
 			if(setnx){
 				//同时确认配货锁
 				Boolean allocaSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId(), 
-						"上锁", 86400);
+						"上锁", AllocationConstant.REDIS_LOCK_TIME);
 				if(allocaSetnx){
 					return verifyAllocationSon(param);
 				}else{
@@ -355,11 +354,11 @@ public class AllocationServiceImpl implements AllocationService {
 				while(true){
 					//确认配货,确认优化公共锁
 					Boolean againSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
-							"上锁", 86400);
+							"上锁", AllocationConstant.REDIS_LOCK_TIME);
 					if(againSetnx){
 						//同时确认配货锁
 						Boolean againAllocaSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId(), 
-								"上锁", 86400);
+								"上锁", AllocationConstant.REDIS_LOCK_TIME);
 						if(againAllocaSetnx){
 							Map<String, Object> map = verifyAllocationSon(param);
 							return map;
@@ -492,10 +491,8 @@ public class AllocationServiceImpl implements AllocationService {
 					orderIds.add(orderId);
 				}
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId, gson.toJson(orderIds));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId,86400);
 			}else{
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId, gson.toJson(param.getOrderIds()));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId,86400);
 			}
 			HttpResult result = allocationServer.allocationMoveOrder(param);
 			return MsgTemplate.customMsg(result);
@@ -521,10 +518,8 @@ public class AllocationServiceImpl implements AllocationService {
 					orderIds.add(orderId);
 				}
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId, gson.toJson(orderIds));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId,86400);
 			}else{
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId, gson.toJson(param.getOrderIds()));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId,86400);
 			}
 		}
 		return MsgTemplate.successMsg(); 
@@ -707,10 +702,8 @@ public class AllocationServiceImpl implements AllocationService {
 				cacheList.add(value);
 			}
 			redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(cacheList));
-			redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId,86400);
 		}else{
 			redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(param));
-			redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId,86400);
 		}
 		//订单表中存入订单数据
 		HttpResult result = allocationServer.verifyAddOrder(param);
@@ -896,7 +889,6 @@ public class AllocationServiceImpl implements AllocationService {
 				String deliveryId = new StringBuffer().append(AllocationConstant.DELIVERYID_PREFIX).append(numberJsonArray.get(0).getAsString()).toString();
 				//提货单做缓存
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId,deliveryId);
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId,86400);
 				waybillDeliveryOrder = gson.fromJson(gson.toJson(result.getData()),WaybillDeliveryOrderPO.class);
 				List<DeliveryOrderPO> deliveryOrderList = waybillDeliveryOrder.getDeliveryOrder();
 				List<OrderPO> againOrderList = deliveryOrderList.get(deliveryOrderList.size()-1).getOrders();
@@ -1259,10 +1251,10 @@ public class AllocationServiceImpl implements AllocationService {
 	public Map<String, Object> againVerifyAllocation(MergeModelBO param, PartnerInfoBO partnerInfoBean) {
 		//确认配货,确认优化公共锁
 		Boolean setnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
-				"上锁", 86400);
+				"上锁", AllocationConstant.REDIS_LOCK_TIME);
 		//同时确认配货锁
 		Boolean waybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
-				"上锁", 86400);
+				"上锁", AllocationConstant.REDIS_LOCK_TIME);
 		if(setnx){
 			if(waybillSetnx){
 				//确认配货执行逻辑方法
@@ -1277,10 +1269,10 @@ public class AllocationServiceImpl implements AllocationService {
 				while(true){
 					//确认配货,确认优化公共锁
 					Boolean againSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
-							"上锁", 86400);
+							"上锁", AllocationConstant.REDIS_LOCK_TIME);
 					//同时确认配货锁
 					Boolean againWaybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
-							"上锁", 86400);
+							"上锁", AllocationConstant.REDIS_LOCK_TIME);
 					if(againSetnx){
 						if(againWaybillSetnx){
 							//确认配货执行逻辑方法
@@ -1303,7 +1295,7 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 	
 	/**
-	 * 确认配货执行逻辑方法
+	 * 装车优化确认配货执行逻辑方法
 	 * @param param
 	 * @param partnerInfoBean
 	 * @return
@@ -1522,11 +1514,9 @@ public class AllocationServiceImpl implements AllocationService {
 						newOrderIdList.add(orderId);
 					}
 					redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId, gson.toJson(newOrderIdList));
-					redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId,86400);
 				}
 			}else{
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId, gson.toJson(orderIds));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId,86400);
 			}
 			
 			//缓存详细订单信息
@@ -1545,10 +1535,8 @@ public class AllocationServiceImpl implements AllocationService {
 					cacheList.add(entry.getValue());
 				}
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId, gson.toJson(cacheList));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId,86400);
 			}else{
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId, gson.toJson(detailList));
-				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId,86400);
 			}
 		}
 		return MsgTemplate.successMsg();
