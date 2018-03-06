@@ -412,6 +412,8 @@ public class AllocationServiceImpl implements AllocationService {
 				String error = orderPO.getOrderId();
 				String Msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 				SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(Msg);
+				//释放同时确认配货,确认优化公共锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 				return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_CHOOSE_ORDER,error);
 			}
 		}
@@ -1375,6 +1377,8 @@ public class AllocationServiceImpl implements AllocationService {
 						String error = orderPO.getOrderId();
 						String Msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 						SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(Msg);
+						//释放同时确认配货,确认优化公共锁
+						redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 						return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_CHOOSE_ORDER,error);
 					}
 				}
