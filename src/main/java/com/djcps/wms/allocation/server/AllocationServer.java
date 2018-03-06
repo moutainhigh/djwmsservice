@@ -460,6 +460,16 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult existIntelligentAlloca(String allocationId) {
+		//将请求参数转化为requestbody格式
+		String json = "{\"allocationId\":"+allocationId+"}";
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.existIntelligentAlloca(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:

@@ -17,6 +17,10 @@ import com.djcps.wms.commons.base.BaseAddBO;
  * @author:zdx
  * @date:2018年1月23日
  */
+/**
+ * @author ASUS
+ *
+ */
 public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = -8809202570759593832L;
@@ -54,8 +58,22 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	 * 订单状态
 	 */
 	private Integer status;
-
 	
+	/**
+	 * 车牌号
+	 */
+	private String plateNumber;
+
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+
+
 	public String getWaybillId() {
 		return waybillId;
 	}
@@ -119,7 +137,8 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	@Override
 	public String toString() {
 		return "AgainVerifyAllocationBO [deliveryId=" + deliveryId + ", waybillId=" + waybillId + ", deliveryIdEffect="
-				+ deliveryIdEffect + ", orderId=" + orderId + ", sequence=" + sequence + ", status=" + status + "]";
+				+ deliveryIdEffect + ", orderId=" + orderId + ", sequence=" + sequence + ", status=" + status
+				+ ", plateNumber=" + plateNumber + "]";
 	}
-	
+
 }

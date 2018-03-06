@@ -6,8 +6,10 @@ import com.djcps.wms.commons.config.ParamsConfig;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 import rpc.plugin.http.HTTPResponse;
 import rpc.plugin.http.RPCClientFields;
 
@@ -395,4 +397,16 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/getOrderByOrderIds.do")
 	public HTTPResponse getOrderByOrderIds(@Body RequestBody rb);
+
+	/**
+	 * 判断智能配货结果是否已配货
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/existIntelligentAlloca.do")
+	public HTTPResponse existIntelligentAlloca(@Body RequestBody rb);
+
 }

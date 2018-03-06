@@ -23,10 +23,6 @@ public class GetExcellentLodingBO extends BaseAddBO implements Serializable{
 	@NotBlank
 	private String waybillId;
 	
-	/**
-	 * 追加订单界面传来的新的提货单号
-	 */
-//	private String deliveryId;
 	public String getWaybillId() {
 		return waybillId;
 	}

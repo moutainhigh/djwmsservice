@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -62,6 +63,8 @@ import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
+import com.djcps.wms.commons.request.MsgHttpRequest;
+import com.djcps.wms.commons.utils.RedisUtil;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
@@ -101,7 +104,7 @@ public class AllocationServiceImpl implements AllocationService {
 	private OrderServer orderServer;
 	@Autowired
 	@Qualifier("redisClientCluster")
-	RedisClient redisClient;
+	private RedisClient redisClient;
 	
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
@@ -333,102 +336,136 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> verifyAllocation(VerifyAllocationBO param) {
-		
-		
-		//确认配货和确认优化操作,需要上锁,以合作方id就锁进行上锁
-		if(1==redisClient.setnx(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(),"上锁")){
-			redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 86400);
-			//防止同时进行确认配货
-			List<String> orderIds = new ArrayList<>();
-			List<SequenceBO> sequenceList = param.getOrderIds();
-			//取出所有的订单号
-			for (SequenceBO sequenceBO : sequenceList) {
-				BeanUtils.copyProperties(param, sequenceBO);
-				orderIds.add(sequenceBO.getOrderId());
-			}
-			
-			//配货之前先确认配货结果是否是已配货，此处订单状态必须为22已入库状态,否的话直接全部驳回
-			HttpResult orderResult = allocationServer.getOrderByOrderIds(orderIds);
-			List<OrderPO> orderPOList = gson.fromJson(gson.toJson(orderResult.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
-			for (OrderPO orderPO : orderPOList) {
-				Integer orderStatus = orderPO.getOrderStatus();
-				if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
-					String error = orderPO.getOrderId();
-					return MsgTemplate.failureMsg(SysMsgEnum.ORDER_STATUS_ERROR,error);
+		try {
+			//确认配货,确认优化公共锁
+			Boolean setnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
+					"上锁", 86400);
+			if(setnx){
+				//同时确认配货锁
+				Boolean allocaSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId(), 
+						"上锁", 86400);
+				if(allocaSetnx){
+					return verifyAllocationSon(param);
+				}else{
+					//删除确认配货,确认优化公共锁
+					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+					return MsgTemplate.failureMsg(SysMsgEnum.VERIFY_ALLOCATION_ERROR);
+				}
+			}else{
+				while(true){
+					//确认配货,确认优化公共锁
+					Boolean againSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
+							"上锁", 86400);
+					if(againSetnx){
+						//同时确认配货锁
+						Boolean againAllocaSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId(), 
+								"上锁", 86400);
+						if(againAllocaSetnx){
+							Map<String, Object> map = verifyAllocationSon(param);
+							return map;
+						}else{
+							//删除确认配货,确认优化公共锁
+							redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+							return MsgTemplate.failureMsg(SysMsgEnum.VERIFY_ALLOCATION_ERROR);
+						}
+					}
+					//休息一秒,再进行下一次循环
+					logger.info("============verifyAllocation方法,等待锁循环中===========");
+					Thread.sleep(1000);
 				}
 			}
-			
-//				OrderIdsBO order = new OrderIdsBO();
-//				order.setChildOrderIds(orderIds);
-//				HttpResult orderResult = orderServer.getOrderByOrderIds(order);
-//				if(!ObjectUtils.isEmpty(orderResult.getData())){
-//					JsonArray asJsonArray = jsonParser.parse(gson.toJson(orderResult.getData())).getAsJsonArray();
-//					for (JsonElement jsonElement : asJsonArray) {
-//						String fdblflag = jsonElement.getAsJsonObject().get("fdblflag").getAsString();
-//						//订单筛选,去除订单中双写的订单,取值为0的数据
-//						if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
-//							WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-//							//已配货直接驳回
-//							if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(fromJson.getFstatus()))){
-//								return MsgTemplate.failureMsg(SysMsgEnum.ORDER_ERROR_ALREADY_ALLOCATION);
-//							}
-//						}
-//					}
-//				}else{
-//					return MsgTemplate.failureMsg(SysMsgEnum.ORDER_IS_NULL);
-//				}
-			
-			//TODO 将所有的提货单id，和提货单号，以及指定的车辆信息id传递给TMS服务,返回成功后才能继续
-			//修改订单的订单状态，修改成已配货
-			OrderIdBO orderId = new OrderIdBO();
-			for(int i=0;i<orderIds.size();i++){
-				orderId.setStatus(AllocationConstant.ORDER_ALREADY_ALLOCATION);
-				orderId.setOrderId(orderIds.get(i));
-				//判断修改成功才能继续往下走(这里需要批量修改)
-				HttpResult updateOrderResult = orderServer.updateOrderStatus(orderId);
-				System.out.println(updateOrderResult.getMsg());
-			}
-			//TODO 修改提货员和装车员的状态
-			//修改配货表中的标志，修改为确认配货,且插入提货单数据(插入提货单确认状态feffect为1)
-			//并通过智能配货id,修改配货订单表中的提货单id(该id原先是为null的),修改装车顺序
-			SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String time  = sd.format(new Date());
-			param.setAllocationIdEffect(AllocationConstant.ALLOCATION_EFFECT);
-			param.setAllocationIdEffectTime(time);
-			param.setWaybillIdCreateTime(time);
-			param.setDeliveryCreateTime(time);
-			param.setDeliveryIdEffect(AllocationConstant.DELIVERY_EFFEFT);
-			HttpResult result = allocationServer.verifyAllocation(param);
-			if(result.isSuccess()){
-				//冗余表中插入运单号,提货单号和车牌号,并且修改订单状态
-				List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
-				for (String string : orderIds) {
-					UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
-					update.setStatus(Integer.valueOf(AllocationConstant.ORDER_ALREADY_ALLOCATION));
-					update.setDeliveryId(param.getDeliveryId());
-					update.setWaybillId(param.getWaybillId());
-					update.setOrderId(string);
-					update.setPlateNumber(param.getPlateNumber());
-					update.setPartnerId(param.getPartnerId());
-					updateList.add(update);
-				}
-				HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
-				if(updateOrderRedunResult.isSuccess()){
-					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
-					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
-					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
-				}
-				//删除确认优化的锁
-				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getPartnerId());
-				return MsgTemplate.customMsg(updateOrderRedunResult);
-			}
-			return MsgTemplate.customMsg(result);
-			//最后通知提货员装车员
-		}else{
-			return MsgTemplate.failureMsg(SysMsgEnum.COMMON_ALLOCATION_LOADING__ERROR);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
+		return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 	}
 
+	/**
+	 * 确认配货执行逻辑方法
+	 * @param param
+	 * @return
+	 */
+	private Map<String, Object> verifyAllocationSon(VerifyAllocationBO param) {
+		//确认配货之前先校验该智能配货结果是否已配货
+		HttpResult existHttpResult = allocationServer.existIntelligentAlloca(param.getAllocationId());
+		if(!ObjectUtils.isEmpty(existHttpResult.getData())){
+			String flag = (String)existHttpResult.getData();
+			if(flag.equals(AllocationConstant.ALLOCATION_EFFECT)){
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+				return MsgTemplate.failureMsg(SysMsgEnum.ALREADY_INTELLIGENT_ALLOCATION);
+			}
+		}
+		List<String> orderIds = new ArrayList<>();
+		List<SequenceBO> sequenceList = param.getOrderIds();
+		//取出所有的订单号
+		for (SequenceBO sequenceBO : sequenceList) {
+			BeanUtils.copyProperties(param, sequenceBO);
+			orderIds.add(sequenceBO.getOrderId());
+		}
+		
+		//配货之前先确认配货结果是否是已配货，此处订单状态必须为22已入库状态,否的话直接全部驳回
+		HttpResult orderResult = allocationServer.getOrderByOrderIds(orderIds);
+		List<OrderPO> orderPOList = gson.fromJson(gson.toJson(orderResult.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
+		for (OrderPO orderPO : orderPOList) {
+			Integer orderStatus = orderPO.getOrderStatus();
+			if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
+				String error = orderPO.getOrderId();
+				String Msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+				SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(Msg);
+				return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_CHOOSE_ORDER,error);
+			}
+		}
+				
+		//TODO 将所有的提货单id，和提货单号，以及指定的车辆信息id传递给TMS服务,返回成功后才能继续
+		//修改订单的订单状态，修改成已配货
+		OrderIdBO orderId = new OrderIdBO();
+		for(int i=0;i<orderIds.size();i++){
+			orderId.setStatus(AllocationConstant.ORDER_ALREADY_ALLOCATION);
+			orderId.setOrderId(orderIds.get(i));
+			//判断修改成功才能继续往下走(这里需要批量修改)
+			HttpResult updateOrderResult = orderServer.updateOrderStatus(orderId);
+			System.out.println(updateOrderResult.getMsg());
+		}
+		//TODO 修改提货员和装车员的状态
+		//修改配货表中的标志，修改为确认配货,且插入提货单数据(插入提货单确认状态feffect为1)
+		//并通过智能配货id,修改配货订单表中的提货单id(该id原先是为null的),修改装车顺序
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time  = sd.format(new Date());
+		param.setAllocationIdEffect(AllocationConstant.ALLOCATION_EFFECT);
+		param.setAllocationIdEffectTime(time);
+		param.setWaybillIdCreateTime(time);
+		param.setDeliveryCreateTime(time);
+		param.setDeliveryIdEffect(AllocationConstant.DELIVERY_EFFEFT);
+		HttpResult result = allocationServer.verifyAllocation(param);
+		if(result.isSuccess()){
+			//冗余表中插入运单号,提货单号和车牌号,并且修改订单状态
+			List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
+			for (String string : orderIds) {
+				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
+				update.setStatus(Integer.valueOf(AllocationConstant.ORDER_ALREADY_ALLOCATION));
+				update.setDeliveryId(param.getDeliveryId());
+				update.setWaybillId(param.getWaybillId());
+				update.setOrderId(string);
+				update.setPlateNumber(param.getPlateNumber());
+				update.setPartnerId(param.getPartnerId());
+				updateList.add(update);
+			}
+			HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
+			if(updateOrderRedunResult.isSuccess()){
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
+				//删除确认优化和确认配货公共锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+				//删除同时确认配货锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
+				return MsgTemplate.customMsg(updateOrderRedunResult);
+			}
+		}
+		return MsgTemplate.customMsg(result);
+		//最后通知提货员装车员
+	}
+	
 	@Override
 	public Map<String, Object> moveOrder(MoveOrderPO param) {
 		String allocationId = param.getAllocationId();
@@ -500,6 +537,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//订单状态:已入库
 		param.setOrderStatus(AllocationConstant.ALL_ADD_STOCK);
 		OtherHttpResult result = allocationServer.getAddOrderList(param);
+		int total = result.getTotal();
 		if(!ObjectUtils.isEmpty(result.getData())){
 			List<String> redundantOrderList = gson.fromJson(gson.toJson(result.getData()),ArrayList.class);
 			OrderIdsBO orderIds = new OrderIdsBO();
@@ -549,6 +587,7 @@ public class AllocationServiceImpl implements AllocationService {
 						WarehouseOrderDetailPO orderDetail = map.get(string);
 						if(orderDetail!=null){
 							map.remove(string);
+							total--;
 						}
 					}
 					if(map.size()>0){
@@ -611,6 +650,7 @@ public class AllocationServiceImpl implements AllocationService {
 						WarehouseOrderDetailPO orderDetail = map.get(orderId);
 						if(orderDetail!=null){
 							map.remove(orderId);
+							total--;
 						}
 					}
 				}
@@ -628,10 +668,10 @@ public class AllocationServiceImpl implements AllocationService {
 			mapResult.put("msg", "");
 			if(!ObjectUtils.isEmpty(detailList)){
 				mapResult.put("data", detailList);
-				mapResult.put("total", detailList.size());
+				mapResult.put("total", total);
 			}else if(!ObjectUtils.isEmpty(orderDetailList)){
 				mapResult.put("data", orderDetailList);
-				mapResult.put("total", orderDetailList.size());
+				mapResult.put("total", total);
 			}else{
 				mapResult.put("data", null);
 				mapResult.put("total",0);
@@ -855,15 +895,21 @@ public class AllocationServiceImpl implements AllocationService {
 				//提货单做缓存
 				redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId,deliveryId);
 				redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId,86400);
-				//装车优化,缓存追加订单,组织参数处理公共方法
-				List<OrderPO> orderList = getOrderPOList(addOrder, param,deliveryId);
 				waybillDeliveryOrder = gson.fromJson(gson.toJson(result.getData()),WaybillDeliveryOrderPO.class);
 				List<DeliveryOrderPO> deliveryOrderList = waybillDeliveryOrder.getDeliveryOrder();
-				DeliveryOrderPO deliveryOrder = new DeliveryOrderPO();
-				BeanUtils.copyProperties(deliveryOrderList.get(0),deliveryOrder);
-				deliveryOrder.setDeliveryId(deliveryId);
-				deliveryOrder.setOrders(orderList);
-				deliveryOrderList.add(deliveryOrder);
+				List<OrderPO> againOrderList = deliveryOrderList.get(deliveryOrderList.size()-1).getOrders();
+				Integer sequence =  againOrderList.get(againOrderList.size()-1).getSequence()+1;
+				
+				if(!ObjectUtils.isEmpty(deliveryOrderList)){
+					String allocationId = deliveryOrderList.get(0).getOrders().get(0).getAllocationId();
+					//装车优化,缓存追加订单,组织参数处理公共方法
+					List<OrderPO> orderList = getOrderPOList(sequence ,addOrder, param,deliveryId,allocationId);
+					DeliveryOrderPO deliveryOrder = new DeliveryOrderPO();
+					BeanUtils.copyProperties(deliveryOrderList.get(0),deliveryOrder);
+					deliveryOrder.setDeliveryId(deliveryId);
+					deliveryOrder.setOrders(orderList);
+					deliveryOrderList.add(deliveryOrder);
+				}
 			}
 		}
 		
@@ -896,8 +942,8 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 	        }
 		}
-		//删除确认配货和确认优化公共锁
-		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+		//删除同时确认优化锁
+		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+waybillId);
 		if(waybillDeliveryOrder!=null){
 			List<DeliveryOrderPO> deliveryList = waybillDeliveryOrder.getDeliveryOrder();
 			for (DeliveryOrderPO deliveryOrderPO : deliveryList) {
@@ -916,14 +962,53 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 			}
 		}
-		return MsgTemplate.successMsg(waybillDeliveryOrder);
+		
+		int size = 0;
+		List<OrderPO> orderList = new ArrayList<>();
+		List<DeliveryOrderPO> deliveryList = waybillDeliveryOrder.getDeliveryOrder();
+		Map<String,DeliveryOrderPO> map = new LinkedHashMap<>();
+		for (DeliveryOrderPO deliveryOrderPO : deliveryList) {
+			List<OrderPO> list = deliveryOrderPO.getOrders();
+			map.put(deliveryOrderPO.getDeliveryId(), deliveryOrderPO);
+			size = size+list.size();
+			for (OrderPO orderPO : list) {
+				orderList.add(orderPO);
+			}
+			deliveryOrderPO.setOrders(new ArrayList<>());
+		}
+		//对数据进行排序,选择排序法
+		int minIndex ;
+		OrderPO temp =null;
+	    for (int i = 0; i < size - 1; i++) {
+	        minIndex = i;
+	        for (int j = i + 1; j < size; j++) {
+	            if (orderList.get(j).getSequence() < orderList.get(minIndex).getSequence()) {     //寻找最小的数
+	                minIndex = j;                 //将最小数的索引保存
+	            }
+	        }
+	        temp = orderList.get(i);
+	        orderList.set(i, orderList.get(minIndex));
+	        orderList.set(minIndex,temp);
+	    }
+	    for (OrderPO order : orderList) {
+	    	String deliveryId = order.getDeliveryId();
+	    	DeliveryOrderPO deliveryOrderPO = map.get(deliveryId);
+    		deliveryOrderPO.getOrders().add(order);
+	    }
+	    int i =0;
+	    for(Map.Entry<String,DeliveryOrderPO> entry:map.entrySet()){
+	    	DeliveryOrderPO value = entry.getValue();
+	    	waybillDeliveryOrder.getDeliveryOrder().set(i, value);
+	    	i++;
+	    }
+	   return MsgTemplate.successMsg(waybillDeliveryOrder);
 	}
 	
 	/**
 	 * 装车优化,缓存追加订单,组织参数处理公共方法
 	 * @return
 	 */
-	private List<OrderPO> getOrderPOList(List<String> orderIdsList,GetExcellentLodingBO param,String deliveryId){
+	private List<OrderPO> getOrderPOList(Integer sequence,List<String> orderIdsList,GetExcellentLodingBO param,String deliveryId,String allocationId){
 		//String是订单号,map用来存在库信息查询出来的数据
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
 		List<OrderIdBO> orderIdBOList = new ArrayList<>();
@@ -960,7 +1045,6 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		
 		List<OrderPO> orderList = new ArrayList<>();
-		Integer i=1;
 		for(Map.Entry<String,WarehouseOrderDetailPO> entry : map.entrySet()){
 			//组织装车优化需要的参数
 			WarehouseOrderDetailPO value = entry.getValue();
@@ -981,22 +1065,15 @@ public class AllocationServiceImpl implements AllocationService {
 				orderPO.setDeliveryTime(value.getFdelivery().getTime());
 			}
 			orderPO.setAddress(new StringBuffer().append(value.getFcodeprovince()).append(value.getFaddressdetail()).toString());
-			orderPO.setSequence(i);
+			orderPO.setSequence(sequence);
 			orderPO.setContacts(value.getFconsignee());
 			orderPO.setCustomerName(value.getFcusername()==null?value.getFpusername():value.getFcusername());
 			orderPO.setMaterialName(value.getFmaterialname());
-			i++;
+			orderPO.setAllocationId(allocationId);
+			orderPO.setDeliveryId(deliveryId);
+			sequence++;
 			orderList.add(orderPO);
 		}
-		
-		HttpResult result = allocationServer.getExcellentLoding(param);
-		WaybillDeliveryOrderPO waybillDeliveryOrder = gson.fromJson(gson.toJson(result.getData()),WaybillDeliveryOrderPO.class);
-		List<DeliveryOrderPO> deliveryOrderList = waybillDeliveryOrder.getDeliveryOrder();
-		DeliveryOrderPO deliveryOrder = new DeliveryOrderPO();
-		BeanUtils.copyProperties(deliveryOrder, deliveryOrderList.get(0));
-		deliveryOrder.setDeliveryId(deliveryId);
-		deliveryOrder.setOrders(orderList);
-		deliveryOrderList.add(deliveryOrder);
 		return orderList;
 	}
 	
@@ -1089,7 +1166,7 @@ public class AllocationServiceImpl implements AllocationService {
 		result = allocationServer.addzhinengpeihuo();
 		Object data = result.getData();
 		if(ObjectUtils.isEmpty(data)){
-			return MsgTemplate.successMsg("没有已入库的订单所有就没有插入的数据");
+			return MsgTemplate.failureMsg("没有已入库的订单所有就没有插入的数据");
 		}
 		JsonArray asJsonArray = jsonParser.parse(gson.toJson(data)).getAsJsonArray();
 		List<String> orderIdsList =new  ArrayList<>();
@@ -1153,8 +1230,6 @@ public class AllocationServiceImpl implements AllocationService {
 				result = allocationServer.addDeliAllocOrder(list);
 			}
 		}
-		//删除确认配货和确认优化锁
-		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+base.getPartnerId());
 		return MsgTemplate.successMsg(allocationBO);
 	}
 
@@ -1180,187 +1255,239 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> againVerifyAllocation(MergeModelBO param, PartnerInfoBO partnerInfoBean) {
-		//确认配货和确认优化操作,需要上锁,以合作方id为锁进行上锁
-		if(1==redisClient.setnx(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(),"上锁")){
-			redisClient.expire(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 86400);
-			//装车优化确认配货合并移除订单,确认追加订单,确认配货
-			//冗余表修改订单状态
-			//修改提货单确认状态修改为feffect为1
-			//修改配货订单表中订单的提货单号
-			String waybillId = param.getWaybillId();
-			//整理装车顺序需要的数据
-			HashMap<String,SequenceBO> map = new HashMap<>();
-			if(!ObjectUtils.isEmpty(param.getSequenceList())){
-				for(SequenceBO sequence : param.getSequenceList()){
-					map.put(sequence.getOrderId(),sequence);
-				}
-				//修改装车顺序================
-				List<AgainVerifyAllocationBO> againVerifyAllocation = new ArrayList<>();
-				param.setAgainVerifyAllocation(againVerifyAllocation);
-				for(Map.Entry<String,SequenceBO> entry : map.entrySet()){
-					AgainVerifyAllocationBO allocation = new AgainVerifyAllocationBO();
-					BeanUtils.copyProperties(partnerInfoBean,allocation);
-					allocation.setDeliveryIdEffect(AllocationConstant.DELIVERY_EFFEFT);
-					allocation.setSequence(String.valueOf(entry.getValue().getSequence()));
-					allocation.setOrderId(entry.getKey());
-					allocation.setDeliveryId(entry.getValue().getDeliveryId());
-					allocation.setWaybillId(waybillId);
-					allocation.setStatus(Integer.valueOf(AllocationConstant.ORDER_ALREADY_ALLOCATION));
-					againVerifyAllocation.add(allocation);
-				}
-				//修改装车顺序================
+		//确认配货,确认优化公共锁
+		Boolean setnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
+				"上锁", 86400);
+		//同时确认配货锁
+		Boolean waybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
+				"上锁", 86400);
+		if(setnx){
+			if(waybillSetnx){
+				//确认配货执行逻辑方法
+				return againVerifyAllocationSon(param,partnerInfoBean);
+			}else{
+				//删除确认配货,确认优化公共锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+				return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
 			}
-			//配货管理追加订单===================
-			//计算装载率,判断装载率是否超出,超出直接驳回
-			//不超出,将订单数据存入订单表中,并重新生成提货单.提货员和装车员和原来的一致,装车顺序在原来的基础上递增
-			
-			//从缓存中取出要追加的订单
-			String str = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
-			if(!StringUtils.isEmpty(str)){
-				List<WarehouseOrderDetailPO> cacheList = gson.fromJson(str, new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
-				//获取移除订单的数据
-				String string = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
-				if(!StringUtils.isEmpty(string)){
-					List<String> orderIdsList = gson.fromJson(string, List.class);
-					//追加的订单和移除的订单需要进行比较,假如追加的订单又被移除了,则需要删除缓存中追加订单的数据
-					for (String orderStr : orderIdsList) {
-						Iterator<WarehouseOrderDetailPO> iterator = cacheList.iterator();
-						while(iterator.hasNext()){
-							WarehouseOrderDetailPO next = iterator.next();
-							if(orderStr.equals(next.getFchildorderid())){
-								iterator.remove();
-							}
+		}else{
+			try {
+				while(true){
+					//确认配货,确认优化公共锁
+					Boolean againSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
+							"上锁", 86400);
+					//同时确认配货锁
+					Boolean againWaybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
+							"上锁", 86400);
+					if(againSetnx){
+						if(againWaybillSetnx){
+							//确认配货执行逻辑方法
+							return againVerifyAllocationSon(param,partnerInfoBean);
+						}else{
+							//删除确认配货,确认优化公共锁
+							redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+							return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
 						}
 					}
+					//休息一秒,再进行下一次循环
+					logger.info("============againVerifyAllocation方法,等待锁循环中===========");
+					Thread.sleep(1000);
 				}
-				
-				//已经经过筛选处理的追加订单
-				if(!ObjectUtils.isEmpty(cacheList)){
-					List<String> orderIds = new ArrayList<>();
-					for (WarehouseOrderDetailPO orderDetailPO : cacheList) {
-						orderIds.add(orderDetailPO.getFchildorderid());
-					}
-					
-					//判断订单状态,此处订单状态必须为22已入库状态
-					HttpResult result = allocationServer.getOrderByOrderIds(orderIds);
-					List<OrderPO> orderPOList = gson.fromJson(gson.toJson(result.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
-					for (OrderPO orderPO : orderPOList) {
-						Integer orderStatus = orderPO.getOrderStatus();
-						if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
-							String error = orderPO.getOrderId();
-							return MsgTemplate.failureMsg(SysMsgEnum.ORDER_STATUS_ERROR,error);
-						}
-					}
-					
-					String allocationId = param.getAllocationId();
-					List<AddAllocationOrderBO> ordersList = new ArrayList<>();
-					AgainVerifyAddOrderBO againVerifyAddOrder = new AgainVerifyAddOrderBO();
-					param.setAgainVerifyAddOrder(againVerifyAddOrder);
-					BeanUtils.copyProperties(partnerInfoBean,againVerifyAddOrder);
-					BeanUtils.copyProperties(param,againVerifyAddOrder);
-					//提货单做缓存
-					String newDeliveryId = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
-					againVerifyAddOrder.setDeliveryId(newDeliveryId);
-					againVerifyAddOrder.setOrdersList(ordersList);
-					againVerifyAddOrder.setDeliveryIdEffect(AllocationConstant.DELIVERY_UNEFFEFT);
-					
-					//组织新增订单所需的参数
-					for (WarehouseOrderDetailPO detail : cacheList) {
-						for (WarehouseAreaBO areaBO : detail.getAreaList()) {
-							String areaId = areaBO.getWarehouseAreaId();
-							String areaName = areaBO.getWarehouseAreaName();
-							for (WarehouseLocationBO locationBO : areaBO.getLocationList()) {
-								AddAllocationOrderBO order = new AddAllocationOrderBO();
-								//组织追加订单需要的参数
-								order.setOrderId(detail.getFchildorderid());
-								order.setAllocationId(allocationId);
-								order.setProductName(detail.getFgroupgoodname());
-								order.setMaterialName(detail.getFmaterialname());
-								order.setCustomerName(detail.getFcusername()==null?detail.getFpusername():detail.getFcusername());
-								order.setContacts(detail.getFconsignee());
-								if(!StringUtils.isEmpty(detail.getFdelivery())){
-									order.setDeliveryTime(new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(detail.getFdelivery()));
-								}
-								SequenceBO sequenceBO = map.get(detail.getFchildorderid());
-								order.setSequence(String.valueOf(sequenceBO.getSequence()));
-								order.setOrderAmount(String.valueOf(detail.getFamount()));
-								order.setAddress(new StringBuffer().append(detail.getFcodeprovince()).append(detail.getFaddressdetail()).toString());
-								order.setUnit(detail.getUnit());
-								order.setWarehouseId(detail.getWarehouseId());
-								order.setWarehouseName(detail.getWarehouseName());
-								order.setWarehouseAreaId(areaId);
-								order.setWarehouseAreaName(areaName);
-								order.setWarehouseLocId(locationBO.getWarehouseLocId());
-								order.setWarehouseLocName(locationBO.getWarehouseLocName());
-								ordersList.add(order);
-							}
-						}
-					}
-					//修改订单服务订单状态修改为已配货
-					for (WarehouseOrderDetailPO orderDetail : cacheList) {
-						OrderIdBO orderIdBO = new OrderIdBO();
-						orderIdBO.setOrderId(orderDetail.getFchildorderid());
-						orderIdBO.setStatus(AllocationConstant.ORDER_ALREADY_ALLOCATION);
-						//通知订单服务修改,需要批量执行
-						HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
-					}
-				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			//配货管理追加订单===================
-			
-			//配货管理移除订单===================
-			String string = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
+		}
+		return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+	}
+	
+	/**
+	 * 确认配货执行逻辑方法
+	 * @param param
+	 * @param partnerInfoBean
+	 * @return
+	 */
+	private Map<String, Object> againVerifyAllocationSon(MergeModelBO param, PartnerInfoBO partnerInfoBean){
+		//装车优化确认配货合并移除订单,确认追加订单,确认配货
+		//冗余表修改订单状态
+		//修改提货单确认状态修改为feffect为1
+		//修改配货订单表中订单的提货单号
+		String waybillId = param.getWaybillId();
+		//整理装车顺序需要的数据
+		HashMap<String,SequenceBO> map = new HashMap<>();
+		if(!ObjectUtils.isEmpty(param.getSequenceList())){
+			for(SequenceBO sequence : param.getSequenceList()){
+				map.put(sequence.getOrderId(),sequence);
+			}
+			//修改装车顺序================
+			List<AgainVerifyAllocationBO> againVerifyAllocation = new ArrayList<>();
+			param.setAgainVerifyAllocation(againVerifyAllocation);
+			for(Map.Entry<String,SequenceBO> entry : map.entrySet()){
+				AgainVerifyAllocationBO allocation = new AgainVerifyAllocationBO();
+				BeanUtils.copyProperties(partnerInfoBean,allocation);
+				allocation.setDeliveryIdEffect(AllocationConstant.DELIVERY_EFFEFT);
+				allocation.setSequence(String.valueOf(entry.getValue().getSequence()));
+				allocation.setOrderId(entry.getKey());
+				allocation.setDeliveryId(entry.getValue().getDeliveryId());
+				allocation.setWaybillId(waybillId);
+				allocation.setStatus(Integer.valueOf(AllocationConstant.ORDER_ALREADY_ALLOCATION));
+				allocation.setPlateNumber(param.getPlateNumber());
+				againVerifyAllocation.add(allocation);
+			}
+			//修改装车顺序================
+		}
+		//配货管理追加订单===================
+		//计算装载率,判断装载率是否超出,超出直接驳回
+		//不超出,将订单数据存入订单表中,并重新生成提货单.提货员和装车员和原来的一致,装车顺序在原来的基础上递增
+		
+		//从缓存中取出要追加的订单
+		String str = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
+		if(!StringUtils.isEmpty(str)){
 			List<WarehouseOrderDetailPO> cacheList = gson.fromJson(str, new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
-			List<String> orderIdsList = gson.fromJson(string, List.class);
-			if(!ObjectUtils.isEmpty(cacheList) &&(!ObjectUtils.isEmpty(orderIdsList))){
-				//追加的订单和移除的订单需要进行比较,假如追加的订单又被移除了,则需要删除缓存中移除订单数据
-				Iterator orderIterator = orderIdsList.iterator();
-				while(orderIterator.hasNext()){
-					String orderNext = (String)orderIterator.next();
+			//获取移除订单的数据
+			String string = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
+			if(!StringUtils.isEmpty(string)){
+				List<String> orderIdsList = gson.fromJson(string, List.class);
+				//追加的订单和移除的订单需要进行比较,假如追加的订单又被移除了,则需要删除缓存中追加订单的数据
+				for (String orderStr : orderIdsList) {
 					Iterator<WarehouseOrderDetailPO> iterator = cacheList.iterator();
 					while(iterator.hasNext()){
 						WarehouseOrderDetailPO next = iterator.next();
-						if(orderNext.equals(next.getFchildorderid())){
-							orderIterator.remove();
+						if(orderStr.equals(next.getFchildorderid())){
+							iterator.remove();
 						}
 					}
 				}
 			}
 			
-			if(!ObjectUtils.isEmpty(orderIdsList)){
-				MoveOrderPO moveOrder = new MoveOrderPO();
-				param.setMoveOrder(moveOrder);
-				BeanUtils.copyProperties(partnerInfoBean,moveOrder);
+			//已经经过筛选处理的追加订单
+			if(!ObjectUtils.isEmpty(cacheList)){
+				List<String> orderIds = new ArrayList<>();
+				for (WarehouseOrderDetailPO orderDetailPO : cacheList) {
+					orderIds.add(orderDetailPO.getFchildorderid());
+				}
 				
-				//通知订单服务修改订单状态为已入库,先判断该订单是否为已配货,是已配货才进行修改否则不修改
-				moveOrder.setOrderIds(orderIdsList);
-				HttpResult updateOrderStatus = allocationServer.getAlreadyAllocOrder(orderIdsList);
-				List<String> list = (List<String>) updateOrderStatus.getData();
-				if(!ObjectUtils.isEmpty(list)){
-					for (String order : list) {
-						OrderIdBO orderIdBO = new OrderIdBO();
-						orderIdBO.setOrderId(order);
-						orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
-						//通知订单服务修改,需要批量执行
-						HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
+				//判断订单状态,此处订单状态必须为22已入库状态
+				HttpResult result = allocationServer.getOrderByOrderIds(orderIds);
+				List<OrderPO> orderPOList = gson.fromJson(gson.toJson(result.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
+				for (OrderPO orderPO : orderPOList) {
+					Integer orderStatus = orderPO.getOrderStatus();
+					if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
+						String error = orderPO.getOrderId();
+						String Msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+						SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(Msg);
+						return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_CHOOSE_ORDER,error);
 					}
 				}
-				//需要订单服务修改订单状态成功情况下,移除订单表数据,并且修改冗余表订单状态(该逻辑在服务端)
-				moveOrder.setStatus(Integer.valueOf(AllocationConstant.ALL_ADD_STOCK));
+				
+				String allocationId = param.getAllocationId();
+				List<AddAllocationOrderBO> ordersList = new ArrayList<>();
+				AgainVerifyAddOrderBO againVerifyAddOrder = new AgainVerifyAddOrderBO();
+				param.setAgainVerifyAddOrder(againVerifyAddOrder);
+				BeanUtils.copyProperties(partnerInfoBean,againVerifyAddOrder);
+				BeanUtils.copyProperties(param,againVerifyAddOrder);
+				//提货单做缓存
+				String newDeliveryId = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
+				againVerifyAddOrder.setDeliveryId(newDeliveryId);
+				againVerifyAddOrder.setOrdersList(ordersList);
+				againVerifyAddOrder.setDeliveryIdEffect(AllocationConstant.DELIVERY_UNEFFEFT);
+				
+				//组织新增订单所需的参数
+				for (WarehouseOrderDetailPO detail : cacheList) {
+					for (WarehouseAreaBO areaBO : detail.getAreaList()) {
+						String areaId = areaBO.getWarehouseAreaId();
+						String areaName = areaBO.getWarehouseAreaName();
+						for (WarehouseLocationBO locationBO : areaBO.getLocationList()) {
+							AddAllocationOrderBO order = new AddAllocationOrderBO();
+							//组织追加订单需要的参数
+							order.setOrderId(detail.getFchildorderid());
+							order.setAllocationId(allocationId);
+							order.setProductName(detail.getFgroupgoodname());
+							order.setMaterialName(detail.getFmaterialname());
+							order.setCustomerName(detail.getFcusername()==null?detail.getFpusername():detail.getFcusername());
+							order.setContacts(detail.getFconsignee());
+							if(!StringUtils.isEmpty(detail.getFdelivery())){
+								order.setDeliveryTime(new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(detail.getFdelivery()));
+							}
+							SequenceBO sequenceBO = map.get(detail.getFchildorderid());
+							order.setSequence(String.valueOf(sequenceBO.getSequence()));
+							order.setOrderAmount(String.valueOf(detail.getFamount()));
+							order.setAddress(new StringBuffer().append(detail.getFcodeprovince()).append(detail.getFaddressdetail()).toString());
+							order.setUnit(detail.getUnit());
+							order.setWarehouseId(detail.getWarehouseId());
+							order.setWarehouseName(detail.getWarehouseName());
+							order.setWarehouseAreaId(areaId);
+							order.setWarehouseAreaName(areaName);
+							order.setWarehouseLocId(locationBO.getWarehouseLocId());
+							order.setWarehouseLocName(locationBO.getWarehouseLocName());
+							ordersList.add(order);
+						}
+					}
+				}
+				//修改订单服务订单状态修改为已配货
+				for (WarehouseOrderDetailPO orderDetail : cacheList) {
+					OrderIdBO orderIdBO = new OrderIdBO();
+					orderIdBO.setOrderId(orderDetail.getFchildorderid());
+					orderIdBO.setStatus(AllocationConstant.ORDER_ALREADY_ALLOCATION);
+					//通知订单服务修改,需要批量执行
+					HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
+				}
 			}
-			//配货管理移除订单===================
-			
-			HttpResult result = allocationServer.againVerifyAllocation(param);
-			if(result.isSuccess()){
-				//清楚缓存
-				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId);
-				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
-				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
-			}
-			return MsgTemplate.customMsg(result);
-		}else{
-			return MsgTemplate.failureMsg(SysMsgEnum.COMMON_ALLOCATION_LOADING__ERROR);
 		}
+		//配货管理追加订单===================
+		
+		//配货管理移除订单===================
+		String string = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
+		List<WarehouseOrderDetailPO> cacheList = gson.fromJson(str, new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+		List<String> orderIdsList = gson.fromJson(string, List.class);
+		if(!ObjectUtils.isEmpty(cacheList) &&(!ObjectUtils.isEmpty(orderIdsList))){
+			//追加的订单和移除的订单需要进行比较,假如追加的订单又被移除了,则需要删除缓存中移除订单数据
+			Iterator orderIterator = orderIdsList.iterator();
+			while(orderIterator.hasNext()){
+				String orderNext = (String)orderIterator.next();
+				Iterator<WarehouseOrderDetailPO> iterator = cacheList.iterator();
+				while(iterator.hasNext()){
+					WarehouseOrderDetailPO next = iterator.next();
+					if(orderNext.equals(next.getFchildorderid())){
+						orderIterator.remove();
+					}
+				}
+			}
+		}
+		
+		if(!ObjectUtils.isEmpty(orderIdsList)){
+			MoveOrderPO moveOrder = new MoveOrderPO();
+			param.setMoveOrder(moveOrder);
+			BeanUtils.copyProperties(partnerInfoBean,moveOrder);
+			
+			//通知订单服务修改订单状态为已入库,先判断该订单是否为已配货,是已配货才进行修改否则不修改
+			moveOrder.setOrderIds(orderIdsList);
+			HttpResult updateOrderStatus = allocationServer.getAlreadyAllocOrder(orderIdsList);
+			List<String> list = (List<String>) updateOrderStatus.getData();
+			if(!ObjectUtils.isEmpty(list)){
+				for (String order : list) {
+					OrderIdBO orderIdBO = new OrderIdBO();
+					orderIdBO.setOrderId(order);
+					orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
+					//通知订单服务修改,需要批量执行
+					HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
+				}
+			}
+			//需要订单服务修改订单状态成功情况下,移除订单表数据,并且修改冗余表订单状态(该逻辑在服务端)
+			moveOrder.setStatus(Integer.valueOf(AllocationConstant.ALL_ADD_STOCK));
+		}
+		//配货管理移除订单===================
+		
+		HttpResult result = allocationServer.againVerifyAllocation(param);
+		if(result.isSuccess()){
+			//清楚缓存
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId);
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
+			//删除确认配货,确认优化公共锁
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+		}
+		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
@@ -1428,6 +1555,7 @@ public class AllocationServiceImpl implements AllocationService {
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId);
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
+		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
 		return MsgTemplate.successMsg();
 	}
 

@@ -138,12 +138,12 @@ public class AllocationConstant {
     public static final String CACHE_AGAIN_VERIFY_ADDORDER="cacheAgainVerifyAddOrder";
     
     /**
-     * redis移除订单订单前缀
+     * redis装车优化移除订单订单前缀
      */
     public static final String REMOVE_ORDER="removeOrder";
     
     /**
-     * redis,缓存的提货单号
+     * redis,装车优化缓存的提货单号
      */
     public static final String DELIVERYID="deliveryId";
     

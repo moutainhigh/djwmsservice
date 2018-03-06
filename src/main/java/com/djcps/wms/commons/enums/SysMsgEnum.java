@@ -87,13 +87,14 @@ public enum SysMsgEnum implements MsgInterface {
 	
 	ORDER_STATUS_ERROR(880018,"订单状态有误"),
 	
-	COMMON_ALLOCATION_LOADING__ERROR(880019,"请勿同时操作确认配货或确认优化"),
+	AGAIN_CHOOSE_ORDER(880019,"订单有误,请重新选择"),
 	
-//	AGAIN_VERIFY_ALLOCATION__ERROR(880020,"请勿同时操作确认优化"),
+	VERIFY_ALLOCATION_ERROR(880020,"请勿同时进行确认配货"),
 	
-//	VERIFY_ALLOCATION__ERROR(880021,"请勿同时操作确认配货")
+	AGAIN_VERIFY_ALLOCATION_ERROR(880021,"请勿同时进行确认优化"),
+	
+	ALREADY_INTELLIGENT_ALLOCATION(880022,"该配货结果已确认"),
 	;
-
 
     private int code;
     
@@ -107,7 +108,10 @@ public enum SysMsgEnum implements MsgInterface {
     public int getCode() {
         return code;
     }
-    @Override
+    public void setMsg(String msg) {
+		this.msg = msg;
+	}
+	@Override
     public String getMsg() {
         return msg;
     }
