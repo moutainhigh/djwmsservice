@@ -9,6 +9,11 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.order.model.*;
 import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.record.constant.StockTakingOperationConstant;
+import com.djcps.wms.record.model.SaveOperationRecordBO;
+import com.djcps.wms.record.model.StocktakingRecordListBO;
+import com.djcps.wms.record.server.OperationRecordServer;
+import com.djcps.wms.record.util.StockTakingOperationRecordUtil;
 import com.djcps.wms.stocktaking.constant.StocktakingTaskConstant;
 import com.djcps.wms.stocktaking.model.*;
 import com.djcps.wms.stocktaking.model.orderresult.InnerDate;
@@ -47,7 +52,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
 
     @Autowired
     private OrderServer orderServer;
-
+    @Autowired
+    private OperationRecordServer operationRecordServer;
     Gson gson=new Gson();
 
     /**
@@ -1132,9 +1138,32 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             Map<String,Object> upmap=updateTaskState(updateStocktakingTaskBO);
             System.out.println(updateStocktakingTaskBO);
         }
+        saveOperationRecord(saveStocktakingOrderInfoBO);
         return MsgTemplate.customMsg(result);
     }
-
+    /**
+     * 判断是否生成盘点开始操作记录
+     * @author  wyb
+     * @param
+     * @return
+     * @create  2018/3/7
+     **/
+    public void saveOperationRecord(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO){
+        List<String> list=new ArrayList<String>();
+        list.add("21");
+        StocktakingRecordListBO stocktakingRecordListBO=new StocktakingRecordListBO();
+        stocktakingRecordListBO.setJobId(saveStocktakingOrderInfoBO.getJobId());
+        stocktakingRecordListBO.setList(list);
+        SaveOperationRecordBO saveOperationRecordBO =new SaveOperationRecordBO();
+        saveOperationRecordBO.setRelativeId(saveStocktakingOrderInfoBO.getJobId());
+        saveOperationRecordBO.setOperationType(StockTakingOperationConstant.START_INVENTORY_TASK);
+        saveOperationRecordBO.setOperator(saveStocktakingOrderInfoBO.getOperator());
+        saveOperationRecordBO.setOperatorId(saveStocktakingOrderInfoBO.getOperatorId());
+        saveOperationRecordBO.setEvent(StockTakingOperationRecordUtil.getStartEvent());
+        if(ObjectUtils.isEmpty(operationRecordServer.stocktakingRecordList(stocktakingRecordListBO))) {
+            operationRecordServer.saveOperationRecord(saveOperationRecordBO);
+        }
+    }
     /**
      * 未完成返回盘点数
      * @author  wzy
