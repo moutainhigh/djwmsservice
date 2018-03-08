@@ -6,6 +6,7 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.commons.base.BaseListBO;
 
 /**
  * 操作记录关联id
@@ -13,7 +14,7 @@ import com.djcps.wms.commons.base.BaseBO;
  * @author:zdx
  * @date:2018年3月8日
  */
-public class RelativeIdBO extends BaseBO implements Serializable {
+public class RelativeIdBO extends BaseListBO implements Serializable {
 	
 	private static final long serialVersionUID = -3809499474310430921L;
 	
