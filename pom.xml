@@ -369,7 +369,7 @@
         <dependency>
             <groupId>rpc.plugin</groupId>
             <artifactId>djhttprpc</artifactId>
-            <version>1.04</version>
+            <version>1.30</version>
         </dependency>
 
         <!-- xstream  XML Bean 转换 -->
