@@ -114,6 +114,21 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	 */
 	private String deliveryCreateTime;
 	
+	/**
+	 * 司机姓名
+	 */
+	@NotBlank
+	private String driverName;
+	
+	
+	public String getDriverName() {
+		return driverName;
+	}
+
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
 	public String getPickerPhone() {
 		return pickerPhone;
 	}
@@ -286,8 +301,8 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
 				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
 				+ deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
-				+ ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime + "]";
+				+ ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime
+				+ ", driverName=" + driverName + "]";
 	}
-
 	
 }

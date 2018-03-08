@@ -409,4 +409,15 @@ public interface WmsForAllocationHttpRequest {
 	@POST("allocation/existIntelligentAlloca.do")
 	public HTTPResponse existIntelligentAlloca(@Body RequestBody rb);
 
+	/**
+	 * 根据关联id获取操作记录信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年3月8日
+	 */
+	@Headers("content-type:application/json")
+	@POST("operationRecord/getRecordByRrelativeId.do")
+	public HTTPResponse getRecordByRrelativeId(@Body RequestBody rb);
+
 }

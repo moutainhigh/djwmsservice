@@ -106,7 +106,6 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	 */
 	private String plateNumber;
 	
-	
 	/**
 	 * 查询标记,flag为0,则表示没有查询条件,为1表中有查询条件
 	 */

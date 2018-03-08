@@ -46,6 +46,7 @@ import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.OrderPO;
 import com.djcps.wms.allocation.model.PickerPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.SequenceBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
@@ -390,6 +391,7 @@ public class AllocationServiceImpl implements AllocationService {
 		if(!ObjectUtils.isEmpty(existHttpResult.getData())){
 			String flag = (String)existHttpResult.getData();
 			if(flag.equals(AllocationConstant.ALLOCATION_EFFECT)){
+				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 				return MsgTemplate.failureMsg(SysMsgEnum.ALREADY_INTELLIGENT_ALLOCATION);
 			}
@@ -425,7 +427,6 @@ public class AllocationServiceImpl implements AllocationService {
 			orderId.setOrderId(orderIds.get(i));
 			//判断修改成功才能继续往下走(这里需要批量修改)
 			HttpResult updateOrderResult = orderServer.updateOrderStatus(orderId);
-			System.out.println(updateOrderResult.getMsg());
 		}
 		//TODO 修改提货员和装车员的状态
 		//修改配货表中的标志，修改为确认配货,且插入提货单数据(插入提货单确认状态feffect为1)
@@ -456,13 +457,13 @@ public class AllocationServiceImpl implements AllocationService {
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
-				//删除确认优化和确认配货公共锁
-				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-				//删除同时确认配货锁
-				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
 				return MsgTemplate.customMsg(updateOrderRedunResult);
 			}
 		}
+		//删除同时确认配货锁
+		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
+		//删除确认优化和确认配货公共锁
+		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 		return MsgTemplate.customMsg(result);
 		//最后通知提货员装车员
 	}
@@ -936,8 +937,7 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 	        }
 		}
-		//删除同时确认优化锁
-		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+waybillId);
+		
 		if(waybillDeliveryOrder!=null){
 			List<DeliveryOrderPO> deliveryList = waybillDeliveryOrder.getDeliveryOrder();
 			for (DeliveryOrderPO deliveryOrderPO : deliveryList) {
@@ -995,7 +995,9 @@ public class AllocationServiceImpl implements AllocationService {
 	    	waybillDeliveryOrder.getDeliveryOrder().set(i, value);
 	    	i++;
 	    }
-	   return MsgTemplate.successMsg(waybillDeliveryOrder);
+	    //删除同时确认优化锁
+	    redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+waybillId);
+	    return MsgTemplate.successMsg(waybillDeliveryOrder);
 	}
 	
 	/**
@@ -1480,9 +1482,10 @@ public class AllocationServiceImpl implements AllocationService {
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
-			//删除确认配货,确认优化公共锁
-			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+			
 		}
+		//删除确认配货,确认优化公共锁
+		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 		return MsgTemplate.customMsg(result);
 	}
 
@@ -1557,5 +1560,11 @@ public class AllocationServiceImpl implements AllocationService {
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+parameter);
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+parameter);
 		return MsgTemplate.successMsg();
+	}
+
+	@Override
+	public Map<String, Object> getRecordByRrelativeId(RelativeIdBO param) {
+		HttpResult result = allocationServer.getRecordByRrelativeId(param);
+		return MsgTemplate.customMsg(result);
 	}
 }
