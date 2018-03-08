@@ -61,12 +61,12 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	 * 装车台id
 	 */
 	@NotBlank
-	private String loadingtableId;
+	private String loadingTableId;
 	/**
 	 * 装车台名称
 	 */
 	@NotBlank
-	private String loadingtableName;
+	private String loadingTableName;
 	/**
 	 * 提货员id
 	 */
@@ -202,25 +202,22 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	}
 
 
-	public String getLoadingtableId() {
-		return loadingtableId;
+	public String getLoadingTableId() {
+		return loadingTableId;
 	}
 
 
-	public void setLoadingtableId(String loadingtableId) {
-		this.loadingtableId = loadingtableId;
+	public void setLoadingTableId(String loadingTableId) {
+		this.loadingTableId = loadingTableId;
 	}
 
-
-	public String getLoadingtableName() {
-		return loadingtableName;
+	public String getLoadingTableName() {
+		return loadingTableName;
 	}
 
-
-	public void setLoadingtableName(String loadingtableName) {
-		this.loadingtableName = loadingtableName;
+	public void setLoadingTableName(String loadingTableName) {
+		this.loadingTableName = loadingTableName;
 	}
-
 
 	public String getPickerId() {
 		return pickerId;
@@ -285,8 +282,8 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable{
 	public String toString() {
 		return "VerifyAllocationBO [orderIds=" + orderIds + ", allocationId=" + allocationId + ", allocationIdEffect="
 				+ allocationIdEffect + ", allocationIdEffectTime=" + allocationIdEffectTime + ", waybillId=" + waybillId
-				+ ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingtableId="
-				+ loadingtableId + ", loadingtableName=" + loadingtableName + ", pickerId=" + pickerId + ", pickerName="
+				+ ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingTableId="
+				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
 				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
 				+ deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
 				+ ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime + "]";

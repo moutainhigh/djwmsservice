@@ -66,7 +66,7 @@
             <appender-ref ref="run" />
         </Logger>
 		<!-- aop操作日志输出配置 -->
-		<Logger name="com.djcps.crm.aop.log.LogAspect" level="INFO"
+		<Logger name="com.djcps.wms.commons.aop.log.LogAspect" level="INFO"
 			additivity="false">
 			<appender-ref ref="operation" />
 		</Logger>

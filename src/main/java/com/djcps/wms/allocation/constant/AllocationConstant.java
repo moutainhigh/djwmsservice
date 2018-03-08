@@ -126,4 +126,89 @@ public class AllocationConstant {
      * 逗号分隔符
      */
     public static final String COMMA_SEPARATOR=",";
+    
+    /**
+     * redis装车优化追加订单前缀
+     */
+    public static final String AGAIN_VERIFY_ADDORDER="againVerifyAddOrder";
+    
+    /**
+     * redis装车优化追加订单前缀,此缓存装车优化确认配货需要使用
+     */
+    public static final String CACHE_AGAIN_VERIFY_ADDORDER="cacheAgainVerifyAddOrder";
+    
+    /**
+     * redis装车优化移除订单订单前缀
+     */
+    public static final String REMOVE_ORDER="removeOrder";
+    
+    /**
+     * redis,装车优化缓存的提货单号
+     */
+    public static final String DELIVERYID="deliveryId";
+    
+    /**
+     * redis,缓存智能配货未确认结果
+     */
+    public static final String INTELLIGENT_ALLOCATION="IntelligentAllocation";
+    
+    /**
+     * redis,智能配货移除订单
+     */
+    public static final String INTELLIGENT_REMOVE_ORDER="IntelligentRemoveOrder";
+    
+    /**
+     * redis,智能配货追加订单
+     */
+    public static final String INTELLIGENT_ADD_ORDER="IntelligentAddOrder";
+    
+    /**
+     * redis,智能配货确认配货锁
+     */
+    public static final String VERIFY_ALLOCATION="verifyAllocation";
+    
+    /**
+     * redis,装车优化确认优化锁
+     */
+    public static final String AGAIN_VERIFY_ALLOCATION="againVerifyAllocation";
+    
+    /**
+     * redis,智能配货确认配货和装车优化确认优化,公共锁
+     */
+    public static final String COMMON_ALLOCATION_LOADING="commonAllocationLoading";
+    
+    /**
+     * 有缓存
+     */
+    public static final String HAVING_CACHE="1";
+    /**
+     * 无缓存
+     */
+    public static final String UNHAVING_CACHE="0";
+    
+    /**
+     * 楞型
+    
+	"BC瓦"= 1
+    "BE瓦"= 2
+    "单C瓦"= 3
+    "单B瓦"= 4
+    "单E瓦"= 5
+    "EBC瓦"= 6
+    "EE瓦"= 7
+     */
+    public static final String FLUTE_TYPE_1="BC瓦";
+    public static final String FLUTE_TYPE_2="BE瓦";
+    public static final String FLUTE_TYPE_3="单C瓦";
+    public static final String FLUTE_TYPE_4="单B瓦";
+    public static final String FLUTE_TYPE_5="单E瓦";
+    public static final String FLUTE_TYPE_6="EBC瓦";
+    public static final String FLUTE_TYPE_7="EE瓦";
+    
+    /**
+     * redis锁过期时间
+     */
+    public static final Integer REDIS_LOCK_TIME=60;
+    
+    
 }

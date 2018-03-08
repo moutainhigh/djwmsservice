@@ -36,7 +36,7 @@ import java.util.Map;
  */
 public class WmsInterceptor extends HandlerInterceptorAdapter{
 
-	private static final DjcpsLogger logger = DjcpsLoggerFactory.getLogger(WmsInterceptor.class);
+	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(WmsInterceptor.class);
 
 	@Autowired
 	@Qualifier("redisClientCluster")
@@ -127,7 +127,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	 * @date:2017年11月13日
 	 */
 	private void responseMsg(SysMsgEnum msg, HttpServletResponse response,String appLogin) {
-		logger.info(msg.getMsg());
+        LOGGER.info(msg.getMsg());
 		PrintWriter printWriter = null;
 		if (!response.isCommitted()) {
 			Map<String, Object> result;

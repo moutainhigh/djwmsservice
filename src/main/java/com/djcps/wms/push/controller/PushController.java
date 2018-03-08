@@ -4,6 +4,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -33,7 +35,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @RequestMapping(value = "/push")
 public class PushController {
 
-    private static Logger logger = LoggerFactory.getLogger(PushController.class);
+    private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(PushController.class);
 
     @Resource
     private PushService pushService;
@@ -63,8 +65,8 @@ public class PushController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+            LOGGER.error(e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
     }
 
@@ -93,8 +95,8 @@ public class PushController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+            LOGGER.error(e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
     }
 
@@ -120,8 +122,8 @@ public class PushController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error(e.getMessage());
-            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+            LOGGER.error(e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
     }
 }

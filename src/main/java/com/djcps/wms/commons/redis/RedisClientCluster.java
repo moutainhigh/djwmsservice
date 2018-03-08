@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisCluster;
 
 /**
  * Redis客户端-集群版
- * 
+ * @author
  *
  */
 public class RedisClientCluster implements RedisClient {

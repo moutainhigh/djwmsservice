@@ -27,7 +27,7 @@ public class GetAllocationManageListPO implements Serializable{
 	/**
 	 * 装车台名称
 	 */
-	private String loadingtableName;
+	private String loadingTableName;
 	/**
 	 * 车牌号
 	 */
@@ -59,11 +59,11 @@ public class GetAllocationManageListPO implements Serializable{
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getLoadingtableName() {
-		return loadingtableName;
+	public String getLoadingTableName() {
+		return loadingTableName;
 	}
-	public void setLoadingtableName(String loadingtableName) {
-		this.loadingtableName = loadingtableName;
+	public void setLoadingTableName(String loadingTableName) {
+		this.loadingTableName = loadingTableName;
 	}
 	public String getPlateNumber() {
 		return plateNumber;
@@ -74,7 +74,7 @@ public class GetAllocationManageListPO implements Serializable{
 	@Override
 	public String toString() {
 		return "GetAllocationManageListPO [deliveryCreateTime=" + deliveryCreateTime + ", waybillId=" + waybillId
-				+ ", status=" + status + ", loadingtableName=" + loadingtableName + ", plateNumber=" + plateNumber
+				+ ", status=" + status + ", loadingTableName=" + loadingTableName + ", plateNumber=" + plateNumber
 				+ ", total=" + total + "]";
 	}
 }

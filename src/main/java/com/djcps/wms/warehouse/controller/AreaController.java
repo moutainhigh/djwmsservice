@@ -63,6 +63,8 @@ public class AreaController {
 			logger.debug("json : " + json);
 			//数据校验
 			ProvinceCityBO param = gson.fromJson(json, ProvinceCityBO.class);
+			PartnerInfoBO partner = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partner,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<ProvinceCityBO>()
@@ -132,6 +134,8 @@ public class AreaController {
 		try {
 			//数据校验
 			ProvinceCityBO param = gson.fromJson(json, ProvinceCityBO.class);
+			PartnerInfoBO partner = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partner,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<ProvinceCityBO>()
