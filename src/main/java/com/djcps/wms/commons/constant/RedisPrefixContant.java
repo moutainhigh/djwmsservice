@@ -12,4 +12,9 @@ public class RedisPrefixContant {
 	 * SystemUrl的前缀
 	 */
 	public static final String REDIS_SYSTEM_URL_PREFIX = "djwms:sysUrl:permission:";
+	
+	/**
+	 * 配货和配货管理的前缀
+	 */
+	public static final String REDIS_ALLOCATION_ORDER_PREFIX = "djwms:allocation:order:";
 }

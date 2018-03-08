@@ -85,7 +85,6 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 			List<SysUrlPO> allSysUrl = sysUrlService.getALLSysUrl();
 			if(!ObjectUtils.isEmpty(allSysUrl)){
 				for (SysUrlPO sysUrlPo : allSysUrl) {
-					redisClient.set(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
 					sysUrlMap.put(sysUrlPo.getUrl(), sysUrlPo);
 				}
 			}else{
@@ -104,6 +103,15 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 					sysUrlService.updateSysUrl(sysUrlPo);
 				}
 			}
+			
+			//再次查询数据库,将查询的数据存到redis中
+			List<SysUrlPO> addAllSysUrl = sysUrlService.getALLSysUrl();
+			if(!ObjectUtils.isEmpty(addAllSysUrl)){
+				for (SysUrlPO sysUrlPo : addAllSysUrl) {
+					redisClient.set(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
+				}
+			}
+			
 			if(!ObjectUtils.isEmpty(insertList)){
 				sysUrlService.batchInsertSysUrl(insertList);
 			}

@@ -120,6 +120,29 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	 */
 	private String deliveryCreateEndTime;
 	
+	/**
+	 * 区分是智能配货结果页面获取追加订单,还是装车优化界面获取追加订单
+	 */
+	private String cache;
+	
+	private String allocationId;
+	
+	public String getAllocationId() {
+		return allocationId;
+	}
+
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
+	}
+
+	public String getCache() {
+		return cache;
+	}
+
+	public void setCache(String cache) {
+		this.cache = cache;
+	}
+
 	public String getDeliveryCreateStartTime() {
 		return deliveryCreateStartTime;
 	}
@@ -315,7 +338,7 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 				+ ", paymentEndTime=" + paymentEndTime + ", paymentStartTime=" + paymentStartTime
 				+ ", deliveryCreateTime=" + deliveryCreateTime + ", plateNumber=" + plateNumber + ", flag=" + flag
 				+ ", deliveryCreateStartTime=" + deliveryCreateStartTime + ", deliveryCreateEndTime="
-				+ deliveryCreateEndTime + "]";
+				+ deliveryCreateEndTime + ", cache=" + cache + ", allocationId=" + allocationId + "]";
 	}
 
 }

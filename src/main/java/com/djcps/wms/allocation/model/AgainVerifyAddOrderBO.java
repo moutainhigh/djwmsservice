@@ -44,7 +44,7 @@ public class AgainVerifyAddOrderBO extends BaseAddBO implements Serializable{
 	 * 装车台名称
 	 */
 	@NotBlank
-	private String loadingtableName;
+	private String loadingTableName;
 	/**
 	 * 提货员id
 	 */
@@ -122,11 +122,11 @@ public class AgainVerifyAddOrderBO extends BaseAddBO implements Serializable{
 	public void setLoadingTableId(String loadingTableId) {
 		this.loadingTableId = loadingTableId;
 	}
-	public String getLoadingtableName() {
-		return loadingtableName;
+	public String getLoadingTableName() {
+		return loadingTableName;
 	}
-	public void setLoadingtableName(String loadingtableName) {
-		this.loadingtableName = loadingtableName;
+	public void setLoadingTableName(String loadingTableName) {
+		this.loadingTableName = loadingTableName;
 	}
 	public String getPickerId() {
 		return pickerId;
@@ -173,7 +173,7 @@ public class AgainVerifyAddOrderBO extends BaseAddBO implements Serializable{
 	@Override
 	public String toString() {
 		return "AgainVerifyAddOrderBO [waybillId=" + waybillId + ", deliveryId=" + deliveryId + ", loadingTableId="
-				+ loadingTableId + ", loadingtableName=" + loadingtableName + ", pickerId=" + pickerId + ", pickerName="
+				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
 				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", loadingPersonId="
 				+ loadingPersonId + ", loadingPersonName=" + loadingPersonName + ", loadingPersonPhone="
 				+ loadingPersonPhone + ", deliveryIdEffect=" + deliveryIdEffect + ", ordersList=" + ordersList + "]";
