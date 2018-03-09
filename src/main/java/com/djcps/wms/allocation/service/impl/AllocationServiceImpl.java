@@ -201,16 +201,13 @@ public class AllocationServiceImpl implements AllocationService {
 				orderIds.setChildOrderIds(childOrderIds);
 				//根据订单号批量查询订单详情信息
 				HttpResult orderIdsResult = orderServer.getOrderByOrderIds(orderIds);
-				JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(orderIdsResult.getData())).getAsJsonArray();
-				for (JsonElement jsonElement : orderIdsJsonArray) {
-					String fdblflag = jsonElement.getAsJsonObject().get("fdblflag").getAsString();
-					//订单筛选,去除订单中双写的订单,取值为0的数据
-					if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
-						WarehouseOrderDetailPO orderDetail = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-						WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getFchildorderid());
+				List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(orderIdsResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
+					if(AppConstant.GROUP_ORDER_DOUBLE.equals(warehouseOrderDetailPO.getFdblflag())){
+						WarehouseOrderDetailPO warehouseDetail = map.get(warehouseOrderDetailPO.getFchildorderid());
 						if(!ObjectUtils.isEmpty(warehouseDetail)){
 							//将订单详情信息和在库信息数据进行拼接
-							orderService.getOrderDetail(warehouseDetail,orderDetail);
+							orderService.getOrderDetail(warehouseDetail,warehouseOrderDetailPO);
 						}
 					}
 				}
@@ -241,16 +238,13 @@ public class AllocationServiceImpl implements AllocationService {
 				orderIds.setChildOrderIds(redundantOrderList);
 				//根据订单号批量查询订单详情信息
 				HttpResult orderIdsResult = orderServer.getOrderByOrderIds(orderIds);
-				JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(orderIdsResult.getData())).getAsJsonArray();
-				for (JsonElement jsonElement : orderIdsJsonArray) {
-					String fdblflag = jsonElement.getAsJsonObject().get("fdblflag").getAsString();
-					//订单筛选,去除订单中双写的订单,取值为0的数据
-					if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
-						WarehouseOrderDetailPO orderDetail = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-						WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getFchildorderid());
+				List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(orderIdsResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
+					if(AppConstant.GROUP_ORDER_DOUBLE.equals(warehouseOrderDetailPO.getFdblflag())){
+						WarehouseOrderDetailPO warehouseDetail = map.get(warehouseOrderDetailPO.getFchildorderid());
 						if(!ObjectUtils.isEmpty(warehouseDetail)){
 							//将订单详情信息和在库信息数据进行拼接
-							orderService.getOrderDetail(warehouseDetail,orderDetail);
+							orderService.getOrderDetail(warehouseDetail,warehouseOrderDetailPO);
 						}
 					}
 				}
@@ -542,17 +536,13 @@ public class AllocationServiceImpl implements AllocationService {
 			orderIds.setChildOrderIds(redundantOrderList);
 			//根据订单号批量查询订单详情信息
 			HttpResult orderIdsResult = orderServer.getOrderByOrderIds(orderIds);
-			JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(orderIdsResult.getData())).getAsJsonArray();
-			for (JsonElement jsonElement : orderIdsJsonArray) {
-				String fdblflag = jsonElement.getAsJsonObject().get("fdblflag").getAsString();
-				//订单筛选,去除订单中双写的订单,取值为0的数据
-				if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
-					WarehouseOrderDetailPO orderDetail = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-					map.put(orderDetail.getFchildorderid(), orderDetail);
-					orderDetailList.add(orderDetail);
+			List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(orderIdsResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+			for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
+				if(AppConstant.GROUP_ORDER_DOUBLE.equals(warehouseOrderDetailPO.getFdblflag())){
+					map.put(warehouseOrderDetailPO.getFchildorderid(), warehouseOrderDetailPO);
+					orderDetailList.add(warehouseOrderDetailPO);
 				}
 			}
-			
 			//根据订单查询在库信息组织对象
 			SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 			BeanUtils.copyProperties(param, selectAreaByOrderId);
@@ -781,24 +771,22 @@ public class AllocationServiceImpl implements AllocationService {
 			if(ObjectUtils.isEmpty(orderIdsResult.getData())){
 				return MsgTemplate.successMsg();
 			}
-			JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(orderIdsResult.getData())).getAsJsonArray();
-			for (JsonElement jsonElement : orderIdsJsonArray) {
-				String fdblflag = jsonElement.getAsJsonObject().get("fdblflag").getAsString();
-				//订单筛选,去除订单中双写的订单,取值为0的数据
-				if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
-					WarehouseOrderDetailPO orderDetail = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-					WarehouseOrderDetailPO orderDetailPO = map.get(orderDetail.getFchildorderid());
-					orderDetail.setDeliveryId(orderDetailPO.getDeliveryId());
-					orderDetail.setWarehouseId(orderDetailPO.getWarehouseId());
-					orderDetail.setWarehouseName(orderDetailPO.getWarehouseLocName());
-					orderDetail.setWarehouseAreaId(orderDetailPO.getWarehouseAreaName());
-					orderDetail.setWarehouseAreaName(orderDetailPO.getWarehouseAreaName());
-					orderDetail.setWarehouseLocId(orderDetailPO.getWarehouseLocId());
-					orderDetail.setWarehouseLocName(orderDetailPO.getWarehouseLocName());
-					orderDetail.setAllocationId(orderDetailPO.getAllocationId());
-					orderDetail.setDeliveryAmount(orderDetailPO.getOrderAmount());
-					orderDetail.setSequence(orderDetailPO.getSequence());
-					warehouseOrderDetailList.add(orderDetail);
+			
+			List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(orderIdsResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+			for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
+				if(AppConstant.GROUP_ORDER_DOUBLE.equals(warehouseOrderDetailPO.getFdblflag())){
+					WarehouseOrderDetailPO orderDetailPO = map.get(warehouseOrderDetailPO.getFchildorderid());
+					warehouseOrderDetailPO.setDeliveryId(orderDetailPO.getDeliveryId());
+					warehouseOrderDetailPO.setWarehouseId(orderDetailPO.getWarehouseId());
+					warehouseOrderDetailPO.setWarehouseName(orderDetailPO.getWarehouseLocName());
+					warehouseOrderDetailPO.setWarehouseAreaId(orderDetailPO.getWarehouseAreaName());
+					warehouseOrderDetailPO.setWarehouseAreaName(orderDetailPO.getWarehouseAreaName());
+					warehouseOrderDetailPO.setWarehouseLocId(orderDetailPO.getWarehouseLocId());
+					warehouseOrderDetailPO.setWarehouseLocName(orderDetailPO.getWarehouseLocName());
+					warehouseOrderDetailPO.setAllocationId(orderDetailPO.getAllocationId());
+					warehouseOrderDetailPO.setDeliveryAmount(orderDetailPO.getOrderAmount());
+					warehouseOrderDetailPO.setSequence(orderDetailPO.getSequence());
+					warehouseOrderDetailList.add(warehouseOrderDetailPO);
 				}
 			}
 		}
@@ -1026,20 +1014,16 @@ public class AllocationServiceImpl implements AllocationService {
 		orderIds.setChildOrderIds(orderIdsList);
 		//根据订单号批量查询订单详情信息
 		HttpResult orderIdsResult = orderServer.getOrderByOrderIds(orderIds);
-		JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(orderIdsResult.getData())).getAsJsonArray();
-		for (JsonElement jsonElement : orderIdsJsonArray) {
-			String fdblflag = jsonElement.getAsJsonObject().get("fdblflag").getAsString();
-			//订单筛选,去除订单中双写的订单,取值为0的数据
-			if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
-				WarehouseOrderDetailPO orderDetail = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-				WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getFchildorderid());
+		List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(orderIdsResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+		for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
+			if(AppConstant.GROUP_ORDER_DOUBLE.equals(warehouseOrderDetailPO.getFdblflag())){
+				WarehouseOrderDetailPO warehouseDetail = map.get(warehouseOrderDetailPO.getFchildorderid());
 				if(!ObjectUtils.isEmpty(warehouseDetail)){
 					//将订单详情信息和在库信息数据进行拼接
-					orderService.getOrderDetail(warehouseDetail,orderDetail);
+					orderService.getOrderDetail(warehouseDetail,warehouseOrderDetailPO);
 				}
 			}
 		}
-		
 		List<OrderPO> orderList = new ArrayList<>();
 		for(Map.Entry<String,WarehouseOrderDetailPO> entry : map.entrySet()){
 			//组织装车优化需要的参数
@@ -1173,15 +1157,15 @@ public class AllocationServiceImpl implements AllocationService {
 		OrderIdsBO param = new OrderIdsBO();
 		param.setChildOrderIds(orderIdsList);
 		result = orderServer.getOrderByOrderIds(param);
-		JsonArray orderIdsJsonArray = jsonParser.parse(gson.toJson(result.getData())).getAsJsonArray();
 		String uuid = UUID.randomUUID().toString();
 		AddExcellentAllocationBO allocationBO = null;
+		List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(result.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
 		if(!ObjectUtils.isEmpty(result.getData())){
-			for(int i=0;i<orderIdsJsonArray.size();i++){
-				String fdblflag = orderIdsJsonArray.get(i).getAsJsonObject().get("fdblflag").getAsString();
+			for(int i=0;i<fromJsonDetailList.size();i++){
+				String fdblflag = fromJsonDetailList.get(i).getFdblflag();
 				//订单筛选,去除订单中双写的订单,取值为0的数据
 				if(AppConstant.GROUP_ORDER_DOUBLE.equals(fdblflag)){
-					WarehouseOrderDetailPO orderDetail = gson.fromJson(orderIdsJsonArray.get(i), WarehouseOrderDetailPO.class);
+					WarehouseOrderDetailPO orderDetail = fromJsonDetailList.get(i);
 					//将订单信息根据订单号存入到map中
 					map.put(orderDetail.getFchildorderid(), orderDetail);
 				}
