@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,8 +26,6 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
-import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
-import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
 import com.djcps.wms.allocation.model.CarBO;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
@@ -37,11 +35,13 @@ import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -277,7 +277,7 @@ public class AllocationController {
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	/*@RequestMapping(name="移除订单",value = "/moveOrder", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="移除订单",value = "/moveOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> moveOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -299,7 +299,7 @@ public class AllocationController {
 			logger.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
-	}*/
+	}
 	
 	/**
 	 * 追加订单
@@ -313,7 +313,6 @@ public class AllocationController {
 	public Map<String, Object> getAddOrderList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-//			OrderParamBO param = gson.fromJson(json, OrderParamBO.class);
 			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -335,14 +334,14 @@ public class AllocationController {
 	}
 	
 	/**
-	 * 确认追加订单
+	 * 智能配货确认追加订单
 	 * @param json
 	 * @param request
 	 * @return
 	 * @author:zdx
 	 * @date:2018年1月22日
 	 */
-	@RequestMapping(name="确认追加订单",value = "/verifyAddOrder", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="智能配货确认追加订单",value = "/verifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> verifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
@@ -372,11 +371,18 @@ public class AllocationController {
 		}
 	}
 	
-	@RequestMapping(name="确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
+	/**
+	 * 装车优化确认追加订单
+	 * @param json
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(name="装车优化确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againVerifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-			return allocationService.againVerifyAddOrder();
+			List<WarehouseOrderDetailPO> cacheList = gson.fromJson(json, new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+			return allocationService.againVerifyAddOrder(cacheList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -698,6 +704,64 @@ public class AllocationController {
 		}
 	}
 	
+	/**
+	 * 智能配货取消配货(清楚缓存)
+	 * @param json
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(name="智能配货取消配货(清楚缓存)",value = "/intelligentCancelAllocation", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> intelligentCancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			String parameter = request.getParameter("allocationId");
+			if (StringUtils.isEmpty(parameter)) {
+				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
+			}
+			return allocationService.intelligentCancelAllocation(parameter);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 装车优化取界面消配货
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@RequestMapping(name="装车优化取界面消配货",value = "/againCancelAllocation", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> againCancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			String parameter = request.getParameter("waybillId");
+			if(StringUtils.isEmpty(parameter)){
+				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
+			}
+//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
+//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+//			BeanUtils.copyProperties(partnerInfoBean,param);
+//			//数据校验
+//			ComplexResult ret = FluentValidator.checkAll().failFast()
+//					.on(param,
+//							new HibernateSupportedValidator<CancelAllocationBO>()
+//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+//					.doValidate().result(ResultCollectors.toComplex());
+//			if (!ret.isSuccess()) {
+//				return MsgTemplate.failureMsg(ret);
+//			}
+			return allocationService.againCancelAllocation(parameter);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
 	@RequestMapping(name="获取提货员信息",value = "/getPicker", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getPicker(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
@@ -726,19 +790,37 @@ public class AllocationController {
 	public Map<String, Object> getLoadingPerson(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
-//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-//			BeanUtils.copyProperties(partnerInfoBean,param);
-//			//数据校验
-//			ComplexResult ret = FluentValidator.checkAll().failFast()
-//					.on(param,
-//							new HibernateSupportedValidator<CancelAllocationBO>()
-//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//					.doValidate().result(ResultCollectors.toComplex());
-//			if (!ret.isSuccess()) {
-//				return MsgTemplate.failureMsg(ret);
-//			}
 			return allocationService.getLoadingPerson();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据关联id获取操作记录信息
+	 * @param json
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(name="根据关联id获取操作记录信息",value = "/getRecordByRrelativeId", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getRecordByRrelativeId(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			RelativeIdBO param = gson.fromJson(json, RelativeIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			//数据校验
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<RelativeIdBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return allocationService.getRecordByRrelativeId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

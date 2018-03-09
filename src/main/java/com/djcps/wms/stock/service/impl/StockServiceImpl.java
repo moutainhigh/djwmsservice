@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import com.djcps.wms.abnormal.constant.AbnormalConstant;
+import com.djcps.wms.abnormal.model.AbnormalOrderPO;
+import com.djcps.wms.abnormal.model.AddAbnormal;
+import com.djcps.wms.abnormal.model.OrderIdListBO;
+import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
+import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.allocation.constant.AllocationConstant;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
@@ -59,6 +65,9 @@ public class StockServiceImpl implements StockService{
 	
 	@Autowired
 	private StockService stockService;
+
+	@Autowired
+	private AbnormalServer abnormalServer;
 	
 	private JsonParser jsonParser = new JsonParser();
 	
@@ -212,6 +221,54 @@ public class StockServiceImpl implements StockService{
 					}
 					if(!result.isSuccess()){
 						return MsgTemplate.failureMsg(SysMsgEnum.REDUNDANT_FAIL);
+					}else{
+						//异常订单逻辑
+						OrderIdListBO orderIdListBO = new OrderIdListBO();
+						BeanUtils.copyProperties(param, orderIdListBO);
+						orderIdListBO.setList(new ArrayList<>());
+						orderIdListBO.getList().add(param.getOrderId());
+						HttpResult orderResult= abnormalServer.getOrderByOrderIdList(orderIdListBO);
+						if(ObjectUtils.isEmpty(orderResult.getData())){
+							if(AllocationConstant.LESS_ADD_STOCK.equals(orderIdBO.getStatus())){
+								//剩余的异常订单数量
+								Integer surplusOrderAmount= orderAmount-saveAmount;
+								//直接插入异常订单数据
+								AddAbnormal addAbnormal = new AddAbnormal();
+								BeanUtils.copyProperties(param, addAbnormal);
+								addAbnormal.setLink(AbnormalConstant.ABNORMAL_LINK_ADD_STOCK);
+								addAbnormal.setReason(new StringBuffer().append(AbnormalConstant.ABNORMAL_ERROR_REASON).append(surplusOrderAmount).toString());
+								addAbnormal.setAbnomalAmount(surplusOrderAmount);
+								addAbnormal.setCustomerName(StringUtils.isEmpty(fromJson.getFcusername())?fromJson.getFpusername():fromJson.getFcusername());
+								addAbnormal.setProductName(fromJson.getFgroupgoodname());
+								addAbnormal.setIsSplit("0");
+								HttpResult addResult = abnormalServer.addAbnormal(addAbnormal);
+								return  MsgTemplate.customMsg(addResult);
+							}
+						}else{
+							UpdateAbnormalBO updateOrderBO = new UpdateAbnormalBO();
+							BeanUtils.copyProperties(param, updateOrderBO);
+							HttpResult abnormalResult =null;
+							if(AllocationConstant.LESS_ADD_STOCK.equals(orderIdBO.getStatus())){
+								AbnormalOrderPO abnormalFromJson = gson.fromJson(gson.toJson(jsonParser.parse(gson.toJson(orderResult.getData())).getAsJsonArray().get(0)),
+										AbnormalOrderPO.class);
+								//异常数量
+								Integer abnomalAmount = abnormalFromJson.getAbnomalAmount();
+								//剩余的异常订单数量
+								Integer surplusOrderAmount= abnomalAmount-saveAmount;
+								//仍然为异常订单,修改异常数量即可
+								updateOrderBO.setAbnomalAmount(String.valueOf(surplusOrderAmount));
+								updateOrderBO.setReason(new StringBuffer().append(AbnormalConstant.ABNORMAL_ERROR_REASON).append(surplusOrderAmount).toString());
+								updateOrderBO.setSubmiter(param.getOperator());
+								abnormalResult = abnormalServer.updateAbnormal(updateOrderBO);
+							}else{
+								updateOrderBO.setStatus(AbnormalConstant.ABNORMAL_STATUS);
+								updateOrderBO.setAbnomalAmount("0");
+								updateOrderBO.setReason(AbnormalConstant.ABNORMAL_REASON_NULL);
+								updateOrderBO.setSubmiter(param.getOperator());
+								abnormalResult = abnormalServer.updateAbnormal(updateOrderBO);
+							}
+							return  MsgTemplate.customMsg(abnormalResult);
+						}
 					}
 				}
 			}

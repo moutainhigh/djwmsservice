@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPool;
 
 /**
  * Redis客户端-单机版
- * 
+ * @author
  *
  */
 public class RedisClientSingle implements RedisClient {

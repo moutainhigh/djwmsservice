@@ -16,10 +16,12 @@ import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 
 
 /**
@@ -254,7 +256,32 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年2月4日
 	 */
-	Map<String, Object> againVerifyAddOrder();
+	Map<String, Object> againVerifyAddOrder(List<WarehouseOrderDetailPO> detailList);
+
+
+	/**
+	 * 装车优化取界面消配货
+	 * @return
+	 * @author:zdx
+	 * @date:2018年2月4日
+	 */
+	Map<String, Object> againCancelAllocation(String waybillId);
+
+
+	/**
+	 * 智能配货取消配货(清楚缓存)
+	 * @param parameter
+	 * @return
+	 */
+	Map<String, Object> intelligentCancelAllocation(String parameter);
+
+
+	/**
+	 * 根据关联id获取操作记录信息
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> getRecordByRrelativeId(RelativeIdBO param);
 
 
 }
