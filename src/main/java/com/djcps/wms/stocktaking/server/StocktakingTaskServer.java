@@ -7,7 +7,6 @@ import com.djcps.wms.stocktaking.model.*;
 import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingTaskHttpRequest;
-import com.djcps.wms.warehouse.server.AreaServer;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import rpc.plugin.http.HTTPResponse;
  **/
 @Component
 public class StocktakingTaskServer {
-    private static final Logger logger = LoggerFactory.getLogger(AreaServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(StocktakingTaskServer.class);
 
     private Gson gson = new Gson();
 

@@ -10,7 +10,7 @@ public enum WareHouseTypeEnum {
     /**
      * 仓库编码类型
      */
-    WAREHOUSE_CODE("11"),
+    WAREHOUSE_CODE("1"),
     /**
      * 库区编码类型
      */

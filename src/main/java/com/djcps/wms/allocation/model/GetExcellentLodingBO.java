@@ -1,6 +1,7 @@
 package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -21,7 +22,7 @@ public class GetExcellentLodingBO extends BaseAddBO implements Serializable{
 	 */
 	@NotBlank
 	private String waybillId;
-
+	
 	public String getWaybillId() {
 		return waybillId;
 	}

@@ -22,6 +22,7 @@ import com.djcps.wms.allocation.model.GetOrderIdByOrderType;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.ZhiNengHttpResult;
@@ -244,14 +245,23 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 
-	public HttpResult getRedundantAttribute(GetRedundantByAttributeBO param) {
+	public OtherHttpResult getRedundantAttribute(GetRedundantByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getRedundantAttribute(rb);
-		return verifyHttpResult(http);
+		OtherHttpResult result = null;
+		//校验请求是否成功
+		if(http.isSuccessful()){
+			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
+		}
+		if(result == null){
+			System.err.println("Http请求出错,HttpResult结果为null");
+			logger.error("Http请求出错,HttpResult结果为null");
+		}
+		return result;
 	}
 	
 	public HttpResult getDeliveryByOrderIds(List<String> param) {
@@ -441,6 +451,36 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult getOrderByOrderIds(List<String> param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.getOrderByOrderIds(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult existIntelligentAlloca(String allocationId) {
+		//将请求参数转化为requestbody格式
+		String json = "{\"allocationId\":"+allocationId+"}";
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.existIntelligentAlloca(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult getRecordByRrelativeId(RelativeIdBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.getRecordByRrelativeId(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -461,5 +501,4 @@ public class AllocationServer {
 		}
 		return result;
 	}
-
 }
