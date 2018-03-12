@@ -352,11 +352,12 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      * 修改规格参数拼接
      * @param childOrderBOList
      * @return
-     * @author:zdx
+     * @author:wzy
      * @date:2018年1月8日
      */
     private OrderInfoBO getOrderDetail(List<ChildOrderBO> childOrderBOList){
         OrderInfoBO orderInfoBO=null;
+        //获取第一条
             Optional optional=childOrderBOList.stream().findFirst();
             if(optional.isPresent()){
                 ChildOrderBO childOrderBO=(ChildOrderBO) optional.get();
