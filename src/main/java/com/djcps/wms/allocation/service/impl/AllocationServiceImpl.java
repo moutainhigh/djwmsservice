@@ -405,8 +405,8 @@ public class AllocationServiceImpl implements AllocationService {
 			Integer orderStatus = orderPO.getOrderStatus();
 			if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
 				String error = orderPO.getOrderId();
-				String Msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
-				SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(Msg);
+				String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+				SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(msg);
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 				return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_CHOOSE_ORDER,error);
@@ -821,7 +821,7 @@ public class AllocationServiceImpl implements AllocationService {
 		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_5);break;
 		        case 6:
 		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_6);break;
-		        case 7:
+		        default:
 		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_7);break;
 		        }
 		}
@@ -1353,8 +1353,8 @@ public class AllocationServiceImpl implements AllocationService {
 					Integer orderStatus = orderPO.getOrderStatus();
 					if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
 						String error = orderPO.getOrderId();
-						String Msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
-						SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(Msg);
+						String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+						SysMsgEnum.AGAIN_CHOOSE_ORDER.setMsg(msg);
 						//释放同时确认配货,确认优化公共锁
 						redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 						return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_CHOOSE_ORDER,error);
