@@ -1,6 +1,12 @@
 package com.djcps.wms.stocktaking.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.djcps.wms.abnormal.constant.AbnormalConstant;
+import com.djcps.wms.abnormal.model.AbnormalOrderPO;
+import com.djcps.wms.abnormal.model.AddAbnormal;
+import com.djcps.wms.abnormal.model.OrderIdListBO;
+import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
+import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -32,6 +38,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**盘点任务实现类
  * @title:
@@ -54,6 +61,10 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     private OrderServer orderServer;
     @Autowired
     private OperationRecordServer operationRecordServer;
+
+    @Autowired
+    private AbnormalServer abnormalServer;
+
     Gson gson=new Gson();
 
     /**
@@ -834,7 +845,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         for (SaveStocktakingOrderInfoBO foresave:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
             //遍历后台获取的全部订单信息
             for (SaveStocktakingOrderInfoBO backgroundsave:orderResultlist) {
-                if (foresave.getIsInventoryProfit().equals(2)) {
+                //是盘盈
+                if (foresave.getIsInventoryProfit().equals(StocktakingTaskConstant.ISADD_SURPLUS)) {
                     if (foresave.getOrderId().equals(backgroundsave.getOrderId()) && foresave.getWarehouseAreaId().equals(backgroundsave.getWarehouseAreaId()) && foresave.getWarehouseLocId().equals(backgroundsave.getWarehouseLocId())) {
                         //保存盘点数量
                         Integer takeStockAmount = null;
@@ -872,6 +884,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 }
             }
         }
+
         //赋值盘盈的订单
         for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO3:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
             if (saveStocktakingOrderInfoBO3.getIsInventoryProfit().equals(1)){
@@ -896,6 +909,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 }
             }
         }
+
         //添加是否在作业
         for (SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO1:saveStocktakingOrderInfoBOList.getSaveStocktaking()){
             if (ObjectUtils.isEmpty(saveStocktakingOrderInfoBO1.getTakeStockAmount())){
@@ -905,6 +919,111 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 saveStocktakingOrderInfoBO1.setStatus(StocktakingTaskConstant.STATUS_3);
             }
         }
+        //异常订单逻辑
+        //获取异常订单collectList
+        List<SaveStocktakingOrderInfoBO> collectList = saveStocktakingOrderInfoBOList.getSaveStocktaking().stream()
+                .filter(b -> b.getDifferenceValue()!=0)
+                .collect(Collectors.toList());
+        collectList.stream().forEach(orderInfoBO->{
+                    childOrderList.stream().forEach(childOrderBO -> {
+                        if(orderInfoBO.getOrderId().equals(childOrderBO.getFchildorderid())){
+                            orderInfoBO.setPartnerName(saveStocktakingOrderInfoBOList.getPartnerName());
+                            orderInfoBO.setPartnerArea(saveStocktakingOrderInfoBOList.getPartnerArea());
+                            orderInfoBO.setAmount(""+childOrderBO.getFamount()+"");
+                            orderInfoBO.setCustomerName(org.springframework.util.StringUtils.isEmpty(childOrderBO.getFcusername())?childOrderBO.getFpusername():childOrderBO.getFcusername());
+                        }
+                    });
+                });
+            //存在异常订单
+            if (!ObjectUtils.isEmpty(collectList)){
+                OrderIdListBO orderIdListBO = new OrderIdListBO();
+                BeanUtils.copyProperties(saveStocktakingOrderInfoBOList, orderIdListBO);
+                List<String> orderidList=new ArrayList<>();
+                collectList.stream().forEach(saveSObo -> {
+                    orderidList.add(saveSObo.getOrderId());
+                });
+                orderIdListBO.setList(orderidList);
+                //查询是否有异常订单
+                HttpResult orderResult= abnormalServer.getOrderByOrderIdList(orderIdListBO);
+                //已存在异常订单执行更新和插入
+                if(!ObjectUtils.isEmpty(orderResult.getData())){
+                    String data = gson.toJson(orderResult.getData());
+                    List<AbnormalOrderPO> abnormalOrderPOList=  JSONArray.parseArray(data, AbnormalOrderPO.class);
+                    abnormalOrderPOList.stream().filter(abnormalOrderPO ->
+                        !ObjectUtils.isEmpty(abnormalOrderPO)
+                    ).forEach(abnormalOrderPO -> {
+                        collectList.stream().forEach(allAbnormalOrder->{
+                            //更新异常订单
+                           if(abnormalOrderPO.getOrderId().equals(allAbnormalOrder.getOrderId())){
+                               StringBuffer reson=new StringBuffer();
+                               Integer surplusOrderAmount=0;
+                               if (allAbnormalOrder.getDifferenceValue()>0){
+                                   surplusOrderAmount= allAbnormalOrder.getDifferenceValue();
+                                   reson.append(AbnormalConstant.ABNORMAL_ERROR_MORE).append(surplusOrderAmount);
+                               }else{
+                                   surplusOrderAmount= -allAbnormalOrder.getDifferenceValue();
+                                   reson.append(AbnormalConstant.ABNORMAL_ERROR_REASON).append(surplusOrderAmount);
+                               }
+                               UpdateAbnormalBO updateOrderBO = new UpdateAbnormalBO();
+                               BeanUtils.copyProperties(allAbnormalOrder, updateOrderBO,"remark","status");
+                               updateOrderBO.setOrderId(allAbnormalOrder.getOrderId());
+                               updateOrderBO.setAbnomalAmount(""+surplusOrderAmount+"");
+                               updateOrderBO.setReason(reson.toString());
+                               updateOrderBO.setSubmiter(allAbnormalOrder.getOperator());
+                               HttpResult abnormalResult = abnormalServer.updateAbnormal(updateOrderBO);
+                           }
+                           //插入异常订单
+                           else{
+                               StringBuffer reson=new StringBuffer();
+                               Integer surplusOrderAmount=0;
+                               if (allAbnormalOrder.getDifferenceValue()>0){
+                                   surplusOrderAmount= allAbnormalOrder.getDifferenceValue();
+                                   reson.append(AbnormalConstant.ABNORMAL_ERROR_MORE).append(surplusOrderAmount);
+                               }else{
+                                   surplusOrderAmount= -allAbnormalOrder.getDifferenceValue();
+                                   reson.append(AbnormalConstant.ABNORMAL_ERROR_REASON).append(surplusOrderAmount);
+                               }
+                               //直接插入异常订单数据
+                               AddAbnormal addAbnormal = new AddAbnormal();
+                               BeanUtils.copyProperties(allAbnormalOrder, addAbnormal,"remark");
+                               addAbnormal.setLink(AbnormalConstant.ABNORMAL_LINK_ADD_STOCKTAKING);
+                               addAbnormal.setReason(reson.toString());
+                               addAbnormal.setAbnomalAmount(surplusOrderAmount);
+                               addAbnormal.setCustomerName(allAbnormalOrder.getCustomerName());
+                               addAbnormal.setProductName(allAbnormalOrder.getProductName());
+                               addAbnormal.setIsSplit("0");
+                               addAbnormal.setAmount(Integer.parseInt(allAbnormalOrder.getAmount()));
+                               HttpResult addResult = abnormalServer.addAbnormal(addAbnormal);
+                           }
+                        });
+                    });
+                }
+                //不存在异常订单信息全部执行插入
+                else{
+                    collectList.stream().forEach(s-> {
+                        StringBuffer reson=new StringBuffer();
+                        Integer surplusOrderAmount=0;
+                        if (s.getDifferenceValue()>0){
+                             surplusOrderAmount= s.getDifferenceValue();
+                            reson.append(AbnormalConstant.ABNORMAL_ERROR_MORE).append(surplusOrderAmount);
+                        }else{
+                             surplusOrderAmount= -s.getDifferenceValue();
+                            reson.append(AbnormalConstant.ABNORMAL_ERROR_REASON).append(surplusOrderAmount);
+                        }
+                        //直接插入异常订单数据
+                        AddAbnormal addAbnormal = new AddAbnormal();
+                        BeanUtils.copyProperties(s, addAbnormal);
+                        addAbnormal.setLink(AbnormalConstant.ABNORMAL_LINK_ADD_STOCKTAKING);
+                        addAbnormal.setReason(reson.toString());
+                        addAbnormal.setAbnomalAmount(surplusOrderAmount);
+                        addAbnormal.setCustomerName(s.getCustomerName());
+                        addAbnormal.setProductName(s.getProductName());
+                        addAbnormal.setIsSplit("0");
+                        addAbnormal.setAmount(Integer.parseInt(s.getAmount()));
+                        HttpResult addResult = abnormalServer.addAbnormal(addAbnormal);
+                    });
+                }
+            }
         HttpResult saveresult= stocktakingTaskServer.completeStocktakingTask(saveStocktakingOrderInfoBOList);
         return MsgTemplate.customMsg(saveresult);
     }
