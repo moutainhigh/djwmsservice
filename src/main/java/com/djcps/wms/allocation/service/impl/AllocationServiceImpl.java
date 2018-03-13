@@ -798,8 +798,8 @@ public class AllocationServiceImpl implements AllocationService {
 	    for (int i = 0; i < size - 1; i++) {
 	        minIndex = i;
 	        for (int j = i + 1; j < size; j++) {
-	            if (warehouseOrderDetailList.get(j).getSequence() < warehouseOrderDetailList.get(minIndex).getSequence()) {     //寻找最小的数
-	                minIndex = j;                 //将最小数的索引保存
+	            if (warehouseOrderDetailList.get(j).getSequence() < warehouseOrderDetailList.get(minIndex).getSequence()) {
+	                minIndex = j;
 	            }
 	        }
 	        temp = warehouseOrderDetailList.get(i);
@@ -964,8 +964,8 @@ public class AllocationServiceImpl implements AllocationService {
 	    for (int i = 0; i < size - 1; i++) {
 	        minIndex = i;
 	        for (int j = i + 1; j < size; j++) {
-	            if (orderList.get(j).getSequence() < orderList.get(minIndex).getSequence()) {     //寻找最小的数
-	                minIndex = j;                 //将最小数的索引保存
+	            if (orderList.get(j).getSequence() < orderList.get(minIndex).getSequence()) {
+	                minIndex = j;
 	            }
 	        }
 	        temp = orderList.get(i);
