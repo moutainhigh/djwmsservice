@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.record.model.EntryRecordListBO;
 import com.djcps.wms.record.model.SaveOperationRecordBO;
 import com.djcps.wms.record.model.StocktakingRecordListBO;

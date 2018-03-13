@@ -29,7 +29,7 @@ public interface OperationRecordHttpRequest {
     @POST("operationRecord/stocktakingList.do")
     HTTPResponse stocktakingRecordList(@Body RequestBody json);
     /**
-     * 获取操作记录
+     * 获取入库移库操作记录
      * @param rb
      * @return
      * @author:zyb
