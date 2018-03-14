@@ -75,4 +75,12 @@ public interface DeliveryService {
      * @return
      */
     Map<String,Object> getOrderDetail(DeliveryOrderDetailBO param);
+    /**
+     * 删除提货订单信息
+     * @autuor wyb
+     * @since 2018/3/13
+     * @param param
+     * @return
+     */
+    Map<String,Object> delOrderInfo(DeleteOrderInfoBO param);
 }

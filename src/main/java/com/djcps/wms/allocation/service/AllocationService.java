@@ -16,6 +16,7 @@ import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
@@ -273,6 +274,14 @@ public interface AllocationService {
 	 * @return
 	 */
 	Map<String, Object> intelligentCancelAllocation(String parameter);
+
+
+	/**
+	 * 根据关联id获取操作记录信息
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> getRecordByRrelativeId(RelativeIdBO param);
 
 
 }

@@ -22,6 +22,7 @@ import com.djcps.wms.allocation.model.GetOrderIdByOrderType;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.ZhiNengHttpResult;
@@ -470,6 +471,16 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult getRecordByRrelativeId(RelativeIdBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		System.out.println("---http请求参数转化为json格式---:"+json);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.getRecordByRrelativeId(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -490,5 +501,4 @@ public class AllocationServer {
 		}
 		return result;
 	}
-
 }

@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +26,6 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
-import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
-import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
 import com.djcps.wms.allocation.model.CarBO;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
@@ -38,6 +35,7 @@ import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
 import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -792,19 +790,37 @@ public class AllocationController {
 	public Map<String, Object> getLoadingPerson(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			logger.debug("json : " + json);
-//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
-//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-//			BeanUtils.copyProperties(partnerInfoBean,param);
-//			//数据校验
-//			ComplexResult ret = FluentValidator.checkAll().failFast()
-//					.on(param,
-//							new HibernateSupportedValidator<CancelAllocationBO>()
-//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//					.doValidate().result(ResultCollectors.toComplex());
-//			if (!ret.isSuccess()) {
-//				return MsgTemplate.failureMsg(ret);
-//			}
 			return allocationService.getLoadingPerson();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据关联id获取操作记录信息
+	 * @param json
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(name="根据关联id获取操作记录信息",value = "/getRecordByRrelativeId", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getRecordByRrelativeId(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			logger.debug("json : " + json);
+			RelativeIdBO param = gson.fromJson(json, RelativeIdBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			//数据校验
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<RelativeIdBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return allocationService.getRecordByRrelativeId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

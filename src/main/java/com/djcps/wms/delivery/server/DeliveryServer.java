@@ -125,7 +125,21 @@ public class DeliveryServer {
         HTTPResponse httpResponse = wmsForDeliveryHttpRequest.getDeliveryForPDA(requestBody);
         return returnResult(httpResponse);
     }
-
+    /**
+     * 删除提货订单信息 
+     *
+     * @param param
+     * @return
+     * @autuor wyb
+     * @since 2018/3/13  
+     */
+    public HttpResult delOrderInfo(DeleteOrderInfoBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForDeliveryHttpRequest.delOrderInfo(requestBody);
+        return returnResult(httpResponse);
+        
+    }
     /**
      * 公共返回
      *
