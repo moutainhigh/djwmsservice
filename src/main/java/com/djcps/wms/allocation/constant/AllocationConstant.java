@@ -178,13 +178,18 @@ public class AllocationConstant {
     public static final String COMMON_ALLOCATION_LOADING="commonAllocationLoading";
     
     /**
-     * 有缓存
+     * 装车优化追加订单
      */
-    public static final String HAVING_CACHE="1";
+    public static final String EXCELLENT_LOADING_CACHE="1";
     /**
-     * 无缓存
+     * 智能配货追加订单
      */
-    public static final String UNHAVING_CACHE="0";
+    public static final String INTELLIGENT_CACHE="0";
+    
+    /**
+     * 追加订单处理,追加订单
+     */
+    public static final String DISPOSE_ADD_ORDER_CACHE="2";
     
     /**
      * 楞型
@@ -210,5 +215,9 @@ public class AllocationConstant {
      */
     public static final Integer REDIS_LOCK_TIME=60;
     
+    /**
+     * 操作有误
+     */
+    public static final String OPERATION_ERROR="操作有误,请重新刷新";
     
 }
