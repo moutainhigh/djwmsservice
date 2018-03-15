@@ -18,6 +18,8 @@ import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
+import com.djcps.wms.commons.enums.FluteTypeEnum;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 
 import org.slf4j.Logger;
@@ -403,7 +405,7 @@ public class AllocationServiceImpl implements AllocationService {
 		List<OrderPO> orderPOList = gson.fromJson(gson.toJson(orderResult.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
 		for (OrderPO orderPO : orderPOList) {
 			Integer orderStatus = orderPO.getOrderStatus();
-			if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
+			if(!OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
 				String error = orderPO.getOrderId();
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
@@ -416,7 +418,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//修改订单的订单状态，修改成已配货
 		OrderIdBO orderId = new OrderIdBO();
 		for(int i=0;i<orderIds.size();i++){
-			orderId.setStatus(AllocationConstant.ORDER_ALREADY_ALLOCATION);
+			orderId.setStatus(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue());
 			orderId.setOrderId(orderIds.get(i));
 			//判断修改成功才能继续往下走(这里需要批量修改)
 			HttpResult updateOrderResult = orderServer.updateOrderStatus(orderId);
@@ -437,7 +439,7 @@ public class AllocationServiceImpl implements AllocationService {
 			List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
 			for (String string : orderIds) {
 				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
-				update.setStatus(Integer.valueOf(AllocationConstant.ORDER_ALREADY_ALLOCATION));
+				update.setStatus(Integer.valueOf(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue()));
 				update.setDeliveryId(param.getDeliveryId());
 				update.setWaybillId(param.getWaybillId());
 				update.setOrderId(string);
@@ -526,7 +528,7 @@ public class AllocationServiceImpl implements AllocationService {
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
 		List<WarehouseOrderDetailPO> orderDetailList = new ArrayList<WarehouseOrderDetailPO>();
 		//订单状态:已入库
-		param.setOrderStatus(AllocationConstant.ALL_ADD_STOCK);
+		param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 		OtherHttpResult result = allocationServer.getAddOrderList(param);
 		int total = result.getTotal();
 		if(!ObjectUtils.isEmpty(result.getData())){
@@ -808,19 +810,19 @@ public class AllocationServiceImpl implements AllocationService {
 	    	 String fflutetype = warehouseOrderDetailPO.getFflutetype();
 		        switch(Integer.valueOf(fflutetype)){
 		        case 1:
-		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_1);break;
+		        	warehouseOrderDetailPO.setFflutetype(FluteTypeEnum.BC.getValue());break;
 		        case 2:
-		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_2);break;
+		        	warehouseOrderDetailPO.setFflutetype(FluteTypeEnum.BE.getValue());break;
 		        case 3:
-		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_3);break;
+		        	warehouseOrderDetailPO.setFflutetype(FluteTypeEnum.C.getValue());break;
 		        case 4:
-		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_4);break;
+		        	warehouseOrderDetailPO.setFflutetype(FluteTypeEnum.B.getValue());break;
 		        case 5:
-		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_5);break;
+		        	warehouseOrderDetailPO.setFflutetype(FluteTypeEnum.E.getValue());break;
 		        case 6:
-		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_6);break;
+		        	warehouseOrderDetailPO.setFflutetype(FluteTypeEnum.EBC.getValue());break;
 		        default:
-		        	warehouseOrderDetailPO.setFflutetype(AllocationConstant.FLUTE_TYPE_7);break;
+		        	warehouseOrderDetailPO.setFflutetype(FluteTypeEnum.EE.getValue());break;
 		        }
 		}
 		if(!ObjectUtils.isEmpty(warehouseOrderDetailList)){
@@ -1128,7 +1130,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//修改提货单确认状态修改为feffect为2
 		param.setDeliveryIdEffect(AllocationConstant.DELIVERY_UNEFFEFT);
 		//修改订单表中订单状态为已入库
-		param.setOrderStatus(AllocationConstant.ALL_ADD_STOCK);
+		param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 		//修改配货表的确认状态为2
 		param.setAllocationIdEffect(AllocationConstant.ALLOCATION_UNEFFECT);
 		HttpResult result = allocationServer.cancelAllocation(param);
@@ -1419,7 +1421,7 @@ public class AllocationServiceImpl implements AllocationService {
 				allocation.setOrderId(entry.getKey());
 				allocation.setDeliveryId(entry.getValue().getDeliveryId());
 				allocation.setWaybillId(waybillId);
-				allocation.setStatus(Integer.valueOf(AllocationConstant.ORDER_ALREADY_ALLOCATION));
+				allocation.setStatus(Integer.valueOf(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue()));
 				allocation.setPlateNumber(param.getPlateNumber());
 				againVerifyAllocation.add(allocation);
 			}
@@ -1461,7 +1463,7 @@ public class AllocationServiceImpl implements AllocationService {
 				List<OrderPO> orderPOList = gson.fromJson(gson.toJson(result.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
 				for (OrderPO orderPO : orderPOList) {
 					Integer orderStatus = orderPO.getOrderStatus();
-					if(!AllocationConstant.ALL_ADD_STOCK.equals(String.valueOf(orderStatus))){
+					if(!OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
 						String error = orderPO.getOrderId();
 						//释放同时确认配货,确认优化公共锁
 						redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
@@ -1520,7 +1522,7 @@ public class AllocationServiceImpl implements AllocationService {
 				for (WarehouseOrderDetailPO orderDetail : cacheList) {
 					OrderIdBO orderIdBO = new OrderIdBO();
 					orderIdBO.setOrderId(orderDetail.getFchildorderid());
-					orderIdBO.setStatus(AllocationConstant.ORDER_ALREADY_ALLOCATION);
+					orderIdBO.setStatus(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue());
 					//通知订单服务修改,需要批量执行
 					HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
 				}
@@ -1564,11 +1566,11 @@ public class AllocationServiceImpl implements AllocationService {
 			List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(orderIdsResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
 			for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
 				//判断该订单只有为已配货的情况下,才允许移除订单
-				if(AllocationConstant.ORDER_ALREADY_ALLOCATION.equals(String.valueOf(warehouseOrderDetailPO.getFstatus()))){
+				if(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue().equals(String.valueOf(warehouseOrderDetailPO.getFstatus()))){
 					for (String order : orderIdsList) {
 						OrderIdBO orderIdBO = new OrderIdBO();
 						orderIdBO.setOrderId(order);
-						orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
+						orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 						//通知订单服务修改,需要批量执行
 						HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
 					}
@@ -1583,7 +1585,7 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 			}
 			//需要订单服务修改订单状态成功情况下,移除订单表数据,并且修改冗余表订单状态(该逻辑在服务端)
-			moveOrder.setStatus(Integer.valueOf(AllocationConstant.ALL_ADD_STOCK));
+			moveOrder.setStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 			moveOrder.setOrderIds(orderIdsList);
 		}
 		//配货管理移除订单===================
