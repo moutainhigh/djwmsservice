@@ -254,26 +254,27 @@ public class DeliveryController {
     }
 
     /**
-     * 删除订单信息
+     * 设置提货单的确认状态为未确认
      * 
      * @param json
      * @return
      */
-    @RequestMapping(name = "删除订单信息", value = "/delOrderInfo", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(name = "设置提货单的确认状态为未确认", value = "/updateDeliveryEffect", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> delOrderInfo(@RequestBody(required = false) String json,
             @InnerUser UserInfoVO userInfoVO) {
         try {
             logger.debug("json : " + json);
-            DeleteOrderInfoBO param = gson.fromJson(json, DeleteOrderInfoBO.class);
+            UpdateDeliveryEffectBO param = gson.fromJson(json, UpdateDeliveryEffectBO.class);
+            param.setPartnerId(userInfoVO.getUcompany());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
-                            new HibernateSupportedValidator<DeleteOrderInfoBO>()
+                            new HibernateSupportedValidator<UpdateDeliveryEffectBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return deliveryService.delOrderInfo(param);
+            return deliveryService.updateDeliveryEffect(param);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());

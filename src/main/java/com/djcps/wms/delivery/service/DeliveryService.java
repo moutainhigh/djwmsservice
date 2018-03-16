@@ -76,11 +76,11 @@ public interface DeliveryService {
      */
     Map<String,Object> getOrderDetail(DeliveryOrderDetailBO param);
     /**
-     * 删除提货订单信息
+     * 设置提货单的确认状态为未确认 
      * @autuor wyb
      * @since 2018/3/13
      * @param param
      * @return
      */
-    Map<String,Object> delOrderInfo(DeleteOrderInfoBO param);
+    Map<String,Object> updateDeliveryEffect(UpdateDeliveryEffectBO param);
 }

@@ -311,8 +311,8 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @return
      */
     @Override
-    public Map<String, Object> delOrderInfo(DeleteOrderInfoBO param) {
-        HttpResult result = deliveryServer.delOrderInfo(param);
+    public Map<String, Object> updateDeliveryEffect(UpdateDeliveryEffectBO param) {
+        HttpResult result = deliveryServer.updateDeliveryEffect(param);
         return MsgTemplate.customMsg(result);
     }
 }

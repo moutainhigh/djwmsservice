@@ -2,8 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-
     <bean id="paramsConfig" class="com.djcps.wms.commons.config.ParamsConfig">
         <!-- 参数-->
         <!-- 内部用户token -->
@@ -39,5 +37,4 @@
        <property name="updateOrderServer" value="http://192.168.2.74:8080/djorder/" />
         <!-- <property name="updateOrderServer" value="http://localhost:8080/djorder/" /> -->
     </bean>
-
-</beans>
+ </beans>

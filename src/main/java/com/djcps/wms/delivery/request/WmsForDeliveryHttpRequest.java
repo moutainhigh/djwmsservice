@@ -100,7 +100,7 @@ public interface WmsForDeliveryHttpRequest {
      * @return
      */
     @Headers("content-type:application/json")
-    @POST("delivery/delOrderInfo.do")
-    HTTPResponse delOrderInfo(@Body RequestBody json);
+    @POST("delivery/updateDeliveryEffect.do")
+    HTTPResponse updateDeliveryEffect(@Body RequestBody json);
 
 }
