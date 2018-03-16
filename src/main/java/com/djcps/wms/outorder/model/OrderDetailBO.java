@@ -1,27 +1,50 @@
-package com.djcps.wms.outLocation.model;
-
-public class OrderInfo {
-	
-	//订单编号
+package com.djcps.wms.outorder.model;
+/**
+ * 获取订单服务数据类
+ * @author ldh
+ *
+ */
+public class OrderDetailBO {
+	/**
+	 * 订单编号
+	 */
 	private String fchildorderid;
-	//商品名称
+	/**
+	 * 产品名称
+	 */
 	private String fgroupgoodname;
-	//商品长
+	/**
+	 * 纸箱规格长
+	 */
 	private Double fboxlength;
-	//商品宽
+	/**
+	 * 纸箱规格宽
+	 */
 	private Double fboxwidth;
-	//商品高 
+	/**
+	 * 纸箱规格高
+	 */
 	private Double fboxheight;
-	//下料规格长加系数
+	/**
+	 * 下料规格长
+	 */
 	private Double fmateriallength;
-	//下料规格宽加系数
+	/**
+	 * 下料规格宽
+	 */
 	private Double fmaterialwidth;
-	//单价
-	private Double funitprice;
-	//金额
-	private Double famountprice;
-	//订单数量
+	/**
+	 * 数量
+	 */
 	private Integer famount;
+	/**
+	 * 单价
+	 */
+	private Double funitprice;
+	/**金额
+	 * 
+	 */
+	private Double famountprice;
 	public String getFchildorderid() {
 		return fchildorderid;
 	}
@@ -64,6 +87,12 @@ public class OrderInfo {
 	public void setFmaterialwidth(Double fmaterialwidth) {
 		this.fmaterialwidth = fmaterialwidth;
 	}
+	public Integer getFamount() {
+		return famount;
+	}
+	public void setFamount(Integer famount) {
+		this.famount = famount;
+	}
 	public Double getFunitprice() {
 		return funitprice;
 	}
@@ -76,20 +105,13 @@ public class OrderInfo {
 	public void setFamountprice(Double famountprice) {
 		this.famountprice = famountprice;
 	}
-	public Integer getFamount() {
-		return famount;
-	}
-	public void setFamount(Integer famount) {
-		this.famount = famount;
-	}
 	@Override
 	public String toString() {
-		return "OrderInfo [fchildorderid=" + fchildorderid + ", fgroupgoodname=" + fgroupgoodname + ", fboxlength="
+		return "OrderDetailBO [fchildorderid=" + fchildorderid + ", fgroupgoodname=" + fgroupgoodname + ", fboxlength="
 				+ fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight=" + fboxheight + ", fmateriallength="
-				+ fmateriallength + ", fmaterialwidth=" + fmaterialwidth + ", funitprice=" + funitprice
-				+ ", famountprice=" + famountprice + ", famount=" + famount + "]";
+				+ fmateriallength + ", fmaterialwidth=" + fmaterialwidth + ", famount=" + famount + ", funitprice="
+				+ funitprice + ", famountprice=" + famountprice + "]";
 	}
-	
 	
 	
 }

@@ -1,4 +1,4 @@
-package com.djcps.wms.outLocation.request;
+package com.djcps.wms.outorder.request;
 
 import com.djcps.wms.commons.config.ParamsConfig;
 
@@ -8,11 +8,15 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import rpc.plugin.http.HTTPResponse;
 import rpc.plugin.http.RPCClientFields;
-
-@RPCClientFields(urlfield="ORDER_SERVER", urlbean=ParamsConfig.class)
+/**
+ * 向订单服务获取订单明细
+ * @author ldh
+ *
+ */
+@RPCClientFields(urlfield="ORDER_SERVER",urlbean=ParamsConfig.class)
 public interface OrderDetailHttpRequest {
 	/**
-	 * 获取订单明细
+	 * 根据订单编号获取订单明细列表
 	 * @param rb
 	 * @return
 	 */
