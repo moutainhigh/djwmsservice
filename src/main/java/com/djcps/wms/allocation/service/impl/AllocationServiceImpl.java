@@ -1150,9 +1150,13 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		JsonArray asJsonArray = jsonParser.parse(gson.toJson(data)).getAsJsonArray();
 		List<String> orderIdsList =new  ArrayList<>();
+		List<OrderIdBO> orderIdBOList = new ArrayList<>();
 		for (JsonElement jsonElement : asJsonArray) {
 			String orderId = jsonElement.getAsJsonObject().get("orderId").getAsString();
 			orderIdsList.add(orderId);
+			OrderIdBO orderIdBO = new OrderIdBO();
+			orderIdBO.setOrderId(orderId);
+			orderIdBOList.add(orderIdBO);
 		}
 		OrderIdsBO param = new OrderIdsBO();
 		param.setChildOrderIds(orderIdsList);
@@ -1170,10 +1174,29 @@ public class AllocationServiceImpl implements AllocationService {
 					map.put(orderDetail.getFchildorderid(), orderDetail);
 				}
 			}
+			
+			
+			SelectAreaByOrderIdBO selectArea = new SelectAreaByOrderIdBO();
+			selectArea.setOrderIds(orderIdBOList);
+			BeanUtils.copyProperties(base, selectArea);
+			List<WarehouseOrderDetailPO> stockInfo = orderService.getStockInfo(selectArea);
+			//key订单号,value为trueAmount实时在库数量
+			Map<String,Integer> trueAmountMap = new HashMap<>();
+			for (WarehouseOrderDetailPO orderDetailPO : stockInfo) {
+				List<WarehouseAreaBO> areaList = orderDetailPO.getAreaList();
+				for (WarehouseAreaBO areaBO : areaList) {
+					List<WarehouseLocationBO> locationList = areaBO.getLocationList();
+					for (WarehouseLocationBO locationBO : locationList) {
+						trueAmountMap.put(orderDetailPO.getOrderId(), locationBO.getTrueAmount());
+					}
+				}
+			}
+			
 			//遍历入库订单的在库信息
 			for (int i=0;i<asJsonArray.size();i++) {
 				WarehouseOrderDetailPO fromJson = gson.fromJson(asJsonArray.get(i), WarehouseOrderDetailPO.class);
 				WarehouseOrderDetailPO orderDetail = map.get(fromJson.getOrderId());
+				
 				//组织参数
 				orderDetail.setWarehouseId(fromJson.getWarehouseId());
 				orderDetail.setWarehouseName(fromJson.getWarehouseName());
@@ -1182,6 +1205,7 @@ public class AllocationServiceImpl implements AllocationService {
 				orderDetail.setWarehouseLocId(fromJson.getWarehouseLocId());
 				orderDetail.setWarehouseLocName(fromJson.getWarehouseLocName());
 				orderDetail.setAllocationId(uuid);
+				orderDetail.setDeliveryAmount(trueAmountMap.get(orderDetail.getFchildorderid()));
 				BeanUtils.copyProperties(orderDetail, fromJson);
 				String address = orderDetail.getFcodeprovince()+orderDetail.getFaddressdetail();
 				fromJson.setFaddressdetail(address);
