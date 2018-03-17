@@ -25,7 +25,7 @@
      	 <property name="wmsServer" value="http://192.168.2.111:8080/djwmsserver/" />
      	<!-- 编号服务 --> 
         <property name="numberServer" value="http://192.168.10.200:80/djnumserver/"/>
-        <!-- 地址服务 -->
+        <!-- 地址服务 --> 
         <property name="addressServer"  value="http://192.168.10.200/djaddressserver/"/>
         <!-- 内部用户服务 -->
         <property name="innerUserServer" value="http://192.168.10.200/djauth/" />

@@ -31,6 +31,16 @@ public class SaveStocktakingOrderInfoBO {
      * 合作方编号
      */
     private String partnerId;
+
+    /**
+     * 合作方区域
+     */
+    private String partnerArea;
+
+    /**
+     * 合作方名称
+     */
+    private String partnerName;
     /**
      * 仓库编号
      */
@@ -224,6 +234,18 @@ public class SaveStocktakingOrderInfoBO {
      */
     private String amount;
 
+    /**
+     * 客户名称
+     */
+    private String customerName;
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
     public String getUnits() {
         return units;
@@ -593,13 +615,31 @@ public class SaveStocktakingOrderInfoBO {
         this.isAdd = isAdd;
     }
 
+    public String getPartnerArea() {
+        return partnerArea;
+    }
+
+    public void setPartnerArea(String partnerArea) {
+        this.partnerArea = partnerArea;
+    }
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
+    }
+
     @Override
     public String toString() {
         return "SaveStocktakingOrderInfoBO{" +
-                "isAdd='" + isAdd + '\'' +
+                "isAdd=" + isAdd +
                 ", relativeId='" + relativeId + '\'' +
                 ", jobId='" + jobId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
+                ", partnerArea='" + partnerArea + '\'' +
+                ", partnerName='" + partnerName + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
                 ", warehouseName='" + warehouseName + '\'' +
                 ", warehouseAreaId='" + warehouseAreaId + '\'' +
@@ -630,7 +670,7 @@ public class SaveStocktakingOrderInfoBO {
                 ", units='" + units + '\'' +
                 ", inventoryClerk='" + inventoryClerk + '\'' +
                 ", inventoryClerkId='" + inventoryClerkId + '\'' +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", materialname='" + materialname + '\'' +
                 ", lnglat='" + lnglat + '\'' +
                 ", paymenttime=" + paymenttime +
@@ -642,6 +682,7 @@ public class SaveStocktakingOrderInfoBO {
                 ", childorderid='" + childorderid + '\'' +
                 ", remark='" + remark + '\'' +
                 ", amount='" + amount + '\'' +
+                ", customerName='" + customerName + '\'' +
                 '}';
     }
 }
