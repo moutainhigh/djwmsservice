@@ -41,5 +41,5 @@
        <!--  <property name="updateOrderServer" value="http://192.168.2.73:8080/djorder/" /> -->
         <!-- <property name="updateOrderServer" value="http://localhost:8080/djorder/" /> -->
     </bean>
-
+ 
 </beans>

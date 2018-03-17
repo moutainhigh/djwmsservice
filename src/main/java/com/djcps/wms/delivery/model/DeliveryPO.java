@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * 提货信息 实体类
+ * 
  * @author Chengw
  * @since 2018/2/1 13:21.
  */
@@ -245,25 +246,13 @@ public class DeliveryPO {
 
     @Override
     public String toString() {
-        return "DeliveryPO{" +
-                "waybillId='" + waybillId + '\'' +
-                ", deliveryId='" + deliveryId + '\'' +
-                ", status=" + status +
-                ", partnerId='" + partnerId + '\'' +
-                ", partnerName='" + partnerName + '\'' +
-                ", partnerArea='" + partnerArea + '\'' +
-                ", loadingTableId='" + loadingTableId + '\'' +
-                ", loadingTableName='" + loadingTableName + '\'' +
-                ", loadingPersonId='" + loadingPersonId + '\'' +
-                ", loadingPersonName='" + loadingPersonName + '\'' +
-                ", finishTime='" + finishTime + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", printCount='" + printCount + '\'' +
-                ", pickerId='" + pickerId + '\'' +
-                ", pickerName='" + pickerName + '\'' +
-                ", effect=" + effect +
-                ", orderList=" + orderList +
-                '}';
+        return "DeliveryPO [waybillId=" + waybillId + ", deliveryId=" + deliveryId + ", status=" + status
+                + ", partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea=" + partnerArea
+                + ", loadingTableId=" + loadingTableId + ", loadingTableName=" + loadingTableName + ", loadingPersonId="
+                + loadingPersonId + ", loadingPersonName=" + loadingPersonName + ", finishTime=" + finishTime
+                + ", createTime=" + createTime + ", updateTime=" + updateTime + ", printCount=" + printCount
+                + ", pickerId=" + pickerId + ", pickerName=" + pickerName + ", effect=" + effect + ", orderList="
+                + orderList + "]";
     }
+
 }
