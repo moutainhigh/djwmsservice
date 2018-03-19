@@ -18,6 +18,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -45,7 +47,7 @@ import com.google.gson.Gson;
 @RequestMapping(value = "/loadingTable")
 public class LoadingTableController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(LoadingTableController.class);
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(LoadingTableController.class);
 	
 	private Gson gson = new Gson();
 	
@@ -64,11 +66,11 @@ public class LoadingTableController {
 	@RequestMapping(name="新增装车台",value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> add(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			AddLoadingTableBO loadingTable = gson.fromJson(json, AddLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			logger.debug("loadingTable : " + loadingTable.toString());
+			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
@@ -83,7 +85,7 @@ public class LoadingTableController {
 			return loadingTableService.add(loadingTable);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -100,11 +102,11 @@ public class LoadingTableController {
 	@RequestMapping(name="修改装车台",value = "/modify", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> modify(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			UpdateLoadingTableBO loadingTable  = gson.fromJson(json, UpdateLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			logger.debug("loadingTable : " + loadingTable.toString());
+			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<UpdateLoadingTableBO>()
@@ -118,7 +120,7 @@ public class LoadingTableController {
 			return loadingTableService.modify(loadingTable);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -135,11 +137,11 @@ public class LoadingTableController {
 	@RequestMapping(name="删除装车台",value = "/delete", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> delete(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			DeleteLoadingTableBO loadingTable  = gson.fromJson(json, DeleteLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			logger.debug("loadingTable : " + loadingTable.toString());
+			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<DeleteLoadingTableBO>()
@@ -151,7 +153,7 @@ public class LoadingTableController {
 			return loadingTableService.delete(loadingTable);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -168,14 +170,14 @@ public class LoadingTableController {
 	@RequestMapping(name="获取所有装车台",value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			BaseListPartnerIdBO param  = gson.fromJson(json, BaseListPartnerIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return loadingTableService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -192,7 +194,7 @@ public class LoadingTableController {
 	@RequestMapping(name="根据id获取指定装车台",value = "/getLoadingTableById", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getLoadingTableById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			SelectLoadingTableByIdBO param  = gson.fromJson(json, SelectLoadingTableByIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -207,7 +209,7 @@ public class LoadingTableController {
 			return loadingTableService.getLoadingTableById(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -224,14 +226,14 @@ public class LoadingTableController {
 	@RequestMapping(name="根据装车台属性模糊查询",value = "/getLoadingTableByAttribute", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getLoadingTableByAttribute(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			SelectLoadingTableByAttributeBO param  = gson.fromJson(json, SelectLoadingTableByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return loadingTableService.getLoadingTableByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -248,11 +250,11 @@ public class LoadingTableController {
 	@RequestMapping(name="启用装车台",value = "/enable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> enable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			IsUseLoadingTableBO loadingTable  = gson.fromJson(json, IsUseLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			logger.debug("loadingTable : " + loadingTable.toString());
+			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<IsUseLoadingTableBO>()
@@ -264,7 +266,7 @@ public class LoadingTableController {
 			return loadingTableService.enable(loadingTable);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -281,11 +283,11 @@ public class LoadingTableController {
 	@RequestMapping(name="禁用装车台",value = "/disable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> disable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			IsUseLoadingTableBO loadingTable  = gson.fromJson(json, IsUseLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			logger.debug("loadingTable : " + loadingTable.toString());
+			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<IsUseLoadingTableBO>()
@@ -297,7 +299,7 @@ public class LoadingTableController {
 			return loadingTableService.disable(loadingTable);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -313,7 +315,7 @@ public class LoadingTableController {
 			return loadingTableService.getnumber(1);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

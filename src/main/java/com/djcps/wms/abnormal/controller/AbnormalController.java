@@ -24,6 +24,8 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.google.gson.Gson;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.AddAbnormal;
 import com.djcps.wms.abnormal.model.GetOrderByAttributeBO;
 import com.djcps.wms.abnormal.model.OrderIdBO;
@@ -41,7 +43,7 @@ import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
 @RequestMapping(value = "/abnormalOrder")
 public class AbnormalController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AbnormalController.class);
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AbnormalController.class);
 	
 	private Gson gson = new Gson();
 	
@@ -59,7 +61,7 @@ public class AbnormalController {
 	@RequestMapping(name="异常订单查询(包含查询条件)",value = "/getOrderByAttribute", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getOrderByAttributeBO(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-            logger.debug("json : " + json);
+            LOGGER.debug("json : " + json);
             GetOrderByAttributeBO param = gson.fromJson(json, GetOrderByAttributeBO.class);
             PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -74,7 +76,7 @@ public class AbnormalController {
             return abnormalService.getOrderByAttributeBO(param);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
 	}
@@ -90,7 +92,7 @@ public class AbnormalController {
 	@RequestMapping(name="根据拆分的订单号获取订单信息",value = "/getSplitOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getSplitOrderByOrderId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-            logger.debug("json : " + json);
+            LOGGER.debug("json : " + json);
             OrderIdBO param = gson.fromJson(json, OrderIdBO.class);
             PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -105,7 +107,7 @@ public class AbnormalController {
             return abnormalService.getSplitOrderByOrderId(param);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
 	}
@@ -121,7 +123,7 @@ public class AbnormalController {
 	@RequestMapping(name="修改异常订单",value = "/updateAbnormal", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> updateAbnormal(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-            logger.debug("json : " + json);
+            LOGGER.debug("json : " + json);
             UpdateAbnormalBO param = gson.fromJson(json, UpdateAbnormalBO.class);
             PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -136,7 +138,7 @@ public class AbnormalController {
             return abnormalService.updateAbnormal(param);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
 	}
@@ -152,7 +154,7 @@ public class AbnormalController {
 	@RequestMapping(name="新增异常订单",value = "/addAbnormal", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> addAbnormal(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-            logger.debug("json : " + json);
+            LOGGER.debug("json : " + json);
             AddAbnormal param = gson.fromJson(json, AddAbnormal.class);
             PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -167,7 +169,7 @@ public class AbnormalController {
             return abnormalService.addAbnormal(param);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
 	}
@@ -183,7 +185,7 @@ public class AbnormalController {
 	@RequestMapping(name="根据订单号获取异常订单信息(批量)",value = "/getOrderByOrderIdList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getOrderByOrderIdList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-            logger.debug("json : " + json);
+            LOGGER.debug("json : " + json);
             OrderIdListBO param = gson.fromJson(json, OrderIdListBO.class);
             PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -198,7 +200,7 @@ public class AbnormalController {
             return abnormalService.getOrderByOrderIdList(param);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
         }
 	}
