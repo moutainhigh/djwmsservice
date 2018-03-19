@@ -10,7 +10,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.record.model.EntryRecordListBO;
 import com.djcps.wms.record.model.SaveOperationRecordBO;
 import com.djcps.wms.record.model.StocktakingRecordListBO;
-import com.djcps.wms.record.model.OperationRecordResult.OperationRecordResult;
+import com.djcps.wms.record.model.result.OperationRecordResult;
 import com.djcps.wms.record.request.OperationRecordHttpRequest;
 import com.google.gson.Gson;
 
