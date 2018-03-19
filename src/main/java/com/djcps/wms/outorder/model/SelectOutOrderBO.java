@@ -9,7 +9,7 @@ import com.djcps.wms.commons.base.BaseListBO;
  * @author ldh
  *
  */
-public class SelectOutOrderBO implements Serializable{
+public class SelectOutOrderBO extends BaseListBO implements Serializable{
 	/**
 	 * 
 	 */
@@ -17,23 +17,23 @@ public class SelectOutOrderBO implements Serializable{
 	/**
 	 * 出库单编号
 	 */
-	private String fid;
+	private String id;
 	/**
 	 * 订单编号
 	 */
-	private String forderId;
+	private String orderId;
 	/**
 	 * 商品名称
 	 */
-	private String fproductName;
+	private String productName;
 	/**
      * 出库单状态
      */
-	private Integer fstatus;
+	private Integer status;
 	/**
      * 客户名称
      */
-	private String fcustomerName;
+	private String customerName;
 	/**
      * 开始时间
      */
@@ -42,87 +42,52 @@ public class SelectOutOrderBO implements Serializable{
      * 结束时间
      */
 	private String endTime;
-	private Integer pageSize;
-
-    private Integer pageNo;
-
-	public String getFid() {
-		return fid;
+	public String getId() {
+		return id;
 	}
-
-	public void setFid(String fid) {
-		this.fid = fid;
+	public void setId(String id) {
+		this.id = id;
 	}
-
-	public String getForderId() {
-		return forderId;
+	public String getOrderId() {
+		return orderId;
 	}
-
-	public void setForderId(String forderId) {
-		this.forderId = forderId;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
-
-	public String getFproductName() {
-		return fproductName;
+	public String getProductName() {
+		return productName;
 	}
-
-	public void setFproductName(String fproductName) {
-		this.fproductName = fproductName;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
-
-	public int getFstatus() {
-		return fstatus;
+	public Integer getStatus() {
+		return status;
 	}
-
-	public void setFstatus(int fstatus) {
-		this.fstatus = fstatus;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
-
-	public String getFcustomerName() {
-		return fcustomerName;
+	public String getCustomerName() {
+		return customerName;
 	}
-
-	public void setFcustomerName(String fcustomerName) {
-		this.fcustomerName = fcustomerName;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
-
 	public String getStartTime() {
 		return startTime;
 	}
-
 	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
-
 	public String getEndTime() {
 		return endTime;
 	}
-
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
-
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
-
-	public Integer getPageNo() {
-		return pageNo;
-	}
-
-	public void setPageNo(Integer pageNo) {
-		this.pageNo = pageNo;
-	}
-
 	@Override
 	public String toString() {
-		return "SelectOutOrderBO [fid=" + fid + ", forderId=" + forderId + ", fproductName=" + fproductName
-				+ ", fstatus=" + fstatus + ", fcustomerName=" + fcustomerName + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", pageSize=" + pageSize + ", pageNo=" + pageNo + "]";
+		return "SelectOutOrderBO [id=" + id + ", orderId=" + orderId + ", productName=" + productName + ", status="
+				+ status + ", customerName=" + customerName + ", startTime=" + startTime + ", endTime=" + endTime + "]";
 	}
     
 }
