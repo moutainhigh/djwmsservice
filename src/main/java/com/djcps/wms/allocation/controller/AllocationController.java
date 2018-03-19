@@ -217,18 +217,6 @@ public class AllocationController {
 			BaseAddBO param = new BaseAddBO();
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-//			GetIntelligentAllocaBO param = gson.fromJson(json, GetIntelligentAllocaBO.class);
-//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-//			BeanUtils.copyProperties(partnerInfoBean,param);
-//			//数据校验
-//			ComplexResult ret = FluentValidator.checkAll().failFast()
-//					.on(param,
-//							new HibernateSupportedValidator<GetIntelligentAllocaBO>()
-//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//					.doValidate().result(ResultCollectors.toComplex());
-//			if (!ret.isSuccess()) {
-//				return MsgTemplate.failureMsg(ret);
-//			}
 			return allocationService.addzhinengpeihuo(param);
 		} catch (Exception e) {
 			e.printStackTrace();

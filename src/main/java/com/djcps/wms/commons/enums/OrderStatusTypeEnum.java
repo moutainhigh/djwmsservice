@@ -13,7 +13,27 @@ public enum OrderStatusTypeEnum {
     /**
      * 已入库
      */
-    ALL_ADD_STOCK("22");
+    ALL_ADD_STOCK("22"),
+	
+	/**
+	 * 已配货
+	 */
+	ORDER_ALREADY_ALLOCATION("23"),
+	
+	/**
+	 * 已提货
+	 */
+	ORDER_ALREADY_DELIVERY("24"),
+	
+	/**
+	 * 已装车
+	 */
+	ORDER_ALREADY_LOADING("25"),
+	
+	 /**
+     * 已发车
+     */
+	ORDER_ALREADY_GOTO("26");
 
     private String value;
 
