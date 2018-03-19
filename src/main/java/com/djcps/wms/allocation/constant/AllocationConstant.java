@@ -10,34 +10,6 @@ package com.djcps.wms.allocation.constant;
 public class AllocationConstant {
 
     public static final String DEFAULT_VERSION = "1.0";
-
-    /**
-     * 部分入库
-     */
-    public static final String LESS_ADD_STOCK ="21";
-
-    /**
-     * 已入库
-     */
-    public static final String ALL_ADD_STOCK ="22";
-    /**
-     * 已配货
-     */
-    public static final String ORDER_ALREADY_ALLOCATION ="23";
-    
-    /**
-     * 已提货
-     */
-    public static final String ORDER_ALREADY_DELIVERY ="24";
-    
-    /**
-     * 已入库
-     */
-    public static final String ORDER_ALREADY_LOADING ="25";
-    /**
-     * 已发车
-     */
-    public static final String ORDER_ALREADY_GOTO ="26";
     
     /**
      * 提货单确认状态,1确认
@@ -178,37 +150,27 @@ public class AllocationConstant {
     public static final String COMMON_ALLOCATION_LOADING="commonAllocationLoading";
     
     /**
-     * 有缓存
+     * 装车优化追加订单
      */
-    public static final String HAVING_CACHE="1";
+    public static final String EXCELLENT_LOADING_CACHE="1";
     /**
-     * 无缓存
+     * 智能配货追加订单
      */
-    public static final String UNHAVING_CACHE="0";
+    public static final String INTELLIGENT_CACHE="0";
     
     /**
-     * 楞型
-    
-	"BC瓦"= 1
-    "BE瓦"= 2
-    "单C瓦"= 3
-    "单B瓦"= 4
-    "单E瓦"= 5
-    "EBC瓦"= 6
-    "EE瓦"= 7
+     * 追加订单处理,追加订单
      */
-    public static final String FLUTE_TYPE_1="BC瓦";
-    public static final String FLUTE_TYPE_2="BE瓦";
-    public static final String FLUTE_TYPE_3="单C瓦";
-    public static final String FLUTE_TYPE_4="单B瓦";
-    public static final String FLUTE_TYPE_5="单E瓦";
-    public static final String FLUTE_TYPE_6="EBC瓦";
-    public static final String FLUTE_TYPE_7="EE瓦";
+    public static final String DISPOSE_ADD_ORDER_CACHE="2";
     
     /**
      * redis锁过期时间
      */
     public static final Integer REDIS_LOCK_TIME=60;
     
+    /**
+     * 操作有误
+     */
+    public static final String OPERATION_ERROR="操作有误,请重新刷新";
     
 }

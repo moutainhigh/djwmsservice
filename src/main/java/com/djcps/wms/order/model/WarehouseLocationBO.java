@@ -14,7 +14,7 @@ public class WarehouseLocationBO implements Serializable{
 	/**
 	 * 实时在库数量
 	 */
-	private String trueAmount;
+	private Integer trueAmount;
     /**
      * 库位编码
      */
@@ -24,10 +24,10 @@ public class WarehouseLocationBO implements Serializable{
      */
     private String warehouseLocName;
     
-	public String getTrueAmount() {
+	public Integer getTrueAmount() {
 		return trueAmount;
 	}
-	public void setTrueAmount(String trueAmount) {
+	public void setTrueAmount(Integer trueAmount) {
 		this.trueAmount = trueAmount;
 	}
 	public String getWarehouseLocId() {
@@ -44,7 +44,7 @@ public class WarehouseLocationBO implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "WarehouseLocationBo [trueAmount=" + trueAmount + ", warehouseLocId=" + warehouseLocId
+		return "WarehouseLocationBO [trueAmount=" + trueAmount + ", warehouseLocId=" + warehouseLocId
 				+ ", warehouseLocName=" + warehouseLocName + "]";
 	}
     
