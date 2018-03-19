@@ -4,6 +4,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.log.AddLog;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -11,8 +13,6 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.stocktaking.model.*;
 import com.djcps.wms.stocktaking.service.StocktakingTaskService;
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +34,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/stocktaking")
 public class StocktakingTaskController {
-    private static final Logger logger = LoggerFactory.getLogger(StocktakingTaskController.class);
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(StocktakingTaskController.class);
 
     @Autowired
     private StocktakingTaskService stocktakingTaskService;
@@ -66,8 +66,8 @@ public class StocktakingTaskController {
             return stocktakingTaskService.addTaskByAll(addStocktakingBO);
         }
         catch (Exception e){
+            LOGGER.error("新增全盘异常：{} ",e.getMessage());
             e.printStackTrace();
-            logger.error("新增全盘任务失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -97,8 +97,8 @@ public class StocktakingTaskController {
             return stocktakingTaskService.addTaskByPart(addStocktakingBO);
         }
         catch (Exception e){
+            LOGGER.error("新增部分任务异常：{} ",e.getMessage());
             e.printStackTrace();
-            logger.error("新增部分任务失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -112,6 +112,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="更新盘点状态",value = "/updateTask", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> updateTaskState(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         UpdateStocktakingTaskBO updateStocktakingTaskBO=gson.fromJson(json,UpdateStocktakingTaskBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,updateStocktakingTaskBO);
@@ -124,6 +125,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.updateTaskState(updateStocktakingTaskBO);
+        }
+        catch (Exception e){
+            LOGGER.error("更新盘点状态异常：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -135,6 +142,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="下发任务更新pda状态",value = "/updatePdaState", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> updatePdaState(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         UpdateStocktakingTaskBO updateStocktakingTaskBO=gson.fromJson(json,UpdateStocktakingTaskBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,updateStocktakingTaskBO);
@@ -147,6 +155,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.updatePdaStatus(updateStocktakingTaskBO);
+        }
+        catch (Exception e){
+            LOGGER.error("更新pda状态异常：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -173,8 +187,8 @@ public class StocktakingTaskController {
         try {
             return stocktakingTaskService.getNumber();
         } catch (Exception e) {
+            LOGGER.error("获取新增盘点任务作业单号异常：{} ",e.getMessage());
             e.printStackTrace();
-            logger.error("获取新增盘点任务作业单号失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -188,6 +202,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="保存新增的盘点任务",value = "/saveTask", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> saveTask(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         SaveStocktakingTaskBO saveStocktakingTaskBO=gson.fromJson(json,SaveStocktakingTaskBO.class) ;
         BeanUtils.copyProperties(partnerInfoBo,saveStocktakingTaskBO);
@@ -202,6 +217,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.saveSoctakingTask(saveStocktakingTaskBO);
+        }
+        catch (Exception e){
+            LOGGER.error("保存盘点任务异常：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -213,6 +234,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="请求盘点任务信息",value = "/stocktakingOrderInfoList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> stocktakingOrderInfoList(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=gson.fromJson(json,PdaGetStocktakingOrderBO.class);
         BeanUtils.copyProperties(partnerInfoBo,pdaGetStocktakingOrderBO);
@@ -225,6 +247,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.stocktakingOrderInfoList(pdaGetStocktakingOrderBO);
+        }
+        catch (Exception e){
+            LOGGER.error("获取盘点任务信息异常：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -236,6 +264,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="发起盘盈",value = "/inventorySurplus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> inventorySurplus(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         StocktakingTaskfBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskfBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
@@ -248,6 +277,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.inventorySurplus2(stocktakingTaskBO);
+        }
+        catch (Exception e){
+            LOGGER.error("发起盘盈异常：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -257,7 +292,7 @@ public class StocktakingTaskController {
      * @company:djwms
      * @create:2018/1/14
      **/
-    @RequestMapping(name="PDA保存盘盈录入信息/Web保存盘盈录入信息",value = "/saveInventoryProfitInfo", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(name="PDA保存盘盈录入信息/保存单条PDA盘点结果",value = "/saveInventoryProfitInfo", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> saveInventoryProfitInfo(@RequestBody(required = false) String json, HttpServletRequest request){
         try{
         SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO=gson.fromJson(json,SaveStocktakingOrderInfoBO.class);
@@ -274,8 +309,8 @@ public class StocktakingTaskController {
         return stocktakingTaskService.saveInventoryProfitInfo(saveStocktakingOrderInfoBO);
     }
         catch (Exception e){
-        e.printStackTrace();
-        logger.error("",e.getMessage());
+            LOGGER.error("PDA保存单挑盘点结果异常：{} ",e.getMessage());
+            e.printStackTrace();
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
      }
     }
@@ -289,6 +324,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> pdaInventorySurplus(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         StocktakingTaskBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
@@ -301,6 +337,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.pdaInventorySurplus(stocktakingTaskBO);
+        }
+        catch (Exception e){
+            LOGGER.error("PDA发起盘盈异常：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -312,6 +354,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="PDA发起盘盈",value = "/pdaInventorySurplus2", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> pdaInventorySurplus2(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         StocktakingTaskfBO stocktakingTaskBO=gson.fromJson(json,StocktakingTaskfBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,stocktakingTaskBO);
@@ -324,6 +367,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.pdaInventorySurplus2(stocktakingTaskBO);
+        }
+        catch (Exception e){
+            LOGGER.error("PDA发起盘盈异常：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -335,10 +384,17 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="Web暂存盘点结果请求",value = "/saveStocktaking", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> saveStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList=gson.fromJson(json,SaveStocktakingOrderInfoList.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,saveStocktakingOrderInfoBOList);
         return stocktakingTaskService.saveStocktakingResult(saveStocktakingOrderInfoBOList,partnerInfoBo);
+        }
+        catch (Exception e){
+            LOGGER.error("Web暂存盘点结果请求：{} ",e.getMessage());
+            e.printStackTrace();
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -350,7 +406,8 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="Web保存盘点结果请求",value = "/completeStocktaking", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> completeStocktaking(@RequestBody(required = false) String json, HttpServletRequest request){
-       SaveStocktakingOrderInfoList saveStocktakingOrderInfoList=gson.fromJson(json,SaveStocktakingOrderInfoList.class);
+       try{
+        SaveStocktakingOrderInfoList saveStocktakingOrderInfoList=gson.fromJson(json,SaveStocktakingOrderInfoList.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,saveStocktakingOrderInfoList);
         ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -362,6 +419,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.completeStocktakingTask(saveStocktakingOrderInfoList,partnerInfoBo);
+       }
+       catch (Exception e){
+           LOGGER.error("Web保存盘点结果请求：{} ",e.getMessage());
+           e.printStackTrace();
+           return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+       }
     }
 
     /**
@@ -388,8 +451,8 @@ public class StocktakingTaskController {
         return stocktakingTaskService.pdaStocktakingTaskList(pdaStocktakingTaskBO);
     }
         catch (Exception e){
-        e.printStackTrace();
-        logger.error("PDA获取盘点任务列表失败",e.getMessage());
+            LOGGER.error("PDA获取盘点任务列表失败：{} ",e.getMessage());
+            e.printStackTrace();
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -418,8 +481,8 @@ public class StocktakingTaskController {
             return stocktakingTaskService.pdaStocktakingOrderList(pdaGetStocktakingOrderBO);
         }
         catch (Exception e){
+            LOGGER.error("PDA获取盘点任务订单列表失败：{} ",e.getMessage());
             e.printStackTrace();
-            logger.error("PDA获取盘点任务订单列表失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -449,7 +512,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error("PDA获取盘点任务订单详情失败",e.getMessage());
+            LOGGER.error("PDA获取盘点任务订单详情异常:{}",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -479,7 +542,7 @@ public class StocktakingTaskController {
         }
         catch (Exception e){
             e.printStackTrace();
-            logger.error("",e);
+            LOGGER.error("PDA保存盘点结果异常：{}",e);
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -508,8 +571,8 @@ public class StocktakingTaskController {
             return stocktakingTaskService.getOrderAmount(pdaGetStocktakingOrderBO);
         }
         catch (Exception e){
+            LOGGER.error("PDA获取盘点订单各个状态数量异常：{}",e.getMessage());
             e.printStackTrace();
-            logger.error("PDA获取盘点订单各个状态数量失败",e.getMessage());
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
@@ -538,9 +601,9 @@ public class StocktakingTaskController {
         return stocktakingTaskService.pdaCompleteStocktaking(pdaGetStocktakingOrderBO);
     }
         catch (Exception e){
-        e.printStackTrace();
-        logger.error("PDA完成盘点更新状态失败",e.getMessage());
-        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+            e.printStackTrace();
+            LOGGER.error("PDA完成盘点更新状态异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
 
@@ -553,6 +616,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 获取全部盘点任务列表",value = "/stocktakingTaskList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> stocktakingTaskList(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
@@ -565,6 +629,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.stocktakingTaskList(getStocktakingTaskBO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("获取全部盘点任务列表异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -576,6 +646,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 条件获取盘点任务列表",value = "/searchTaskList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> searchTaskList(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
         BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
@@ -588,6 +659,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.searchTaskList(getStocktakingTaskBO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("条件获取盘点任务列表异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -599,6 +676,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 查看盘点结果列表",value = "/stocktakingResultList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> stocktakingResultList(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO=gson.fromJson(json,PdaGetStocktakingOrderBO.class);
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         BeanUtils.copyProperties(partnerInfoBo,pdaGetStocktakingOrderBO);
@@ -611,6 +689,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.stocktakingResultList(pdaGetStocktakingOrderBO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("查看盘点结果列表异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -622,10 +706,17 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 获取操作记录",value = "/operationRecordList", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> operationRecordList(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
         BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
         return stocktakingTaskService.operationRecordList(getStocktakingTaskBO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("获取操作记录异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -637,14 +728,22 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 查看盘点任务进行情况",value = "/stocktakingCompleteStatus", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> stocktakingCompleteStatus(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         GetStocktakingTaskBO getStocktakingTaskBO=gson.fromJson(json,GetStocktakingTaskBO.class);
         BeanUtils.copyProperties(partnerInfoBo,getStocktakingTaskBO);
         return stocktakingTaskService.stocktakingCompleteStatus(getStocktakingTaskBO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("查看盘点任务进行情况异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     @RequestMapping(name=" 获取盘点任务的库位信息",value = "/areaAndLocInfo", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> areaAndLocInfo(@RequestBody(required = false) String json, HttpServletRequest request){
+       try{
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
         JobAndWarehouseBO jobAndWarehouseBO=gson.fromJson(json,JobAndWarehouseBO.class);
         BeanUtils.copyProperties(partnerInfoBo,jobAndWarehouseBO);
@@ -657,6 +756,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.areaAndLocInfo(jobAndWarehouseBO);
+       }
+       catch (Exception e){
+           e.printStackTrace();
+           LOGGER.error("获取盘点任务的库位信息异常:{}",e.getMessage());
+           return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+       }
     }
 
     /**
@@ -668,6 +773,7 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 更新打印次数接口",value = "/printCount", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> printCount(@RequestBody(required = false) String json, HttpServletRequest request){
+        try{
         PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
        PrintCountBO printCountBO=gson.fromJson(json,PrintCountBO.class);
         BeanUtils.copyProperties(partnerInfoBo,printCountBO);
@@ -680,6 +786,12 @@ public class StocktakingTaskController {
             return MsgTemplate.failureMsg(ret);
         }
         return stocktakingTaskService.printCount(printCountBO);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("更新打印次数接口异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
@@ -691,17 +803,25 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name=" 获取未下发作业订单信息",value = "/noSendOrderInfo", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> noSendOrderInfo(@RequestBody(required = false) String json, HttpServletRequest request){
-        PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
-        PrintCountBO printCountBO=gson.fromJson(json,PrintCountBO.class);
-        BeanUtils.copyProperties(partnerInfoBo,printCountBO);
-        ComplexResult ret = FluentValidator.checkAll().failFast()
-                .on(printCountBO,
-                        new HibernateSupportedValidator<PrintCountBO>()
-                                .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-                .doValidate().result(ResultCollectors.toComplex());
-        if (!ret.isSuccess()) {
-            return MsgTemplate.failureMsg(ret);
+        try{
+            PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
+            PrintCountBO printCountBO=gson.fromJson(json,PrintCountBO.class);
+            BeanUtils.copyProperties(partnerInfoBo,printCountBO);
+            ComplexResult ret = FluentValidator.checkAll().failFast()
+                    .on(printCountBO,
+                            new HibernateSupportedValidator<PrintCountBO>()
+                                    .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                    .doValidate().result(ResultCollectors.toComplex());
+            if (!ret.isSuccess()) {
+                return MsgTemplate.failureMsg(ret);
+            }
+            return stocktakingTaskService.noSendOrderInfo(printCountBO);
         }
-        return stocktakingTaskService.noSendOrderInfo(printCountBO);
+        catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("获取未下发作业订单信息异常:{}",e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        }
+
     }
 }
