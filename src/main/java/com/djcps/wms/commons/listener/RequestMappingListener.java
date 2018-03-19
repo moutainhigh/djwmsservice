@@ -58,7 +58,7 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 	    try {
 	    	List<SysUrlPO> sysUrlList = new ArrayList<SysUrlPO>();
 	    	List<SysUrlPO> insertList = new ArrayList<SysUrlPO>();
-	    	Map<String,SysUrlPO> sysUrlMap = new HashMap<String,SysUrlPO>(requestMappingHandlerMapping.getHandlerMethods().size());
+	    	Map<String,SysUrlPO> sysUrlMap = new HashMap<String,SysUrlPO>(16);
 	    	
 	    	if(rootName.equals(displayName)){
 				Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();  

@@ -40,7 +40,7 @@ public interface OperationRecordHttpRequest {
     HTTPResponse entryRecordList(@Body RequestBody rb);
     /**
      * 保存操作记录
-     * @param rb
+     * @param json
      * @return
      * @author:zyb
      * @date:2018/3/6

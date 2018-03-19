@@ -54,7 +54,7 @@ public class CookiesUtil{
 			for (Cookie cookie : cookies) {
 				cookieMap.put(cookie.getName(), cookie);
 			}
-		}
+		} 
 		return cookieMap;
 	}
 
