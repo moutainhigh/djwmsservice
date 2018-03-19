@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<Properties>
+		<!-- 定义项目存储日志文件夹 -->
+		<Property name="LOG_HOME">${sys:catalina.home}/logs/WMS
+		</Property>
+	</Properties>
+
+	<Appenders>
+
+		<!-- 运行日志输出文件 -->
+		<RollingRandomAccessFile name="run"
+			fileName="${LOG_HOME}/run.log" filePattern="${LOG_HOME}/run.%d{yyyy-MM-dd}-%i.log.gz"
+			append="true">
+			<!--日志格式 -->
+			<PatternLayout
+				pattern="%d{yyyy.MM.dd HH:mm:ss z} %-5level %class{36}.%M()/%L - %msg%xEx%n" />
+			<Policies>
+				<!-- 对应 filePattern维度(根据filePattern的正则来)，此处为天数 -->
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+				<!-- 文件大小单位为字节，默认不限制 -->
+				<SizeBasedTriggeringPolicy size="1073741824" />
+			</Policies>
+			<!-- 同一天的日志最大扩展个数为5，最多保存2天 -->
+			<DefaultRolloverStrategy max="5">
+				<Delete basePath="${LOG_HOME}" maxDepth="1">
+					<IfFileName glob="run.*.log.gz" />
+					<IfLastModified age="2d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingRandomAccessFile>
+		
+		
+		<!-- 操作日志输出文件 -->
+		<RollingRandomAccessFile name="operation"
+			fileName="${LOG_HOME}/operation.log" filePattern="${LOG_HOME}/operation.%d{yyyy-MM-dd}-%i.log.gz"
+			append="true">
+			<PatternLayout
+				pattern="%d{yyyy.MM.dd HH:mm:ss z} %-5level %class{36}.%M()/%L - %msg%xEx%n" />
+			<Policies>
+				<!-- 对应 filePattern维度，此处为天数 -->
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+				<!-- 文件大小单位为字节，默认不限制 -->
+				<SizeBasedTriggeringPolicy size="1073741824" />
+			</Policies>
+			<!-- 同一天的日志最大扩展个数为5，最多保存7天 -->
+			<DefaultRolloverStrategy max="5">
+				<Delete basePath="${LOG_HOME}" maxDepth="1">
+					<IfFileName glob="operation.*.log.gz" />
+					<IfLastModified age="2d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingRandomAccessFile>
+
+	</Appenders>
+
+	<Loggers>
+		<!-- 项目统一运行日志输出配置 -->
+		<Logger name="com.djcps" level="DEBUG" additivity="false">
+			<appender-ref ref="run" />
+		</Logger>
+		<!-- 项目统一运行日志输出配置 -->
+        <Logger name="rpc.plugin.http.log.HttpLogger" level="DEBUG" additivity="false">
+            <appender-ref ref="run" />
+        </Logger>
+		<!-- aop操作日志输出配置 -->
+		<Logger name="com.djcps.wms.commons.aop.log.LogAspect" level="INFO"
+			additivity="false">
+			<appender-ref ref="operation" />
+		</Logger>
+	</Loggers>
+</configuration>

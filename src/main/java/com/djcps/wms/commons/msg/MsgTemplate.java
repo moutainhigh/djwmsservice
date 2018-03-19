@@ -1,8 +1,8 @@
 package com.djcps.wms.commons.msg;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +67,6 @@ public class MsgTemplate {
      * @param error 错误输出
      * @return
      */
-    @Deprecated
     public static Map<String, Object> failureMsg(String error) {
         return customMsg(false, 310001, error, null);
     }
@@ -106,14 +105,13 @@ public class MsgTemplate {
      * @return the map
      */
     private static Map<String, Object> customMsg(boolean success, int msgCode, String message, Object data) {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>(4);
         result.put("success", success);
         result.put("code", msgCode);
         result.put("msg", message);
         result.put("data", data);
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            logger.info("返回输出：", mapper.writeValueAsString(result));
+            logger.info("返回输出：", JSONObject.toJSONString(result));
         }catch (Exception e){
             e.printStackTrace();
         }

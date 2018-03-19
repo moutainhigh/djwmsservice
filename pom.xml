@@ -13,6 +13,33 @@
         <url>http://www.djcps.com</url>
     </organization>
 
+    <profiles>
+        <profile>
+            <!-- 开发环境 -->
+            <id>dev</id>
+            <properties>
+                <environment>dev</environment>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault><!-- 默认激活该profile节点 -->
+            </activation>
+        </profile>
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <environment>test</environment>
+            </properties>
+
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>production</id>
+            <properties>
+                <environment>production</environment>
+            </properties>
+        </profile>
+    </profiles>
 
     <developers>
         <developer>
@@ -32,8 +59,25 @@
             <id>alimaven</id>
             <name>aliyun maven</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>public</id>
+            <name>aliyun nexus</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -41,8 +85,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>1.8</java-version>
         <org.springframework-version>4.3.8.RELEASE</org.springframework-version>
-        <org.aspectj-version>1.8.10</org.aspectj-version>
-        <org.slf4j-version>1.7.24</org.slf4j-version>
+        <org.aspectj-version>1.8.9</org.aspectj-version>
+        <org.slf4j-version>1.7.25</org.slf4j-version>
+        <project.web.name>/djwmsservice</project.web.name>
+        <log4j.version>2.9.1</log4j.version>
+        <jackson.version>2.8.6</jackson.version>
     </properties>
 
     <dependencies>
@@ -168,6 +215,12 @@
             <version>4.5.3</version>
         </dependency>
 
+		<dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        
         <!-- AspectJ -->
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -197,30 +250,20 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
         <!-- 桥接：告诉commons logging使用Log4j2 -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-jcl</artifactId>
-            <version>2.8.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.8.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.8.2</version>
+            <version>${log4j.version}</version>
         </dependency>
 
         <!--解析json -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.8.6</version>
+            <version>${jackson.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.fasterxml.jackson.core</groupId>
@@ -231,7 +274,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.8.6</version>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.35</version>
         </dependency>
 
 
@@ -312,6 +361,13 @@
             <artifactId>retrofit</artifactId>
             <version>2.3.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>converter-scalars</artifactId>
@@ -326,7 +382,7 @@
         <dependency>
             <groupId>rpc.plugin</groupId>
             <artifactId>djhttprpc</artifactId>
-            <version>1.03</version>
+            <version>1.30</version>
         </dependency>
 
         <!-- xstream  XML Bean 转换 -->
@@ -359,6 +415,13 @@
             <version>1.0</version>
         </dependency>
 
+        <!-- DJCPS log4j-->
+        <dependency>
+            <groupId>com.djcps</groupId>
+            <artifactId>djcpslog4j</artifactId>
+            <version>1.3.0.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -373,6 +436,15 @@
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
+                </configuration>
+            </plugin>
+
+            <!-- 跳过单元测试 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
 
@@ -397,8 +469,20 @@
                 <version>9.4.5.v20170502</version>
                 <configuration>
                     <webApp>
-                        <contextPath>/djbalanceserver</contextPath>
+                        <contextPath>${project.web.name}</contextPath>
                     </webApp>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <path>${project.web.name}</path>
+                    <charset>UTF-8</charset>
+                    <port>8080</port>
+                    <uriEncoding>UTF-8</uriEncoding>
                 </configuration>
             </plugin>
 
@@ -414,12 +498,15 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.conf</include>
-
-                </includes>
+                <excludes>
+                    <exclude>dev/**</exclude>
+                    <exclude>test/**</exclude>
+                    <exclude>production/**</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources/${environment}</directory>
             </resource>
         </resources>
 
@@ -441,6 +528,6 @@
             </testResource>
         </testResources>
 
-        <finalName>djwms-service</finalName>
+        <finalName>${project.artifactId}</finalName>
     </build>
 </project>

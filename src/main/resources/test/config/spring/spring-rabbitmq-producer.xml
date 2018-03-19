@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/rabbit
+     http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+     http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- Activates annotation-based bean configuration -->
+    <!--<context:annotation-dev.config/>-->
+    <tx:annotation-driven transaction-manager="rabbitTxManage"/>
+    <!-- Scans for application @Components to deploy -->
+    <!--<context:component-scan base-package="com.djcps.djserver.**.mq"/>-->
+    <!--配置connection-factory，指定连接rabbit server参数 -->
+    <rabbit:connection-factory id="connectionFactory"
+                               username="${mq.user}" password="${mq.password}" host="${mq.host}" port="${mq.port}"/>
+
+
+    <bean id="rabbitTxManage"
+          class="org.springframework.amqp.rabbit.transaction.RabbitTransactionManager">
+        <property name="connectionFactory" ref="connectionFactory"></property>
+    </bean>
+
+    <!-- json转换器，消息可以自动根据转换器转换格式，不配置时默认为java序列化，可以自行配置 -->
+    <!--<bean id="messageConverter" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter" />-->
+    <!--message-converter="messageConverter"-->
+
+    <!--定义rabbit template用于数据的接收和发送 -->
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+                     channel-transacted="true"/>
+
+    <!--通过指定下面的admin信息，当前producer中的exchange和queue会在rabbitmq服务器上自动生成 -->
+    <rabbit:admin connection-factory="connectionFactory"/>
+
+    <!--定义queue:队列 durable:持久化 auto-delete：当所有消费者断开链接，删除队列 exclusive: 仅创建者可以使用的私有队列，断开后自动删除 -->
+    <rabbit:queue name="message.server.balance.test" durable="true" auto-delete="false"
+                  exclusive="false" auto-declare="true"/>
+    <rabbit:queue name="message.server.balance.frozen" durable="true" auto-delete="false"
+                  exclusive="false" auto-declare="true"/>
+    <rabbit:queue name="message.server.balance.update" durable="true" auto-delete="false"
+                  exclusive="false" auto-declare="true"/>
+    <rabbit:queue name="message.balance.mall.confirm" durable="true" auto-delete="false"
+                  exclusive="false" auto-declare="true"/>
+
+    <!-- 定义direct exchange：交换器,路由器 durable:持久化 auto-delete:当所有绑定队列都不再使用时，是否自动删除该交换机
+        绑定queueTest -->
+    <rabbit:direct-exchange name="exchangeBalance" durable="true" auto-delete="false" auto-declare="true">
+        <!--<rabbit:bindings>-->
+            <!--<rabbit:binding queue="message.server.balance.test" key="queueTestBalanceServerKey"/>-->
+            <!--<rabbit:binding queue="message.server.balance.frozen" key="queueFrozenBalanceServerKey"/>-->
+            <!--<rabbit:binding queue="message.server.balance.update" key="queueUpdateBalanceServerKey"/>-->
+            <!--<rabbit:binding queue="message.balance.mall.confirm" key="queueConfirmBalanceMallKey" />-->
+        <!--</rabbit:bindings>-->
+    </rabbit:direct-exchange>
+
+    <!--<rabbit:queue name="message.crm.balance.update" durable="true" auto-delete="false"-->
+                  <!--exclusive="false" auto-declare="true"/>-->
+    <!--<rabbit:direct-exchange name="exchangeCrm" durable="true" auto-delete="false" auto-declare="true">-->
+        <!--<rabbit:bindings>-->
+            <!--<rabbit:binding queue="message.crm.balance.update" key="queueUpdateBalanceCrmKey"/>-->
+        <!--</rabbit:bindings>-->
+    <!--</rabbit:direct-exchange>-->
+
+</beans>
