@@ -252,18 +252,20 @@ public interface AllocationService {
 
 	/**
 	 * 装车优化确认追加订单
+	 * @param detailList
 	 * @return
 	 * @author:zdx
-	 * @date:2018年2月4日
+	 * @date:2018年3月13日
 	 */
 	Map<String, Object> againVerifyAddOrder(List<WarehouseOrderDetailPO> detailList);
 
 
 	/**
-	 * 装车优化取界面消配货
+	 *  装车优化取消配货
+	 * @param waybillId
 	 * @return
 	 * @author:zdx
-	 * @date:2018年2月4日
+	 * @date:2018年3月13日
 	 */
 	Map<String, Object> againCancelAllocation(String waybillId);
 

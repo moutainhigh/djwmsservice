@@ -38,6 +38,7 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
 	/**
 	 * 装车顺序
 	 */
+	@NotEmpty
 	private List<SequenceBO> sequenceList;
 	
 	/**
