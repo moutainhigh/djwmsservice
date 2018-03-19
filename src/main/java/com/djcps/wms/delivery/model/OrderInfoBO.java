@@ -5,6 +5,12 @@ import java.util.List;
 
 import com.djcps.wms.commons.base.BaseBO;
 
+/**
+ * 订单号list<String>对象
+ * @company:djwms
+ * @author:zdx
+ * @date:2018年3月19日
+ */
 public class OrderInfoBO extends BaseBO implements Serializable {
     /**
      * 
