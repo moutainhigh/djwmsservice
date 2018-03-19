@@ -143,6 +143,10 @@ public class DeliveryServiceImpl implements DeliveryService {
                 ChildOrderBO childOrderBO =  childOrderList.stream().filter(
                         b -> b.getFchildorderid().equals(order.getOrderId())).findFirst().orElse(null);
                 if(!ObjectUtils.isEmpty(childOrderBO)) {
+                    //设置账户名称  母账户名称或者子账户名称
+                    String custommerName = childOrderBO.getFcusername();
+                    custommerName = ObjectUtils.isEmpty(custommerName)?childOrderBO.getFpusername():custommerName;
+                    order.setCustomerName(custommerName);
                     order.setBoxHeight(StringUtils.toString(childOrderBO.getFboxheight()));
                     order.setBoxWidth(StringUtils.toString(childOrderBO.getFboxwidth()));
                     order.setBoxLength(StringUtils.toString(childOrderBO.getFboxlength()));
@@ -298,5 +302,17 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
         });
         return orderList;
+    }
+    /**
+     * 删除提货订单信息
+     * @autuor wyb
+     * @since 2018/3/13
+     * @param param
+     * @return
+     */
+    @Override
+    public Map<String, Object> updateDeliveryEffect(UpdateDeliveryEffectBO param) {
+        HttpResult result = deliveryServer.updateDeliveryEffect(param);
+        return MsgTemplate.customMsg(result);
     }
 }
