@@ -1,4 +1,4 @@
-package com.djcps.wms.record.model.OperationRecordResult;
+package com.djcps.wms.record.model.result;
 
 /**
  * 特殊的http参数接收
