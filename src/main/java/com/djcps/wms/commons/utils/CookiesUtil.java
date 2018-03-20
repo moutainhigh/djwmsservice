@@ -48,13 +48,13 @@ public class CookiesUtil{
 	 * @date:2017年11月13日
 	 */
 	private static Map<String, Cookie> readCookieMap(HttpServletRequest request) {
-		Map<String, Cookie> cookieMap = new HashMap<String, Cookie>();
 		Cookie[] cookies = request.getCookies();
+		Map<String, Cookie> cookieMap = new HashMap<String, Cookie>(cookies.length);
 		if (null != cookies) {
 			for (Cookie cookie : cookies) {
 				cookieMap.put(cookie.getName(), cookie);
 			}
-		}
+		} 
 		return cookieMap;
 	}
 

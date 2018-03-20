@@ -75,4 +75,12 @@ public interface DeliveryService {
      * @return
      */
     Map<String,Object> getOrderDetail(DeliveryOrderDetailBO param);
+    /**
+     * 设置提货单的确认状态为未确认 
+     * @autuor wyb
+     * @since 2018/3/13
+     * @param param
+     * @return
+     */
+    Map<String,Object> updateDeliveryEffect(UpdateDeliveryEffectBO param);
 }

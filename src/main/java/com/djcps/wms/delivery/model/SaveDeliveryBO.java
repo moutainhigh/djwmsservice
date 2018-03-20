@@ -5,10 +5,11 @@ import java.io.Serializable;
 
 /**
  * 完成单条订单提货任务
+ * 
  * @author Chengw
  * @since 2018/1/31 07:52.
  */
-public class SaveDeliveryBO implements Serializable{
+public class SaveDeliveryBO implements Serializable {
 
     /**
      * 合作方号
@@ -60,6 +61,19 @@ public class SaveDeliveryBO implements Serializable{
      * 操作人ID
      */
     private String operatorId;
+    /**
+     * 运单编号
+     */
+    @NotNull
+    private String wayBillId;
+
+    public String getWayBillId() {
+        return wayBillId;
+    }
+
+    public void setWayBillId(String wayBillId) {
+        this.wayBillId = wayBillId;
+    }
 
     public String getPartnerId() {
         return partnerId;
@@ -135,16 +149,10 @@ public class SaveDeliveryBO implements Serializable{
 
     @Override
     public String toString() {
-        return "SaveDeliveryBO{" +
-                "partnerId='" + partnerId + '\'' +
-                ", deliveryId='" + deliveryId + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseAreaId='" + warehouseAreaId + '\'' +
-                ", warehouseLocId='" + warehouseLocId + '\'' +
-                ", realDeliveryAmount=" + realDeliveryAmount +
-                ", operator='" + operator + '\'' +
-                ", operatorId='" + operatorId + '\'' +
-                '}';
+        return "SaveDeliveryBO [partnerId=" + partnerId + ", deliveryId=" + deliveryId + ", orderId=" + orderId
+                + ", warehouseId=" + warehouseId + ", warehouseAreaId=" + warehouseAreaId + ", warehouseLocId="
+                + warehouseLocId + ", realDeliveryAmount=" + realDeliveryAmount + ", operator=" + operator
+                + ", operatorId=" + operatorId + ", wayBillId=" + wayBillId + "]";
     }
+
 }

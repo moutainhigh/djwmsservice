@@ -3,7 +3,6 @@ package com.djcps.wms.stocktaking.server;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.stocktaking.request.StocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
-import com.djcps.wms.warehouse.server.AreaServer;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import java.util.Map;
  **/
 @Component
 public class StocktakingOrderServer {
-    private static final Logger logger = LoggerFactory.getLogger(AreaServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(StocktakingOrderServer.class);
 
     private Gson gson = new Gson();
 

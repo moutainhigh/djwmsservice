@@ -32,32 +32,32 @@ public class AbnormalServiceImpl implements AbnormalService {
 	@Override
 	public Map<String, Object> getOrderByAttributeBO(GetOrderByAttributeBO param) {
 		HttpResult result = abnormalServer.getOrderByAttributeBO(param);
-		return MsgTemplate.successMsg(result);
+		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
 	public Map<String, Object> getSplitOrderByOrderId(OrderIdBO param) {
 		HttpResult result = abnormalServer.getSplitOrderByOrderId(param);
-		return MsgTemplate.successMsg(result);
+		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
 	public Map<String, Object> updateAbnormal(UpdateAbnormalBO param) {
 		param.setSubmiter(param.getOperator());
 		HttpResult result = abnormalServer.updateAbnormal(param);
-		return MsgTemplate.successMsg(result);
+		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
 	public Map<String, Object> addAbnormal(AddAbnormal param) {
 		HttpResult result = abnormalServer.addAbnormal(param);
-		return MsgTemplate.successMsg(result);
+		return MsgTemplate.customMsg(result);
 	}
 
 	@Override
 	public Map<String, Object> getOrderByOrderIdList(OrderIdListBO param) {
 		HttpResult result = abnormalServer.getOrderByOrderIdList(param);
-		return MsgTemplate.successMsg(result);
+		return MsgTemplate.customMsg(result);
 	}
 
 }

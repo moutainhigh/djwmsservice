@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 
 /**
@@ -68,52 +69,50 @@ public class OrderServiceImpl implements OrderService {
 		if(ObjectUtils.isEmpty(result.getData())){
 			return MsgTemplate.successMsg(null); 
 		}
-		JsonArray asJsonArray = new JsonParser().parse(gson.toJson(result.getData())).getAsJsonArray();  
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 		BeanUtils.copyProperties(param, selectAreaByOrderId);
 		List<OrderIdBO> list = new ArrayList<OrderIdBO>();
 		List<WarehouseOrderDetailPO> detailList = new ArrayList<WarehouseOrderDetailPO>();
-		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
-		for (JsonElement jsonElement : asJsonArray) {
-			String orderId = new JsonParser().parse(gson.toJson(jsonElement)).getAsJsonObject().get("fchildorderid").getAsString();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
+		List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(result.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+		for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
+			String orderId = warehouseOrderDetailPO.getFchildorderid();
 			OrderIdBO orderIdBO = new OrderIdBO();
 			orderIdBO.setOrderId(orderId);
 			list.add(orderIdBO);
-			WarehouseOrderDetailPO fromJson = gson.fromJson(jsonElement, WarehouseOrderDetailPO.class);
-			fromJson.setAmountSaved(0);
+			warehouseOrderDetailPO.setAmountSaved(0);
 			//组织参数
-			getOrderDetail(fromJson,fromJson);
-			detailList.add(fromJson);
-			map.put(fromJson.getFchildorderid(), fromJson);
+			getOrderDetail(warehouseOrderDetailPO,warehouseOrderDetailPO);
+			detailList.add(warehouseOrderDetailPO);
+			map.put(warehouseOrderDetailPO.getFchildorderid(), warehouseOrderDetailPO);
 		}
 		selectAreaByOrderId.setOrderIds(list);
 		//根据id获取在库信息
 		List<WarehouseOrderDetailPO> resultList = getStockInfo(selectAreaByOrderId);
-		if(resultList==null){
-			return MsgTemplate.successMsg(detailList);
-		}
 		//根据id存入到map中
-		for (WarehouseOrderDetailPO warehouseOrderDetailPO : resultList) {
-			WarehouseOrderDetailPO detatil = map.get(warehouseOrderDetailPO.getOrderId());
-			if(detatil!=null){
-				//组织参数
-				getOrderDetail(detatil,detatil);
-				detatil.setAreaList(warehouseOrderDetailPO.getAreaList());
-				detatil.setOrderId(warehouseOrderDetailPO.getOrderId());
-				detatil.setFchildorderid(warehouseOrderDetailPO.getOrderId());
-				detatil.setAmountSaved(warehouseOrderDetailPO.getAmountSaved());
-				detatil.setAmount(warehouseOrderDetailPO.getAmount());
-				detatil.setFamount(warehouseOrderDetailPO.getFamount());
-				detatil.setWarehouseId(warehouseOrderDetailPO.getWarehouseId());
-				detatil.setWarehouseName(warehouseOrderDetailPO.getWarehouseName());
+		if(!ObjectUtils.isEmpty(resultList)){
+			for (WarehouseOrderDetailPO warehouseOrderDetailPO : resultList) {
+				WarehouseOrderDetailPO detatil = map.get(warehouseOrderDetailPO.getOrderId());
+				if(detatil!=null){
+					//组织参数
+					getOrderDetail(detatil,detatil);
+					detatil.setAreaList(warehouseOrderDetailPO.getAreaList());
+					detatil.setOrderId(warehouseOrderDetailPO.getOrderId());
+					detatil.setFchildorderid(warehouseOrderDetailPO.getOrderId());
+					detatil.setAmountSaved(warehouseOrderDetailPO.getAmountSaved());
+					detatil.setAmount(warehouseOrderDetailPO.getAmount());
+					detatil.setFamount(warehouseOrderDetailPO.getFamount());
+					detatil.setWarehouseId(warehouseOrderDetailPO.getWarehouseId());
+					detatil.setWarehouseName(warehouseOrderDetailPO.getWarehouseName());
+				}
 			}
 		}
 		//因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<String, Object>(16);
 		resultMap.put("success", true);
 		resultMap.put("code", 100000);
 		resultMap.put("msg", "");
-		resultMap.put("total", detailList.size());
+		resultMap.put("total", result.getTotalCount());
 		resultMap.put("data", detailList);
 		return resultMap;
 	}

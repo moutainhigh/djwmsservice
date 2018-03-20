@@ -29,7 +29,7 @@ public interface OperationRecordHttpRequest {
     @POST("operationRecord/stocktakingList.do")
     HTTPResponse stocktakingRecordList(@Body RequestBody json);
     /**
-     * 获取操作记录
+     * 获取入库移库操作记录
      * @param rb
      * @return
      * @author:zyb
@@ -40,7 +40,7 @@ public interface OperationRecordHttpRequest {
     HTTPResponse entryRecordList(@Body RequestBody rb);
     /**
      * 保存操作记录
-     * @param rb
+     * @param json
      * @return
      * @author:zyb
      * @date:2018/3/6
