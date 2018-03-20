@@ -32,10 +32,6 @@ import com.google.gson.Gson;
 @Service
 public class LoadingTableServiceImpl implements LoadingTableService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(LoadingTableServiceImpl.class);	
-	
-	private Gson gson = new Gson();
-	
 	@Autowired
 	private LoadingTableServer loadingTableServer;
 

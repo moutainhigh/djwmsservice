@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
 import com.djcps.wms.address.server.AddressServer;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -22,10 +24,6 @@ import com.google.gson.Gson;
  */
 @Service
 public class AddressServiceImpl implements AddressService {
-	
-	private static final Logger logger = LoggerFactory.getLogger(AddressServiceImpl.class);	
-	
-	private Gson gson = new Gson();
 
 	@Autowired
 	private AddressServer addressServer;

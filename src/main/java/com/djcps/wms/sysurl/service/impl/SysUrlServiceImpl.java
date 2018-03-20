@@ -24,10 +24,6 @@ import com.google.gson.Gson;
 @Service
 public class SysUrlServiceImpl implements SysUrlService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(SysUrlServiceImpl.class);	
-	
-	private Gson gson = new Gson();
-	
 	@Autowired
 	private SysUrlDao sysUrlDao;
 	
