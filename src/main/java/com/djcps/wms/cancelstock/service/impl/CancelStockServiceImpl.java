@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.inject.spi.Bean;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.djcps.wms.cancelstock.enums.CancelStockEnum;
 import com.djcps.wms.cancelstock.model.CancalOrderAttributePO;
 import com.djcps.wms.cancelstock.model.CancelStockPO;
 import com.djcps.wms.cancelstock.model.param.AddCancelStockBO;
@@ -58,6 +61,9 @@ public class CancelStockServiceImpl implements CancelStockService {
 		OrderIdBO orderIdBO = new OrderIdBO();
 		orderIdBO.setChildOrderId(param.getOrderId());
 		HttpResult orderResult = orderServer.getOrderByOrderId(orderIdBO);
+		if(ObjectUtils.isEmpty(orderResult.getData())){
+			return MsgTemplate.failureMsg(SysMsgEnum.ORDER_IS_NULL);
+		}
 		if(!ObjectUtils.isEmpty(orderResult)){
 			WarehouseOrderDetailPO orderDetailPO = gson.fromJson(gson.toJson(orderResult.getData()), WarehouseOrderDetailPO.class);
 			String fflutetype = orderDetailPO.getFflutetype();
@@ -97,6 +103,13 @@ public class CancelStockServiceImpl implements CancelStockService {
 
 	@Override
 	public Map<String, Object> addStock(AddStockBO param) {
+		CancelOrderIdBO cancelOrderIdBO = new CancelOrderIdBO();
+		BeanUtils.copyProperties(param, cancelOrderIdBO);
+		HttpResult cancelOrderResult = cancelStockServer.getOrderByOrderId(cancelOrderIdBO);
+		CancalOrderAttributePO orderAttribute = gson.fromJson(gson.toJson(cancelOrderResult.getData()), CancalOrderAttributePO.class);
+		if(!param.getWarehouseId().equals(orderAttribute.getWarehouseId())){
+			return MsgTemplate.failureMsg(CancelStockEnum.WAREHOUSEID_ERROR.getValue());
+		}
 		HttpResult result = cancelStockServer.addStock(param);
 		return MsgTemplate.customMsg(result);
 	}
