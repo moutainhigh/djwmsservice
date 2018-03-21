@@ -63,7 +63,7 @@ public class CancalOrderAttributePO implements Serializable{
 	 * 经纬度
 	 */
 	private String location;
-	
+
 	public String getLocation() {
 		return location;
 	}
