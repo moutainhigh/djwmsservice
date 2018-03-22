@@ -5,8 +5,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +18,6 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
@@ -29,6 +26,7 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
 import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
+import com.djcps.wms.loadingtable.model.GetUserListBO;
 import com.djcps.wms.loadingtable.model.IsUseLoadingTableBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
@@ -313,6 +311,38 @@ public class LoadingTableController {
 	public Map<String, Object> getNumber(@RequestBody(required = false) String json, HttpServletRequest request){
 		try {
 			return loadingTableService.getnumber(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 获取所有的装车台账号列表
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2018年3月22日
+	 */
+	@RequestMapping(name="获取所有的装车台账号列表",value = "/getUserList", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getUserList(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			LOGGER.debug("json : " + json);
+			GetUserListBO param  = new GetUserListBO();
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			LOGGER.debug("loadingTable : " + param.toString());
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<GetUserListBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return loadingTableService.getUserList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

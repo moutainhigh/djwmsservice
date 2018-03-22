@@ -33,6 +33,19 @@ public class UpdateLoadingTableBO extends BaseAddBO implements Serializable{
 	 * 装车台可用该车辆规格数组
 	 */
 	private String specs;
+	
+	 /**
+     * 绑定的用户表的fid
+     */
+	private String bindingUserId;
+
+	public String getBindingUserId() {
+		return bindingUserId;
+	}
+
+	public void setBindingUserId(String bindingUserId) {
+		this.bindingUserId = bindingUserId;
+	}
 
 	public String getName() {
 		return name;
@@ -68,7 +81,8 @@ public class UpdateLoadingTableBO extends BaseAddBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "UpdateLoadingTableBO [id=" + id + ", name=" + name + ", status=" + status + ", specs=" + specs + "]";
+		return "UpdateLoadingTableBO [id=" + id + ", name=" + name + ", status=" + status + ", specs=" + specs
+				+ ", bindingUserId=" + bindingUserId + "]";
 	}
 
 }
