@@ -4,22 +4,17 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingTask.model.DelLoaderBO;
 import com.djcps.wms.loadingTask.model.GetLoadingPersonInfoBO;
-import com.djcps.wms.loadingTask.model.LoadingPersonBO;
 import com.djcps.wms.loadingTask.model.SaveLoaderBO;
-import com.djcps.wms.loadingTask.model.updataLoaderBO;
-import com.djcps.wms.loadingTask.model.result.addOrderApplicationResult;
+import com.djcps.wms.loadingTask.model.UpdataLoaderBO;
 import com.djcps.wms.loadingTask.server.LoaderManageHttpServer;
 import com.djcps.wms.loadingTask.service.LoaderManageService;
-import com.djcps.wms.stocktaking.model.orderresult.InnerDate;
 
 /**
  * 装车员管理实现类
@@ -44,7 +39,7 @@ public class LoaderManageServiceImpl implements LoaderManageService {
      * @create 2018/3/20
      **/
     @Override
-    public Map<String, Object> updataLoader(updataLoaderBO param) {
+    public Map<String, Object> updataLoader(UpdataLoaderBO param) {
         HttpResult result = loaderManageHttpServer.updataLoader(param);
         return MsgTemplate.customMsg(result);
     }

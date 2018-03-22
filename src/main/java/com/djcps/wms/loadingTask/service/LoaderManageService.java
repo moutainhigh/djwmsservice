@@ -4,9 +4,8 @@ import java.util.Map;
 
 import com.djcps.wms.loadingTask.model.DelLoaderBO;
 import com.djcps.wms.loadingTask.model.GetLoadingPersonInfoBO;
-import com.djcps.wms.loadingTask.model.LoadingPersonBO;
 import com.djcps.wms.loadingTask.model.SaveLoaderBO;
-import com.djcps.wms.loadingTask.model.updataLoaderBO;
+import com.djcps.wms.loadingTask.model.UpdataLoaderBO;
 
 /**
  * 装车员管理 service
@@ -23,7 +22,7 @@ public interface LoaderManageService {
      * @param param
      * @return
      */
-    Map<String, Object> updataLoader(updataLoaderBO param);
+    Map<String, Object> updataLoader(UpdataLoaderBO param);
     /**
      * 删除装车员
      *
