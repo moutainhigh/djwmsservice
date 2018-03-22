@@ -87,20 +87,11 @@ public class LoaderManageHttpServer {
      * @return
      * @create 2018/3/20
      **/
-    public addOrderApplicationResult loadingPersonList(GetLoadingPersonInfoBO param) {
+    public HttpResult loadingPersonList(GetLoadingPersonInfoBO param) {
         String paramJson = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = loaderManageHttpRequest.loaderList(requestBody);
-      //校验请求是否成功
-        addOrderApplicationResult result = null;
-        if(httpResponse.isSuccessful()) {
-            result = gson.fromJson(httpResponse.getBodyString(), addOrderApplicationResult.class);
-        }
-        if(result == null){
-            System.err.println("Http请求出错,HttpResult结果为null");
-            LOGGER.error("Http请求出错,HttpResult结果为null");
-        }
-        return result;
+        return returnResult(httpResponse);
 
     }
 

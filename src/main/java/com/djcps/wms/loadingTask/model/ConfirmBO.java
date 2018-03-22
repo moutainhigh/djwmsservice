@@ -28,6 +28,30 @@ public class ConfirmBO extends BaseBO {
      * 装车员编号集合
      */
     private List<LoadingPersonIdBO> list;
+    /**
+     * 合作方名称
+     */
+    private String partnerName;
+    /**
+     * 合作方区域
+     */
+    private String partnerArea;
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
+    }
+
+    public String getPartnerArea() {
+        return partnerArea;
+    }
+
+    public void setPartnerArea(String partnerArea) {
+        this.partnerArea = partnerArea;
+    }
 
     public String getPartnerId() {
         return partnerId;
@@ -55,7 +79,8 @@ public class ConfirmBO extends BaseBO {
 
     @Override
     public String toString() {
-        return "ConfirmBO [partnerId=" + partnerId + ", loadingTableId=" + loadingTableId + ", list=" + list + "]";
+        return "ConfirmBO [partnerId=" + partnerId + ", loadingTableId=" + loadingTableId + ", list=" + list
+                + ", partnerName=" + partnerName + ", partnerArea=" + partnerArea + "]";
     }
 
 }

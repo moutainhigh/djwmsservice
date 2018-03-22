@@ -22,7 +22,19 @@ public class RemoveLoadingPersonBO extends BaseBO {
      * 装车员id
      */
     private String id;
-    
+    /**
+     * 状态(0空闲,1繁忙)
+     */
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public String getPartnerId() {
         return partnerId;
     }
@@ -41,7 +53,7 @@ public class RemoveLoadingPersonBO extends BaseBO {
 
     @Override
     public String toString() {
-        return "RemoveLoadingPersonBO [partnerId=" + partnerId + ", id=" + id + "]";
+        return "RemoveLoadingPersonBO [partnerId=" + partnerId + ", id=" + id + ", status=" + status + "]";
     }
 
 }

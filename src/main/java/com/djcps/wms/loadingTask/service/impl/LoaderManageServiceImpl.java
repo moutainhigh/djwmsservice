@@ -28,12 +28,13 @@ import com.djcps.wms.stocktaking.model.orderresult.InnerDate;
  * @since 2018/3/19
  */
 @Service
-public class LoaderManageServiceImpl implements LoaderManageService{
-    
+public class LoaderManageServiceImpl implements LoaderManageService {
+
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(LoaderManageService.class);
 
     @Autowired
     private LoaderManageHttpServer loaderManageHttpServer;
+
     /**
      * 修改装车员
      * 
@@ -45,11 +46,9 @@ public class LoaderManageServiceImpl implements LoaderManageService{
     @Override
     public Map<String, Object> updataLoader(updataLoaderBO param) {
         HttpResult result = loaderManageHttpServer.updataLoader(param);
-        if (!ObjectUtils.isEmpty(result)) {
-            return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.customMsg(result);
     }
+
     /**
      * 删除装车员
      * 
@@ -61,11 +60,9 @@ public class LoaderManageServiceImpl implements LoaderManageService{
     @Override
     public Map<String, Object> delLoader(DelLoaderBO param) {
         HttpResult result = loaderManageHttpServer.delLoader(param);
-        if (!ObjectUtils.isEmpty(result)) {
-            return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.customMsg(result);
     }
+
     /**
      * 新增装车员
      * 
@@ -77,11 +74,9 @@ public class LoaderManageServiceImpl implements LoaderManageService{
     @Override
     public Map<String, Object> saveLoader(SaveLoaderBO param) {
         HttpResult result = loaderManageHttpServer.saveLoader(param);
-        if (!ObjectUtils.isEmpty(result)) {
-            return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.customMsg(result);
     }
+
     /**
      * 获取装车员列表
      * 
@@ -92,19 +87,7 @@ public class LoaderManageServiceImpl implements LoaderManageService{
      **/
     @Override
     public Map<String, Object> loadingPersonList(GetLoadingPersonInfoBO param) {
-        addOrderApplicationResult result = loaderManageHttpServer.loadingPersonList(param);
-        if(ObjectUtils.isEmpty(result.getData())) {
-            return MsgTemplate.successMsg();
-        }
-        InnerDate innerDate=new InnerDate();
-        innerDate.setTotal(result.getData().getTotal());
-        innerDate.setResult(result.getData().getResult());
-        return MsgTemplate.successMsg(innerDate);
+        HttpResult result = loaderManageHttpServer.loadingPersonList(param);
+        return MsgTemplate.customMsg(result);
     }
-
-    
-    
-    
-    
-    
 }

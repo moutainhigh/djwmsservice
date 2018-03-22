@@ -60,10 +60,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     @Override
     public Map<String, Object> loadingPersonList(LoadingPersonBO param) {
         HttpResult result = loadingTaskServer.loadingPersonList(param);
-        if (!ObjectUtils.isEmpty(result)) {
-            return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.customMsg(result);
     }
 
     /**
@@ -76,11 +73,9 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> removeLoadingPerson(RemoveLoadingPersonBO param) {
+        param.setStatus(0);
         HttpResult result = loadingTaskServer.removeLoadingPerson(param);
-        if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
 
     /**
@@ -95,7 +90,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     public Map<String, Object> confirm(ConfirmBO param) {
         HttpResult updateLoadPersonResult = loadingTaskServer.updateLoadPersonStatus(param);
         HttpResult result = loadingTaskServer.getOrderList(param);
-        if (!ObjectUtils.isEmpty(result)) {
             if (result.isSuccess()) {
                 String data = JSONObject.toJSONString(result.getData());
                 ConfirmPO confirmPO = gson.fromJson(data, ConfirmPO.class);
@@ -109,7 +103,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 });
                 return MsgTemplate.successMsg(orderInfo);
             }
-        }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
 
@@ -124,10 +117,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     @Override
     public Map<String, Object> loading(LoadingBO param) {
         HttpResult result = loadingTaskServer.loading(param);
-        if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
 
     /**
@@ -141,10 +131,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     @Override
     public Map<String, Object> additionalOrder(AdditionalOrderBO param) {
         HttpResult result = loadingTaskServer.additionalOrder(param);
-        if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
     /**
      * 驳回申请
@@ -157,10 +144,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     @Override
     public Map<String, Object> rejectRequest(RejectRequestBO param) {
         HttpResult result = loadingTaskServer.rejectRequest(param);
-        if(!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
-        }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
     /**
      * 追加订单申请列表web
