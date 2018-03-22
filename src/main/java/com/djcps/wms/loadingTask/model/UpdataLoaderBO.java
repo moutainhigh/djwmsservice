@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import com.djcps.wms.commons.base.BaseBO;
 
 /**
- * 更新装车员信息参数
+ *  更新装车员信息参数
  * 
  * @author WYB
  * @since 2018/3/20
