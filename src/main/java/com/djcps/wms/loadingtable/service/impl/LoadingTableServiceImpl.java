@@ -63,19 +63,22 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 
 	@Override
 	public Map<String, Object> getAllList(BaseListPartnerIdBO baseListParam){
-		List<LoadingTablePO> loadingTableList = null;
 		HttpResult result = loadingTableServer.getAllList(baseListParam);
+		BaseVO baseVO = null;
 		if(!ObjectUtils.isEmpty(result.getData())){
-			BaseVO baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
+			baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
 			if(!ObjectUtils.isEmpty(baseVO.getResult())){
-				loadingTableList = gson.fromJson(gson.toJson(baseVO.getResult()), new TypeToken<ArrayList<LoadingTablePO>>(){}.getType());
+				List<LoadingTablePO> loadingTableList = gson.fromJson(gson.toJson(baseVO.getResult()), new TypeToken<ArrayList<LoadingTablePO>>(){}.getType());
 				//组织假数据,取要权限好了去or取
 				for (LoadingTablePO loadingTablePO : loadingTableList) {
 					loadingTablePO.setBindingUserName("叮叮当当");
 				}
+				baseVO.setResult(loadingTableList);
 			}
+		}else{
+			baseVO = new BaseVO();
 		}
-		return MsgTemplate.successMsg(loadingTableList);
+		return MsgTemplate.successMsg(baseVO);
 	}
 
 	@Override

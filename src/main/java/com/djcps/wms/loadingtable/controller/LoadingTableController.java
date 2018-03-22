@@ -68,7 +68,6 @@ public class LoadingTableController {
 			AddLoadingTableBO loadingTable = gson.fromJson(json, AddLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
@@ -104,7 +103,6 @@ public class LoadingTableController {
 			UpdateLoadingTableBO loadingTable  = gson.fromJson(json, UpdateLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<UpdateLoadingTableBO>()
@@ -139,7 +137,6 @@ public class LoadingTableController {
 			DeleteLoadingTableBO loadingTable  = gson.fromJson(json, DeleteLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<DeleteLoadingTableBO>()
@@ -252,7 +249,6 @@ public class LoadingTableController {
 			IsUseLoadingTableBO loadingTable  = gson.fromJson(json, IsUseLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<IsUseLoadingTableBO>()
@@ -285,7 +281,6 @@ public class LoadingTableController {
 			IsUseLoadingTableBO loadingTable  = gson.fromJson(json, IsUseLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			LOGGER.debug("loadingTable : " + loadingTable.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(loadingTable,
 							new HibernateSupportedValidator<IsUseLoadingTableBO>()
@@ -330,10 +325,9 @@ public class LoadingTableController {
 	public Map<String, Object> getUserList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			LOGGER.debug("json : " + json);
-			GetUserListBO param  = new GetUserListBO();
+			GetUserListBO param  = gson.fromJson(json, GetUserListBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			LOGGER.debug("loadingTable : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<GetUserListBO>()
