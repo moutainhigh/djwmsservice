@@ -45,7 +45,7 @@ import com.google.gson.Gson;
 @RequestMapping(value = "/loadingTable")
 public class LoadingTableController {
 	
-	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(LoadingTableController.class);
+	private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(LoadingTableController.class);
 	
 	private Gson gson = new Gson();
 	
