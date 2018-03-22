@@ -25,9 +25,8 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingTask.model.DelLoaderBO;
 import com.djcps.wms.loadingTask.model.GetLoadingPersonInfoBO;
-import com.djcps.wms.loadingTask.model.LoadingPersonBO;
 import com.djcps.wms.loadingTask.model.SaveLoaderBO;
-import com.djcps.wms.loadingTask.model.updataLoaderBO;
+import com.djcps.wms.loadingTask.model.UpdataLoaderBO;
 import com.djcps.wms.loadingTask.service.LoaderManageService;
 
 /**
@@ -90,12 +89,12 @@ public class LoaderManageController {
             HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
-            updataLoaderBO param = gson.fromJson(json, updataLoaderBO.class);
+            UpdataLoaderBO param = gson.fromJson(json, UpdataLoaderBO.class);
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             BeanUtils.copyProperties(partnerInfoBo, param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
-                            new HibernateSupportedValidator<updataLoaderBO>()
+                            new HibernateSupportedValidator<UpdataLoaderBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {

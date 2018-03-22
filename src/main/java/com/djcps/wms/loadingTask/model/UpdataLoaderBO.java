@@ -10,8 +10,10 @@ import com.djcps.wms.commons.base.BaseBO;
  * @author WYB
  * @since 2018/3/20
  */
-public class updataLoaderBO extends BaseBO {
+public class UpdataLoaderBO extends BaseBO {
 
+	private String id;
+	
     /**
      * 
      */
@@ -76,7 +78,15 @@ public class updataLoaderBO extends BaseBO {
     @NotBlank
     private String operator;
 
-    public String getOperator() {
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getOperator() {
         return operator;
     }
 
@@ -188,12 +198,12 @@ public class updataLoaderBO extends BaseBO {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "updataLoaderBO [name=" + name + ", sex=" + sex + ", idCard=" + idCard + ", phone=" + phone
-                + ", provinceName=" + provinceName + ", cityName=" + cityName + ", countyName=" + countyName
-                + ", address=" + address + ", remark=" + remark + ", loadingTableid=" + loadingTableid + ", status="
-                + status + ", operatorId=" + operatorId + ", partnerId=" + partnerId + ", operator=" + operator + "]";
-    }
+	@Override
+	public String toString() {
+		return "UpdataLoaderBO [id=" + id + ", name=" + name + ", sex=" + sex + ", idCard=" + idCard + ", phone="
+				+ phone + ", provinceName=" + provinceName + ", cityName=" + cityName + ", countyName=" + countyName
+				+ ", address=" + address + ", remark=" + remark + ", loadingTableid=" + loadingTableid + ", status="
+				+ status + ", operatorId=" + operatorId + ", partnerId=" + partnerId + ", operator=" + operator + "]";
+	}
 
 }

@@ -42,8 +42,6 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class OrderServiceImpl implements OrderService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);	
-	
 	private Gson gson = new Gson();
 	
 	private JsonParser jsonParser = new JsonParser();

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.MapAddressComponentPO;
@@ -50,6 +51,9 @@ public class StockServer {
 	WmsForStockHttpRequest wmsForStockHttpRequest;
 	
 	public MapLocationPO getStreetCode(String key, String newLocation, String output) {
+		if(StringUtils.isEmpty(newLocation)){
+			return null;
+		}
 		MapLocationPO allLocation = stockDao.getLocationByLocation(newLocation);
 		if(allLocation!=null){
 			//非空直接返回
@@ -62,6 +66,9 @@ public class StockServer {
 			JsonParser jsonParser = new JsonParser();
 			try {
 				JsonElement jsonElement = jsonParser.parse(bodyString).getAsJsonObject().get("regeocode");
+				if(jsonElement==null){
+					return null;
+				}
 				JsonElement jsonElement2 = jsonElement.getAsJsonObject().get("addressComponent");
 				MapAddressComponentPO fromJson = gson.fromJson(jsonElement2, MapAddressComponentPO.class);
 				MapLocationPO mapLocaTion = new MapLocationPO();

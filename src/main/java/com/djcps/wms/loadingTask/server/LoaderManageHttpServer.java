@@ -11,10 +11,8 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingTask.model.DelLoaderBO;
 import com.djcps.wms.loadingTask.model.GetLoadingPersonInfoBO;
-import com.djcps.wms.loadingTask.model.LoadingPersonBO;
 import com.djcps.wms.loadingTask.model.SaveLoaderBO;
-import com.djcps.wms.loadingTask.model.updataLoaderBO;
-import com.djcps.wms.loadingTask.model.result.addOrderApplicationResult;
+import com.djcps.wms.loadingTask.model.UpdataLoaderBO;
 import com.djcps.wms.loadingTask.request.LoaderManageHttpRequest;
 
 import okhttp3.MediaType;
@@ -39,7 +37,7 @@ public class LoaderManageHttpServer {
      * @return
      * @create 2018/3/20
      **/
-    public HttpResult updataLoader(updataLoaderBO param) {
+    public HttpResult updataLoader(UpdataLoaderBO param) {
         String paramJson = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = loaderManageHttpRequest.updataLoader(requestBody);
