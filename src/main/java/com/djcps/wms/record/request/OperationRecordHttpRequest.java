@@ -32,7 +32,7 @@ public interface OperationRecordHttpRequest {
      * 获取入库移库操作记录
      * @param rb
      * @return
-     * @author:zyb
+     * @author:wyb
      * @date:2018/3/6
      */
     @Headers("content-type:application/json")
@@ -40,9 +40,9 @@ public interface OperationRecordHttpRequest {
     HTTPResponse entryRecordList(@Body RequestBody rb);
     /**
      * 保存操作记录
-     * @param rb
+     * @param json
      * @return
-     * @author:zyb
+     * @author:wyb
      * @date:2018/3/6
      */
     @Headers("content-type:application/json")
