@@ -7,6 +7,9 @@ package com.djcps.wms.cancelstock.enums;
  * @date:2018年3月21日
  */
 public enum CancelStockEnum {
+	/**
+	 * 分割符
+	 */
 	STRING_SEPARATOR("-"),
 	
 	WAREHOUSEID_ERROR("请退回到原来仓库");
