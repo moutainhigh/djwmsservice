@@ -1,4 +1,4 @@
-package com.djcps.wms.loadingTask.model.result;
+package com.djcps.wms.loadingtask.model.result;
 
 /**
  * 特殊的http参数接收

@@ -1,4 +1,4 @@
-package com.djcps.wms.loadingTask.model.result;
+package com.djcps.wms.loadingtask.model.result;
 
 import java.io.Serializable;
 
