@@ -4,8 +4,6 @@ import java.util.Map;
 
 import javax.validation.Validation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,12 +35,12 @@ public class OutOrderController {
 	
 	private Gson gson = new Gson();
 	
-	private static final DjcpsLogger logger = DjcpsLoggerFactory.getLogger(OutOrderController.class);
+	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OutOrderController.class);
 	
 	@RequestMapping(name="获取订单明细列表",value="/gerOrderDetail",method = RequestMethod.POST)
 	public Map<String,Object> getOrderDetailByOrderId(@RequestBody String json){
 		try{
-			logger.debug("json:"+json);
+			LOGGER.debug("json:"+json);
 			OutOrderBO out = gson.fromJson(json, OutOrderBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(out,new HibernateSupportedValidator<OutOrderBO>()
@@ -54,7 +52,7 @@ public class OutOrderController {
 			return outOrderService.getOrderDetail(out);
 		}catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 		
@@ -63,7 +61,7 @@ public class OutOrderController {
 	@RequestMapping(name="获取所有出库单列表",value="/listOutOrder",method=RequestMethod.POST)
 	public Map<String, Object> getAllOutOrder(@RequestBody String json){
 		try{
-			logger.debug("json:"+json);
+			LOGGER.debug("json:"+json);
 			SelectOutOrderBO param = gson.fromJson(json, SelectOutOrderBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,new HibernateSupportedValidator<SelectOutOrderBO>()
@@ -75,7 +73,7 @@ public class OutOrderController {
 			return outOrderService.getAllOutOrder(param);
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -83,7 +81,7 @@ public class OutOrderController {
 	@RequestMapping(name="根据出库单编号获取一条出库单信息",value="/getOutOrderById",method=RequestMethod.POST)
 	public Map<String, Object> getOutOrderByOutOrderId(@RequestBody String json){
 		try{
-			logger.debug("json:"+json);
+			LOGGER.debug("json:"+json);
 			OutOrderBO param = gson.fromJson(json, OutOrderBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,new HibernateSupportedValidator<OutOrderBO>()
@@ -95,7 +93,7 @@ public class OutOrderController {
 			return outOrderService.getOutOrderByOutOrderId(param);
 		}catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -113,7 +111,7 @@ public class OutOrderController {
 			return outOrderService.updateOutOrderByOutOrderId(param);
 		}catch(Exception e){
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

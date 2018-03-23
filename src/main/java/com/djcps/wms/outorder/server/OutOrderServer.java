@@ -28,12 +28,12 @@ public class OutOrderServer {
 	
 	private Gson gson = new GsonBuilder().serializeNulls().create();
 	
-	private static final DjcpsLogger logger = DjcpsLoggerFactory.getLogger(OutOrderServer.class);
+	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OutOrderServer.class);
 	
 	
 	public HttpResult getOrderIdsByOutOrderId(OutOrderBO param){
 		String json = gson.toJson(param);
-		logger.debug("---http请求参数转化成json---:"+json);
+		LOGGER.debug("---http请求参数转化成json---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
 		HTTPResponse http = wmsForOutOrderHttpRequest.getOrderIdsByOutOrderId(rb);
 		return verifyHttpResult(http);
@@ -41,7 +41,7 @@ public class OutOrderServer {
 	
 	public HttpResult getAllOutOrder(SelectOutOrderBO param){
 		String json = gson.toJson(param);
-		logger.debug("---http请求参数转化成json---:"+json);
+		LOGGER.debug("---http请求参数转化成json---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
 		HTTPResponse http = wmsForOutOrderHttpRequest.getAllOutOrder(rb);
 		return verifyHttpResult(http);
@@ -49,7 +49,7 @@ public class OutOrderServer {
 	
 	public HttpResult getOutOrderByOutOrderId(OutOrderBO param){
 		String json = gson.toJson(param);
-		logger.debug("---http请求参数转化成json---:"+json);
+		LOGGER.debug("---http请求参数转化成json---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
 		HTTPResponse http = wmsForOutOrderHttpRequest.getOutOrderByOutOrderId(rb);
 		return verifyHttpResult(http);
@@ -57,7 +57,7 @@ public class OutOrderServer {
 	
 	public HttpResult updateOutOrderByOutOrderId(OutOrderBO param){
 		String json = gson.toJson(param);
-		logger.debug("---http请求参数转化成json---:"+json);
+		LOGGER.debug("---http请求参数转化成json---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
 		HTTPResponse http = wmsForOutOrderHttpRequest.updateOutOrderByOutOrderId(rb);
 		return verifyHttpResult(http);
@@ -70,7 +70,7 @@ public class OutOrderServer {
 			result = gson.fromJson(http.getBodyString(), HttpResult.class);
 		}
 		if(result == null){
-			logger.error("Http请求出错,HttpResult结果为null");
+		    LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

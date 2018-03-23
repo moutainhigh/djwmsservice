@@ -115,7 +115,8 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 	public Map<String, Object> getUserList(GetUserListBO param) {
 		//假数据到最后还是需要删除
 		List<UserPO> list = new ArrayList<>();
-		for(int i=0;i<10;i++){
+		int ten = 10;
+		for(int i=0;i<ten;i++){
 			UserPO user = new UserPO();
 			user.setBindingUserName("一号账号"+i);
 			user.setBindingUserId(String.valueOf(i));
