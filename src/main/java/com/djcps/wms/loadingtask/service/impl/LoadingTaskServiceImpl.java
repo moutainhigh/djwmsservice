@@ -1,5 +1,6 @@
 package com.djcps.wms.loadingtask.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,19 +18,20 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
+import com.djcps.wms.loadingtask.model.FinishLoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonBO;
 import com.djcps.wms.loadingtask.model.OrderInfoPO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
 import com.djcps.wms.loadingtask.model.result.ConfirmPO;
+import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.loadingtask.model.result.OrderIdAndLoadingAmountPO;
-import com.djcps.wms.loadingtask.model.result.addOrderApplicationResult;
+import com.djcps.wms.loadingtask.model.result.OrderRedundantPO;
 import com.djcps.wms.loadingtask.server.LoadingTaskOrderServer;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
 import com.djcps.wms.loadingtask.service.LoadingTaskService;
-import com.djcps.wms.stocktaking.model.orderresult.InnerDate;
-
+import com.djcps.wms.order.model.OrderIdsBO;
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
@@ -88,20 +90,28 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> confirm(ConfirmBO param) {
+        
         HttpResult updateLoadPersonResult = loadingTaskServer.updateLoadPersonStatus(param);
         HttpResult result = loadingTaskServer.getOrderList(param);
             if (result.isSuccess()) {
                 String data = JSONObject.toJSONString(result.getData());
                 ConfirmPO confirmPO = gson.fromJson(data, ConfirmPO.class);
                 List<OrderIdAndLoadingAmountPO> orderPOList = confirmPO.getOrderPOList();
-                List<OrderInfoPO> orderInfo = loadingTaskOrderServer.getChildOrderList(orderPOList);
+                List<String> childOrderIds = new ArrayList<String>();
+                OrderIdsBO orderIdsBO = new OrderIdsBO();
+                for(OrderIdAndLoadingAmountPO orderInfo :orderPOList) {
+                    childOrderIds.add(orderInfo.getOrderId());
+                    orderIdsBO.setChildOrderIds(childOrderIds);
+                }
+                List<OrderInfoPO> orderInfo = loadingTaskOrderServer.getChildOrderList(orderIdsBO);
                 orderInfo.stream().forEach(info -> {
                     List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
                             .filter(amount -> info.getFchildorderid().equals(amount.getOrderId()))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
                 });
-                return MsgTemplate.successMsg(orderInfo);
+                
+                return MsgTemplate.successMsg(confirmPO);
             }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
@@ -156,14 +166,34 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> addOrderApplicationList(AddOrderApplicationListBO param) {
-        addOrderApplicationResult result = loadingTaskServer.addOrderApplicationList(param);
-        if(ObjectUtils.isEmpty(result.getData())) {
-            return MsgTemplate.successMsg();
+        HttpResult result = loadingTaskServer.addOrderApplicationList(param);
+        return MsgTemplate.customMsg(result);
+    }
+    /**
+     * 完成装车
+     *
+     * @param param
+     * @return
+     * @autuor WYB
+     * @since 2018/3/21
+     */
+    @Override
+    public Map<String, Object> finishLoading(FinishLoadingBO param) {
+        FinishLoadingPO result = loadingTaskServer.finishLoading(param);
+        if(ObjectUtils.isEmpty(result.getLoadingTaskPO())) {
+            return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
         }
-        InnerDate innerDate=new InnerDate();
-        innerDate.setTotal(result.getData().getTotal());
-        innerDate.setResult(result.getData().getResult());
-        return MsgTemplate.successMsg(innerDate);
+        List<OrderRedundantPO> orderPOList = result.getOrderPOList();
+        if(!ObjectUtils.isEmpty(orderPOList)) {
+            for(OrderRedundantPO info :orderPOList) {
+                if(!"25".equals(info.getStatus())) {
+                    return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
+                }
+            }
+        }
+        param.setStatus(20);
+        HttpResult updateResult = loadingTaskServer.updateWayBill(param);
+        return MsgTemplate.customMsg(updateResult);
     }
 
 }

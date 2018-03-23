@@ -1,7 +1,11 @@
 package com.djcps.wms.loadingtask.model;
 
 import com.djcps.wms.commons.base.BaseBO;
-
+/**
+ * 驳回申请
+ * @author wyb
+ * @since 2018/3/21
+ */
 public class RejectRequestBO extends BaseBO {
     /**
      * 
@@ -14,11 +18,7 @@ public class RejectRequestBO extends BaseBO {
     /**
      * 运单编号
      */
-    private String waybillId;
-    /**
-     * 装车台编号
-     */
-    private String loadingTableId;
+    private String wayBillId;
     /**
      * 处理人编号
      */
@@ -27,6 +27,26 @@ public class RejectRequestBO extends BaseBO {
      * 处理人
      */
     private String handler;
+    /**
+     * 处理状态
+     */
+    private Integer disposeStatus;
+
+    public String getWayBillId() {
+        return wayBillId;
+    }
+
+    public void setWayBillId(String wayBillId) {
+        this.wayBillId = wayBillId;
+    }
+
+    public Integer getDisposeStatus() {
+        return disposeStatus;
+    }
+
+    public void setDisposeStatus(Integer disposeStatus) {
+        this.disposeStatus = disposeStatus;
+    }
 
     public String getPartnerId() {
         return partnerId;
@@ -34,22 +54,6 @@ public class RejectRequestBO extends BaseBO {
 
     public void setPartnerId(String partnerId) {
         this.partnerId = partnerId;
-    }
-
-    public String getWaybillId() {
-        return waybillId;
-    }
-
-    public void setWaybillId(String waybillId) {
-        this.waybillId = waybillId;
-    }
-
-    public String getLoadingTableId() {
-        return loadingTableId;
-    }
-
-    public void setLoadingTableId(String loadingTableId) {
-        this.loadingTableId = loadingTableId;
     }
 
     public String getHandlerid() {
@@ -70,8 +74,8 @@ public class RejectRequestBO extends BaseBO {
 
     @Override
     public String toString() {
-        return "RejectRequestBO [partnerId=" + partnerId + ", waybillId=" + waybillId + ", loadingTableId="
-                + loadingTableId + ", handlerid=" + handlerid + ", handler=" + handler + "]";
+        return "RejectRequestBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerid=" + handlerid
+                + ", handler=" + handler + ", disposeStatus=" + disposeStatus + "]";
     }
 
 }

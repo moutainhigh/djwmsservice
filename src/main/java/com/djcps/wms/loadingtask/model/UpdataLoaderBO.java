@@ -8,7 +8,7 @@ import com.djcps.wms.commons.base.BaseBO;
 /**
  *  更新装车员信息参数
  * 
- * @author WYB
+ * @author  WYB
  * @since 2018/3/20
  */
 public class UpdataLoaderBO extends BaseBO {

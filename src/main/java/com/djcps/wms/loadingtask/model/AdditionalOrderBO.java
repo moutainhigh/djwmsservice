@@ -33,26 +33,34 @@ public class AdditionalOrderBO extends BaseBO {
     /**
      * 运单编号
      */
-    private String waybillId;
-    /**
-     * 装车台编号
-     */
-    private String loadingTableId;
+    private String wayBillId;
     /**
      * 处理人编号
      */
-    private String handlerid;
+    private String handlerId;
     /**
      * 处理人
      */
     private String handler;
+    /**
+     * 处理状态(0待处理,1已通过,2已驳回)
+     */
+    private Integer disposeStatus;
 
-    public String getHandlerid() {
-        return handlerid;
+    public String getHandlerId() {
+        return handlerId;
     }
 
-    public void setHandlerid(String handlerid) {
-        this.handlerid = handlerid;
+    public void setHandlerId(String handlerId) {
+        this.handlerId = handlerId;
+    }
+
+    public Integer getDisposeStatus() {
+        return disposeStatus;
+    }
+
+    public void setDisposeStatus(Integer disposeStatus) {
+        this.disposeStatus = disposeStatus;
     }
 
     public String getHandler() {
@@ -95,27 +103,19 @@ public class AdditionalOrderBO extends BaseBO {
         this.partnerId = partnerId;
     }
 
-    public String getWaybillId() {
-        return waybillId;
+    public String getWayBillId() {
+        return wayBillId;
     }
 
-    public void setWaybillId(String waybillId) {
-        this.waybillId = waybillId;
-    }
-
-    public String getLoadingTableId() {
-        return loadingTableId;
-    }
-
-    public void setLoadingTableId(String loadingTableId) {
-        this.loadingTableId = loadingTableId;
+    public void setWayBillId(String wayBillId) {
+        this.wayBillId = wayBillId;
     }
 
     @Override
-    public String toString() {
+    public String toString() { 
         return "AdditionalOrderBO [addSquare=" + addSquare + ", proposerId=" + proposerId + ", proposer=" + proposer
-                + ", partnerId=" + partnerId + ", waybillId=" + waybillId + ", loadingTableId=" + loadingTableId
-                + ", handlerid=" + handlerid + ", handler=" + handler + "]";
+                + ", partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId + ", handler="
+                + handler + ", disposeStatus=" + disposeStatus + "]";
     }
 
 }

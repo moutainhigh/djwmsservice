@@ -1,6 +1,6 @@
 package com.djcps.wms.loadingtask.model;
 
-import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * 装车信息参数
@@ -8,7 +8,7 @@ import com.djcps.wms.commons.base.BaseBO;
  * @author WYB
  * @since 2018/3/21
  */
-public class LoadingBO extends BaseBO {
+public class LoadingBO extends BaseAddBO {
 
     /**
      * 
@@ -29,11 +29,7 @@ public class LoadingBO extends BaseBO {
     /**
      * 运单编号
      */
-    private String waybillId;
-    /**
-     * 合作方号
-     */
-    private String partnerId;
+    private String wayBillId;
 
     public Integer getLoadingAmount() {
         return loadingAmount;
@@ -59,26 +55,18 @@ public class LoadingBO extends BaseBO {
         this.orderId = orderId;
     }
 
-    public String getWaybillId() {
-        return waybillId;
+    public String getWayBillId() {
+        return wayBillId;
     }
 
-    public void setWaybillId(String waybillId) {
-        this.waybillId = waybillId;
-    }
-
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
+    public void setWayBillId(String wayBillId) {
+        this.wayBillId = wayBillId;
     }
 
     @Override
     public String toString() {
         return "LoadingBO [loadingAmount=" + loadingAmount + ", orderAmount=" + orderAmount + ", orderId=" + orderId
-                + ", waybillId=" + waybillId + ", partnerId=" + partnerId + "]";
+                + ", wayBillId=" + wayBillId + "]";
     }
 
 }

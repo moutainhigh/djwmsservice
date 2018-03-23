@@ -17,6 +17,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtask.model.OrderInfoPO;
 import com.djcps.wms.loadingtask.model.result.OrderIdAndLoadingAmountPO;
 import com.djcps.wms.loadingtask.request.LoadingTaskOrderHttpRequest;
+import com.djcps.wms.order.model.OrderIdsBO;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -42,7 +43,7 @@ public class LoadingTaskOrderServer {
      * @return
      * @create 2018/3/20
      **/
-    public HttpResult getInfoByOrderIds(List<OrderIdAndLoadingAmountPO> childOrderIds) {
+    public HttpResult getInfoByOrderIds(OrderIdsBO childOrderIds) {
         String json = gson.toJson(childOrderIds);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), json);
         HTTPResponse httpResponse = loadingTaskOrderHttpRequest.getOrderDetailsList(requestBody);
@@ -53,7 +54,7 @@ public class LoadingTaskOrderServer {
      * @param param
      * @return
      */
-    public List<OrderInfoPO> getChildOrderList(List<OrderIdAndLoadingAmountPO> childOrderIds){
+    public List<OrderInfoPO> getChildOrderList(OrderIdsBO childOrderIds){
         List<OrderInfoPO> orderInfoPOList = new ArrayList<>();
         HttpResult httpResult = getInfoByOrderIds(childOrderIds);
         if(httpResult.isSuccess()){

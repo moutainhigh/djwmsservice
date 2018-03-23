@@ -120,7 +120,7 @@ public class LoaderManageController {
     /**
      * 删除装车员信息
      * 
-     * @autuor wyb
+     * @autuor  wyb
      * @since 2018/3/19
      * @param request
      * @param json

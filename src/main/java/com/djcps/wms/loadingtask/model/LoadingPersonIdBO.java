@@ -1,7 +1,13 @@
 package com.djcps.wms.loadingtask.model;
 
-import com.djcps.wms.commons.base.BaseBO;
+import org.springframework.util.ObjectUtils;
 
+import com.djcps.wms.commons.base.BaseBO;
+/**
+ * 装车员信息
+ * @author wyb
+ * @since 2018/3/21
+ */
 public class LoadingPersonIdBO extends BaseBO {
 
     /**
@@ -22,6 +28,9 @@ public class LoadingPersonIdBO extends BaseBO {
     private String loadingTableId;
 
     public Integer getStatus() {
+        if(ObjectUtils.isEmpty(this.status)) {
+            this.status=1;
+        }
         return status;
     }
 

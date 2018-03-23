@@ -10,11 +10,12 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
+import com.djcps.wms.loadingtask.model.FinishLoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonBO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
-import com.djcps.wms.loadingtask.model.result.addOrderApplicationResult;
+import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.loadingtask.request.WmsForLoadingTaskHttpRequest;
 import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 
@@ -60,7 +61,7 @@ public class LoadingTaskServer {
     public HttpResult removeLoadingPerson(RemoveLoadingPersonBO param) {
         String paramJson = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.RemoveLoadingPerson(requestBody);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.removeLoadingPerson(requestBody);
         return returnResult(httpResponse);
     }
 
@@ -141,14 +142,41 @@ public class LoadingTaskServer {
      * @return
      * @create 2018/3/21
      */
-    public addOrderApplicationResult addOrderApplicationList(AddOrderApplicationListBO param) {
+    public HttpResult addOrderApplicationList(AddOrderApplicationListBO param) {
         String paramJson = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),paramJson);
-        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.additionalOrder(requestBody);
-      //校验请求是否成功
-        addOrderApplicationResult result = null;
-        if(httpResponse.isSuccessful()) {
-            result = gson.fromJson(httpResponse.getBodyString(), addOrderApplicationResult.class);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.addOrderApplicationList(requestBody);
+        return returnResult(httpResponse);
+    }
+    /**
+     * 修改运单状态
+     * 
+     * @author wyb
+     * @param param
+     * @return
+     * @create 2018/3/21
+     */
+    public HttpResult updateWayBill(FinishLoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.updateWayBill(requestBody);
+        return returnResult(httpResponse);
+    }
+    /**
+     * 完成装车
+     * 
+     * @author wyb
+     * @param param
+     * @return
+     * @create 2018/3/21
+     */
+    public FinishLoadingPO finishLoading(FinishLoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.finishLoading(requestBody);
+        FinishLoadingPO result = null;
+        if(httpResponse.isSuccessful()){
+            result = gson.fromJson(httpResponse.getBodyString(), FinishLoadingPO.class);
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");

@@ -54,7 +54,7 @@ public interface WmsForLoadingTaskHttpRequest {
      */
     @Headers("content-type:application/json")
     @POST("loadingtask/updateLoadPerson.do")
-    HTTPResponse RemoveLoadingPerson(@Body RequestBody json);
+    HTTPResponse removeLoadingPerson(@Body RequestBody json);
 
     /**
      * 装车
@@ -63,7 +63,7 @@ public interface WmsForLoadingTaskHttpRequest {
      * @return
      */
     @Headers("content-type:application/json")
-    @POST("loadingtask/LoadingAndUpdate.do")
+    @POST("loadingtask/loadingAndUpdate.do")
     HTTPResponse loading(@Body RequestBody json);
 
     /**
@@ -73,7 +73,7 @@ public interface WmsForLoadingTaskHttpRequest {
      * @return
      */
     @Headers("content-type:application/json")
-    @POST("")
+    @POST("loadingtask/getWayBillAndOrder.do")
     HTTPResponse finishLoading(@Body RequestBody json);
 
     /**
@@ -83,7 +83,7 @@ public interface WmsForLoadingTaskHttpRequest {
      * @return
      */
     @Headers("content-type:application/json")
-    @POST("")
+    @POST("loadingtask/updateLoadingTask.do")
     HTTPResponse additionalOrder(@Body RequestBody json);
     /**
      * 驳回申请
@@ -92,7 +92,7 @@ public interface WmsForLoadingTaskHttpRequest {
      * @return
      */
     @Headers("content-type:application/json")
-    @POST("")
+    @POST("loadingtask/updateLoadingTask.do")
     HTTPResponse rejectRequest(@Body RequestBody json);
     /**
      * 追加订单申请列表web
@@ -101,6 +101,15 @@ public interface WmsForLoadingTaskHttpRequest {
      * @return
      */
     @Headers("content-type:application/json")
-    @POST("")
+    @POST("loadingtask/getAddSquare.do")
     HTTPResponse addOrderApplicationList(@Body RequestBody json);
+    /**
+     * 修改运单状态
+     * 
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("loadingtask/updateWayBill.do")
+    HTTPResponse updateWayBill(@Body RequestBody json);
 }

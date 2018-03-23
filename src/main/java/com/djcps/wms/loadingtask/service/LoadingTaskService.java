@@ -5,6 +5,7 @@ import java.util.Map;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
+import com.djcps.wms.loadingtask.model.FinishLoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonBO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
@@ -67,6 +68,7 @@ public interface LoadingTaskService {
      * @return
      */
     Map<String, Object> additionalOrder(AdditionalOrderBO param);
+
     /**
      * 驳回申请
      * 
@@ -75,13 +77,25 @@ public interface LoadingTaskService {
      * @param param
      * @return
      */
-    Map<String,Object> rejectRequest(RejectRequestBO param);
+    Map<String, Object> rejectRequest(RejectRequestBO param);
+
     /**
      * 追加订单申请列表web
+     * 
      * @autuor wyb
      * @since 2018/3/21
      * @param param
      * @return
      */
-    Map<String,Object> addOrderApplicationList(AddOrderApplicationListBO param);
+    Map<String, Object> addOrderApplicationList(AddOrderApplicationListBO param);
+
+    /**
+     * 完成装车
+     * 
+     * @autuor wyb
+     * @since 2018/3/21
+     * @param param
+     * @return
+     */
+    Map<String, Object> finishLoading(FinishLoadingBO param);
 }

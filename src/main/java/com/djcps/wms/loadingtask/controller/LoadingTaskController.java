@@ -24,6 +24,7 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
+import com.djcps.wms.loadingtask.model.FinishLoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonBO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
@@ -190,8 +191,25 @@ public class LoadingTaskController {
      */
     @RequestMapping(name = "完成装车", value = "/finishLoading", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> finishLoading(@RequestBody(required = false) String json, HttpServletRequest request) {
-        LOGGER.debug("json : " + json);
-        return null;
+        try {
+            LOGGER.debug("json : " + json);
+            FinishLoadingBO param = gson.fromJson(json, FinishLoadingBO.class);
+            PartnerInfoBO partnerInfoBO = (PartnerInfoBO) request.getAttribute("partnerInfo");
+            BeanUtils.copyProperties(partnerInfoBO, param);
+            ComplexResult ret = FluentValidator.checkAll().failFast()
+                    .on(param,
+                            new HibernateSupportedValidator<FinishLoadingBO>()
+                                    .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                    .doValidate().result(ResultCollectors.toComplex());
+            if (!ret.isSuccess()) {
+                return MsgTemplate.failureMsg(ret);
+            }
+            return loadingTaskService.finishLoading(param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
     }
 
     /**
