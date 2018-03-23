@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.allocation.constant.AllocationConstant;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
@@ -75,6 +77,7 @@ import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
+import com.djcps.wms.record.service.OperationRecordService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -93,7 +96,7 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class AllocationServiceImpl implements AllocationService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AllocationServiceImpl.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServiceImpl.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -366,7 +369,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}
 					}
 					//休息一秒,再进行下一次循环
-					logger.info("============verifyAllocation方法,等待锁循环中===========");
+					LOGGER.info("============verifyAllocation方法,等待锁循环中===========");
 					Thread.sleep(1000);
 				}
 			}
@@ -1294,7 +1297,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}
 					}
 					//休息一秒,再进行下一次循环
-					logger.info("============againVerifyAllocation方法,等待锁循环中===========");
+					LOGGER.info("============againVerifyAllocation方法,等待锁循环中===========");
 					Thread.sleep(1000);
 				}
 			} catch (InterruptedException e) {

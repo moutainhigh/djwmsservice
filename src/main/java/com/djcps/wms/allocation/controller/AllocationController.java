@@ -24,6 +24,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
@@ -57,7 +59,7 @@ import com.google.gson.reflect.TypeToken;
 @RequestMapping(value = "/allocation")
 public class AllocationController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AllocationController.class);
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(AllocationController.class);
 	
 	private Gson gson = new Gson();
 	
@@ -76,12 +78,12 @@ public class AllocationController {
 	@RequestMapping(name="获取所有混合配货列表",value = "/getOrderType", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getOrderType(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			BaseBO baseBO = new BaseBO();
 			return allocationService.getOrderType(baseBO);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -97,12 +99,12 @@ public class AllocationController {
 	@RequestMapping(name="获取已选择的混合配货列表",value = "/getChooseAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getChooseAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			return allocationService.getChooseAllocation(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -119,7 +121,7 @@ public class AllocationController {
 	@RequestMapping(name="混合配货保存接口(新增和修改)",value = "/saveAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> saveAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			AddAllocationBO allocation = gson.fromJson(json, AddAllocationBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,allocation);
@@ -135,7 +137,7 @@ public class AllocationController {
 			return allocationService.saveAllocation(allocation);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -151,7 +153,7 @@ public class AllocationController {
 	@RequestMapping(name="获取配货结果",value = "/getAllocationResultList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllocationResultList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -167,7 +169,7 @@ public class AllocationController {
 			return allocationService.getAllocationResultList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -183,7 +185,7 @@ public class AllocationController {
 	@RequestMapping(name="智能配货结果",value = "/getIntelligentAllocaList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getIntelligentAllocaList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			GetIntelligentAllocaBO param = gson.fromJson(json, GetIntelligentAllocaBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -199,7 +201,7 @@ public class AllocationController {
 			return allocationService.getIntelligentAllocaList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -213,14 +215,14 @@ public class AllocationController {
 	@RequestMapping(name="智能配货结果",value = "/addzhinengpeihuo", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> addzhinengpeihuo(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			BaseAddBO param = new BaseAddBO();
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return allocationService.addzhinengpeihuo(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -236,7 +238,7 @@ public class AllocationController {
 	@RequestMapping(name="确认配货",value = "/verifyAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> verifyAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			VerifyAllocationBO param = gson.fromJson(json, VerifyAllocationBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -252,7 +254,7 @@ public class AllocationController {
 			return allocationService.verifyAllocation(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -268,7 +270,7 @@ public class AllocationController {
 	@RequestMapping(name="移除订单",value = "/moveOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> moveOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			MoveOrderPO param = gson.fromJson(json, MoveOrderPO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -284,7 +286,7 @@ public class AllocationController {
 			return allocationService.moveOrder(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -300,7 +302,7 @@ public class AllocationController {
 	@RequestMapping(name="追加订单列表",value = "/getAddOrderList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAddOrderList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -316,7 +318,7 @@ public class AllocationController {
 			return allocationService.getAddOrderList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -332,7 +334,7 @@ public class AllocationController {
 	@RequestMapping(name="智能配货确认追加订单",value = "/verifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> verifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			List<AddAllocationOrderBO> param = gson.fromJson(json, new TypeToken<ArrayList<AddAllocationOrderBO>>(){}.getType());
 			long start = System.currentTimeMillis();
 			System.err.println(System.currentTimeMillis());
@@ -354,7 +356,7 @@ public class AllocationController {
 			return allocationService.verifyAddOrder(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -368,12 +370,12 @@ public class AllocationController {
 	@RequestMapping(name="装车优化确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againVerifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			List<WarehouseOrderDetailPO> cacheList = gson.fromJson(json, new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
 			return allocationService.againVerifyAddOrder(cacheList);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -389,7 +391,7 @@ public class AllocationController {
 	@RequestMapping(name="配货管理查询",value = "/getAllocationManageList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllocationManageList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			GetRedundantByAttributeBO param = gson.fromJson(json, GetRedundantByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -405,7 +407,7 @@ public class AllocationController {
 			return allocationService.getAllocationManageList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -421,7 +423,7 @@ public class AllocationController {
 	@RequestMapping(name="获取运单明细",value = "/getWaybillDetailByWayId", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWaybillDetailByWayId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			GetDeliveryByWaybillIdsBO  param = gson.fromJson(json, GetDeliveryByWaybillIdsBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -437,7 +439,7 @@ public class AllocationController {
 			return allocationService.getWaybillDetailByWayId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -453,7 +455,7 @@ public class AllocationController {
 	@RequestMapping(name="装车优化",value = "/getExcellentLoding", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getExcellentLoding(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			GetExcellentLodingBO param = gson.fromJson(json, GetExcellentLodingBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -469,7 +471,7 @@ public class AllocationController {
 			return allocationService.getExcellentLoding(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -485,7 +487,7 @@ public class AllocationController {
 	/*@RequestMapping(name="装车优化确认追加订单",value = "/againVerifyAddOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againVerifyAddOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			AgainVerifyAddOrderBO param = gson.fromJson(json, AgainVerifyAddOrderBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -501,7 +503,7 @@ public class AllocationController {
 			return allocationService.againVerifyAddOrder(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -518,7 +520,7 @@ public class AllocationController {
 	@RequestMapping(name="装车优化再次确认配货",value = "/againVerifyAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againVerifyAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			MergeModelBO param = gson.fromJson(json, MergeModelBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -533,7 +535,7 @@ public class AllocationController {
 			return allocationService.againVerifyAllocation(param,partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -541,7 +543,7 @@ public class AllocationController {
 	/*@RequestMapping(name="装车优化再次确认配货",value = "/againVerifyAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againVerifyAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			List<AgainVerifyAllocationBO> param = gson.fromJson(json, new TypeToken<ArrayList<AgainVerifyAllocationBO>>(){}.getType());
 			for (AgainVerifyAllocationBO againVerifyAllocationBO : param) {
 				PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -558,7 +560,7 @@ public class AllocationController {
 			return allocationService.againVerifyAllocation(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}*/
@@ -574,7 +576,7 @@ public class AllocationController {
 	@RequestMapping(name="获取所有可用车辆的信息",value = "/getAllUserCarInfo", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllUserCarInfo(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-//			logger.debug("json : " + json);
+//			LOGGER.debug("json : " + json);
 //			AgainVerifyAllocationBO param = gson.fromJson(json, AgainVerifyAllocationBO.class);
 //			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 //			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -590,7 +592,7 @@ public class AllocationController {
 			return allocationService.getAllUserCarInfo();
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -606,7 +608,7 @@ public class AllocationController {
 	@RequestMapping(name="根据车辆id获取车辆详情",value = "/getCarDetailById", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getCarDetailById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			CarBO param = gson.fromJson(json, CarBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -622,7 +624,7 @@ public class AllocationController {
 			return allocationService.getCarDetailById();
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -638,7 +640,7 @@ public class AllocationController {
 	@RequestMapping(name="车辆确认更换",value = "/changeCarInfo", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> changeCarInfo(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			String id = "";
 			ChangeCarInfoBO param = gson.fromJson(json, ChangeCarInfoBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -655,7 +657,7 @@ public class AllocationController {
 			return allocationService.changeCarInfo(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -671,7 +673,7 @@ public class AllocationController {
 	@RequestMapping(name="取消配货",value = "/cancelAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> cancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -687,7 +689,7 @@ public class AllocationController {
 			return allocationService.cancelAllocation(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -701,7 +703,7 @@ public class AllocationController {
 	@RequestMapping(name="智能配货取消配货(清楚缓存)",value = "/intelligentCancelAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> intelligentCancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			String parameter = request.getParameter("allocationId");
 			if (StringUtils.isEmpty(parameter)) {
 				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
@@ -709,7 +711,7 @@ public class AllocationController {
 			return allocationService.intelligentCancelAllocation(parameter);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -725,7 +727,7 @@ public class AllocationController {
 	@RequestMapping(name="装车优化取界面消配货",value = "/againCancelAllocation", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> againCancelAllocation(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			String parameter = request.getParameter("waybillId");
 			if(StringUtils.isEmpty(parameter)){
 				return MsgTemplate.failureMsg(SysMsgEnum.PARAM_ERROR);
@@ -745,7 +747,7 @@ public class AllocationController {
 			return allocationService.againCancelAllocation(parameter);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -753,7 +755,7 @@ public class AllocationController {
 	@RequestMapping(name="获取提货员信息",value = "/getPicker", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getPicker(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 //			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
 //			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 //			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -769,7 +771,7 @@ public class AllocationController {
 			return allocationService.getPicker();
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -777,11 +779,11 @@ public class AllocationController {
 	@RequestMapping(name="获取装车员信息",value = "/getLoadingPerson", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getLoadingPerson(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			return allocationService.getLoadingPerson();
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -795,7 +797,7 @@ public class AllocationController {
 	@RequestMapping(name="根据关联id获取操作记录信息",value = "/getRecordByRrelativeId", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getRecordByRrelativeId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			RelativeIdBO param = gson.fromJson(json, RelativeIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -811,7 +813,7 @@ public class AllocationController {
 			return allocationService.getRecordByRrelativeId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

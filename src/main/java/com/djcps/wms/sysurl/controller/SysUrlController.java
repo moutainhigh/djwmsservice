@@ -5,6 +5,9 @@ package com.djcps.wms.sysurl.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.google.gson.Gson;
 
 
@@ -19,7 +22,7 @@ import com.google.gson.Gson;
 
 public class SysUrlController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(SysUrlController.class);
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(SysUrlController.class);
 	
 	private Gson gson = new Gson();
 }
