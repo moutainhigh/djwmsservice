@@ -2,7 +2,7 @@ package com.djcps.wms.loadingTask.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
  * 新增装车员
@@ -11,7 +11,7 @@ import com.djcps.wms.commons.base.BaseBO;
  * @author:wyb
  * @date:2018年3月22日
  */
-public class SaveLoaderBO extends BaseBO {
+public class SaveLoaderBO extends BaseAddBO {
 
     /**
      * 
@@ -27,7 +27,7 @@ public class SaveLoaderBO extends BaseBO {
     @NotBlank
     private String name;
     /**
-     * 性别(1男;0女)
+     * 性别(1男;2女)
      */
     private Integer sex;
     /**
@@ -62,45 +62,47 @@ public class SaveLoaderBO extends BaseBO {
      * 装车台id
      */
     private String loadingTableId;
+    
     /**
-     * 操作人编号
-     */
-    private String operatorId;
-    /**
-     * 合作方编号
-     */
-    @NotBlank
-    private String partnerId;
-    /**
-     * 操作人姓名
-     */
-    private String operator;
+	 * 市编码
+	 */
+	private Integer provinceCode;
+	
+	/**
+	 * 城市编码
+	 */
+	private Integer cityCode;
+	
+	/**
+	 * 区编码
+	 */
+	private Integer countyCode;
 
-    public String getOperatorId() {
-        return operatorId;
-    }
+    public Integer getProvinceCode() {
+		return provinceCode;
+	}
 
-    public void setOperatorId(String operatorId) {
-        this.operatorId = operatorId;
-    }
+	public void setProvinceCode(Integer provinceCode) {
+		this.provinceCode = provinceCode;
+	}
 
-    public String getPartnerId() {
-        return partnerId;
-    }
+	public Integer getCityCode() {
+		return cityCode;
+	}
 
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
-    }
+	public void setCityCode(Integer cityCode) {
+		this.cityCode = cityCode;
+	}
 
-    public String getOperator() {
-        return operator;
-    }
+	public Integer getCountyCode() {
+		return countyCode;
+	}
 
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
+	public void setCountyCode(Integer countyCode) {
+		this.countyCode = countyCode;
+	}
 
-    public String getId() {
+	public String getId() {
         return id;
     }
 
@@ -188,12 +190,12 @@ public class SaveLoaderBO extends BaseBO {
         this.loadingTableId = loadingTableId;
     }
 
-    @Override
-    public String toString() {
-        return "SaveLoaderBO [id=" + id + ", name=" + name + ", sex=" + sex + ", idCard=" + idCard + ", phone=" + phone
-                + ", provinceName=" + provinceName + ", cityName=" + cityName + ", countyName=" + countyName
-                + ", address=" + address + ", remark=" + remark + ", loadingTableId=" + loadingTableId + ", operatorId="
-                + operatorId + ", partnerId=" + partnerId + ", operator=" + operator + "]";
-    }
+	@Override
+	public String toString() {
+		return "SaveLoaderBO [id=" + id + ", name=" + name + ", sex=" + sex + ", idCard=" + idCard + ", phone=" + phone
+				+ ", provinceName=" + provinceName + ", cityName=" + cityName + ", countyName=" + countyName
+				+ ", address=" + address + ", remark=" + remark + ", loadingTableId=" + loadingTableId
+				+ ", provinceCode=" + provinceCode + ", cityCode=" + cityCode + ", countyCode=" + countyCode + "]";
+	}
 
 }

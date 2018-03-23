@@ -72,7 +72,7 @@ public class LoaderManageHttpServer {
     public HttpResult saveLoader(SaveLoaderBO param) {
         String paramJson = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = loaderManageHttpRequest.delLoader(requestBody);
+        HTTPResponse httpResponse = loaderManageHttpRequest.saveLoader(requestBody);
         return returnResult(httpResponse);
 
     }

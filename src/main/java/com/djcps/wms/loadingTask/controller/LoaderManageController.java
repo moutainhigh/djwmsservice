@@ -21,6 +21,7 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingTask.model.DelLoaderBO;
@@ -28,6 +29,7 @@ import com.djcps.wms.loadingTask.model.GetLoadingPersonInfoBO;
 import com.djcps.wms.loadingTask.model.SaveLoaderBO;
 import com.djcps.wms.loadingTask.model.UpdataLoaderBO;
 import com.djcps.wms.loadingTask.service.LoaderManageService;
+import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 
 /**
  * @title:装车员管理控制层
@@ -96,6 +98,8 @@ public class LoaderManageController {
                     .on(param,
                             new HibernateSupportedValidator<UpdataLoaderBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                    .on(param.getName().length(),
+							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
@@ -160,6 +164,8 @@ public class LoaderManageController {
                     .on(param,
                             new HibernateSupportedValidator<SaveLoaderBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+                    .on(param.getName().length(),
+							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);

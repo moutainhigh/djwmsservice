@@ -1,5 +1,6 @@
 package com.djcps.wms.loadingTask.model;
 
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseBO;
@@ -11,7 +12,8 @@ import com.djcps.wms.commons.base.BaseBO;
  * @since 2018/3/20
  */
 public class UpdataLoaderBO extends BaseBO {
-
+	
+	@NotBlank
 	private String id;
 	
     /**
@@ -21,6 +23,7 @@ public class UpdataLoaderBO extends BaseBO {
     /**
      * 姓名
      */
+    @NotBlank
     private String name;
     /**
      * 性别(1男;0女)
@@ -77,6 +80,46 @@ public class UpdataLoaderBO extends BaseBO {
      */
     @NotBlank
     private String operator;
+    
+    /**
+	 * 市编码
+	 */
+	private Integer provinceCode;
+	
+	/**
+	 * 城市编码
+	 */
+	private Integer cityCode;
+	
+	/**
+	 * 区编码
+	 */
+	private Integer countyCode;
+	
+
+	public Integer getProvinceCode() {
+		return provinceCode;
+	}
+
+	public void setProvinceCode(Integer provinceCode) {
+		this.provinceCode = provinceCode;
+	}
+
+	public Integer getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(Integer cityCode) {
+		this.cityCode = cityCode;
+	}
+
+	public Integer getCountyCode() {
+		return countyCode;
+	}
+
+	public void setCountyCode(Integer countyCode) {
+		this.countyCode = countyCode;
+	}
 
 	public String getId() {
 		return id;
@@ -203,7 +246,9 @@ public class UpdataLoaderBO extends BaseBO {
 		return "UpdataLoaderBO [id=" + id + ", name=" + name + ", sex=" + sex + ", idCard=" + idCard + ", phone="
 				+ phone + ", provinceName=" + provinceName + ", cityName=" + cityName + ", countyName=" + countyName
 				+ ", address=" + address + ", remark=" + remark + ", loadingTableid=" + loadingTableid + ", status="
-				+ status + ", operatorId=" + operatorId + ", partnerId=" + partnerId + ", operator=" + operator + "]";
+				+ status + ", operatorId=" + operatorId + ", partnerId=" + partnerId + ", operator=" + operator
+				+ ", provinceCode=" + provinceCode + ", cityCode=" + cityCode + ", countyCode=" + countyCode + "]";
 	}
+
 
 }
