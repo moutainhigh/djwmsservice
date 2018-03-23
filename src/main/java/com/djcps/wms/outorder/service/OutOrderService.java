@@ -2,7 +2,6 @@ package com.djcps.wms.outorder.service;
 
 import java.util.Map;
 
-import com.djcps.wms.outorder.model.OrderBO;
 import com.djcps.wms.outorder.model.OutOrderBO;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
 /**
