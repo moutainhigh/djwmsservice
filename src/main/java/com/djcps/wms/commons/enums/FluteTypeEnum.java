@@ -37,10 +37,4 @@ public enum FluteTypeEnum {
         return value;
     }
 
-    @Override
-    public String toString() {
-        return "OrderStatusTypeEnum{" +
-                "value='" + value + '\'' +
-                '}';
-    }
 }

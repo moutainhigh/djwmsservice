@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.allocation.constant.AllocationConstant;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
@@ -75,6 +77,7 @@ import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
+import com.djcps.wms.record.service.OperationRecordService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -93,7 +96,7 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class AllocationServiceImpl implements AllocationService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AllocationServiceImpl.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServiceImpl.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -133,7 +136,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//返回给前端的数据对象
 		List<WarehouseOrderDetailPO> stockInfo = null;
 		//String是订单号,map用来存在库信息查询出来的数据
-		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
 		//订单类型
 		List<String> orderTypeList = new ArrayList<String>();
 		//订单号集合
@@ -292,7 +295,7 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 			}
 		}
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>(16);
         result.put("success",true);
         result.put("code",100000);
         result.put("msg", "");
@@ -310,7 +313,7 @@ public class AllocationServiceImpl implements AllocationService {
 		OtherHttpResult result = allocationServer.getOrderByAllocationId(param);
 		List<OrderPO> orderPoList = gson.fromJson(gson.toJson(result.getData()), new TypeToken<ArrayList<OrderPO>>(){}.getType());
 		
-		Map<String,OrderPO> map = new HashMap<>();
+		Map<String,OrderPO> map = new HashMap<>(16);
 		if(!ObjectUtils.isEmpty(orderPoList)){
 			//将智能配货结果存入到缓存当中
 			if(!ObjectUtils.isEmpty(orderPoList)){
@@ -318,7 +321,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 			allocation.setDate(orderPoList);
 			allocation.setCarInfo(new CarInfo());
-			Map<String, Object> resultMap = new HashMap<String, Object>();
+			Map<String, Object> resultMap = new HashMap<String, Object>(16);
 			resultMap.put("success",true);
 			resultMap.put("code",100000);
 			resultMap.put("msg", "");
@@ -366,7 +369,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}
 					}
 					//休息一秒,再进行下一次循环
-					logger.info("============verifyAllocation方法,等待锁循环中===========");
+					LOGGER.info("============verifyAllocation方法,等待锁循环中===========");
 					Thread.sleep(1000);
 				}
 			}
@@ -525,7 +528,7 @@ public class AllocationServiceImpl implements AllocationService {
 	public Map<String, Object> getAddOrderList(GetRedundantByAttributeBO param) {
 		String allocationId = param.getAllocationId();
 		String waybillId = param.getWaybillId();
-		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
 		List<WarehouseOrderDetailPO> orderDetailList = new ArrayList<WarehouseOrderDetailPO>();
 		//订单状态:已入库
 		param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
@@ -604,7 +607,7 @@ public class AllocationServiceImpl implements AllocationService {
 					}
 					//判断假如全部移除完毕了,那么就直接返回null
 					if(map.size()==0){
-						Map<String, Object> mapResult = new HashMap<String, Object>();
+						Map<String, Object> mapResult = new HashMap<String, Object>(16);
 						mapResult.put("success",true);
 						mapResult.put("code",100000);
 						mapResult.put("msg", "");
@@ -652,7 +655,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 			
 			//不走缓存,智能配货结果获取追加订单
-			Map<String, Object> mapResult = new HashMap<String, Object>();
+			Map<String, Object> mapResult = new HashMap<String, Object>(16);
 			mapResult.put("success",true);
 			mapResult.put("code",100000);
 			mapResult.put("msg", "");
@@ -679,7 +682,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//缓存详细订单信息
 		String cacheOrder = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId);
 		if(!StringUtils.isEmpty(cacheOrder)){
-			Map<String,AddAllocationOrderBO> map = new HashMap<>();
+			Map<String,AddAllocationOrderBO> map = new HashMap<>(16);
 			List<AddAllocationOrderBO> cacheList = gson.fromJson(cacheOrder, new TypeToken<ArrayList<AddAllocationOrderBO>>(){}.getType());
 			//保证追加订单的唯一性
 			for (AddAllocationOrderBO addAllocationOrderBO : cacheList) {
@@ -708,13 +711,13 @@ public class AllocationServiceImpl implements AllocationService {
 		List<GetAllocationManageListPO> allocationManageList = null;
 		List<String> waybillList = new ArrayList<String>();
 		//key为运单号
-		Map<String,GetAllocationManageListPO> map = new HashMap<String,GetAllocationManageListPO>();
+		Map<String,GetAllocationManageListPO> map = new HashMap<String,GetAllocationManageListPO>(16);
 		int total = 0;
 		// 查询标记,flag为0,则表示没有查询条件,为1表中有查询条件
 		if(AllocationConstant.UNHAVE_QUERY_CONDITION.equals(param.getFlag())){
 			//分页查询运单表
 			OtherHttpResult result = allocationServer.getAlloManageQuery(param);
-			Map<String, Object> resultMap = new HashMap<String, Object>();
+			Map<String, Object> resultMap = new HashMap<String, Object>(16);
 			resultMap.put("success",true);
 			resultMap.put("code",100000);
 			resultMap.put("msg", "");
@@ -724,7 +727,7 @@ public class AllocationServiceImpl implements AllocationService {
 		}else{
 			//查询标记为1表中有查询条件
 			OtherHttpResult result = allocationServer.getAlloManageFuzzyQuery(param);
-			Map<String, Object> resultMap = new HashMap<String, Object>();
+			Map<String, Object> resultMap = new HashMap<String, Object>(16);
 			resultMap.put("success",true);
 			resultMap.put("code",100000);
 			resultMap.put("msg", "");
@@ -736,7 +739,7 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> getWaybillDetailByWayId(GetDeliveryByWaybillIdsBO param) {
-		Map<String,WarehouseOrderDetailPO> map = new HashMap<>();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<>(16);
 		//根据运单号获取提货单号
 		HttpResult result = allocationServer.getDeliveryByWaybillIds(param);
 		if(ObjectUtils.isEmpty(result.getData())){
@@ -994,7 +997,7 @@ public class AllocationServiceImpl implements AllocationService {
 	 */
 	private List<OrderPO> getOrderPOList(Integer sequence,List<String> orderIdsList,GetExcellentLodingBO param,String deliveryId,String allocationId){
 		//String是订单号,map用来存在库信息查询出来的数据
-		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
 		List<OrderIdBO> orderIdBOList = new ArrayList<>();
 		for (String string : orderIdsList) {
 			OrderIdBO orderIdBO = new OrderIdBO();
@@ -1140,7 +1143,7 @@ public class AllocationServiceImpl implements AllocationService {
 	@Override
 	public Map<String, Object> addzhinengpeihuo(BaseAddBO base) {
 		List<WarehouseOrderDetailPO> list = new ArrayList<>();
-		Map<String,WarehouseOrderDetailPO> map = new HashMap<>();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<>(16);
 		//获取所有的在库信息id
 		HttpResult result = null;
 		result = allocationServer.addzhinengpeihuo();
@@ -1181,7 +1184,7 @@ public class AllocationServiceImpl implements AllocationService {
 			BeanUtils.copyProperties(base, selectArea);
 			List<WarehouseOrderDetailPO> stockInfo = orderService.getStockInfo(selectArea);
 			//key订单号,value为trueAmount实时在库数量
-			Map<String,Integer> trueAmountMap = new HashMap<>();
+			Map<String,Integer> trueAmountMap = new HashMap<>(16);
 			for (WarehouseOrderDetailPO orderDetailPO : stockInfo) {
 				List<WarehouseAreaBO> areaList = orderDetailPO.getAreaList();
 				for (WarehouseAreaBO areaBO : areaList) {
@@ -1294,7 +1297,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}
 					}
 					//休息一秒,再进行下一次循环
-					logger.info("============againVerifyAllocation方法,等待锁循环中===========");
+					LOGGER.info("============againVerifyAllocation方法,等待锁循环中===========");
 					Thread.sleep(1000);
 				}
 			} catch (InterruptedException e) {
@@ -1323,9 +1326,9 @@ public class AllocationServiceImpl implements AllocationService {
 		
 		List<SequenceBO> addOrder = new ArrayList<>();
 		//装车顺序map
-		Map<String,SequenceBO> sequenceMap = new HashMap<>();
+		Map<String,SequenceBO> sequenceMap = new HashMap<>(16);
 		//原数据map
-		Map<String,WarehouseOrderDetailPO> formerMap = new HashMap<>();
+		Map<String,WarehouseOrderDetailPO> formerMap = new HashMap<>(16);
 		for(SequenceBO sequenceBO : param.getSequenceList()){
 			sequenceMap.put(sequenceBO.getOrderId(), sequenceBO);
 		}
@@ -1429,7 +1432,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//修改配货订单表中订单的提货单号
 		
 		//整理装车顺序需要的数据
-		HashMap<String,SequenceBO> map = new HashMap<>();
+		HashMap<String,SequenceBO> map = new HashMap<>(16);
 		if(!ObjectUtils.isEmpty(param.getSequenceList())){
 			for(SequenceBO sequence : param.getSequenceList()){
 				map.put(sequence.getOrderId(),sequence);
@@ -1663,7 +1666,7 @@ public class AllocationServiceImpl implements AllocationService {
 			//缓存详细订单信息
 			String cacheOrder = redisClient.get(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
 			if(!StringUtils.isEmpty(cacheOrder)){
-				Map<String,WarehouseOrderDetailPO> map = new HashMap<>();
+				Map<String,WarehouseOrderDetailPO> map = new HashMap<>(16);
 				List<WarehouseOrderDetailPO> cacheList = gson.fromJson(cacheOrder, new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
 				for (WarehouseOrderDetailPO orderDetailPO : cacheList) {
 					map.put(orderDetailPO.getFchildorderid(), orderDetailPO);

@@ -42,8 +42,6 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class OrderServiceImpl implements OrderService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);	
-	
 	private Gson gson = new Gson();
 	
 	private JsonParser jsonParser = new JsonParser();
@@ -73,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
 		BeanUtils.copyProperties(param, selectAreaByOrderId);
 		List<OrderIdBO> list = new ArrayList<OrderIdBO>();
 		List<WarehouseOrderDetailPO> detailList = new ArrayList<WarehouseOrderDetailPO>();
-		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>();
+		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
 		List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(result.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
 		for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
 			String orderId = warehouseOrderDetailPO.getFchildorderid();
@@ -108,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 		//因为这里返回的参数比较特殊所以需要重新自己组织对象,不调用方法
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> resultMap = new HashMap<String, Object>(16);
 		resultMap.put("success", true);
 		resultMap.put("code", 100000);
 		resultMap.put("msg", "");

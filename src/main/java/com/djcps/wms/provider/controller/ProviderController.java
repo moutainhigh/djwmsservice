@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 
@@ -45,7 +47,7 @@ import com.google.gson.Gson;
 @RequestMapping(value = "/provider")
 public class ProviderController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProviderController.class);
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(ProviderController.class);
 	
 	private Gson gson = new Gson();
 	
@@ -64,11 +66,11 @@ public class ProviderController {
 	@RequestMapping(name="新增供应商档案",value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> add(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			AddProviderBO param = gson.fromJson(json, AddProviderBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("AddProviderBO : " + param.toString());
+			LOGGER.debug("AddProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<AddProviderBO>()
@@ -98,7 +100,7 @@ public class ProviderController {
 			return providerService.add(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -115,11 +117,11 @@ public class ProviderController {
 	@RequestMapping(name="修改供应商档案",value = "/modify", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> modify(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			UpdateProviderBO param = gson.fromJson(json, UpdateProviderBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("UpdateProviderVO : " + param.toString());
+			LOGGER.debug("UpdateProviderVO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<UpdateProviderBO>()
@@ -149,7 +151,7 @@ public class ProviderController {
 			return providerService.modify(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -166,11 +168,11 @@ public class ProviderController {
 	@RequestMapping(name="删除供应商档案",value = "/delete", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> delete(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			DeleteProviderBO param = gson.fromJson(json, DeleteProviderBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("DeleteProviderBO : " + param.toString());
+			LOGGER.debug("DeleteProviderBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<DeleteProviderBO>()
@@ -182,7 +184,7 @@ public class ProviderController {
 			return providerService.delete(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -199,14 +201,14 @@ public class ProviderController {
 	@RequestMapping(name="获取所有供应商档案列表",value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			BaseListPartnerIdBO param = gson.fromJson(json, BaseListPartnerIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return providerService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -223,12 +225,12 @@ public class ProviderController {
 	@RequestMapping(name="根据供应商属性模糊查询",value = "/getByProviderAttribute", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getByProviderAttribute(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			SelectProviderByAttributeBO param = gson.fromJson(json, SelectProviderByAttributeBO.class);
 			return providerService.getProviderByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

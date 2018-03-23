@@ -2,6 +2,8 @@ package com.djcps.wms.delivery.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListPO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -15,8 +17,6 @@ import com.djcps.wms.delivery.service.DeliveryService;
 import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.server.OrderServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -35,7 +35,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(DeliveryService.class);
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(DeliveryService.class);
 
     @Autowired
     private DeliveryServer deliveryServer;

@@ -16,6 +16,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.outorder.model.OutOrderBO;
@@ -35,7 +37,7 @@ public class OutOrderController {
 	
 	private Gson gson = new Gson();
 	
-	private static final Logger logger = LoggerFactory.getLogger(OutOrderController.class);
+	private static final DjcpsLogger logger = DjcpsLoggerFactory.getLogger(OutOrderController.class);
 	
 	@RequestMapping(name="获取订单明细列表",value="/gerOrderDetail",method = RequestMethod.POST)
 	public Map<String,Object> getOrderDetailByOrderId(@RequestBody String json){
