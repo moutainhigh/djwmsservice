@@ -22,6 +22,7 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
+import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingTask.model.DelLoaderBO;
@@ -100,6 +101,11 @@ public class LoaderManageController {
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .on(param.getName().length(),
 							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+                    .on(param.getSex(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,1))
+					.on(param.getIdCard(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,18))
+					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getAddress(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
+					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
@@ -166,6 +172,11 @@ public class LoaderManageController {
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .on(param.getName().length(),
 							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+                    .on(param.getSex(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,1))
+					.on(param.getIdCard(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,18))
+					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getAddress(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
+					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
