@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.AddAbnormal;
 import com.djcps.wms.abnormal.model.GetOrderByAttributeBO;
 import com.djcps.wms.abnormal.model.OrderIdBO;
@@ -28,7 +30,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class AbnormalServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AbnormalServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AbnormalServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -38,7 +40,6 @@ public class AbnormalServer {
 	public HttpResult getOrderByOrderIdList(OrderIdListBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = abnormalServerHttpRequest.getOrderByOrderIdList(rb);
@@ -48,7 +49,6 @@ public class AbnormalServer {
 	public HttpResult addAbnormal(AddAbnormal param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = abnormalServerHttpRequest.addAbnormal(rb);
@@ -58,7 +58,6 @@ public class AbnormalServer {
 	public HttpResult getOrderByAttributeBO(GetOrderByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = abnormalServerHttpRequest.getOrderByAttributeBO(rb);
@@ -68,7 +67,6 @@ public class AbnormalServer {
 	public HttpResult updateAbnormal(UpdateAbnormalBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = abnormalServerHttpRequest.updateAbnormal(rb);
@@ -78,7 +76,6 @@ public class AbnormalServer {
 	public HttpResult getSplitOrderByOrderId(OrderIdBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = abnormalServerHttpRequest.getSplitOrderByOrderId(rb);
@@ -101,7 +98,7 @@ public class AbnormalServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
