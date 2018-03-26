@@ -73,7 +73,7 @@ public class LocationController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			param.setCodeType(WareHouseTypeEnum.WAREHOUSE_AREA_LOCA_CODE.getValue());
+			param.setCodeType(WareHouseTypeEnum.WAREHOUSE_AREA_LOC_CODE.getValue());
 			return locationService.addLocation(param);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,7 +140,7 @@ public class LocationController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			param.setCodeType(WareHouseTypeEnum.WAREHOUSE_AREA_LOCA_CODE.getValue());
+			param.setCodeType(WareHouseTypeEnum.WAREHOUSE_AREA_LOC_CODE.getValue());
 			return locationService.deleteLocation(param);
 		} catch (Exception e) {
 			e.printStackTrace();
