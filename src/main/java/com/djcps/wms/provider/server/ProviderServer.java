@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -27,7 +29,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class ProviderServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProviderServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(ProviderServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -37,7 +39,6 @@ public class ProviderServer {
 	public HttpResult add(AddProviderBO addBean){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(addBean);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = providerHttpRequest.add(rb);
@@ -48,7 +49,6 @@ public class ProviderServer {
 	public HttpResult modify(UpdateProviderBO updateBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(updateBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = providerHttpRequest.modify(rb);
@@ -59,7 +59,6 @@ public class ProviderServer {
 	public HttpResult delete(DeleteProviderBO deleteBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(deleteBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = providerHttpRequest.delete(rb);
@@ -70,7 +69,6 @@ public class ProviderServer {
 	public HttpResult getAllList(BaseListPartnerIdBO baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = providerHttpRequest.getAllList(rb);
@@ -80,7 +78,6 @@ public class ProviderServer {
 	public HttpResult getProviderByAttribute(SelectProviderByAttributeBO selectVagueBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(selectVagueBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = providerHttpRequest.getProviderByAttribute(rb);
@@ -103,7 +100,7 @@ public class ProviderServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

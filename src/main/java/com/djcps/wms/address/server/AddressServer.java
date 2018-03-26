@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
 import com.djcps.wms.address.request.AddressServerHttpRequest;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -22,7 +24,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class AddressServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AddressServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AddressServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -32,7 +34,6 @@ public class AddressServer {
 	public HttpResult getProvinceAllList(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = addressServerHttpRequest.getProvinceAllList(rb);
@@ -42,7 +43,6 @@ public class AddressServer {
 	public HttpResult getCityListByProvince(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = addressServerHttpRequest.getCityListByProvince(rb);
@@ -52,7 +52,6 @@ public class AddressServer {
 	public HttpResult getAreaListByCity(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = addressServerHttpRequest.getAreaListByCity(rb);
@@ -62,7 +61,6 @@ public class AddressServer {
 	public HttpResult getStreeListByArea(ProvinceCityAreaCodeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = addressServerHttpRequest.getStreeListByArea(rb);
@@ -85,7 +83,7 @@ public class AddressServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

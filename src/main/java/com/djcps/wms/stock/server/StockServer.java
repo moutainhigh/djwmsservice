@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.MapAddressComponentPO;
 import com.djcps.wms.commons.request.MapHttpRequest;
@@ -37,7 +39,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class StockServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(StockServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(StockServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -81,7 +83,7 @@ public class StockServer {
 				stockDao.insertLocation(mapLocaTion);
 				return mapLocaTion;
 			} catch (Exception e) {
-				logger.error("高德地图调用失败,经纬度地址为空",e);
+				LOGGER.error("高德地图调用失败,经纬度地址为空",e);
 				System.err.println("=============高德地图调用失败,经纬度地址为空:========="+e.getMessage());
 				return null;
 			}
@@ -91,7 +93,6 @@ public class StockServer {
 	public HttpResult getRecommendLoca(RecommendLocaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = wmsForStockHttpRequest.getRecommendLoca(rb);
@@ -102,7 +103,6 @@ public class StockServer {
 	public HttpResult getOperationRecord(OrderIdBO fromJson) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(fromJson);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = wmsForStockHttpRequest.getOperationRecord(rb);
@@ -113,7 +113,6 @@ public class StockServer {
 	public HttpResult addStock(AddStockBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = wmsForStockHttpRequest.addStock(rb);
@@ -124,7 +123,6 @@ public class StockServer {
 	public HttpResult moveStock(MoveStockBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = wmsForStockHttpRequest.moveStock(rb);
@@ -135,7 +133,6 @@ public class StockServer {
 	public HttpResult getSavedStockAmount(SelectSavedStockAmountBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = wmsForStockHttpRequest.getSavedStockAmount(rb);
@@ -146,7 +143,6 @@ public class StockServer {
 	public HttpResult getAreaByOrderId(SelectAreaByOrderIdBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = wmsForStockHttpRequest.getAreaByOrderId(rb);
@@ -170,7 +166,7 @@ public class StockServer {
 		}
 		if(ObjectUtils.isEmpty(result)){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

@@ -1,5 +1,7 @@
 package com.djcps.wms.stocktaking.server;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.stocktaking.request.StocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
@@ -22,7 +24,7 @@ import java.util.Map;
  **/
 @Component
 public class StocktakingOrderServer {
-    private static final Logger logger = LoggerFactory.getLogger(StocktakingOrderServer.class);
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(StocktakingOrderServer.class);
 
     private Gson gson = new Gson();
 
@@ -41,7 +43,6 @@ public class StocktakingOrderServer {
      **/
     public HttpResult getInfoByChildIds(Map<String,List<String>> map){
         String json = gson.toJson(map);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //HTTPResponse http =wmsStocktakingOrderHttpRequest.getOrderDetailsList(rb) ;
         HTTPResponse http=stocktakingOrderHttpRequest.getOrderDetailsList(rb);
@@ -64,7 +65,7 @@ public class StocktakingOrderServer {
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }
