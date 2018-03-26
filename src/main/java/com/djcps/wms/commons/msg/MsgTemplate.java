@@ -111,14 +111,10 @@ public class MsgTemplate {
         result.put("msg", message);
         result.put("data", data);
         try {
-            logger.info("返回输出：", JSONObject.toJSONString(result));
         }catch (Exception e){
             e.printStackTrace();
         }
         return result;
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(MsgTemplate.class);
-
 
 }
