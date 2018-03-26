@@ -26,7 +26,7 @@ public class LoadingTaskPO{
     /**
      * 申请时间
      */
-    private Date applicationTime;
+    private String applicationTime;
 
     /**
      * 处理状态(0待处理,1已通过,2已驳回)
@@ -52,10 +52,6 @@ public class LoadingTaskPO{
      * 处理人
      */
     private String handler;
-
-    private Date createTime;
-
-    private Date updatetime;
 
     /**
      *合作方id
@@ -96,11 +92,11 @@ public class LoadingTaskPO{
         this.addSquare = addSquare;
     }
 
-    public Date getApplicationTime() {
+    public String getApplicationTime() {
         return applicationTime;
     }
 
-    public void setApplicationTime(Date applicationTime) {
+    public void setApplicationTime(String applicationTime) {
         this.applicationTime = applicationTime;
     }
 
@@ -144,22 +140,6 @@ public class LoadingTaskPO{
         this.handler = handler;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdatetime() {
-        return updatetime;
-    }
-
-    public void setUpdatetime(Date updatetime) {
-        this.updatetime = updatetime;
-    }
-
     public String getPartnerId() {
         return partnerId;
     }
@@ -186,21 +166,11 @@ public class LoadingTaskPO{
 
     @Override
     public String toString() {
-        return "LoadingTaskPO{" +
-                "wayBillId='" + wayBillId + '\'' +
-                ", loadingtTableId='" + loadingtTableId + '\'' +
-                ", addSquare=" + addSquare +
-                ", applicationTime=" + applicationTime +
-                ", disposeStatus=" + disposeStatus +
-                ", proposerId='" + proposerId + '\'' +
-                ", proposer='" + proposer + '\'' +
-                ", handlerId='" + handlerId + '\'' +
-                ", handler='" + handler + '\'' +
-                ", createTime=" + createTime +
-                ", updatetime=" + updatetime +
-                ", partnerId='" + partnerId + '\'' +
-                ", partnerName='" + partnerName + '\'' +
-                ", partnerArea=" + partnerArea +
-                '}';
+        return "LoadingTaskPO [wayBillId=" + wayBillId + ", loadingtTableId=" + loadingtTableId + ", addSquare="
+                + addSquare + ", applicationTime=" + applicationTime + ", disposeStatus=" + disposeStatus
+                + ", proposerId=" + proposerId + ", proposer=" + proposer + ", handlerId=" + handlerId + ", handler="
+                + handler + ", partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea=" + partnerArea
+                + "]";
     }
+    
 }

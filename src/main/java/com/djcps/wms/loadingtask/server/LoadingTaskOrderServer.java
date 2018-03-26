@@ -14,8 +14,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.loadingtask.model.OrderInfoPO;
 import com.djcps.wms.loadingtask.model.result.OrderIdAndLoadingAmountPO;
+import com.djcps.wms.loadingtask.model.result.OrderInfoPO;
 import com.djcps.wms.loadingtask.request.LoadingTaskOrderHttpRequest;
 import com.djcps.wms.order.model.OrderIdsBO;
 
@@ -57,10 +57,14 @@ public class LoadingTaskOrderServer {
     public List<OrderInfoPO> getChildOrderList(OrderIdsBO childOrderIds){
         List<OrderInfoPO> orderInfoPOList = new ArrayList<>();
         HttpResult httpResult = getInfoByOrderIds(childOrderIds);
+        System.out.println("#####################");
+        System.out.println(httpResult);
         if(httpResult.isSuccess()){
             String data = gson.toJson(httpResult.getData());
             orderInfoPOList = JSONArray.parseArray(data,OrderInfoPO.class);
         }
+        System.out.println("#####################");
+        System.out.println(orderInfoPOList);
         return  orderInfoPOList;
     }
     

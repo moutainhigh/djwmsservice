@@ -1,4 +1,4 @@
-package com.djcps.wms.loadingtask.model;
+package com.djcps.wms.loadingtask.model.result;
 
 /**
  * 订单服务 子订单 返回实体类
@@ -66,6 +66,30 @@ public class OrderInfoPO {
      * 装车台数量
      */
     private Integer loadingAmount;
+    /**
+     * 获取订单状态
+     */
+    private Integer orderStatus;
+    /**
+     * 异常数量
+     */
+    private Integer abnomalAmount;
+
+    public Integer getAbnomalAmount() {
+        return abnomalAmount;
+    }
+
+    public void setAbnomalAmount(Integer abnomalAmount) {
+        this.abnomalAmount = abnomalAmount;
+    }
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
     public Integer getLoadingAmount() {
         return loadingAmount;
@@ -177,7 +201,8 @@ public class OrderInfoPO {
                 + fflutetype + ", fboxlength=" + fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight=" + fboxheight
                 + ", fmateriallength=" + fmateriallength + ", fmaterialwidth=" + fmaterialwidth + ", fmaterialname="
                 + fmaterialname + ", famount=" + famount + ", fmaterialRule=" + fmaterialRule + ", fproductRule="
-                + fproductRule + ", loadingAmount=" + loadingAmount + "]";
+                + fproductRule + ", loadingAmount=" + loadingAmount + ", orderStatus=" + orderStatus
+                + ", abnomalAmount=" + abnomalAmount + "]";
     }
 
 }

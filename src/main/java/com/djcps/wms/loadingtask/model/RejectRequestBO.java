@@ -1,8 +1,13 @@
 package com.djcps.wms.loadingtask.model;
 
+import javax.validation.constraints.NotNull;
+
 import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.push.model.PushMsgBO;
+
 /**
  * 驳回申请
+ * 
  * @author wyb
  * @since 2018/3/21
  */
@@ -22,7 +27,7 @@ public class RejectRequestBO extends BaseBO {
     /**
      * 处理人编号
      */
-    private String handlerid;
+    private String handlerId;
     /**
      * 处理人
      */
@@ -31,6 +36,95 @@ public class RejectRequestBO extends BaseBO {
      * 处理状态
      */
     private Integer disposeStatus;
+    /**
+     * 操作人id
+     */
+    private String operatorId;
+
+    /**
+     * 操作人名称
+     */
+    private String operator;
+    /**
+     * 用户id列表
+     */
+    @NotNull
+    private String userid;
+
+    /**
+     * 消息内容
+     */
+    @NotNull
+    private String msg;
+    /**
+     * 业务id
+     */
+    @NotNull
+    private String mid;
+    /**
+     * 消息类型
+     */
+    private String type;
+    /**
+     * 通知标题
+     */
+    private String title;
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getMid() {
+        return mid;
+    }
+
+    public void setMid(String mid) {
+        this.mid = mid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
     public String getWayBillId() {
         return wayBillId;
@@ -56,14 +150,6 @@ public class RejectRequestBO extends BaseBO {
         this.partnerId = partnerId;
     }
 
-    public String getHandlerid() {
-        return handlerid;
-    }
-
-    public void setHandlerid(String handlerid) {
-        this.handlerid = handlerid;
-    }
-
     public String getHandler() {
         return handler;
     }
@@ -72,10 +158,20 @@ public class RejectRequestBO extends BaseBO {
         this.handler = handler;
     }
 
+    public String getHandlerId() {
+        return handlerId;
+    }
+
+    public void setHandlerId(String handlerId) {
+        this.handlerId = handlerId;
+    }
+
     @Override
     public String toString() {
-        return "RejectRequestBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerid=" + handlerid
-                + ", handler=" + handler + ", disposeStatus=" + disposeStatus + "]";
+        return "RejectRequestBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId
+                + ", handler=" + handler + ", disposeStatus=" + disposeStatus + ", operatorId=" + operatorId
+                + ", operator=" + operator + ", userid=" + userid + ", msg=" + msg + ", mid=" + mid + ", type=" + type
+                + ", title=" + title + "]";
     }
 
 }

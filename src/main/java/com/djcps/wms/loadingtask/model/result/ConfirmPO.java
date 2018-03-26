@@ -30,6 +30,18 @@ public class ConfirmPO {
      * 订单编号
      */
     private List<OrderIdAndLoadingAmountPO> orderPOList;
+    /**
+     * 订单信息
+     */
+    private List<OrderInfoPO> orderInfo;
+
+    public List<OrderInfoPO> getOrderInfo() {
+        return orderInfo;
+    }
+
+    public void setOrderInfo(List<OrderInfoPO> orderInfo) {
+        this.orderInfo = orderInfo;
+    }
 
     public String getWaybillId() {
         return waybillId;
@@ -66,7 +78,7 @@ public class ConfirmPO {
     @Override
     public String toString() {
         return "ConfirmPO [waybillId=" + waybillId + ", name=" + name + ", plateNumber=" + plateNumber
-                + ", orderPOList=" + orderPOList + "]";
+                + ", orderPOList=" + orderPOList + ", orderInfo=" + orderInfo + "]";
     }
 
 }

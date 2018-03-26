@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
@@ -172,11 +173,14 @@ public class LoadingTaskServer {
      */
     public FinishLoadingPO finishLoading(FinishLoadingBO param) {
         String paramJson = gson.toJson(param);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),paramJson);
+        RequestBody requestBody =RequestBody.create(MediaType.parse("application/json; charset=utf-8"),paramJson);
         HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.finishLoading(requestBody);
+        HttpResult httpResult = returnResult(httpResponse);
+        System.out.println(httpResult);
         FinishLoadingPO result = null;
         if(httpResponse.isSuccessful()){
-            result = gson.fromJson(httpResponse.getBodyString(), FinishLoadingPO.class);
+            String http = gson.toJson(httpResult.getData());
+            result = gson.fromJson(http, FinishLoadingPO.class);
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
