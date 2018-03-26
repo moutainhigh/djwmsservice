@@ -1,6 +1,7 @@
 package com.djcps.wms.loadingtask.service.impl;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,7 @@ public class LoaderManageServiceImpl implements LoaderManageService {
      **/
     @Override
     public Map<String, Object> saveLoader(SaveLoaderBO param) {
+    	param.setId(UUID.randomUUID().toString());
         HttpResult result = loaderManageHttpServer.saveLoader(param);
         return MsgTemplate.customMsg(result);
     }
@@ -75,7 +77,7 @@ public class LoaderManageServiceImpl implements LoaderManageService {
     /**
      * 获取装车员列表
      * 
-     * @author wyb
+     * @author  wyb
      * @param
      * @return
      * @create 2018/3/20

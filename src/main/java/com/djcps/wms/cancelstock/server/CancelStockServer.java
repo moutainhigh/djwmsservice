@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
 import com.djcps.wms.address.request.AddressServerHttpRequest;
 import com.djcps.wms.cancelstock.model.param.AddCancelStockBO;
@@ -27,7 +29,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class CancelStockServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CancelStockServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(CancelStockServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -37,7 +39,6 @@ public class CancelStockServer {
 	public HttpResult getOrderByOrderId(CancelOrderIdBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = cancelStockServerHttpRequest.getOrderByOrderId(rb);
@@ -47,7 +48,6 @@ public class CancelStockServer {
 	public HttpResult addStock(AddStockBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = cancelStockServerHttpRequest.addStock(rb);
@@ -57,7 +57,6 @@ public class CancelStockServer {
 	public HttpResult addCancelStock(AddCancelStockBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = cancelStockServerHttpRequest.addCancelStock(rb);
@@ -67,7 +66,6 @@ public class CancelStockServer {
 	public HttpResult getCancelStockByPickerId(PickerIdBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = cancelStockServerHttpRequest.getCancelStockByPickerId(rb);
@@ -90,7 +88,7 @@ public class CancelStockServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

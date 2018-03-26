@@ -1,21 +1,21 @@
 package com.djcps.wms.loadingtask.model;
 
+import java.io.Serializable;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.commons.base.BaseListBO;
 
 /**
  * 获取装车员信息包含查询
  * 
- * @company:djwms
+ * @company: djwms
  * @author:wyb
  * @date:2018年3月22日
  */
-public class GetLoadingPersonInfoBO extends BaseBO {
+public class GetLoadingPersonInfoBO extends BaseListBO implements Serializable{
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1522403205165183703L;
     /**
      * 姓名

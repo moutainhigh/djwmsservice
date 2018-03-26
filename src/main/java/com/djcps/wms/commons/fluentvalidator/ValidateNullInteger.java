@@ -16,7 +16,7 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @author:zdx
  * @date:2017年11月28日
  */
-public class ValidateNullInteger extends ValidatorHandler<String> implements Validator<String> {
+public class ValidateNullInteger extends ValidatorHandler<Object> implements Validator<Object> {
 	
 		
 		/**
@@ -56,11 +56,19 @@ public class ValidateNullInteger extends ValidatorHandler<String> implements Val
 		 * 校验方法
 		 */
 		@Override
-		public boolean validate(ValidatorContext context, String str) {
+		public boolean validate(ValidatorContext context, Object str) {
 			if(!ObjectUtils.isEmpty(str)){
-				if(str.length() > maxStringLength){
-					context.addErrorMsg(error.getMsg());
-					return false;
+				if(str instanceof String){
+					if(((String) str).length() > maxStringLength){
+						context.addErrorMsg(error.getMsg());
+						return false;
+					}
+				}
+				if(str instanceof Integer){
+					if(((Integer) str).SIZE > maxStringLength){
+						context.addErrorMsg(error.getMsg());
+						return false;
+					}
 				}
 			}
 			return true;

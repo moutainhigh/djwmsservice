@@ -137,7 +137,7 @@ public class AdditionalOrderBO extends BaseBO {
     }
 
     @Override
-    public String toString() {
+    public String toString() { 
         return "AdditionalOrderBO [addSquare=" + addSquare + ", proposerId=" + proposerId + ", proposer=" + proposer
                 + ", partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId + ", handler="
                 + handler + ", disposeStatus=" + disposeStatus + ", operatorId=" + operatorId + ", operator=" + operator

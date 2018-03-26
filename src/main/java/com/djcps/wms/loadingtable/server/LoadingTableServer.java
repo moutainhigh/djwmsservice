@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -30,7 +32,7 @@ import java.util.Map;
 @Component
 public class LoadingTableServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(LoadingTableServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(LoadingTableServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -44,7 +46,6 @@ public class LoadingTableServer {
 	public HttpResult add(AddLoadingTableBO loadingTable){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(loadingTable);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.add(rb);
@@ -55,7 +56,6 @@ public class LoadingTableServer {
 	public HttpResult modify(UpdateLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = loadingTableHttpRequest.modify(rb);
@@ -66,7 +66,6 @@ public class LoadingTableServer {
 	public HttpResult delete(DeleteLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = loadingTableHttpRequest.delete(rb);
@@ -77,7 +76,6 @@ public class LoadingTableServer {
 	public HttpResult getAllList(BaseListPartnerIdBO baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = loadingTableHttpRequest.getAllList(rb);
@@ -88,7 +86,6 @@ public class LoadingTableServer {
 	public HttpResult getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = loadingTableHttpRequest.getLoadingTableByAttribute(rb);
@@ -99,7 +96,6 @@ public class LoadingTableServer {
 	public HttpResult getLoadingTableById(SelectLoadingTableByIdBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = loadingTableHttpRequest.getLoadingTableById(rb);
@@ -110,7 +106,6 @@ public class LoadingTableServer {
 	public HttpResult enable(IsUseLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = loadingTableHttpRequest.enable(rb);
@@ -121,7 +116,6 @@ public class LoadingTableServer {
 	public HttpResult disable(IsUseLoadingTableBO loadingTable){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(loadingTable);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = loadingTableHttpRequest.disable(rb);
@@ -138,7 +132,6 @@ public class LoadingTableServer {
 		GetNumberBO getNumberBO=new GetNumberBO();
 		getNumberBO.setCount(count);
 		String json=gson.toJson(getNumberBO);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = numberServerHttp.getnumber(rb);
@@ -174,7 +167,7 @@ public class LoadingTableServer {
 		}
 		if(ObjectUtils.isEmpty(result)){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
@@ -22,8 +23,6 @@ import com.djcps.wms.commons.enums.FluteTypeEnum;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,7 +67,6 @@ import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
-import com.djcps.wms.commons.request.MsgHttpRequest;
 import com.djcps.wms.commons.utils.RedisUtil;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
@@ -77,7 +75,8 @@ import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
-import com.djcps.wms.record.service.OperationRecordService;
+import com.djcps.wms.push.model.PushMsgBO;
+import com.djcps.wms.push.service.PushService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -111,6 +110,8 @@ public class AllocationServiceImpl implements AllocationService {
 	@Autowired
 	@Qualifier("redisClientCluster")
 	private RedisClient redisClient;
+	@Resource
+    private PushService pushService;
 	
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
@@ -452,6 +453,17 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 			HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
 			if(updateOrderRedunResult.isSuccess()){
+				//最后通知提货员
+				PushMsgBO push = new PushMsgBO();
+				push.setAppSystem(AppConstant.WMS);
+				push.setUserid(param.getPickerId());
+				push.setMid(param.getDeliveryId());
+				push.setType(AllocationConstant.PUSH_DELIVERY_TYPE);
+				push.setMsg(AllocationConstant.PUSH_DELIVERY_MSG);
+				push.setTicker(AllocationConstant.PUSH_DELIVERY_TICKER);
+				push.setTitle(AllocationConstant.PUSH_DELIVERY_TITLE);
+				//消息推送
+//				pushService.sendAppMsg(push);
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
@@ -463,7 +475,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//删除确认优化和确认配货公共锁
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 		return MsgTemplate.customMsg(result);
-		//最后通知提货员装车员
+		
 	}
 	
 	@Override

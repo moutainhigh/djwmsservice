@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OrderHttpResult;
 import com.djcps.wms.order.model.OrderIdBO;
@@ -32,7 +34,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class OrderServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(OrderServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OrderServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -45,7 +47,6 @@ public class OrderServer {
 	public OrderHttpResult getAllOrderList(OrderParamBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = orderHttpRequest.getAllOrderList(rb);
@@ -62,7 +63,7 @@ public class OrderServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
@@ -70,7 +71,6 @@ public class OrderServer {
 	public HttpResult getOrderByOrderId(OrderIdBO param){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = orderHttpRequest.getOrderByOrderId(rb);
@@ -81,7 +81,6 @@ public class OrderServer {
 	public HttpResult getOrderByOrderIds(OrderIdsBO param){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = updateOrderHttpRequest.getOrderByOrderIds(rb);
@@ -92,7 +91,6 @@ public class OrderServer {
 	public HttpResult updateOrderStatus(OrderIdBO param){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = updateOrderHttpRequest.updateOrderStatus(rb);
@@ -116,7 +114,7 @@ public class OrderServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

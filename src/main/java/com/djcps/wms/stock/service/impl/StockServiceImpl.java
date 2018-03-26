@@ -200,7 +200,9 @@ public class StockServiceImpl implements StockService{
 					orderRedundant.setMaterialWidth(fromJson.getFmaterialwidth());
 					orderRedundant.setMaterialName(fromJson.getFmaterialname());
 					orderRedundant.setOrderId(fromJson.getFchildorderid());
-					orderRedundant.setOrderTime(sd.format(fromJson.getFordertime()));
+					if(fromJson.getFordertime()!=null){
+						orderRedundant.setOrderTime(sd.format(fromJson.getFordertime()));
+					}
 					orderRedundant.setProductName(fromJson.getFgroupgoodname());
 					if(!ObjectUtils.isEmpty(fromJson.getFpaymenttime())){
 						orderRedundant.setPaymentTime(sd.format(fromJson.getFpaymenttime()));
