@@ -46,6 +46,31 @@ public class AdditionalOrderBO extends BaseBO {
      * 处理状态(0待处理,1已通过,2已驳回)
      */
     private Integer disposeStatus;
+    /**
+     * 操作人id
+     */
+    private String operatorId;
+
+    /**
+     * 操作人名称
+     */
+    private String operator;
+
+    public String getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
     public String getHandlerId() {
         return handlerId;
@@ -115,7 +140,8 @@ public class AdditionalOrderBO extends BaseBO {
     public String toString() {
         return "AdditionalOrderBO [addSquare=" + addSquare + ", proposerId=" + proposerId + ", proposer=" + proposer
                 + ", partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId + ", handler="
-                + handler + ", disposeStatus=" + disposeStatus + "]";
+                + handler + ", disposeStatus=" + disposeStatus + ", operatorId=" + operatorId + ", operator=" + operator
+                + "]";
     }
 
 }

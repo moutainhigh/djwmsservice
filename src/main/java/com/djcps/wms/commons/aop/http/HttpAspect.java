@@ -11,10 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.log.HttpLogger;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author Chengw
@@ -45,7 +48,13 @@ public class HttpAspect {
     public Object logPrint(ProceedingJoinPoint pjp) throws Throwable {
         Object proceed = pjp.proceed();
         Object[] params = pjp.getArgs();
-        String json = JSONObject.toJSONString(Arrays.asList(params));
+
+        String json = "";
+        if(params.length>0){
+            json = JSONObject.toJSONString(Arrays.asList(params).stream().filter(
+                    a -> !(a instanceof HttpServletRequest || a instanceof HttpServletResponse)
+            ).collect(Collectors.toList()));
+        }
         LOGGER.debug("==> Http_Preparing: {} " , pjp.getSignature());
         LOGGER.debug("==> Http_Parameters: {} " , json);
         LOGGER.debug("<== Http_Result: - {} - 耗时 {}ms" , proceed,Duration.between(startTime,LocalTime.now()).toMillis());

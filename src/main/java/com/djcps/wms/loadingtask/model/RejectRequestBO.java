@@ -69,6 +69,30 @@ public class RejectRequestBO extends BaseBO {
      * 通知标题
      */
     private String title;
+    /**
+     * 通知栏提示文字
+     */
+    private String ticker;
+    /**
+     * 自定义参数
+     */
+    private Object extraField;
+
+    public String getTicker() {
+        return ticker;
+    }
+
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
+    }
+
+    public Object getExtraField() {
+        return extraField;
+    }
+
+    public void setExtraField(Object extraField) {
+        this.extraField = extraField;
+    }
 
     public String getUserid() {
         return userid;
@@ -171,7 +195,7 @@ public class RejectRequestBO extends BaseBO {
         return "RejectRequestBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId
                 + ", handler=" + handler + ", disposeStatus=" + disposeStatus + ", operatorId=" + operatorId
                 + ", operator=" + operator + ", userid=" + userid + ", msg=" + msg + ", mid=" + mid + ", type=" + type
-                + ", title=" + title + "]";
+                + ", title=" + title + ", ticker=" + ticker + ", extraField=" + extraField + "]";
     }
 
 }

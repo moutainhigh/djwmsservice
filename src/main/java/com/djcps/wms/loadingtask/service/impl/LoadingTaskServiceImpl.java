@@ -198,6 +198,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> additionalOrder(AdditionalOrderBO param) {
+        param.setProposer(param.getOperator());
+        param.setOperatorId(param.getOperatorId());
         HttpResult result = loadingTaskServer.additionalOrder(param);
         return MsgTemplate.customMsg(result);
     }
