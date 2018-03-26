@@ -64,7 +64,18 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	 */
 	@NotBlank
 	private String warehouseId;
+	/**
+	 * 仓库名称
+	 */
+	@NotBlank
+	private String warehouseName;
 	
+	public String getWarehouseName() {
+		return warehouseName;
+	}
+	public void setWarehouseName(String warehouseName) {
+		this.warehouseName = warehouseName;
+	}
 	public String getWarehouseId() {
 		return warehouseId;
 	}
@@ -125,6 +136,6 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 		return "AddStockBO [id=" + id + ", orderId=" + orderId + ", amount=" + amount + ", warehouseAreaId="
 				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
 				+ ", warehouseLocName=" + warehouseLocName + ", pickerId=" + pickerId + ", warehouseId=" + warehouseId
-				+ "]";
+				+ ", warehouseName=" + warehouseName + "]";
 	}
 }
