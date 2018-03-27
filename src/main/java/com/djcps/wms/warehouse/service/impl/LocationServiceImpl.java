@@ -1,5 +1,7 @@
 package com.djcps.wms.warehouse.service.impl;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
@@ -30,9 +32,7 @@ import java.util.Map;
 @Service
 public class LocationServiceImpl implements LocationService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(LocationServiceImpl.class);
-	
-	private Gson gson = new Gson();
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(LocationServiceImpl.class);
 	
 	@Autowired
 	private LocationServer locationServer;
@@ -51,7 +51,7 @@ public class LocationServiceImpl implements LocationService {
 				//编码确认失败打印错误，将标志改成false
 				if(!verifyCode.isSuccess()){
 					flag = false;
-					logger.error("----wms基础服务编码确认失败----");
+					LOGGER.error("----wms基础服务编码确认失败----");
 					return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
 				}
 				return MsgTemplate.customMsg(verifyCode);
@@ -79,7 +79,7 @@ public class LocationServiceImpl implements LocationService {
 			if(deleteCode.isSuccess()){
 				return MsgTemplate.customMsg(deleteCode);
 			}else{
-				logger.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
+				LOGGER.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
 				return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
 			}
 		}

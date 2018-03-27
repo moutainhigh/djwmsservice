@@ -92,6 +92,15 @@ public interface WmsForDeliveryHttpRequest {
     @Headers("content-type:application/json")
     @POST("delivery/getDeliveryForPDA.do")
     HTTPResponse getDeliveryForPDA(@Body RequestBody json);
-
+    /**
+     * 删除提货订单信息 
+     * @autuor wyb
+     * @since 2018/3/13 
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("delivery/updateDeliveryEffect.do")
+    HTTPResponse updateDeliveryEffect(@Body RequestBody json);
 
 }

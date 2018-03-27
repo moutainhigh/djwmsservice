@@ -28,10 +28,6 @@ import com.google.gson.Gson;
  */
 @Service
 public class ProviderServiceImpl implements ProviderService {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ProviderServiceImpl.class);	
-	
-	private Gson gson = new Gson();
 
 	@Autowired
 	private ProviderServer providerServer;

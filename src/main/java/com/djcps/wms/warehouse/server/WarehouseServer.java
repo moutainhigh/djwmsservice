@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -33,7 +35,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class WarehouseServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(WarehouseServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(WarehouseServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -46,7 +48,6 @@ public class WarehouseServer {
 	public HttpResult add(AddWarehouseBO addBean){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(addBean);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseHttpRequest.add(rb);
@@ -57,7 +58,6 @@ public class WarehouseServer {
 	public HttpResult modify(UpdateWarehouseBO updateBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(updateBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.modify(rb);
@@ -68,7 +68,6 @@ public class WarehouseServer {
 	public HttpResult delete(DeleteWarehouseBO deleteBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(deleteBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.delete(rb);
@@ -80,7 +79,6 @@ public class WarehouseServer {
 	public HttpResult getAllList(BaseListPartnerIdBO baseListParam){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseListParam);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getAllList(rb);
@@ -91,7 +89,6 @@ public class WarehouseServer {
 	public HttpResult getWarehouseById(SelectWarehouseByIdBO selectByIdBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(selectByIdBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getWarehouseById(rb);
@@ -101,7 +98,6 @@ public class WarehouseServer {
 	public HttpResult getWarehouseByAttribute(SelectWarehouseByAttributeBO selectVagueBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(selectVagueBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getWarehouseByAttribute(rb);
@@ -111,7 +107,6 @@ public class WarehouseServer {
 	public HttpResult enable(IsUseWarehouseBO isUseBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(isUseBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.enable(rb);
@@ -121,7 +116,6 @@ public class WarehouseServer {
 	public HttpResult disable(IsUseWarehouseBO isUseBean){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(isUseBean);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.disable(rb);
@@ -130,7 +124,6 @@ public class WarehouseServer {
 	
 	public HttpResult getWarehouseType(String partnerId) {
 		//将请求参数转化为requestbody格式
-		System.out.println("---http请求参数转化为json格式---:"+partnerId);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),partnerId);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getWarehouseType(rb);
@@ -140,7 +133,6 @@ public class WarehouseServer {
 	public HttpResult getAllWarehouseName(PartnerInfoBO partnerInfoBean) {
 		String json = gson.toJson(partnerInfoBean);
 		//将请求参数转化为requestbody格式
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getAllWarehouseName(rb);
@@ -156,7 +148,6 @@ public class WarehouseServer {
 	public HttpResult getWarehouseCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
-		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json
 		);
 		//调用接口获取信息
@@ -167,7 +158,6 @@ public class WarehouseServer {
 	public HttpResult verifyCode(AddWarehouseBO addBean) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(addBean);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseHttpRequest.verifyCode(rb);
@@ -178,7 +168,6 @@ public class WarehouseServer {
 	public HttpResult deleteCode(DeleteWarehouseBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseHttpRequest.deleteCode(rb);
@@ -202,7 +191,7 @@ public class WarehouseServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

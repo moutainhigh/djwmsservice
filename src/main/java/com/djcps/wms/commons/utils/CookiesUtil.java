@@ -9,6 +9,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.util.ObjectUtils;
+
 
 /**
  * @title:cook工具类
@@ -48,13 +50,13 @@ public class CookiesUtil{
 	 * @date:2017年11月13日
 	 */
 	private static Map<String, Cookie> readCookieMap(HttpServletRequest request) {
-		Map<String, Cookie> cookieMap = new HashMap<String, Cookie>();
 		Cookie[] cookies = request.getCookies();
+		Map<String, Cookie> cookieMap = new HashMap<String, Cookie>(16);
 		if (null != cookies) {
 			for (Cookie cookie : cookies) {
 				cookieMap.put(cookie.getName(), cookie);
 			}
-		}
+		} 
 		return cookieMap;
 	}
 

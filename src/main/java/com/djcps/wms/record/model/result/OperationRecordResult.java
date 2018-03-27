@@ -1,4 +1,4 @@
-package com.djcps.wms.record.model.OperationRecordResult;
+package com.djcps.wms.record.model.result;
 
 import java.io.Serializable;
 

@@ -22,6 +22,7 @@ import com.djcps.wms.allocation.constant.AllocationConstant;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -155,20 +156,20 @@ public class StockServiceImpl implements StockService{
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(trueAmount+saveAmount==orderAmount){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
+				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(AllocationConstant.LESS_ADD_STOCK);
+				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
 			}
 		}else{
 			if(saveAmount > orderAmount){
 				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(saveAmount.equals(orderAmount)){
 				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(AllocationConstant.ALL_ADD_STOCK);
+				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 			}else{
 				//小于表示部分入库
-				orderIdBO.setStatus(AllocationConstant.LESS_ADD_STOCK);
+				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
 			}
 		}
 		HttpResult result = null;
@@ -199,7 +200,9 @@ public class StockServiceImpl implements StockService{
 					orderRedundant.setMaterialWidth(fromJson.getFmaterialwidth());
 					orderRedundant.setMaterialName(fromJson.getFmaterialname());
 					orderRedundant.setOrderId(fromJson.getFchildorderid());
-					orderRedundant.setOrderTime(sd.format(fromJson.getFordertime()));
+					if(fromJson.getFordertime()!=null){
+						orderRedundant.setOrderTime(sd.format(fromJson.getFordertime()));
+					}
 					orderRedundant.setProductName(fromJson.getFgroupgoodname());
 					if(!ObjectUtils.isEmpty(fromJson.getFpaymenttime())){
 						orderRedundant.setPaymentTime(sd.format(fromJson.getFpaymenttime()));
@@ -208,11 +211,11 @@ public class StockServiceImpl implements StockService{
 					//插入冗余数据订单数据
 					result = allocationServer.batchAddOrderRedundant(orderRedundant);
 					if(result.isSuccess()){
-						if(AllocationConstant.ALL_ADD_STOCK.equals(orderIdBO.getStatus())){
+						if(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(orderIdBO.getStatus())){
 							//修改冗余表订单状态为已入库
 							List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
 							UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
-							update.setStatus(Integer.valueOf(AllocationConstant.ALL_ADD_STOCK));
+							update.setStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 							update.setOrderId(param.getOrderId());
 							update.setPartnerId(param.getPartnerId());
 							updateList.add(update);
@@ -229,7 +232,7 @@ public class StockServiceImpl implements StockService{
 						orderIdListBO.getList().add(param.getOrderId());
 						HttpResult orderResult= abnormalServer.getOrderByOrderIdList(orderIdListBO);
 						if(ObjectUtils.isEmpty(orderResult.getData())){
-							if(AllocationConstant.LESS_ADD_STOCK.equals(orderIdBO.getStatus())){
+							if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(orderIdBO.getStatus())){
 								//剩余的异常订单数量
 								Integer surplusOrderAmount= orderAmount-saveAmount;
 								//直接插入异常订单数据
@@ -248,7 +251,7 @@ public class StockServiceImpl implements StockService{
 							UpdateAbnormalBO updateOrderBO = new UpdateAbnormalBO();
 							BeanUtils.copyProperties(param, updateOrderBO);
 							HttpResult abnormalResult =null;
-							if(AllocationConstant.LESS_ADD_STOCK.equals(orderIdBO.getStatus())){
+							if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(orderIdBO.getStatus())){
 								AbnormalOrderPO abnormalFromJson = gson.fromJson(gson.toJson(jsonParser.parse(gson.toJson(orderResult.getData())).getAsJsonArray().get(0)),
 										AbnormalOrderPO.class);
 								//异常数量

@@ -29,9 +29,9 @@ public class AppProducer{
      */
     @Transactional(value = "rabbitTxManage",rollbackFor = {InterruptedException.class})
     public void sendRegisterMsg(String message) throws InterruptedException{
-        logger.debug("App Push MqProducer路由："+ PushConstant.EXCHANGE_WMS);
-        logger.debug("App Push MqProducer路由："+PushConstant.APP_REGISTER);
-        logger.debug("App Push MqProducer路由："+message);
+        logger.debug("App Register MqProducer路由：{} ",PushConstant.EXCHANGE_WMS);
+        logger.debug("App Register MqProducer路由：{} ",PushConstant.APP_REGISTER);
+        logger.info("App Register MqProducer路由：{}",message);
         amqpTemplate.convertAndSend(PushConstant.EXCHANGE_WMS,
                 PushConstant.APP_REGISTER, message);
     }
@@ -43,9 +43,9 @@ public class AppProducer{
      */
     @Transactional(value = "rabbitTxManage",rollbackFor = {InterruptedException.class})
     public void sendPushMsg(String message) throws InterruptedException{
-        logger.debug("App Push MqProducer路由："+ PushConstant.EXCHANGE_WMS);
-        logger.debug("App Push MqProducer路由："+PushConstant.APP_PUSH);
-        logger.debug("App Push MqProducer路由："+message);
+        logger.debug("App Push MqProducer路由：{}",PushConstant.EXCHANGE_WMS);
+        logger.debug("App Push MqProducer路由：{}",PushConstant.APP_PUSH);
+        logger.info("App Push MqProducer路由：{}",message);
         amqpTemplate.convertAndSend(PushConstant.EXCHANGE_WMS,
                 PushConstant.APP_PUSH, message);
     }
@@ -57,9 +57,9 @@ public class AppProducer{
      */
     @Transactional(value = "rabbitTxManage",rollbackFor = {InterruptedException.class})
     public void sendLogoutMsg(String message) throws InterruptedException{
-        logger.debug("App Push MqProducer路由："+ PushConstant.EXCHANGE_WMS);
-        logger.debug("App Push MqProducer路由："+PushConstant.APP_LOGOUT);
-        logger.debug("App Push MqProducer路由："+message);
+        logger.debug("App Logout MqProducer路由：{}",PushConstant.EXCHANGE_WMS);
+        logger.debug("App Logout MqProducer路由：{}",PushConstant.APP_LOGOUT);
+        logger.info("App Logout MqProducer路由：{}",message);
         amqpTemplate.convertAndSend(PushConstant.EXCHANGE_WMS,
                 PushConstant.APP_LOGOUT, message);
     }

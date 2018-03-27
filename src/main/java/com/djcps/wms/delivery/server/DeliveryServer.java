@@ -1,13 +1,13 @@
 package com.djcps.wms.delivery.server;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.request.WmsForDeliveryHttpRequest;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
@@ -21,7 +21,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @Component
 public class DeliveryServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DeliveryServer.class);
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(DeliveryServer.class);
 
     @Autowired
     private WmsForDeliveryHttpRequest wmsForDeliveryHttpRequest;
@@ -125,7 +125,21 @@ public class DeliveryServer {
         HTTPResponse httpResponse = wmsForDeliveryHttpRequest.getDeliveryForPDA(requestBody);
         return returnResult(httpResponse);
     }
-
+    /**
+     *  设置提货单的确认状态为未确认 
+     *
+     * @param param
+     * @return
+     * @autuor wyb
+     * @since 2018/3/13  
+     */
+    public HttpResult updateDeliveryEffect(UpdateDeliveryEffectBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForDeliveryHttpRequest.updateDeliveryEffect(requestBody);
+        return returnResult(httpResponse);
+        
+    }
     /**
      * 公共返回
      *
@@ -141,7 +155,7 @@ public class DeliveryServer {
                     return baseResult;
                 }
             }catch(Exception e){
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
                 e.printStackTrace();
             }
         }

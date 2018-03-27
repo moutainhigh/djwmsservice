@@ -15,6 +15,16 @@ public class SaveStocktakingOrderInfoList {
 
     private String partnerId;
 
+    /**
+     * 合作方区域
+     */
+    private String partnerArea;
+
+    /**
+     * 合作方名称
+     */
+    private String partnerName;
+
     private String operator;
 
     private String operatorId;
@@ -30,6 +40,22 @@ public class SaveStocktakingOrderInfoList {
      * 盘点员id
      */
     private String inventoryClerkId;
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
+    }
+
+    public String getPartnerArea() {
+        return partnerArea;
+    }
+
+    public void setPartnerArea(String partnerArea) {
+        this.partnerArea = partnerArea;
+    }
 
     List<SaveStocktakingOrderInfoBO> saveStocktaking;
 
@@ -104,6 +130,8 @@ public class SaveStocktakingOrderInfoList {
         return "SaveStocktakingOrderInfoList{" +
                 "jobId='" + jobId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
+                ", partnerArea='" + partnerArea + '\'' +
+                ", partnerName='" + partnerName + '\'' +
                 ", operator='" + operator + '\'' +
                 ", operatorId='" + operatorId + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
