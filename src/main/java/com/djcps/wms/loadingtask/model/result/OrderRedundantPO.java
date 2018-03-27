@@ -81,15 +81,7 @@ public class OrderRedundantPO {
      * 车牌号
      */
     private String plateNumber;
-    /**
-     * 创建时间
-     */
-    private String createTime;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
-
+    
     public String getPartnerId() {
         return partnerId;
     }
@@ -250,47 +242,15 @@ public class OrderRedundantPO {
         this.plateNumber = plateNumber;
     }
 
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
     @Override
     public String toString() {
-        return "OrderRedundantPO{" +
-                "partnerId='" + partnerId + '\'' +
-                ", partnerName='" + partnerName + '\'' +
-                ", partnerArea=" + partnerArea +
-                ", wayBillId='" + wayBillId + '\'' +
-                ", deliveryId='" + deliveryId + '\'' +
-                ", status=" + status +
-                ", isSplit=" + isSplit +
-                ", orderId='" + orderId + '\'' +
-                ", customerName='" + customerName + '\'' +
-                ", productName='" + productName + '\'' +
-                ", materialName='" + materialName + '\'' +
-                ", materialLength='" + materialLength + '\'' +
-                ", materialWidth='" + materialWidth + '\'' +
-                ", boxLength='" + boxLength + '\'' +
-                ", boxWidth='" + boxWidth + '\'' +
-                ", boxHeight='" + boxHeight + '\'' +
-                ", orderTime='" + orderTime + '\'' +
-                ", deliveryTime='" + deliveryTime + '\'' +
-                ", paymentTime='" + paymentTime + '\'' +
-                ", plateNumber='" + plateNumber + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                '}';
+        return "OrderRedundantPO [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea="
+                + partnerArea + ", wayBillId=" + wayBillId + ", deliveryId=" + deliveryId + ", status=" + status
+                + ", isSplit=" + isSplit + ", orderId=" + orderId + ", customerName=" + customerName + ", productName="
+                + productName + ", materialName=" + materialName + ", materialLength=" + materialLength
+                + ", materialWidth=" + materialWidth + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth
+                + ", boxHeight=" + boxHeight + ", orderTime=" + orderTime + ", deliveryTime=" + deliveryTime
+                + ", paymentTime=" + paymentTime + ", plateNumber=" + plateNumber + "]";
     }
+    
 }
