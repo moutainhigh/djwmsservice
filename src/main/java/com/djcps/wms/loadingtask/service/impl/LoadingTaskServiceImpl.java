@@ -105,18 +105,19 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> confirm(ConfirmBO param) {
-
-        HttpResult updateLoadPersonResult = loadingTaskServer.updateLoadPersonStatus(param);
         HttpResult result = loadingTaskServer.getOrderList(param);
         if (result.isSuccess()) {
+            HttpResult updateLoadPersonResult = loadingTaskServer.updateLoadPersonStatus(param);
             String data = JSONObject.toJSONString(result.getData());
             ConfirmPO confirmPO = gson.fromJson(data, ConfirmPO.class);
             List<OrderIdAndLoadingAmountPO> orderPOList = confirmPO.getOrderPOList();
             List<String> childOrderIds = new ArrayList<String>();
             OrderIdsBO orderIdsBO = new OrderIdsBO();
+            if(!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderIdAndLoadingAmountPO orderInfo : orderPOList) {
                 childOrderIds.add(orderInfo.getOrderId());
                 orderIdsBO.setChildOrderIds(childOrderIds);
+            }
             }
             List<AbnormalOrderPO> abnormalInfo = abnormalOrderInfo(childOrderIds, param);
 
@@ -140,8 +141,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                  * });
                  */
 
-                orderInfo.stream().forEach(info -> {
-                    List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
+                orderInfo.stream().forEach(info -> {                    List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
                             .filter(amount -> info.getFchildorderid().equals(amount.getOrderId()))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
@@ -184,6 +184,21 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> loading(LoadingBO param) {
+        if(!ObjectUtils.isEmpty(param)) {
+            Integer loadingAmount = param.getLoadingAmount();
+            Integer orderAmount = param.getOrderAmount();
+            if(!orderAmount.equals(loadingAmount)) {
+              param.setOnceOrderid(new StringBuffer(param.getOrderId()).append("-1").toString());
+              param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append("-2").toString() );
+            if("0".equals(loadingAmount)) {
+                param.setCancelStockAmount(orderAmount);
+                param.setCancelType(1);
+            }else {
+                param.setCancelStockAmount(orderAmount-loadingAmount);
+                param.setCancelType(2);
+            }
+            }
+        }
         HttpResult result = loadingTaskServer.loading(param);
         return MsgTemplate.customMsg(result);
     }
@@ -233,7 +248,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     public void pushMsg(RejectRequestBO param) {
         try {
-            param.setMid(param.getWayBillId());
             String json = gson.toJson(param);
             appProducer.sendPushMsg(json);
         } catch (InterruptedException e) {

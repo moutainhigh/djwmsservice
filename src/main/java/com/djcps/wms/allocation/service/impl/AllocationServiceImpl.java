@@ -1346,6 +1346,7 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		//被移除的订单
 		List<WarehouseOrderDetailPO> removeOrder = new ArrayList<>();
+		if(!ObjectUtils.isEmpty(orderDetailList)) {
 		for (WarehouseOrderDetailPO orderDetailPO : orderDetailList) {
 			formerMap.put(orderDetailPO.getFchildorderid(), orderDetailPO);
 			SequenceBO sequenceBO = sequenceMap.get(orderDetailPO.getFchildorderid());
@@ -1353,6 +1354,7 @@ public class AllocationServiceImpl implements AllocationService {
 			if(sequenceBO==null){
 				removeOrder.add(orderDetailPO);
 			}
+		}
 		}
 		//新增的订单
 		for(SequenceBO sequenceBO : param.getSequenceList()){

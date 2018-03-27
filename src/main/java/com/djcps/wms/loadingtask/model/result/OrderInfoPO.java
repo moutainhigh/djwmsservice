@@ -7,6 +7,7 @@ package com.djcps.wms.loadingtask.model.result;
  * @since 2018/3/20
  */
 public class OrderInfoPO {
+    
     /**
      * 产品名称
      */
@@ -74,7 +75,7 @@ public class OrderInfoPO {
      * 异常数量
      */
     private Integer abnomalAmount;
-
+    
     public Integer getAbnomalAmount() {
         return abnomalAmount;
     }

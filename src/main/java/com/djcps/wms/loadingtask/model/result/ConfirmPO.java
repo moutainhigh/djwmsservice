@@ -34,7 +34,7 @@ public class ConfirmPO {
      * 订单信息
      */
     private List<OrderInfoPO> orderInfo;
-
+    
     public List<OrderInfoPO> getOrderInfo() {
         return orderInfo;
     }

@@ -52,31 +52,73 @@ public class RejectRequestBO extends BaseBO {
     private String userid;
 
     /**
-     * 消息内容
+     * 通知栏提示文字
      */
-    @NotNull
-    private String msg;
+    private String ticker;
+
+    /**
+     * 通知标题
+     */
+    private String title;
+
+    /**
+     * 通知文字描述
+     */
+    private String text;
+
+    /**
+     * 自定义内容
+     */
+    private String custom;
+
+    /**
+     * 消息类型
+     */
+    private String type;
+
+    /**
+     * 自定义参数
+     */
+    private Object extraField;
+
     /**
      * 业务id
      */
     @NotNull
     private String mid;
     /**
-     * 消息类型
+     * 消息内容
      */
-    private String type;
+    @NotNull
+    private String msg;
     /**
-     * 通知标题
+     * APP系统
      */
-    private String title;
-    /**
-     * 通知栏提示文字
-     */
-    private String ticker;
-    /**
-     * 自定义参数
-     */
-    private Object extraField;
+    private String appSystem;
+
+    public String getAppSystem() {
+        return appSystem;
+    }
+
+    public void setAppSystem(String appSystem) {
+        this.appSystem = appSystem;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getCustom() {
+        return custom;
+    }
+
+    public void setCustom(String custom) {
+        this.custom = custom;
+    }
 
     public String getTicker() {
         return ticker;
@@ -194,8 +236,9 @@ public class RejectRequestBO extends BaseBO {
     public String toString() {
         return "RejectRequestBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId
                 + ", handler=" + handler + ", disposeStatus=" + disposeStatus + ", operatorId=" + operatorId
-                + ", operator=" + operator + ", userid=" + userid + ", msg=" + msg + ", mid=" + mid + ", type=" + type
-                + ", title=" + title + ", ticker=" + ticker + ", extraField=" + extraField + "]";
+                + ", operator=" + operator + ", userid=" + userid + ", ticker=" + ticker + ", title=" + title
+                + ", text=" + text + ", custom=" + custom + ", type=" + type + ", extraField=" + extraField + ", mid="
+                + mid + ", msg=" + msg + ", appSystem=" + appSystem + "]";
     }
 
 }
