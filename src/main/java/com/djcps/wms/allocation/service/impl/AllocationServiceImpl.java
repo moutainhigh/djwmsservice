@@ -68,6 +68,9 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.utils.RedisUtil;
+import com.djcps.wms.loadingtask.model.RejectRequestBO;
+import com.djcps.wms.loadingtask.server.LoadingTaskServer;
+import com.djcps.wms.loadingtask.service.LoadingTaskService;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
@@ -112,7 +115,8 @@ public class AllocationServiceImpl implements AllocationService {
 	private RedisClient redisClient;
 	@Resource
     private PushService pushService;
-	
+	@Autowired
+    private LoadingTaskServer loadingTaskServer;
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
 		HttpResult result = allocationServer.getOrderType(baseBO);
@@ -467,6 +471,10 @@ public class AllocationServiceImpl implements AllocationService {
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
+				//删除同时确认配货锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
+				//删除确认优化和确认配货公共锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 				return MsgTemplate.customMsg(updateOrderRedunResult);
 			}
 		}
@@ -1346,6 +1354,7 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		//被移除的订单
 		List<WarehouseOrderDetailPO> removeOrder = new ArrayList<>();
+		if(!ObjectUtils.isEmpty(orderDetailList)) {
 		for (WarehouseOrderDetailPO orderDetailPO : orderDetailList) {
 			formerMap.put(orderDetailPO.getFchildorderid(), orderDetailPO);
 			SequenceBO sequenceBO = sequenceMap.get(orderDetailPO.getFchildorderid());
@@ -1353,6 +1362,7 @@ public class AllocationServiceImpl implements AllocationService {
 			if(sequenceBO==null){
 				removeOrder.add(orderDetailPO);
 			}
+		}
 		}
 		//新增的订单
 		for(SequenceBO sequenceBO : param.getSequenceList()){
@@ -1636,6 +1646,13 @@ public class AllocationServiceImpl implements AllocationService {
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
+			if(param.getFlag().equals(AllocationConstant.FLAG_ADD_ORDER_HANDLE)){
+			    RejectRequestBO rejectRequest = new RejectRequestBO();
+			    rejectRequest.setDisposeStatus(1);
+			    rejectRequest.setHandler(param.getOperator());
+			    rejectRequest.setHandlerId(param.getOperatorId());
+			    result = loadingTaskServer.rejectRequest(rejectRequest);
+			}
 		}
 		//删除确认配货,确认优化公共锁
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());

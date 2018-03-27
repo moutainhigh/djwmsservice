@@ -92,7 +92,20 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
 	 */
 	private String loadingPersonPhone;
 	
-	public List<SequenceBO> getSequenceList() {
+	/**
+	 * 区分追加订单处理界面和装车优化界面的标识
+	 */
+	private String flag;
+	
+	public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public List<SequenceBO> getSequenceList() {
 		return sequenceList;
 	}
 
@@ -217,15 +230,15 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
 		this.loadingPersonPhone = loadingPersonPhone;
 	}
 
-	@Override
-	public String toString() {
-		return "MergeModelBO [againVerifyAllocation=" + againVerifyAllocation + ", moveOrder=" + moveOrder
-				+ ", againVerifyAddOrder=" + againVerifyAddOrder + ", sequenceList=" + sequenceList + ", allocationId="
-				+ allocationId + ", waybillId=" + waybillId + ", newDeliveryId=" + newDeliveryId + ", loadingTableId="
-				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
-				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", loadingPersonId="
-				+ loadingPersonId + ", loadingPersonName=" + loadingPersonName + ", loadingPersonPhone="
-				+ loadingPersonPhone + "]";
-	}
+    @Override
+    public String toString() {
+        return "MergeModelBO [againVerifyAllocation=" + againVerifyAllocation + ", moveOrder=" + moveOrder
+                + ", againVerifyAddOrder=" + againVerifyAddOrder + ", sequenceList=" + sequenceList + ", allocationId="
+                + allocationId + ", waybillId=" + waybillId + ", newDeliveryId=" + newDeliveryId + ", loadingTableId="
+                + loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
+                + pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", loadingPersonId="
+                + loadingPersonId + ", loadingPersonName=" + loadingPersonName + ", loadingPersonPhone="
+                + loadingPersonPhone + ", flag=" + flag + "]";
+    }
 
 }

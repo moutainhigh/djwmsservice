@@ -18,6 +18,7 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -268,6 +269,7 @@ public class LoadingTaskController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
+            param.setAppSystem(AppConstant.WMS);
             return loadingTaskService.rejectRequest(param);
         } catch (Exception e) {
             e.printStackTrace();
