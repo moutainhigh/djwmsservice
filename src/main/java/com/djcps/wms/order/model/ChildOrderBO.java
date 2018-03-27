@@ -266,7 +266,7 @@ public class ChildOrderBO {
     /**
      * 是否分发
      */
-    private Integer fdbflage;
+    private String fdblflag;
 
     public String getForderId() {
         return forderId;
@@ -692,70 +692,15 @@ public class ChildOrderBO {
         this.fpaytype = fpaytype;
     }
 
-    public Integer getFdbflage() {
-        return fdbflage;
-    }
+	public String getFdblflag() {
+		return fdblflag;
+	}
 
-    public void setFdbflage(Integer fdbflage) {
-        this.fdbflage = fdbflage;
-    }
+	public void setFdblflag(String fdblflag) {
+		this.fdblflag = fdblflag;
+	}
 
-    @Override
-    public String toString() {
-        return "ChildOrderBO{" +
-                "forderId='" + forderId + '\'' +
-                ", fchildorderid='" + fchildorderid + '\'' +
-                ", fpusername='" + fpusername + '\'' +
-                ", fcusername='" + fcusername + '\'' +
-                ", fgroupgoodid='" + fgroupgoodid + '\'' +
-                ", fgroupgoodname='" + fgroupgoodname + '\'' +
-                ", funitprice=" + funitprice +
-                ", fsmallprice=" + fsmallprice +
-                ", famountprice=" + famountprice +
-                ", fstatus=" + fstatus +
-                ", fmanufacturer='" + fmanufacturer + '\'' +
-                ", fmateriafid='" + fmateriafid + '\'' +
-                ", ftransportsheet='" + ftransportsheet + '\'' +
-                ", fflutetype='" + fflutetype + '\'' +
-                ", fboxmodel='" + fboxmodel + '\'' +
-                ", fboxlength=" + fboxlength +
-                ", fboxwidth=" + fboxwidth +
-                ", fboxheight=" + fboxheight +
-                ", fmateriallength=" + fmateriallength +
-                ", fmaterialwidth=" + fmaterialwidth +
-                ", fmaterialname='" + fmaterialname + '\'' +
-                ", fstavetype='" + fstavetype + '\'' +
-                ", fseries='" + fseries + '\'' +
-                ", fhline='" + fhline + '\'' +
-                ", fvline='" + fvline + '\'' +
-                ", fhlineformula='" + fhlineformula + '\'' +
-                ", fvlineformula='" + fvlineformula + '\'' +
-                ", famount=" + famount +
-                ", famountpiece=" + famountpiece +
-                ", flayer=" + flayer +
-                ", fhformula='" + fhformula + '\'' +
-                ", fvformula='" + fvformula + '\'' +
-                ", fproductarea=" + fproductarea +
-                ", fmarktingplanid='" + fmarktingplanid + '\'' +
-                ", fmktplanchangeid='" + fmktplanchangeid + '\'' +
-                ", fordertype=" + fordertype +
-                ", fconsignee='" + fconsignee + '\'' +
-                ", fcontactway='" + fcontactway + '\'' +
-                ", fcodeprovince='" + fcodeprovince + '\'' +
-                ", fdelivery='" + fdelivery + '\'' +
-                ", fdeliveryString='" + fdeliveryString + '\'' +
-                ", fdistime='" + fdistime + '\'' +
-                ", fsignintime='" + fsignintime + '\'' +
-                ", flnglat='" + flnglat + '\'' +
-                ", faddressdetail='" + faddressdetail + '\'' +
-                ", faddressremark='" + faddressremark + '\'' +
-                ", foperatetime='" + foperatetime + '\'' +
-                ", foperator='" + foperator + '\'' +
-                ", fkeyarea='" + fkeyarea + '\'' +
-                ", furgencyorder=" + furgencyorder +
-                ", fgiveintegral=" + fgiveintegral +
-                ", fdeletestatus='" + fdeletestatus + '\'' +
-                ", fpaytype=" + fpaytype +
-                '}';
-    }
+	
+
+    
 }

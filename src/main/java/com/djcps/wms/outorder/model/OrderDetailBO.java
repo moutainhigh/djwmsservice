@@ -1,116 +1,116 @@
 package com.djcps.wms.outorder.model;
 /**
- * 获取订单服务数据类
- * @author ldh
+ * 返回页面的参数
+ * @author xzzx
  *
  */
 public class OrderDetailBO {
 	/**
 	 * 订单编号
 	 */
-	private String fchildorderid;
+	private String childOrderId;
 	/**
 	 * 产品名称
 	 */
-	private String fgroupgoodname;
+	private String groupGoodName;
 	/**
-	 * 纸箱规格长
+	 * 下料规格
 	 */
-	private Double fboxlength;
+	private String material;
 	/**
-	 * 纸箱规格宽
+	 * 纸箱规格
 	 */
-	private Double fboxwidth;
-	/**
-	 * 纸箱规格高
-	 */
-	private Double fboxheight;
-	/**
-	 * 下料规格长
-	 */
-	private Double fmateriallength;
-	/**
-	 * 下料规格宽
-	 */
-	private Double fmaterialwidth;
+	private String box;
 	/**
 	 * 数量
 	 */
-	private Integer famount;
+	private Integer amount;
 	/**
 	 * 单价
 	 */
-	private Double funitprice;
-	/**金额
-	 * 
+	private Double unitPrice;
+	/**
+	 * 金额
 	 */
-	private Double famountprice;
-	public String getFchildorderid() {
-		return fchildorderid;
+	private Double amountPrice; 
+	/**
+	 * 单位
+	 */
+	private String unit;
+	
+	public OrderDetailBO(){
+		this.unit = "片";
 	}
-	public void setFchildorderid(String fchildorderid) {
-		this.fchildorderid = fchildorderid;
+
+	public String getChildOrderId() {
+		return childOrderId;
 	}
-	public String getFgroupgoodname() {
-		return fgroupgoodname;
+
+	public void setChildOrderId(String childOrderId) {
+		this.childOrderId = childOrderId;
 	}
-	public void setFgroupgoodname(String fgroupgoodname) {
-		this.fgroupgoodname = fgroupgoodname;
+
+	public String getGroupGoodName() {
+		return groupGoodName;
 	}
-	public Double getFboxlength() {
-		return fboxlength;
+
+	public void setGroupGoodName(String groupGoodName) {
+		this.groupGoodName = groupGoodName;
 	}
-	public void setFboxlength(Double fboxlength) {
-		this.fboxlength = fboxlength;
+
+	public String getMaterial() {
+		return material;
 	}
-	public Double getFboxwidth() {
-		return fboxwidth;
+
+	public void setMaterial(String material) {
+		this.material = material;
 	}
-	public void setFboxwidth(Double fboxwidth) {
-		this.fboxwidth = fboxwidth;
+
+	public String getBox() {
+		return box;
 	}
-	public Double getFboxheight() {
-		return fboxheight;
+
+	public void setBox(String box) {
+		this.box = box;
 	}
-	public void setFboxheight(Double fboxheight) {
-		this.fboxheight = fboxheight;
+
+	public Integer getAmount() {
+		return amount;
 	}
-	public Double getFmateriallength() {
-		return fmateriallength;
+
+	public void setAmount(Integer amount) {
+		this.amount = amount;
 	}
-	public void setFmateriallength(Double fmateriallength) {
-		this.fmateriallength = fmateriallength;
+
+	public Double getUnitPrice() {
+		return unitPrice;
 	}
-	public Double getFmaterialwidth() {
-		return fmaterialwidth;
+
+	public void setUnitPrice(Double unitPrice) {
+		this.unitPrice = unitPrice;
 	}
-	public void setFmaterialwidth(Double fmaterialwidth) {
-		this.fmaterialwidth = fmaterialwidth;
+
+	public Double getAmountPrice() {
+		return amountPrice;
 	}
-	public Integer getFamount() {
-		return famount;
+
+	public void setAmountPrice(Double amountPrice) {
+		this.amountPrice = amountPrice;
 	}
-	public void setFamount(Integer famount) {
-		this.famount = famount;
+
+	public String getUnit() {
+		return unit;
 	}
-	public Double getFunitprice() {
-		return funitprice;
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
-	public void setFunitprice(Double funitprice) {
-		this.funitprice = funitprice;
-	}
-	public Double getFamountprice() {
-		return famountprice;
-	}
-	public void setFamountprice(Double famountprice) {
-		this.famountprice = famountprice;
-	}
+
 	@Override
 	public String toString() {
-		return "OrderDetailBO [fchildorderid=" + fchildorderid + ", fgroupgoodname=" + fgroupgoodname + ", fboxlength="
-				+ fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight=" + fboxheight + ", fmateriallength="
-				+ fmateriallength + ", fmaterialwidth=" + fmaterialwidth + ", famount=" + famount + ", funitprice="
-				+ funitprice + ", famountprice=" + famountprice + "]";
+		return "OrderDetailInfoBO [childOrderId=" + childOrderId + ", groupGoodName=" + groupGoodName + ", material="
+				+ material + ", box=" + box + ", amount=" + amount + ", unitPrice=" + unitPrice + ", amountPrice="
+				+ amountPrice + ", unit=" + unit + "]";
 	}
 	
 	

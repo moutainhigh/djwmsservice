@@ -1,116 +1,44 @@
 package com.djcps.wms.outorder.model.outorderresult;
-/**
- * 返回页面的参数
- * @author xzzx
- *
- */
+
+import java.util.List;
+
+import com.djcps.wms.outorder.model.OrderDetailBO;
+
 public class OrderDetailInfoVO {
 	/**
-	 * 订单编号
+	 * 总金额
 	 */
-	private String childOrderId;
+	private Double totalPrice;
 	/**
-	 * 产品名称
+	 * 订单明细 
 	 */
-	private String groupGoodName;
+	private List<OrderDetailBO> orderDetails;
 	/**
-	 * 下料规格
+	 * 总数量
 	 */
-	private String material;
-	/**
-	 * 纸箱规格
-	 */
-	private String box;
-	/**
-	 * 数量
-	 */
-	private Integer amount;
-	/**
-	 * 单价
-	 */
-	private Double unitPrice;
-	/**
-	 * 金额
-	 */
-	private Double amountPrice; 
-	/**
-	 * 单位
-	 */
-	private String unit;
-	
-	public OrderDetailInfoVO(){
-		this.unit = "片";
+	private Integer totalAmount;
+	public Double getTotalPrice() {
+		return totalPrice;
 	}
-
-	public String getChildOrderId() {
-		return childOrderId;
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
-
-	public void setChildOrderId(String childOrderId) {
-		this.childOrderId = childOrderId;
+	public List<OrderDetailBO> getOrderDetails() {
+		return orderDetails;
 	}
-
-	public String getGroupGoodName() {
-		return groupGoodName;
+	public void setOrderDetails(List<OrderDetailBO> orderDetails) {
+		this.orderDetails = orderDetails;
 	}
-
-	public void setGroupGoodName(String groupGoodName) {
-		this.groupGoodName = groupGoodName;
+	public Integer getTotalAmount() {
+		return totalAmount;
 	}
-
-	public String getMaterial() {
-		return material;
+	public void setTotalAmount(Integer totalAmount) {
+		this.totalAmount = totalAmount;
 	}
-
-	public void setMaterial(String material) {
-		this.material = material;
-	}
-
-	public String getBox() {
-		return box;
-	}
-
-	public void setBox(String box) {
-		this.box = box;
-	}
-
-	public Integer getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Integer amount) {
-		this.amount = amount;
-	}
-
-	public Double getUnitPrice() {
-		return unitPrice;
-	}
-
-	public void setUnitPrice(Double unitPrice) {
-		this.unitPrice = unitPrice;
-	}
-
-	public Double getAmountPrice() {
-		return amountPrice;
-	}
-
-	public void setAmountPrice(Double amountPrice) {
-		this.amountPrice = amountPrice;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
 	@Override
 	public String toString() {
-		return "OrderDetailInfoBO [childOrderId=" + childOrderId + ", groupGoodName=" + groupGoodName + ", material="
-				+ material + ", box=" + box + ", amount=" + amount + ", unitPrice=" + unitPrice + ", amountPrice="
-				+ amountPrice + ", unit=" + unit + "]";
+		return "OrderDetailInfoVO [totalPrice=" + totalPrice + ", orderDetails=" + orderDetails + ", totalAmount="
+				+ totalAmount + "]";
 	}
 	
 	
