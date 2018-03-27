@@ -68,6 +68,9 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.utils.RedisUtil;
+import com.djcps.wms.loadingtask.model.RejectRequestBO;
+import com.djcps.wms.loadingtask.server.LoadingTaskServer;
+import com.djcps.wms.loadingtask.service.LoadingTaskService;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
@@ -112,7 +115,8 @@ public class AllocationServiceImpl implements AllocationService {
 	private RedisClient redisClient;
 	@Resource
     private PushService pushService;
-	
+	@Autowired
+    private LoadingTaskServer loadingTaskServer;
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
 		HttpResult result = allocationServer.getOrderType(baseBO);
@@ -1642,6 +1646,13 @@ public class AllocationServiceImpl implements AllocationService {
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
+			if(param.getFlag().equals(AllocationConstant.FLAG_ADD_ORDER_HANDLE)){
+			    RejectRequestBO rejectRequest = new RejectRequestBO();
+			    rejectRequest.setDisposeStatus(1);
+			    rejectRequest.setHandler(param.getOperator());
+			    rejectRequest.setHandlerId(param.getOperatorId());
+			    result = loadingTaskServer.rejectRequest(rejectRequest);
+			}
 		}
 		//删除确认配货,确认优化公共锁
 		redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
