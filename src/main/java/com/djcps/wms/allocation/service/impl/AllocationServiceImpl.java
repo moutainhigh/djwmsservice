@@ -68,6 +68,7 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.utils.RedisUtil;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
 import com.djcps.wms.loadingtask.service.LoadingTaskService;
@@ -1646,9 +1647,11 @@ public class AllocationServiceImpl implements AllocationService {
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
 			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
-			if(param.getFlag().equals(AllocationConstant.FLAG_ADD_ORDER_HANDLE)){
+			if(AllocationConstant.FLAG_ADD_ORDER_HANDLE.equals(param.getFlag())){
 			    RejectRequestBO rejectRequest = new RejectRequestBO();
-			    rejectRequest.setDisposeStatus(1);
+			    BeanUtils.copyProperties(param, rejectRequest);
+			    rejectRequest.setDisposeStatus(LoadingTaskConstant.DISPOSESTATUS_1);
+			    rejectRequest.setWayBillId(param.getWaybillId());
 			    rejectRequest.setHandler(param.getOperator());
 			    rejectRequest.setHandlerId(param.getOperatorId());
 			    result = loadingTaskServer.rejectRequest(rejectRequest);

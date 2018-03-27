@@ -57,14 +57,10 @@ public class LoadingTaskOrderServer {
     public List<OrderInfoPO> getChildOrderList(OrderIdsBO childOrderIds){
         List<OrderInfoPO> orderInfoPOList = new ArrayList<>();
         HttpResult httpResult = getInfoByOrderIds(childOrderIds);
-        System.out.println("#####################");
-        System.out.println(httpResult);
         if(httpResult.isSuccess()){
             String data = gson.toJson(httpResult.getData());
             orderInfoPOList = JSONArray.parseArray(data,OrderInfoPO.class);
         }
-        System.out.println("#####################");
-        System.out.println(orderInfoPOList);
         return  orderInfoPOList;
     }
     
