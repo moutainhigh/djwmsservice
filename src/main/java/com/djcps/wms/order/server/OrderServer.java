@@ -62,7 +62,6 @@ public class OrderServer {
 			result.setMsg("");
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
 			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
@@ -113,7 +112,6 @@ public class OrderServer {
 			result = gson.fromJson(http.getBodyString(), HttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
 			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
