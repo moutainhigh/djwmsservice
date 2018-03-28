@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.djcps.wms.outorder.model.OrderDetailBO;
 
+/**
+ * 订单详细信息
+ * @author ldh
+ */
 public class OrderDetailInfoVO {
 	/**
 	 * 总金额
