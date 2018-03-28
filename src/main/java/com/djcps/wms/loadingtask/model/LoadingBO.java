@@ -34,12 +34,6 @@ public class LoadingBO extends BaseAddBO {
      * 运单状态 1待提货,5部分提货,10提货完成,15部分装车,20装车完成
      */
     private Integer status;
-
-    /**
-     * 冗余表订单状态21,部分入库 ,22 ,已入库：23 ,已配货：24, 已提货：25, 已装车：26 ,已发车
-     */
-    /* private Integer redundantStatus; */
-
     /**
      * 退库数量
      */

@@ -55,6 +55,18 @@ public class AdditionalOrderBO extends BaseBO {
      * 操作人名称
      */
     private String operator;
+    /**
+     * 申请时间
+     */
+    private String applicationTime;
+
+    public String getApplicationTime() {
+        return applicationTime;
+    }
+
+    public void setApplicationTime(String applicationTime) {
+        this.applicationTime = applicationTime;
+    }
 
     public String getOperatorId() {
         return operatorId;
@@ -137,11 +149,11 @@ public class AdditionalOrderBO extends BaseBO {
     }
 
     @Override
-    public String toString() { 
+    public String toString() {
         return "AdditionalOrderBO [addSquare=" + addSquare + ", proposerId=" + proposerId + ", proposer=" + proposer
                 + ", partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId + ", handler="
                 + handler + ", disposeStatus=" + disposeStatus + ", operatorId=" + operatorId + ", operator=" + operator
-                + "]";
+                + ", applicationTime=" + applicationTime + "]";
     }
 
 }

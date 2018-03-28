@@ -1,6 +1,8 @@
 package com.djcps.wms.loadingtask.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,12 +23,14 @@ import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
 import com.djcps.wms.loadingtask.model.FinishLoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonBO;
+import com.djcps.wms.loadingtask.model.LoadingPersonIdBO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
 import com.djcps.wms.loadingtask.model.result.AbnormalOrderPO;
@@ -38,9 +42,7 @@ import com.djcps.wms.loadingtask.model.result.OrderRedundantPO;
 import com.djcps.wms.loadingtask.server.LoadingTaskOrderServer;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
 import com.djcps.wms.loadingtask.service.LoadingTaskService;
-import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdsBO;
-import com.djcps.wms.push.model.PushMsgBO;
 import com.djcps.wms.push.mq.producer.AppProducer;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
@@ -71,7 +73,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/20
      */
     @Override
@@ -85,12 +87,12 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/20
      */
     @Override
     public Map<String, Object> removeLoadingPerson(RemoveLoadingPersonBO param) {
-        param.setStatus(0);
+        param.setStatus(LoadingTaskConstant.LOADINGPERSON_TYPE_0);
         HttpResult result = loadingTaskServer.removeLoadingPerson(param);
         return MsgTemplate.customMsg(result);
     }
@@ -100,14 +102,25 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/20
      */
     @Override
     public Map<String, Object> confirm(ConfirmBO param) {
+        List<LoadingPersonIdBO> list =param.getList();
+        if(!ObjectUtils.isEmpty(list)) {
+        for(LoadingPersonIdBO info :list) {
+            if(!ObjectUtils.isEmpty(param.getLoadingTableId())) {
+            info.setLoadingTableId(param.getLoadingTableId());
+            }
+        }
+        }
         HttpResult result = loadingTaskServer.getOrderList(param);
+        if(ObjectUtils.isEmpty(result.getData())) {
+            return MsgTemplate.failureMsg(SysMsgEnum.NOT_TASK);
+        }
         if (result.isSuccess()) {
-            HttpResult updateLoadPersonResult = loadingTaskServer.updateLoadPersonStatus(param);
+            loadingTaskServer.updateLoadPersonStatus(param);
             String data = JSONObject.toJSONString(result.getData());
             ConfirmPO confirmPO = gson.fromJson(data, ConfirmPO.class);
             List<OrderIdAndLoadingAmountPO> orderPOList = confirmPO.getOrderPOList();
@@ -141,7 +154,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                  * });
                  */
 
-                orderInfo.stream().forEach(info -> {                    List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
+                orderInfo.stream().forEach(info -> {List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
                             .filter(amount -> info.getFchildorderid().equals(amount.getOrderId()))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
@@ -152,6 +165,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             return MsgTemplate.successMsg(confirmPO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        
     }
 
     /**
@@ -179,7 +193,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/21
      */
     @Override
@@ -190,13 +204,15 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             if(!orderAmount.equals(loadingAmount)) {
               param.setOnceOrderid(new StringBuffer(param.getOrderId()).append("-1").toString());
               param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append("-2").toString() );
-            if("0".equals(loadingAmount)) {
+             if(!ObjectUtils.isEmpty(loadingAmount)) {
+            if(loadingAmount==0) {
                 param.setCancelStockAmount(orderAmount);
-                param.setCancelType(1);
+                param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_1);
             }else {
                 param.setCancelStockAmount(orderAmount-loadingAmount);
-                param.setCancelType(2);
+                param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
             }
+             }
             }
         }
         HttpResult result = loadingTaskServer.loading(param);
@@ -208,11 +224,12 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/21
      */
     @Override
     public Map<String, Object> additionalOrder(AdditionalOrderBO param) {
+        param.setApplicationTime("NOW()");
         param.setProposer(param.getOperator());
         param.setOperatorId(param.getOperatorId());
         HttpResult result = loadingTaskServer.additionalOrder(param);
@@ -224,14 +241,14 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/21
      */
     @Override
     public Map<String, Object> rejectRequest(RejectRequestBO param) {
         // 推送驳回消息
         pushMsg(param);
-        param.setDisposeStatus(2);
+        param.setDisposeStatus(LoadingTaskConstant.DISPOSESTATUS_2);
         param.setHandler(param.getOperator());
         param.setHandlerId(param.getOperatorId());
         HttpResult result = loadingTaskServer.rejectRequest(param);
@@ -243,7 +260,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/21
      */
     public void pushMsg(RejectRequestBO param) {
@@ -262,7 +279,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/21
      */
     @Override
@@ -276,7 +293,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      *
      * @param param
      * @return
-     * @autuor WYB
+     * @author WYB
      * @since 2018/3/21
      */
     @Override
@@ -290,12 +307,12 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         List<OrderRedundantPO> orderPOList = result.getOrderPOList();
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {
-                if (!"25".equals(info.getStatus().toString())) {
+                if (!LoadingTaskConstant.REDUNDANTSTATUS_25.equals(info.getStatus())) {
                     return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
                 }
             }
         }
-        param.setStatus(20);
+        param.setStatus(LoadingTaskConstant.WAYBILLID_STATUS_20);
         HttpResult updateResult = loadingTaskServer.updateWayBill(param);
         return MsgTemplate.customMsg(updateResult);
     }
