@@ -65,7 +65,7 @@ public class ValidateNullInteger extends ValidatorHandler<Object> implements Val
 					}
 				}
 				if(str instanceof Integer){
-					if(((Integer) str).SIZE > maxStringLength){
+					if(String.valueOf(str).length() > maxStringLength){
 						context.addErrorMsg(error.getMsg());
 						return false;
 					}

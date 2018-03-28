@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Component
 public class HttpAspect {
 
-    private DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(HttpAspect.class);
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(HttpAspect.class);
 
     private LocalTime startTime;
 
@@ -60,5 +60,7 @@ public class HttpAspect {
         LOGGER.debug("<== Http_Result: - {} - 耗时 {}ms" , proceed,Duration.between(startTime,LocalTime.now()).toMillis());
         return proceed;
     }
+
+
 
 }
