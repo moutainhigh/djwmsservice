@@ -58,9 +58,17 @@ public class ValidateNullInteger extends ValidatorHandler<Object> implements Val
 		@Override
 		public boolean validate(ValidatorContext context, Object str) {
 			if(!ObjectUtils.isEmpty(str)){
-				if(String.valueOf(str).length()> maxStringLength){
-					context.addErrorMsg(error.getMsg());
-					return false;
+				if(str instanceof String){
+					if(((String) str).length() > maxStringLength){
+						context.addErrorMsg(error.getMsg());
+						return false;
+					}
+				}
+				if(str instanceof Integer){
+					if(String.valueOf(str).length() > maxStringLength){
+						context.addErrorMsg(error.getMsg());
+						return false;
+					}
 				}
 			}
 			return true;

@@ -183,7 +183,6 @@ public class LoadingTaskServer {
             result = gson.fromJson(http, FinishLoadingPO.class);
         }
         if(result == null){
-            System.err.println("Http请求出错,HttpResult结果为null");
             LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
