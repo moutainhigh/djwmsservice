@@ -104,4 +104,9 @@ public class StocktakingTaskConstant {
      */
     public static final Integer INVENTORY_NORMAL=2;
 
+    /**
+     * 是否拆分
+     */
+    public static  final  String FDBLFLAG="0.0";
+
 }

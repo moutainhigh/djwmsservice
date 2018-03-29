@@ -1186,7 +1186,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         OrderIdsBO orderIdsBO = new OrderIdsBO();
         orderIdsBO.setChildOrderIds(orderidlist);
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
-        Optional optional=childOrderList.stream().filter(b -> b.getFdblflag().equals(0))
+        Optional optional=childOrderList.stream().filter(b -> b.getFdblflag().equals(StocktakingTaskConstant.FDBLFLAG))
                 .findFirst();
         if(optional.isPresent()){
             ChildOrderBO childOrderBO=(ChildOrderBO) optional.get();
