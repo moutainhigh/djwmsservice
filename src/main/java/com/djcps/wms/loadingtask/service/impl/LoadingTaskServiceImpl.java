@@ -138,10 +138,10 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
                     if (!ObjectUtils.isEmpty(orderInfo.getOrderId())) {
                         if (orderInfo.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER) > 0) {
-                            
+
                             orderId = orderInfo.getOrderId().substring(0,
                                     orderInfo.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
-                            
+
                             map.put(orderInfo.getOrderId(), orderId);
                             childOrderIds.add(orderId);
                         } else {
@@ -155,7 +155,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
             }
             List<AbnormalOrderPO> abnormalInfo = abnormalOrderInfo(childOrderIds, param);
-            
+
             List<OrderInfoPO> orderInfo = loadingTaskOrderServer.getChildOrderList(orderIdsBO);
 
             if (!ObjectUtils.isEmpty(orderInfo)) {
@@ -171,8 +171,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
                     for (AbnormalOrderPO abnormalOrderPO : abnormalInfo) {
                         if (orderInformation.getFchildorderid().equals(abnormalOrderPO.getOrderId())) {
-                            if(!abnormalOrderPO.getAbnomalAmount().equals(0)) {
-                            orderInformation.setAbnomalAmount(abnormalOrderPO.getAbnomalAmount());
+                            if (!abnormalOrderPO.getAbnomalAmount().equals(0)) {
+                                orderInformation.setAbnomalAmount(abnormalOrderPO.getAbnomalAmount());
                             }
                         }
                     }
@@ -223,6 +223,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> loading(LoadingBO param) {
+        OrderIdBO orderIdBO = new OrderIdBO();
         if (!ObjectUtils.isEmpty(param)) {
             Integer loadingAmount = param.getLoadingAmount();
             Integer orderAmount = param.getOrderAmount();
@@ -230,27 +231,71 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 param.setOnceOrderid(new StringBuffer(param.getOrderId()).append("-1").toString());
                 param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append("-2").toString());
                 if (!ObjectUtils.isEmpty(loadingAmount)) {
+                    // 全部退库
                     if (loadingAmount == 0) {
                         param.setCancelStockAmount(orderAmount);
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_1);
+                        //更新订单状态
+                        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getOrderId(), param.getPartnerId(), param.getVersion())) {
+                            
+                            HttpResult result = loadingTaskServer.loading(param);
+                            return MsgTemplate.customMsg(result);
+                        } else {
+                            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+                        }
+                        
+
                     } else {
+                        // 部分退库
                         param.setCancelStockAmount(orderAmount - loadingAmount);
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
+                        HttpResult result = loadingTaskServer.loading(param);
+                        return MsgTemplate.customMsg(result);
+                        // 更新-1订订单状态
+                        /*Boolean updateOnce = updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOnceOrderid(), param.getPartnerId(),
+                                param.getVersion());
+                        Boolean updateTwice = false;
+                        if (updateOnce) {
+                            // 更新-2订单状态
+                            updateTwice = updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getTwiceOrderid(), param.getPartnerId(),
+                                    param.getVersion());
+                        } else {
+                            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+                        }*/
+                        /*if (updateTwice) {
+                            HttpResult result = loadingTaskServer.loading(param);
+                            return MsgTemplate.customMsg(result);
+                        }*/
                     }
                 }
             }
         }
-        HttpResult result = loadingTaskServer.loading(param);
-        OrderIdBO orderIdBO = new OrderIdBO();
-        orderIdBO.setOrderId(param.getOrderId());
-        orderIdBO.setStatus("25");
-        orderIdBO.setPartnerId(param.getPartnerId());
-        orderIdBO.setVersion(param.getVersion());
-        HttpResult updateResult = loadingTaskOrderServer.updateOrderStatus(orderIdBO);
-        if (updateResult.isSuccess()) {
+
+        // 正常装车
+        /*
+         * orderIdBO.setOrderId(param.getOrderId()); orderIdBO.setStatus("25");
+         * orderIdBO.setPartnerId(param.getPartnerId());
+         * orderIdBO.setVersion(param.getVersion()); HttpResult updateResult =
+         * loadingTaskOrderServer.updateOrderStatus(orderIdBO);
+         */
+        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOrderId(), param.getPartnerId(), param.getVersion())) {
+            HttpResult result = loadingTaskServer.loading(param);
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+    }
+
+    public boolean updateOrderStatus(String status, String orderId, String partnerId, String version) {
+        OrderIdBO orderIdBO = new OrderIdBO();
+        orderIdBO.setOrderId(orderId);
+        orderIdBO.setStatus(status);
+        orderIdBO.setPartnerId(partnerId);
+        orderIdBO.setVersion(version);
+        HttpResult updateResult = loadingTaskOrderServer.updateOrderStatus(orderIdBO);
+        if (updateResult.isSuccess()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -338,13 +383,14 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         if (ObjectUtils.isEmpty(result.getLoadingTaskPO())) {
             return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
         }
+        // 该订单数据状态应到订单自取
         List<OrderRedundantPO> orderPOList = result.getOrderPOList();
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {
                 if (!LoadingTaskConstant.REDUNDANTSTATUS_25.equals(info.getStatus())) {
                     return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
                 }
-            }       
+            }
         }
         param.setStatus(LoadingTaskConstant.WAYBILLID_STATUS_20);
         HttpResult updateResult = loadingTaskServer.updateWayBill(param);
