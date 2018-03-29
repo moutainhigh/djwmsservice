@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
 import com.djcps.wms.allocation.model.AddExcellentAllocationBO;
@@ -51,7 +53,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class AllocationServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AllocationServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -67,7 +69,6 @@ public class AllocationServer {
 	public HttpResult getOrderType(BaseBO baseBO) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(baseBO);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getOrderType(rb);
@@ -77,7 +78,6 @@ public class AllocationServer {
 	public HttpResult getChooseAllocation(PartnerInfoBO partnern) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(partnern);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getChooseAllocation(rb);
@@ -87,7 +87,6 @@ public class AllocationServer {
 	public HttpResult saveAllocation(AddAllocationBO allocation) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(allocation);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.saveAllocation(rb);
@@ -97,7 +96,6 @@ public class AllocationServer {
 	public OtherHttpResult getOrderIdByOrderType(GetOrderIdByOrderType param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getOrderIdByOrderType(rb);
@@ -107,15 +105,12 @@ public class AllocationServer {
 			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
 	public HttpResult getNumber(int count) {
 		//将请求参数转化为requestbody格式
-//		String json = gson.toJson(deliveryList);
-//		System.out.println("---http请求参数转化为json格式---:"+json);
 		String param = "count="+count;
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"),param);
 		//调用借口获取信息
@@ -124,9 +119,7 @@ public class AllocationServer {
 	}
 	public HttpResult zhinengpeihuo() {
 		//将请求参数转化为requestbody格式
-//		String json = gson.toJson(null);
 		String json =  "{\"id\":11,\"name\":\"zhagnsan\"}";
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.zhinengpeihuo(rb);
@@ -137,7 +130,6 @@ public class AllocationServer {
 	public HttpResult verifyAllocation(VerifyAllocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.verifyAllocation(rb);
@@ -147,7 +139,6 @@ public class AllocationServer {
 	public OtherHttpResult getAddOrderList(GetRedundantByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getAddOrderList(rb);
@@ -157,8 +148,7 @@ public class AllocationServer {
 			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 		
@@ -167,7 +157,6 @@ public class AllocationServer {
 	public HttpResult verifyAddOrder(List<AddAllocationOrderBO> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.verifyAddOrder(rb);
@@ -177,7 +166,6 @@ public class AllocationServer {
 	public HttpResult getExcellentLoding(GetExcellentLodingBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getExcellentLoding(rb);
@@ -188,7 +176,6 @@ public class AllocationServer {
 	public HttpResult againVerifyAddOrder(AgainVerifyAddOrderBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.againVerifyAddOrder(rb);
@@ -198,7 +185,6 @@ public class AllocationServer {
 	public HttpResult againVerifyAllocation(List<AgainVerifyAllocationBO> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.againVerifyAllocation(rb);
@@ -207,9 +193,6 @@ public class AllocationServer {
 	
 	public HttpResult getAllUserCarInfo() {
 		//将请求参数转化为requestbody格式
-//		String json = gson.toJson(param);
-//		System.out.println("---http请求参数转化为json格式---:"+json);
-//		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getAllUserCarInfo();
 		return verifyHttpResult(http);
@@ -218,7 +201,6 @@ public class AllocationServer {
 	public HttpResult changeCarInfo(ChangeCarInfoBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.changeCarInfo(rb);
@@ -228,7 +210,6 @@ public class AllocationServer {
 	public HttpResult cancelAllocation(CancelAllocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.cancelAllocation(rb);
@@ -238,7 +219,6 @@ public class AllocationServer {
 	public HttpResult getOrderByDeliveryId(List<String> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getOrderByDeliveryId(rb);
@@ -248,7 +228,6 @@ public class AllocationServer {
 	public OtherHttpResult getRedundantAttribute(GetRedundantByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getRedundantAttribute(rb);
@@ -258,8 +237,7 @@ public class AllocationServer {
 			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
@@ -267,7 +245,6 @@ public class AllocationServer {
 	public HttpResult getDeliveryByOrderIds(List<String> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getDeliveryByOrderIds(rb);
@@ -277,7 +254,6 @@ public class AllocationServer {
 	public HttpResult getWaybillByDeliveryIds(List<String> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getWaybillByDeliveryIds(rb);
@@ -287,7 +263,6 @@ public class AllocationServer {
 	public HttpResult getDeliveryByWaybillIds(GetDeliveryByWaybillIdsBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getDeliveryByWaybillIds(rb);
@@ -297,7 +272,6 @@ public class AllocationServer {
 	public OtherHttpResult getAlloManageFuzzyQuery(GetRedundantByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getAlloManageFuzzyQuery(rb);
@@ -307,8 +281,7 @@ public class AllocationServer {
 			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
@@ -316,7 +289,6 @@ public class AllocationServer {
 	public OtherHttpResult getAlloManageQuery(GetRedundantByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getAlloManageQuery(rb);
@@ -326,8 +298,7 @@ public class AllocationServer {
 			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
@@ -335,7 +306,6 @@ public class AllocationServer {
 	public HttpResult getAllocationOrderTypes(BaseUpdateAndDeleteBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getAllocationOrderTypes(rb);
@@ -344,8 +314,6 @@ public class AllocationServer {
 	
 	public HttpResult addzhinengpeihuo() {
 		//将请求参数转化为requestbody格式
-//		String json = gson.toJson(param);
-//		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),"1");
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.addzhinengpeihuo(rb);
@@ -355,7 +323,6 @@ public class AllocationServer {
 	public HttpResult addDeliAllocOrder(List<WarehouseOrderDetailPO> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.addDeliAllocOrder(rb);
@@ -365,7 +332,6 @@ public class AllocationServer {
 	public OtherHttpResult getOrderByAllocationId(GetIntelligentAllocaBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getOrderByAllocationId(rb);
@@ -375,8 +341,7 @@ public class AllocationServer {
 			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
@@ -384,7 +349,6 @@ public class AllocationServer {
 	public HttpResult batchAddOrderRedundant(AddOrderRedundantBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.batchAddOrderRedundant(rb);
@@ -394,7 +358,6 @@ public class AllocationServer {
 	public HttpResult batchUpdateOrderRedun(List<UpdateOrderRedundantBO> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.batchUpdateOrderRedun(rb);
@@ -404,7 +367,6 @@ public class AllocationServer {
 	public HttpResult addExcellentAllocation(AddExcellentAllocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.addExcellentAllocation(rb);
@@ -414,7 +376,6 @@ public class AllocationServer {
 	public HttpResult managerMoveOrder(MoveOrderPO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.managerMoveOrder(rb);
@@ -424,7 +385,6 @@ public class AllocationServer {
 	public HttpResult allocationMoveOrder(MoveOrderPO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.allocationMoveOrder(rb);
@@ -434,7 +394,6 @@ public class AllocationServer {
 	public HttpResult getAlreadyAllocOrder(List<String> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getAlreadyAllocOrder(rb);
@@ -444,7 +403,6 @@ public class AllocationServer {
 	public HttpResult againVerifyAllocation(MergeModelBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.againVerifyAllocation(rb);
@@ -454,7 +412,6 @@ public class AllocationServer {
 	public HttpResult getOrderByOrderIds(List<String> param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getOrderByOrderIds(rb);
@@ -464,7 +421,6 @@ public class AllocationServer {
 	public HttpResult existIntelligentAlloca(String allocationId) {
 		//将请求参数转化为requestbody格式
 		String json = "{\"allocationId\":"+allocationId+"}";
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.existIntelligentAlloca(rb);
@@ -474,7 +430,6 @@ public class AllocationServer {
 	public HttpResult getRecordByRrelativeId(RelativeIdBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getRecordByRrelativeId(rb);
@@ -496,8 +451,7 @@ public class AllocationServer {
 			result = gson.fromJson(http.getBodyString(), HttpResult.class);
 		}
 		if(result == null){
-			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

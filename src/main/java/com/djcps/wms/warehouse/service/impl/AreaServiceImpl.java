@@ -11,6 +11,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
 import com.djcps.wms.address.server.AddressServer;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -42,7 +44,7 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class AreaServiceImpl implements AreaService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AreaServiceImpl.class);
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AreaServiceImpl.class);
 	
 	private Gson gson = new Gson();
 	
@@ -82,7 +84,7 @@ public class AreaServiceImpl implements AreaService {
 				//编码确认失败打印错误，将标志改成false
 				if(!verifyCode.isSuccess()){
 					flag = false;
-					logger.error("----wms基础服务编码确认失败----");
+					LOGGER.error("----wms基础服务编码确认失败----");
 					return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
 				}
 				return MsgTemplate.customMsg(verifyCode);
@@ -128,7 +130,7 @@ public class AreaServiceImpl implements AreaService {
 			if(deleteCode.isSuccess()){
 				return MsgTemplate.customMsg(deleteCode);
 			}else{
-				logger.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
+				LOGGER.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
 				return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
 			}
 		}

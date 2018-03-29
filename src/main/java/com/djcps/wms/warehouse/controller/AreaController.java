@@ -4,6 +4,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
@@ -41,7 +43,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/warehouse")
 public class AreaController {
-	private static final Logger logger = LoggerFactory.getLogger(AreaController.class);
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(AreaController.class);
 	
 	private Gson gson = new Gson();
 	
@@ -60,7 +62,7 @@ public class AreaController {
 	@RequestMapping(name="新增库区",value = "/addArea", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> addArea(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			//数据校验
 			ProvinceCityBO param = gson.fromJson(json, ProvinceCityBO.class);
 			PartnerInfoBO partner = (PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -115,7 +117,7 @@ public class AreaController {
 			return areaService.addArea(addArea);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -185,7 +187,7 @@ public class AreaController {
 			return areaService.modifyArea(updateArea);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -202,11 +204,11 @@ public class AreaController {
 	@RequestMapping(name="删除库区",value = "/deleteArea", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> deleteArea(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			DeleteAreaBO param = gson.fromJson(json, DeleteAreaBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("DeleteWarehouseBO : " + param.toString());
+			LOGGER.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<DeleteAreaBO>()
@@ -219,7 +221,7 @@ public class AreaController {
 			return areaService.deleteArea(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -236,14 +238,14 @@ public class AreaController {
 	@RequestMapping(name="获取所有库区列表",value = "/getAreaAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAreaAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			SelectAllAreaListBO param = gson.fromJson(json, SelectAllAreaListBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return areaService.getAreaAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -260,7 +262,7 @@ public class AreaController {
 	@RequestMapping(name="根据库区id获取库区",value = "/getAreaById", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAreaById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			SelectWarehouseByIdBO param = gson.fromJson(json, SelectWarehouseByIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -275,7 +277,7 @@ public class AreaController {
 			return areaService.getAreaById(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -294,7 +296,7 @@ public class AreaController {
 		try {
 			PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
 			GetCodeBO param=gson.fromJson(json,GetCodeBO.class);
-			logger.debug("GetCodeBO : " + param.toString());
+			LOGGER.debug("GetCodeBO : " + param.toString());
 			BeanUtils.copyProperties(partnerInfoBo,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
@@ -307,7 +309,7 @@ public class AreaController {
 			return areaService.getAreaCode(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

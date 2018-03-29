@@ -173,4 +173,29 @@ public class AllocationConstant {
      */
     public static final String OPERATION_ERROR="操作有误,请重新刷新";
     
+    /**
+     * 1 盘点
+     * 2 提货
+     * 3 装车
+     * 4 入库
+     *5异常处理
+     */
+    public static final String PUSH_DELIVERY_TYPE="2";
+    
+    /**
+     * 装车优化追加订单处理标记
+     */
+    public static final String FLAG_AGAIN_VERIFY="1";
+    
+    /**
+     * 追加订单处理界面处理标记
+     */
+    public static final String FLAG_ADD_ORDER_HANDLE="0";
+    
+    public static final String PUSH_DELIVERY_MSG="你有最新的提货任务,请打开任务系统查看";
+    public static final String PUSH_DELIVERY_TICKER="WMS提货任务";
+    public static final String PUSH_DELIVERY_TITLE="提货任务";
+    public static final String PUSH_DELIVERY_TEXT="2";
+    public static final String PUSH_DELIVERY_CUSTOM="";
+    
 }

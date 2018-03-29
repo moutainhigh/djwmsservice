@@ -1,13 +1,13 @@
 package com.djcps.wms.delivery.server;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.request.WmsForDeliveryHttpRequest;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
@@ -21,7 +21,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @Component
 public class DeliveryServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DeliveryServer.class);
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(DeliveryServer.class);
 
     @Autowired
     private WmsForDeliveryHttpRequest wmsForDeliveryHttpRequest;
@@ -155,7 +155,7 @@ public class DeliveryServer {
                     return baseResult;
                 }
             }catch(Exception e){
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
                 e.printStackTrace();
             }
         }

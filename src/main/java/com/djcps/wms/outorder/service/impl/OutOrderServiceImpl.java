@@ -1,6 +1,9 @@
 package com.djcps.wms.outorder.service.impl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -9,18 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.outorder.model.OrderBO;
+import com.djcps.wms.order.model.ChildOrderBO;
+import com.djcps.wms.order.model.OrderIdsBO;
+import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.outorder.model.OrderDetailBO;
 import com.djcps.wms.outorder.model.OutOrderBO;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
-import com.djcps.wms.outorder.model.outorderresult.OrderDetailInfoBO;
+import com.djcps.wms.outorder.model.outorderresult.OrderDetailInfoVO;
 import com.djcps.wms.outorder.server.OutOrderServer;
 import com.djcps.wms.outorder.service.OutOrderService;
 import com.google.gson.Gson;
 /**
- * 
+ * 出库单模块业务层
  * @author ldh
  *
  */
@@ -29,36 +35,68 @@ public class OutOrderServiceImpl implements OutOrderService{
 	@Autowired
 	private OutOrderServer outOrderServer;
 	
+	@Autowired
+	private OrderServer orderServer;
+	
 	private Gson gson = new Gson();
+	
 	@Override
 	public Map<String, Object> getOrderDetail(OutOrderBO param) {
 		//先根据出库单号获取订单编号
 		HttpResult result = outOrderServer.getOrderIdsByOutOrderId(param);
-		//获取订单编号数组
-		String orderStr = (String)result.getData();
-		String[] orderIds = orderStr.split(","); 
-		HttpResult res = null;
-		List<OrderDetailInfoBO> list = new ArrayList<OrderDetailInfoBO>();
-		for(String orderId:orderIds){
-			OrderBO orderBO = new OrderBO();
-			orderBO.setChildOrderId(orderId);
-			res = outOrderServer.getOrderDetailByOrderId(orderBO);
-			if(!ObjectUtils.isEmpty(res.getData())){
-				OrderDetailBO orderDetail = gson.fromJson(gson.toJson(res.getData()), OrderDetailBO.class);
-				OrderDetailInfoBO detailInfo = new OrderDetailInfoBO();
-				BeanUtils.copyProperties(orderDetail, detailInfo);
-				//拼接参数,设置下料规格和产品规格
-				if(!ObjectUtils.isEmpty(orderDetail.getFboxlength()) && !ObjectUtils.isEmpty(orderDetail) && !ObjectUtils.isEmpty(orderDetail)){
-					detailInfo.setFbox(new StringBuffer().append(orderDetail.getFboxlength()).append("*").append(orderDetail.getFboxwidth()).append("*").append(orderDetail.getFboxheight()).toString());
-				}
-				if(!ObjectUtils.isEmpty(orderDetail.getFmateriallength()) && !ObjectUtils.isEmpty(orderDetail.getFmaterialwidth())){
-					detailInfo.setFmaterial(new StringBuffer().append(orderDetail.getFmateriallength()).append("*").append(orderDetail.getFmaterialwidth()).toString());
-				}
-				list.add(detailInfo);
+		//获取出库单号字符串
+		String childOrderIdStr = result.getData().toString();
+		String[] childOrderIds = childOrderIdStr.split(",");
+		List<String> list = Arrays.asList(childOrderIds);
+		OrderIdsBO orderIdsBO = new OrderIdsBO();
+		orderIdsBO.setChildOrderIds(list);
+		//获取订单明细详情list
+		List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+		List<ChildOrderBO> childOrders = new ArrayList<ChildOrderBO>();
+		for(ChildOrderBO child:childOrderList){
+			if(AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())){
+				childOrders.add(child);
 			}
 		}
 		
-		return MsgTemplate.successMsg(list);
+		List<OrderDetailBO> orderDetailList = new ArrayList<OrderDetailBO>();
+		if(!childOrderList.isEmpty()){
+			for(ChildOrderBO childOrderBO:childOrders){
+				OrderDetailBO orderDetail = new OrderDetailBO();
+				orderDetail.setChildOrderId(childOrderBO.getFchildorderid());
+				orderDetail.setGroupGoodName(childOrderBO.getFgroupgoodname());
+				if(!ObjectUtils.isEmpty(childOrderBO.getFmateriallength())&&!ObjectUtils.isEmpty(childOrderBO.getFmaterialwidth())){
+					StringBuffer buff = new StringBuffer().append(childOrderBO.getFmateriallength()).append("*").append(childOrderBO.getFmaterialwidth());
+					orderDetail.setMaterial(buff.toString());
+				}
+				if(!ObjectUtils.isEmpty(childOrderBO.getFboxlength())&&!ObjectUtils.isEmpty(childOrderBO.getFboxwidth())
+						&&!ObjectUtils.isEmpty(childOrderBO.getFboxheight())){
+					StringBuffer stringBuff = new StringBuffer().append(childOrderBO.getFboxlength()).append("*").
+							append(childOrderBO.getFboxwidth()).append("*").append(childOrderBO.getFboxheight());
+					orderDetail.setBox(stringBuff.toString());
+				}
+				orderDetail.setAmount(childOrderBO.getFamountpiece());
+				orderDetail.setUnitPrice(childOrderBO.getFunitprice());
+				orderDetail.setAmountPrice(childOrderBO.getFamountprice());
+				orderDetailList.add(orderDetail);
+				
+			}
+		}
+		
+		Double totalPrice = 0.0;
+		Integer totalAmount = 0;
+		for(OrderDetailBO orderDetail:orderDetailList){
+			totalPrice += orderDetail.getAmountPrice();
+			totalAmount += orderDetail.getAmount();
+		}
+		DecimalFormat df = new DecimalFormat("######0.00"); 
+		totalPrice = Double.valueOf(df.format(totalPrice)) ;
+		
+		OrderDetailInfoVO orderDetailVO = new OrderDetailInfoVO();
+		orderDetailVO.setOrderDetails(orderDetailList);
+		orderDetailVO.setTotalAmount(totalAmount);
+		orderDetailVO.setTotalPrice(totalPrice);
+		return MsgTemplate.successMsg(orderDetailVO);
 	}
 	
 	@Override

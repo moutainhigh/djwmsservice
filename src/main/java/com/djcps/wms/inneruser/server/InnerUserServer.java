@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.server;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
@@ -28,7 +30,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @Repository
 public class InnerUserServer {
 
-    private static Logger logger = LoggerFactory.getLogger(InnerUserServer.class);
+    private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(InnerUserServer.class);
 
 
     @Autowired
@@ -55,7 +57,7 @@ public class InnerUserServer {
                     return userCodeVO.getCode();
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -83,7 +85,7 @@ public class InnerUserServer {
                         return baseResult;
                     }
                 } catch (Exception e) {
-                    logger.error(e.getMessage());
+                    LOGGER.error(e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -111,7 +113,7 @@ public class InnerUserServer {
                 }
 
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -140,7 +142,7 @@ public class InnerUserServer {
                     }
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -167,7 +169,7 @@ public class InnerUserServer {
                     }
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                LOGGER.error(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -193,7 +195,7 @@ public class InnerUserServer {
                         return userExchangeTokenVO.getToken();
                     }
                 } catch (Exception e) {
-                    logger.error(e.getMessage());
+                    LOGGER.error(e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -220,7 +222,7 @@ public class InnerUserServer {
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             e.printStackTrace();
         }
         return false;
@@ -245,7 +247,7 @@ public class InnerUserServer {
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             e.printStackTrace();
         }
         return false;

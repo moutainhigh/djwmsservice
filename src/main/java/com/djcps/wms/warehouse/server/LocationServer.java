@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.djcps.wms.commons.model.GetCodeBO;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -30,7 +32,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class LocationServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(LocationServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(LocationServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -43,7 +45,6 @@ public class LocationServer {
 	public HttpResult addLocation(AddLocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.addLocation(rb);
@@ -53,7 +54,6 @@ public class LocationServer {
 	public HttpResult modifyLocation(UpdateLocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.modifyLocation(rb);
@@ -63,7 +63,6 @@ public class LocationServer {
 	public HttpResult deleteLocation(DeleteLocationBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.deleteLocation(rb);
@@ -73,7 +72,6 @@ public class LocationServer {
 	public HttpResult getLocationAllList(SelectAllLocationListBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.getLocationAllList(rb);
@@ -83,7 +81,6 @@ public class LocationServer {
 	public HttpResult getLocationByAttribute(SelectLocationByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.getLocationByAttribute(rb);
@@ -98,7 +95,6 @@ public class LocationServer {
 	public HttpResult getLocationCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(getCodeBO);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = getCodeRequest.getCode(rb);
@@ -108,7 +104,6 @@ public class LocationServer {
 	public HttpResult verifyCode(AddLocationBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = locationHttpRequest.verifyCode(rb);
@@ -119,7 +114,6 @@ public class LocationServer {
 	public HttpResult deleteCode(DeleteLocationBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = locationHttpRequest.deleteCode(rb);
@@ -130,7 +124,6 @@ public class LocationServer {
 	public HttpResult getLocationByCode(SelectLocationByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-		System.out.println("---http请求参数转化为json格式---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = locationHttpRequest.getLocationByAttribute(rb);
@@ -153,7 +146,7 @@ public class LocationServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}
