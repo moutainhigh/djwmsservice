@@ -7,7 +7,7 @@ package com.djcps.wms.loadingtask.model.result;
  * @since 2018/3/20
  */
 public class OrderInfoPO {
-    
+
     /**
      * 产品名称
      */
@@ -75,7 +75,29 @@ public class OrderInfoPO {
      * 异常数量
      */
     private Integer abnomalAmount;
-    
+
+    private String fdblflag;
+    /**
+     * 订单状态
+     */
+    private Integer fstatus;
+
+    public Integer getFstatus() {
+        return fstatus;
+    }
+
+    public void setFstatus(Integer fstatus) {
+        this.fstatus = fstatus;
+    }
+
+    public String getFdblflag() {
+        return fdblflag;
+    }
+
+    public void setFdblflag(String fdblflag) {
+        this.fdblflag = fdblflag;
+    }
+
     public Integer getAbnomalAmount() {
         return abnomalAmount;
     }
@@ -203,7 +225,7 @@ public class OrderInfoPO {
                 + ", fmateriallength=" + fmateriallength + ", fmaterialwidth=" + fmaterialwidth + ", fmaterialname="
                 + fmaterialname + ", famount=" + famount + ", fmaterialRule=" + fmaterialRule + ", fproductRule="
                 + fproductRule + ", loadingAmount=" + loadingAmount + ", orderStatus=" + orderStatus
-                + ", abnomalAmount=" + abnomalAmount + "]";
+                + ", abnomalAmount=" + abnomalAmount + ", fdblflag=" + fdblflag + ", fstatus=" + fstatus + "]";
     }
 
 }

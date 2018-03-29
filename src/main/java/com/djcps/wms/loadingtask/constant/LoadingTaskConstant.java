@@ -92,4 +92,8 @@ public class LoadingTaskConstant {
      * 装车员繁忙状态
      */
     public static final Integer LOADINGPERSON_TYPE_1=1;
+    /**
+     * 截取拆分订单编号
+     */
+    public static final String SUBSTRING_ORDER="-";
 }
