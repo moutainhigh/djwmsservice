@@ -3,7 +3,11 @@ package com.djcps.wms.outorder.model.outorderresult;
 import java.util.List;
 
 import com.djcps.wms.outorder.model.OrderDetailBO;
-
+/**
+ * 前端接收出库单结果
+ * @author ldh
+ *
+ */
 public class OrderDetailInfoVO {
 	/**
 	 * 总金额
