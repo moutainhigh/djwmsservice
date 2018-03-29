@@ -1,5 +1,9 @@
 package com.djcps.wms.loadingtask.model.result;
 
+import org.springframework.util.ObjectUtils;
+
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
+
 /**
  * 获取订单编号及装车数量实体类
  * 
@@ -33,6 +37,7 @@ public class OrderIdAndLoadingAmountPO {
     }
 
     public String getOrderId() {
+        
         return orderId;
     }
 

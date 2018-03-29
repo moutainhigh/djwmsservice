@@ -17,6 +17,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtask.model.result.OrderIdAndLoadingAmountPO;
 import com.djcps.wms.loadingtask.model.result.OrderInfoPO;
 import com.djcps.wms.loadingtask.request.LoadingTaskOrderHttpRequest;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 
 import okhttp3.MediaType;
@@ -63,7 +64,20 @@ public class LoadingTaskOrderServer {
         }
         return  orderInfoPOList;
     }
-    
+    /**
+     * 修改订单状态
+     * @param param
+     * @return
+     */
+    public HttpResult updateOrderStatus(OrderIdBO param){
+        //将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = loadingTaskOrderHttpRequest.updateOrderStatus(rb);
+        //校验请求是否成功
+        return returnResult(http);
+    } 
     /**
      * 公共返回
      *
