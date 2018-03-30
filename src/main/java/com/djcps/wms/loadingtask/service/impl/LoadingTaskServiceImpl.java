@@ -3,6 +3,7 @@ package com.djcps.wms.loadingtask.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -42,6 +44,7 @@ import com.djcps.wms.loadingtask.model.result.OrderRedundantPO;
 import com.djcps.wms.loadingtask.server.LoadingTaskOrderServer;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
 import com.djcps.wms.loadingtask.service.LoadingTaskService;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.push.mq.producer.AppProducer;
 
@@ -107,65 +110,87 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> confirm(ConfirmBO param) {
-        List<LoadingPersonIdBO> list =param.getList();
-        if(!ObjectUtils.isEmpty(list)) {
-        for(LoadingPersonIdBO info :list) {
-            if(!ObjectUtils.isEmpty(param.getLoadingTableId())) {
-            info.setLoadingTableId(param.getLoadingTableId());
+        List<LoadingPersonIdBO> list = param.getList();
+        if (!ObjectUtils.isEmpty(list)) {
+            for (LoadingPersonIdBO info : list) {
+                if (!ObjectUtils.isEmpty(param.getLoadingTableId())) {
+                    info.setLoadingTableId(param.getLoadingTableId());
+                }
             }
         }
-        }
+
         HttpResult result = loadingTaskServer.getOrderList(param);
-        if(ObjectUtils.isEmpty(result.getData())) {
+        if (ObjectUtils.isEmpty(result.getData())) {
             return MsgTemplate.failureMsg(SysMsgEnum.NOT_TASK);
         }
         if (result.isSuccess()) {
             loadingTaskServer.updateLoadPersonStatus(param);
             String data = JSONObject.toJSONString(result.getData());
             ConfirmPO confirmPO = gson.fromJson(data, ConfirmPO.class);
+
             List<OrderIdAndLoadingAmountPO> orderPOList = confirmPO.getOrderPOList();
             List<String> childOrderIds = new ArrayList<String>();
             OrderIdsBO orderIdsBO = new OrderIdsBO();
-            if(!ObjectUtils.isEmpty(orderPOList)) {
-            for (OrderIdAndLoadingAmountPO orderInfo : orderPOList) {
-                childOrderIds.add(orderInfo.getOrderId());
-                orderIdsBO.setChildOrderIds(childOrderIds);
-            }
+            Map<String, String> map = new HashMap<>(16);
+            if (!ObjectUtils.isEmpty(orderPOList)) {
+                String orderId = null;
+                for (OrderIdAndLoadingAmountPO orderInfo : orderPOList) {
+
+                    if (!ObjectUtils.isEmpty(orderInfo.getOrderId())) {
+                        if (orderInfo.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER) > 0) {
+
+                            orderId = orderInfo.getOrderId().substring(0,
+                                    orderInfo.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+
+                            map.put(orderInfo.getOrderId(), orderId);
+                            childOrderIds.add(orderId);
+                        } else {
+                            map.put(orderInfo.getOrderId(), orderInfo.getOrderId());
+                            childOrderIds.add(orderInfo.getOrderId());
+                        }
+                    }
+
+                    orderIdsBO.setChildOrderIds(childOrderIds);
+                }
+
             }
             List<AbnormalOrderPO> abnormalInfo = abnormalOrderInfo(childOrderIds, param);
 
             List<OrderInfoPO> orderInfo = loadingTaskOrderServer.getChildOrderList(orderIdsBO);
+
             if (!ObjectUtils.isEmpty(orderInfo)) {
+
+                List<OrderInfoPO> orderlist = new ArrayList<>();
                 for (OrderInfoPO orderInfoPO : orderInfo) {
+                    orderInfoPO.setOrderStatus(orderInfoPO.getFstatus());
+                    if (AppConstant.GROUP_ORDER_DOUBLE.equals(orderInfoPO.getFdblflag())) {
+                        orderlist.add(orderInfoPO);
+                    }
+                }
+                for (OrderInfoPO orderInformation : orderlist) {
+
                     for (AbnormalOrderPO abnormalOrderPO : abnormalInfo) {
-                        if (orderInfoPO.getFchildorderid().equals(abnormalOrderPO.getOrderId())) {
-                            orderInfoPO.setAbnomalAmount(abnormalOrderPO.getAbnomalAmount());
+                        if (orderInformation.getFchildorderid().equals(abnormalOrderPO.getOrderId())) {
+                            if (!abnormalOrderPO.getAbnomalAmount().equals(0)) {
+                                orderInformation.setAbnomalAmount(abnormalOrderPO.getAbnomalAmount());
+                            }
                         }
                     }
                 }
-                /*
-                 * orderInfo.stream().forEach(infor -> { Optional optional =
-                 * abnormalInfo.stream() .filter(abnormal ->
-                 * infor.getFchildorderid().equals(abnormal.getOrderId())) .findFirst();
-                 * if(optional.isPresent()){ OrderInfoPO orderInfoPO
-                 * =(OrderInfoPO)optional.get();
-                 * infor.setAbnomalAmount(orderInfoPO.getAbnomalAmount()); }
-                 * 
-                 * });
-                 */
-
-                orderInfo.stream().forEach(info -> {List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
-                            .filter(amount -> info.getFchildorderid().equals(amount.getOrderId()))
+                orderlist.stream().forEach(info -> {
+                    List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
+                            .filter(amount -> info.getFchildorderid().equals(map.get(amount.getOrderId())))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
-                    info.setOrderStatus(loadingAmount.get(0).getOrderStatus());
+                    info.setFchildorderid(loadingAmount.get(0).getOrderId());
                 });
-                confirmPO.setOrderInfo(orderInfo);
+
+                confirmPO.setOrderInfo(orderlist);
             }
             return MsgTemplate.successMsg(confirmPO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
-        
+
     }
 
     /**
@@ -198,25 +223,79 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> loading(LoadingBO param) {
-        if(!ObjectUtils.isEmpty(param)) {
+        OrderIdBO orderIdBO = new OrderIdBO();
+        if (!ObjectUtils.isEmpty(param)) {
             Integer loadingAmount = param.getLoadingAmount();
             Integer orderAmount = param.getOrderAmount();
-            if(!orderAmount.equals(loadingAmount)) {
-              param.setOnceOrderid(new StringBuffer(param.getOrderId()).append("-1").toString());
-              param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append("-2").toString() );
-             if(!ObjectUtils.isEmpty(loadingAmount)) {
-            if(loadingAmount==0) {
-                param.setCancelStockAmount(orderAmount);
-                param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_1);
-            }else {
-                param.setCancelStockAmount(orderAmount-loadingAmount);
-                param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
-            }
-             }
+            if (!orderAmount.equals(loadingAmount)) {
+                param.setOnceOrderid(new StringBuffer(param.getOrderId()).append("-1").toString());
+                param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append("-2").toString());
+                if (!ObjectUtils.isEmpty(loadingAmount)) {
+                    // 全部退库
+                    if (loadingAmount == 0) {
+                        param.setCancelStockAmount(orderAmount);
+                        param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_1);
+                        //更新订单状态
+                        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getOrderId(), param.getPartnerId(), param.getVersion())) {
+                            
+                            HttpResult result = loadingTaskServer.loading(param);
+                            return MsgTemplate.customMsg(result);
+                        } else {
+                            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+                        }
+                        
+
+                    } else {
+                        // 部分退库
+                        param.setCancelStockAmount(orderAmount - loadingAmount);
+                        param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
+                        HttpResult result = loadingTaskServer.loading(param);
+                        return MsgTemplate.customMsg(result);
+                        // 更新-1订订单状态
+                        /*Boolean updateOnce = updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOnceOrderid(), param.getPartnerId(),
+                                param.getVersion());
+                        Boolean updateTwice = false;
+                        if (updateOnce) {
+                            // 更新-2订单状态
+                            updateTwice = updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getTwiceOrderid(), param.getPartnerId(),
+                                    param.getVersion());
+                        } else {
+                            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+                        }*/
+                        /*if (updateTwice) {
+                            HttpResult result = loadingTaskServer.loading(param);
+                            return MsgTemplate.customMsg(result);
+                        }*/
+                    }
+                }
             }
         }
-        HttpResult result = loadingTaskServer.loading(param);
-        return MsgTemplate.customMsg(result);
+
+        // 正常装车
+        /*
+         * orderIdBO.setOrderId(param.getOrderId()); orderIdBO.setStatus("25");
+         * orderIdBO.setPartnerId(param.getPartnerId());
+         * orderIdBO.setVersion(param.getVersion()); HttpResult updateResult =
+         * loadingTaskOrderServer.updateOrderStatus(orderIdBO);
+         */
+        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOrderId(), param.getPartnerId(), param.getVersion())) {
+            HttpResult result = loadingTaskServer.loading(param);
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+    }
+
+    public boolean updateOrderStatus(String status, String orderId, String partnerId, String version) {
+        OrderIdBO orderIdBO = new OrderIdBO();
+        orderIdBO.setOrderId(orderId);
+        orderIdBO.setStatus(status);
+        orderIdBO.setPartnerId(partnerId);
+        orderIdBO.setVersion(version);
+        HttpResult updateResult = loadingTaskOrderServer.updateOrderStatus(orderIdBO);
+        if (updateResult.isSuccess()) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -304,6 +383,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         if (ObjectUtils.isEmpty(result.getLoadingTaskPO())) {
             return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
         }
+        // 该订单数据状态应到订单自取
         List<OrderRedundantPO> orderPOList = result.getOrderPOList();
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {

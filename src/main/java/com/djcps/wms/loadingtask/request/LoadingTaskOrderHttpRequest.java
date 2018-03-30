@@ -25,4 +25,14 @@ public interface LoadingTaskOrderHttpRequest {
     @Headers("content-type:application/json")
     @POST("order/getInfoByChildIds.do")
     HTTPResponse getOrderDetailsList(@Body RequestBody json);
+    /**
+     * 修改订单状态
+     * @param rb
+     * @return
+     * @author:zdx
+     * @date:2017年12月29日
+     */
+    @Headers("content-type:application/json")
+    @POST("order/changeOrderStatus.do")
+    public HTTPResponse updateOrderStatus(@Body RequestBody rb);
 }
