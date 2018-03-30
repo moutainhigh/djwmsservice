@@ -9,7 +9,7 @@ import com.djcps.wms.outorder.model.OrderDetailBO;
  * @author ldh
  */
 public class OrderDetailInfoVO {
-	/**
+	/** 
 	 * 总金额
 	 */
 	private Double totalPrice;
