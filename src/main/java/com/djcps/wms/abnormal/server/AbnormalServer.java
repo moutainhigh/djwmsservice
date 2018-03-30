@@ -1,23 +1,13 @@
 package com.djcps.wms.abnormal.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.abnormal.model.AddAbnormal;
-import com.djcps.wms.abnormal.model.GetOrderByAttributeBO;
-import com.djcps.wms.abnormal.model.OrderIdBO;
-import com.djcps.wms.abnormal.model.OrderIdListBO;
-import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
+import com.djcps.wms.abnormal.model.*;
 import com.djcps.wms.abnormal.request.AbnormalServerHttpRequest;
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
-import com.djcps.wms.address.request.AddressServerHttpRequest;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.google.gson.Gson;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
 
 /**
