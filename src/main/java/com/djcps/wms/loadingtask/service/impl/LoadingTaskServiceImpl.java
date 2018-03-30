@@ -131,7 +131,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             List<OrderIdAndLoadingAmountPO> orderPOList = confirmPO.getOrderPOList();
             List<String> childOrderIds = new ArrayList<String>();
             OrderIdsBO orderIdsBO = new OrderIdsBO();
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<>(16);
             if (!ObjectUtils.isEmpty(orderPOList)) {
                 String orderId = null;
                 for (OrderIdAndLoadingAmountPO orderInfo : orderPOList) {
