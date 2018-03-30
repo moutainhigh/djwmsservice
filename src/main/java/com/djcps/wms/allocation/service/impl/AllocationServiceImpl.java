@@ -68,6 +68,7 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.utils.RedisUtil;
+import com.djcps.wms.loadingtable.server.LoadingTableServer;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
@@ -118,6 +119,8 @@ public class AllocationServiceImpl implements AllocationService {
     private PushService pushService;
 	@Autowired
     private LoadingTaskServer loadingTaskServer;
+	@Autowired
+	private LoadingTableServer loadingTableServer;
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
 		HttpResult result = allocationServer.getOrderType(baseBO);
@@ -442,6 +445,20 @@ public class AllocationServiceImpl implements AllocationService {
 		param.setWaybillIdCreateTime(time);
 		param.setDeliveryCreateTime(time);
 		param.setDeliveryIdEffect(AllocationConstant.DELIVERY_EFFEFT);
+		
+		
+		
+		//伪代码要删除
+		HttpResult talbeResult =  allocationServer.getDeliveryTableId();
+		if(ObjectUtils.isEmpty(talbeResult.getData())){
+			return MsgTemplate.failureMsg("当前无空闲装车台请等待");
+		}else{
+			JsonObject asJsonObject = new JsonParser().parse(gson.toJson(talbeResult.getData())).getAsJsonArray().get(0).getAsJsonObject();
+			param.setLoadingTableId(asJsonObject.get("loadingTableId").getAsString());
+			param.setLoadingTableName(asJsonObject.get("loadingTableName").getAsString());
+		}
+		//伪代码要删除
+		
 		HttpResult result = allocationServer.verifyAllocation(param);
 		if(result.isSuccess()){
 			//冗余表中插入运单号,提货单号和车牌号,并且修改订单状态

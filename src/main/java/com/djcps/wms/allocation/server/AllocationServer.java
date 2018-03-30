@@ -436,6 +436,15 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult getDeliveryTableId() {
+		//将请求参数转化为requestbody格式
+		String json = "";
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.getDeliveryTableId(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -455,4 +464,6 @@ public class AllocationServer {
 		}
 		return result;
 	}
+
+	
 }
