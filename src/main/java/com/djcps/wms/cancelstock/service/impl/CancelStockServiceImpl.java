@@ -23,6 +23,7 @@ import com.djcps.wms.cancelstock.server.CancelStockServer;
 import com.djcps.wms.cancelstock.service.CancelStockService;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.FluteTypeEnum;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -111,6 +112,14 @@ public class CancelStockServiceImpl implements CancelStockService {
 			return MsgTemplate.failureMsg(CancelStockEnum.WAREHOUSEID_ERROR.getValue());
 		}
 		HttpResult result = cancelStockServer.addStock(param);
+		//修改订单服务拆分订单的订单状态
+//		if(result.isSuccess()){
+//			OrderIdBO orderIdBO = new OrderIdBO();
+//			orderIdBO.setOrderId(param.getOrderId());
+//			orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+//	        //通知订单服务修改,需要批量执行
+//	        HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
+//		}
 		return MsgTemplate.customMsg(result);
 	}
 
