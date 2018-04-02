@@ -50,32 +50,32 @@ public class LoadingTaskConstant {
     /**
      * 冗余表订单状态 21,部分入库
      */
-    public static final Integer REDUNDANTSTATUS_21=21;
+    public static final String REDUNDANTSTATUS_21="21";
 
     /**
      * 冗余表订单状态 22 ,已入库
      */
-    public static final Integer REDUNDANTSTATUS_22=22;
+    public static final String REDUNDANTSTATUS_22="22";
 
     /**
      * 冗余表订单状态 23 ,已配货
      */
-    public static final Integer REDUNDANTSTATUS_23=23;
+    public static final String REDUNDANTSTATUS_23="23";
 
     /**
      * 冗余表订单状态 24, 已提货
      */
-    public static final Integer REDUNDANTSTATUS_24=24;
+    public static final String REDUNDANTSTATUS_24="24";
 
     /**
      * 冗余表订单状态 25, 已装车
      */
-    public static final Integer REDUNDANTSTATUS_25=25;
+    public static final String REDUNDANTSTATUS_25="25";
 
     /**
      * 冗余表订单状态 26 ,已发车
      */
-    public static final Integer REDUNDANTSTATUS_26=26;
+    public static final String REDUNDANTSTATUS_26="26";
     /**
      * 全部退库1
      */

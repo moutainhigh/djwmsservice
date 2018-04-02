@@ -7,23 +7,31 @@ import org.springframework.stereotype.Component;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.request.NumberServerHttpRequest;
+import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
 import com.djcps.wms.loadingtask.model.FinishLoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonBO;
+import com.djcps.wms.loadingtask.model.OutOrderInfoBO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
 import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.loadingtask.request.WmsForLoadingTaskHttpRequest;
+import com.djcps.wms.outorder.request.WmsForOutOrderHttpRequest;
 import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rpc.plugin.http.HTTPResponse;
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author wyb
@@ -34,6 +42,10 @@ public class LoadingTaskServer {
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(LoadingTaskServer.class);
     @Autowired
     private WmsForLoadingTaskHttpRequest wmsForLoadingTaskHttpRequest;
+    @Autowired
+    private NumberServerHttpRequest numberServerHttpRequest;
+    @Autowired
+    private WmsForOutOrderHttpRequest wmsForOutOrderHttpRequest;
 
     /**
      * 获取装车员列表
@@ -188,6 +200,59 @@ public class LoadingTaskServer {
         }
         return result;
     }
+    
+    /**
+     * 通过运单号获取订单id，车辆id，车牌号等信息
+     */
+    public HttpResult getInfoByWayBillId(FinishLoadingBO param){
+    	String json = gson.toJson(param);
+    	RequestBody rb =RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json);
+    	HTTPResponse response = wmsForOutOrderHttpRequest.getInfoByWayBillId(rb);
+    	HttpResult result = returnResult(response);
+    	return result;
+    }
+    
+    /**
+     * 生成出库单数据
+     */
+    public HttpResult insertOutOrder(List<OutOrderInfoBO> params){
+    	String json = gson.toJson(params);
+    	RequestBody rb =RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json);
+    	HTTPResponse response = wmsForOutOrderHttpRequest.insertOutOrder(rb);
+    	HttpResult result = returnResult(response);
+    	return result;
+    }
+    
+    /**
+     * 获取统一编号服务的编号
+     * @param count
+     * @return
+     * @author ldh
+     */
+    public HttpResult getNumber(int count){
+    	GetNumberBO getNumberBO=new GetNumberBO();
+		getNumberBO.setCount(count);
+		String json=gson.toJson(getNumberBO);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = numberServerHttpRequest.getnumber(rb);
+		//校验请求是否成功
+		HttpResult result=returnResult(http);
+		//更换data为字符串"ZTC+numbers"
+		String backjson= gson.toJson(result.getData());
+		System.out.println("");
+		Map<String,List<String>> map=gson.fromJson(backjson, Map.class);
+		String number= "";
+		//返回的编号键名
+		String key="numbers";
+		if((map.get(key)).size()>0){
+			number=AppConstant.CK+(map.get("numbers")).get(0);
+		}
+		result.setData(number);
+		return result;
+    	
+    }
+    
     /**
      * 公共返回
      *
@@ -209,4 +274,6 @@ public class LoadingTaskServer {
         }
         return null;
     }
+    
+    
 }
