@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
+import com.djcps.wms.commons.base.PushExtraFieldBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.FluteTypeEnum;
@@ -476,16 +477,23 @@ public class AllocationServiceImpl implements AllocationService {
 			HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
 			if(updateOrderRedunResult.isSuccess()){
 				//最后通知提货员
+				PushExtraFieldBO pushExtraFieldBO = new PushExtraFieldBO();
+				pushExtraFieldBO.setUserId(param.getPickerId());
+				pushExtraFieldBO.setOpenType(AppConstant.PUSH_OPEN_TYPE_DELIVERY);
 				PushMsgBO push = new PushMsgBO();
-				push.setAppSystem(AppConstant.WMS);
 				push.setUserid(param.getPickerId());
+//				push.setMsg(AllocationConstant.PUSH_DELIVERY_MSG);
+				push.setAppSystem(AppConstant.WMS);
 				push.setMid(param.getDeliveryId());
 				push.setType(AllocationConstant.PUSH_DELIVERY_TYPE);
-				push.setMsg(AllocationConstant.PUSH_DELIVERY_MSG);
-				push.setTicker(AllocationConstant.PUSH_DELIVERY_TICKER);
 				push.setTitle(AllocationConstant.PUSH_DELIVERY_TITLE);
+				push.setText(AllocationConstant.PUSH_DELIVERY_TEXT);
+				push.setExtraField(pushExtraFieldBO);
 				//消息推送
-//				pushService.sendAppMsg(push);
+				Map<String, Object> sendAppMsg = pushService.sendAppMsg(push);
+				if(!(Boolean)sendAppMsg.get("success")){
+					LOGGER.error("==========智能配货生成提货单推送消息失败==========");
+				}
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
@@ -1280,8 +1288,8 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> getPicker() {
-		PickerPO picker1 = new PickerPO("977","周德星","15157780633","空闲");
-		PickerPO picker2 = new PickerPO("977","郑杰","15157780633","空闲");
+		PickerPO picker1 = new PickerPO("1000933","周德星","15157780633","空闲");
+		PickerPO picker2 = new PickerPO("1000933","郑杰","15157780633","空闲");
 		List<PickerPO> list = new ArrayList<>();
 		list.add(picker1);
 		list.add(picker2);
