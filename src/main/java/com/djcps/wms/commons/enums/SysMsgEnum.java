@@ -95,7 +95,8 @@ public enum SysMsgEnum implements MsgInterface {
 	
 	ALREADY_INTELLIGENT_ALLOCATION(880022,"该配货结果已确认"),
 	NOT_DEAL(880023,"还有任务未处理无法完成装车"),
-	NOT_TASK(880024,"当前没有任务")
+	NOT_TASK(880024,"当前没有任务"),
+	OUTORDER_FAIL(880025,"生成出库单失败")
 	;
 
     private int code;

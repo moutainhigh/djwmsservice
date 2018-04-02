@@ -1,5 +1,6 @@
 package com.djcps.wms.loadingtask.model;
 
+import java.util.Date;
 import java.util.List;
 /**
  * 根据运单id获取车牌号、订单号、配货时间和车辆id
@@ -35,22 +36,23 @@ public class GetOrderByWayBillIdPO {
 	public void setOrderId(List<String> orderId) {
 		this.orderId = orderId;
 	}
-	public String getAllocationTime() {
-		return allocationTime;
-	}
-	public void setAllocationTime(String allocationTime) {
-		this.allocationTime = allocationTime;
-	}
 	public String getCarId() {
 		return carId;
 	}
 	public void setCarId(String carId) {
 		this.carId = carId;
 	}
+	
+	public String getAllocationTime() {
+		return allocationTime;
+	}
+	public void setAllocationTime(String allocationTime) {
+		this.allocationTime = allocationTime;
+	}
 	@Override
 	public String toString() {
-		return "GetOrderByWayBillIdPO [plateNumber=" + plateNumber + ", allocationTime=" + allocationTime + ", carId="
-				+ carId + "]";
+		return "GetOrderByWayBillIdPO [plateNumber=" + plateNumber + ", orderId=" + orderId + ", allocationTime="
+				+ allocationTime + ", carId=" + carId + "]";
 	}
 	
 	

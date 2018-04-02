@@ -100,17 +100,18 @@ public class OutOrderInfoBO extends BaseAddBO{
 	public void setPlateNumber(String plateNumber) {
 		this.plateNumber = plateNumber;
 	}
-	public String getAllocationTime() {
-		return allocationTime;
-	}
-	public void setAllocationTime(String allocationTime) {
-		this.allocationTime = allocationTime;
-	}
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public String getAllocationTime() {
+		return allocationTime;
+	}
+	public void setAllocationTime(String allocationTime) {
+		this.allocationTime = allocationTime;
 	}
 	@Override
 	public String toString() {

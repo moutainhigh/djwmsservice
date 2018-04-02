@@ -52,14 +52,18 @@ public interface WmsForOutOrderHttpRequest {
 	HTTPResponse updateOutOrderByOutOrderId(@Body RequestBody rb);
 	
 	/**
-	 * 根据运单编号获取车辆id、订单id车牌号等信息
+	 * 根据运单id获取车辆id、客户信息、车牌号等
+	 * @param rb
+	 * @return
 	 */
 	@Headers("content-type:application/json")
 	@POST("outOrder/selectOrderByWayBillId.do")
 	HTTPResponse getInfoByWayBillId(@Body RequestBody rb);
 	
 	/**
-	 * 生成出库单表数据
+	 * 生成出库单数据
+	 * @param rb
+	 * @return
 	 */
 	@Headers("content-type:application/json")
 	@POST("outOrder/insertOutOrder.do")
