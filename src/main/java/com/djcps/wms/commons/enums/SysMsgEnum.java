@@ -94,8 +94,14 @@ public enum SysMsgEnum implements MsgInterface {
 	AGAIN_VERIFY_ALLOCATION_ERROR(880021,"请勿同时进行确认优化"),
 	
 	ALREADY_INTELLIGENT_ALLOCATION(880022,"该配货结果已确认"),
+	
 	NOT_DEAL(880023,"还有任务未处理无法完成装车"),
-	NOT_TASK(880024,"当前没有任务")
+	
+	NOT_TASK(880024,"当前没有任务"),
+	
+	NO_HAVE_WAREHOUSE(880025,"当前无可用仓库"),
+	
+	WAREHOUSE_ERROR(880026,"该仓库有误请重新核实")
 	;
 
     private int code;

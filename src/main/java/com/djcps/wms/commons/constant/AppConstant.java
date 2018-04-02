@@ -73,4 +73,20 @@ public class AppConstant {
      */
     public static final String CARTON_ORDER ="3";
     
+    /**
+     * 盘点处理消息推送,openType
+     */
+    public static final Integer PUSH_OPEN_TYPE_STOCKTAKING =1;
+    
+    /**
+     * 追加订单处理消息推送,openType
+     */
+    public static final Integer PUSH_OPEN_TYPE_ADD_ORDER_HANDLE =2;
+    
+    /**
+     * 提货消息推送,openType
+     */
+    public static final Integer PUSH_OPEN_TYPE_DELIVERY =3;
+    
+   
 }

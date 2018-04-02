@@ -193,9 +193,9 @@ public class AllocationConstant {
     public static final String FLAG_ADD_ORDER_HANDLE="0";
     
     public static final String PUSH_DELIVERY_MSG="你有最新的提货任务,请打开任务系统查看";
-    public static final String PUSH_DELIVERY_TICKER="WMS提货任务";
-    public static final String PUSH_DELIVERY_TITLE="提货任务";
-    public static final String PUSH_DELIVERY_TEXT="2";
-    public static final String PUSH_DELIVERY_CUSTOM="";
+    
+    public static final String PUSH_DELIVERY_TITLE="您有新的提货任务";
+    
+    public static final String PUSH_DELIVERY_TEXT="您有新的提货任务,请打开任务系统查看";
     
 }

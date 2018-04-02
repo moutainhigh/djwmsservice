@@ -71,7 +71,7 @@ public class LoadingTaskConstant {
      * 冗余表订单状态 25, 已装车
      */
     public static final String REDUNDANTSTATUS_25="25";
-
+    public static final Integer ORDERTSTATUS_25=25; 
     /**
      * 冗余表订单状态 26 ,已发车
      */

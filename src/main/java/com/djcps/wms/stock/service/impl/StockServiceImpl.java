@@ -2,10 +2,10 @@ package com.djcps.wms.stock.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.util.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +25,7 @@ import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
@@ -33,6 +34,7 @@ import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.djcps.wms.stock.model.AddStockBO;
+import com.djcps.wms.stock.model.BulitTypePO;
 import com.djcps.wms.stock.model.MapLocationPO;
 import com.djcps.wms.stock.model.MoveStockBO;
 import com.djcps.wms.stock.model.RecommendLocaBO;
@@ -41,10 +43,11 @@ import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
 import com.djcps.wms.stock.server.StockServer;
 import com.djcps.wms.stock.service.StockService;
+import com.djcps.wms.warehouse.server.WarehouseServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * 入库移库业务层
@@ -69,6 +72,9 @@ public class StockServiceImpl implements StockService{
 
 	@Autowired
 	private AbnormalServer abnormalServer;
+	
+	@Autowired
+	private WarehouseServer warehouseServer;
 	
 	private JsonParser jsonParser = new JsonParser();
 	
@@ -133,6 +139,24 @@ public class StockServiceImpl implements StockService{
 
 	@Override
 	public Map<String, Object> addStock(AddStockBO param) {
+		//先判断入库的仓库是否被启用,禁用直接驳回
+		PartnerInfoBO partnerInfoBean = new PartnerInfoBO();
+		BeanUtils.copyProperties(param, partnerInfoBean);
+		HttpResult warehouseResult = warehouseServer.getAllWarehouseName(partnerInfoBean);
+		if(ObjectUtils.isEmpty(warehouseResult.getData())){
+			return MsgTemplate.failureMsg(SysMsgEnum.NO_HAVE_WAREHOUSE);
+		}
+		List<BulitTypePO> fromJsonDetailList = gson.fromJson(gson.toJson(warehouseResult.getData()), new TypeToken<ArrayList<BulitTypePO>>(){}.getType());
+		Map<String,BulitTypePO> haveMap = new HashMap<>(16);
+		for (BulitTypePO bulitTypePO : fromJsonDetailList) {
+			haveMap.put(bulitTypePO.getWarehouseId(), bulitTypePO);
+		}
+		BulitTypePO bulitTypePO = haveMap.get(param.getWarehouseId());
+		if(bulitTypePO==null){
+			return MsgTemplate.failureMsg(SysMsgEnum.WAREHOUSE_ERROR);
+		}
+		//先判断入库的仓库是否被启用,禁用直接驳回
+		
 		ArrayList<OrderIdBO> list = new ArrayList<OrderIdBO>();
 		//订单号
 		String orderId = param.getOrderId();
