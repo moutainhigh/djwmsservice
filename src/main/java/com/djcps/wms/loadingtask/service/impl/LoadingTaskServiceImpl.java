@@ -235,37 +235,39 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                     if (loadingAmount == 0) {
                         param.setCancelStockAmount(orderAmount);
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_1);
-                        //更新订单状态
-                        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getOrderId(), param.getPartnerId(), param.getVersion())) {
-                            
+                        // 更新订单状态
+                        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getOrderId(),
+                                param.getPartnerId(), param.getVersion())) {
+
                             HttpResult result = loadingTaskServer.loading(param);
                             return MsgTemplate.customMsg(result);
                         } else {
                             return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
                         }
-                        
 
                     } else {
                         // 部分退库
                         param.setCancelStockAmount(orderAmount - loadingAmount);
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
                         HttpResult result = loadingTaskServer.loading(param);
+                        // 伪代码后期下面更新 换为下面注释的代码
+                        updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOrderId(),
+                                param.getPartnerId(), param.getVersion());
                         return MsgTemplate.customMsg(result);
                         // 更新-1订订单状态
-                        /*Boolean updateOnce = updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOnceOrderid(), param.getPartnerId(),
-                                param.getVersion());
-                        Boolean updateTwice = false;
-                        if (updateOnce) {
-                            // 更新-2订单状态
-                            updateTwice = updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getTwiceOrderid(), param.getPartnerId(),
-                                    param.getVersion());
-                        } else {
-                            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
-                        }*/
-                        /*if (updateTwice) {
-                            HttpResult result = loadingTaskServer.loading(param);
-                            return MsgTemplate.customMsg(result);
-                        }*/
+                        /*
+                         * Boolean updateOnce =
+                         * updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25,
+                         * param.getOnceOrderid(), param.getPartnerId(), param.getVersion()); Boolean
+                         * updateTwice = false; if (updateOnce) { // 更新-2订单状态 updateTwice =
+                         * updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24,
+                         * param.getTwiceOrderid(), param.getPartnerId(), param.getVersion()); } else {
+                         * return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE); }
+                         */
+                        /*
+                         * if (updateTwice) { HttpResult result = loadingTaskServer.loading(param);
+                         * return MsgTemplate.customMsg(result); }
+                         */
                     }
                 }
             }
@@ -278,7 +280,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
          * orderIdBO.setVersion(param.getVersion()); HttpResult updateResult =
          * loadingTaskOrderServer.updateOrderStatus(orderIdBO);
          */
-        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOrderId(), param.getPartnerId(), param.getVersion())) {
+        if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOrderId(), param.getPartnerId(),
+                param.getVersion())) {
             HttpResult result = loadingTaskServer.loading(param);
             return MsgTemplate.customMsg(result);
         }
@@ -387,7 +390,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         List<OrderRedundantPO> orderPOList = result.getOrderPOList();
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {
-                if (!LoadingTaskConstant.REDUNDANTSTATUS_25.equals(info.getStatus())) {
+                if (!LoadingTaskConstant.ORDERTSTATUS_25.equals(info.getStatus())) {
                     return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
                 }
             }
