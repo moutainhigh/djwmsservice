@@ -14,7 +14,9 @@ import com.djcps.wms.delivery.enums.DeliveryStatusEnum;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.server.DeliveryServer;
 import com.djcps.wms.delivery.service.DeliveryService;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.ChildOrderBO;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.server.OrderServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +118,12 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public Map<String, Object> completeOrder(SaveDeliveryBO param) {
         HttpResult result = deliveryServer.completeOrder(param);
+        OrderIdBO orderIdBO = new OrderIdBO();
         if (!ObjectUtils.isEmpty(result)) {
+            orderIdBO.setOrderId(param.getOrderId());
+            orderIdBO.setPartnerId(param.getPartnerId());
+            orderIdBO.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+            orderServer.updateOrderStatus(orderIdBO);
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
@@ -312,7 +319,9 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     @Override
     public Map<String, Object> updateDeliveryEffect(UpdateDeliveryEffectBO param) {
+        
         HttpResult result = deliveryServer.updateDeliveryEffect(param);
+        
         return MsgTemplate.customMsg(result);
     }
 }

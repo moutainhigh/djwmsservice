@@ -227,6 +227,8 @@ public class ProviderController {
 		try {
 			LOGGER.debug("json : " + json);
 			SelectProviderByAttributeBO param = gson.fromJson(json, SelectProviderByAttributeBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+            BeanUtils.copyProperties(partnerInfoBean,param);
 			return providerService.getProviderByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();
