@@ -9,6 +9,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.StringUtils;
+import com.djcps.wms.delivery.constant.DeliveryConstant;
 import com.djcps.wms.delivery.enums.DeliveryMsgEnum;
 import com.djcps.wms.delivery.enums.DeliveryStatusEnum;
 import com.djcps.wms.delivery.model.*;
@@ -319,8 +320,15 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     @Override
     public Map<String, Object> updateDeliveryEffect(UpdateDeliveryEffectBO param) {
-        
+        OrderIdBO orderIdBO = new OrderIdBO();
         HttpResult result = deliveryServer.updateDeliveryEffect(param);
+        //更新订单状态为已入库
+        if(!ObjectUtils.isEmpty(param.getOrderIds())){
+            orderIdBO.setOrderId(param.getOrderIds().get(0));
+            orderIdBO.setPartnerId(param.getPartnerId());
+            orderIdBO.setStatus(DeliveryConstant.REDUNDANTSTATUS_22);
+            orderServer.updateOrderStatus(orderIdBO);
+        }
         
         return MsgTemplate.customMsg(result);
     }

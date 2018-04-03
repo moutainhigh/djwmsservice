@@ -63,6 +63,7 @@ public class OutOrderServer {
 		return verifyHttpResult(http);
 	}
 	
+	
 	private HttpResult verifyHttpResult(HTTPResponse http){
 		HttpResult result = null;
 		//校验请求是否成功

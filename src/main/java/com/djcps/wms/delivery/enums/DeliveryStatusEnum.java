@@ -18,7 +18,6 @@ public enum DeliveryStatusEnum{
      * 已提货
      */
     ACCOMPLISHED(10);
-
     private Integer value;
 
     DeliveryStatusEnum(Integer value){

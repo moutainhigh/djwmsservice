@@ -758,6 +758,6 @@ public class ChildOrderBO {
                 ", fdeletestatus='" + fdeletestatus + '\'' +
                 ", fpaytype=" + fpaytype +
                 ", fdblflag='" + fdblflag + '\'' +
-                '}';
+                '}'; 
     }
 }
