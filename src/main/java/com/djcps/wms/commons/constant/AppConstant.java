@@ -93,5 +93,14 @@ public class AppConstant {
      */
     public static final Integer PUSH_OPEN_TYPE_DELIVERY =3;
     
-   
+    /**
+     * wms项目msg枚举前缀
+     */
+    public static final Integer WMS_MSG_ENUM_PREFIX = 880000;
+    
+    /**
+     * 配货msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_ALLOCATION_ENUM_PREFIX = 100;
+    
 }
