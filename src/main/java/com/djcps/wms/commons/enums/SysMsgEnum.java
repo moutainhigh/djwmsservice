@@ -104,7 +104,7 @@ public enum SysMsgEnum implements MsgInterface {
 	WAREHOUSE_ERROR(880026,"该仓库有误请重新核实"),
 	
 	OUTORDER_FAIL(880027,"生成出库单失败")
-	;
+	; 
 
     private int code;
     
