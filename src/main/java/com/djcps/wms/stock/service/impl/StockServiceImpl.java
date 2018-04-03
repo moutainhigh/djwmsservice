@@ -32,6 +32,7 @@ import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
+import com.djcps.wms.stock.enums.StockMsgEnum;
 import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.djcps.wms.stock.model.AddStockBO;
 import com.djcps.wms.stock.model.BulitTypePO;
@@ -177,7 +178,7 @@ public class StockServiceImpl implements StockService{
 			JsonArray asJsonArray = jsonParser.parse(gson.toJson(object)).getAsJsonArray();
 			Integer trueAmount = asJsonArray.get(0).getAsJsonObject().get("amountSaved").getAsInt();
 			if(trueAmount+saveAmount>orderAmount){
-				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
+				return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(trueAmount+saveAmount==orderAmount){
 				//相等表示已入库修改订单状态
 				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
@@ -187,7 +188,7 @@ public class StockServiceImpl implements StockService{
 			}
 		}else{
 			if(saveAmount > orderAmount){
-				return MsgTemplate.failureMsg(SysMsgEnum.SAVE_AMOUNT_ERROE);
+				return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(saveAmount.equals(orderAmount)){
 				//相等表示已入库修改订单状态
 				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
@@ -247,7 +248,7 @@ public class StockServiceImpl implements StockService{
 						}
 					}
 					if(!result.isSuccess()){
-						return MsgTemplate.failureMsg(SysMsgEnum.REDUNDANT_FAIL);
+						return MsgTemplate.failureMsg(StockMsgEnum.REDUNDANT_FAIL);
 					}else{
 						//异常订单逻辑
 						OrderIdListBO orderIdListBO = new OrderIdListBO();

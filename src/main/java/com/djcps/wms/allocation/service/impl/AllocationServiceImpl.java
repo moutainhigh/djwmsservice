@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.allocation.constant.AllocationConstant;
+import com.djcps.wms.allocation.enums.AllocationMsgEnum;
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
 import com.djcps.wms.allocation.model.AddExcellentAllocationBO;
@@ -358,7 +359,7 @@ public class AllocationServiceImpl implements AllocationService {
 				}else{
 					//删除确认配货,确认优化公共锁
 					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-					return MsgTemplate.failureMsg(SysMsgEnum.VERIFY_ALLOCATION_ERROR);
+					return MsgTemplate.failureMsg(AllocationMsgEnum.VERIFY_ALLOCATION_ERROR);
 				}
 			}else{
 				while(true){
@@ -375,7 +376,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}else{
 							//删除确认配货,确认优化公共锁
 							redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-							return MsgTemplate.failureMsg(SysMsgEnum.VERIFY_ALLOCATION_ERROR);
+							return MsgTemplate.failureMsg(AllocationMsgEnum.VERIFY_ALLOCATION_ERROR);
 						}
 					}
 					//休息一秒,再进行下一次循环
@@ -402,7 +403,7 @@ public class AllocationServiceImpl implements AllocationService {
 			if(flag.equals(AllocationConstant.ALLOCATION_EFFECT)){
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-				return MsgTemplate.failureMsg(SysMsgEnum.ALREADY_INTELLIGENT_ALLOCATION);
+				return MsgTemplate.failureMsg(AllocationMsgEnum.ALREADY_INTELLIGENT_ALLOCATION);
 			}
 		}
 		List<String> orderIds = new ArrayList<>();
@@ -422,7 +423,7 @@ public class AllocationServiceImpl implements AllocationService {
 				String error = orderPO.getOrderId();
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-				String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+				String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 				return MsgTemplate.failureMsg(msg);
 			}
 		}
@@ -747,7 +748,9 @@ public class AllocationServiceImpl implements AllocationService {
 		}else{
 			redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(param));
 		}
-		//订单表中存入订单数据
+		for (AddAllocationOrderBO addAllocationOrderBO : param) {
+			addAllocationOrderBO.setDeliveryAmount(addAllocationOrderBO.getOrderAmount());
+		}
 		HttpResult result = allocationServer.verifyAddOrder(param);
 		return MsgTemplate.customMsg(result);
 	}
@@ -1321,7 +1324,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}else{
 				//删除确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-				return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
+				return MsgTemplate.failureMsg(AllocationMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
 			}
 		}else{
 			try {
@@ -1339,7 +1342,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}else{
 							//删除确认配货,确认优化公共锁
 							redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-							return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
+							return MsgTemplate.failureMsg(AllocationMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
 						}
 					}
 					//休息一秒,再进行下一次循环
@@ -1590,7 +1593,7 @@ public class AllocationServiceImpl implements AllocationService {
 						redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 						//删除同时确认优化锁
 					    redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+waybillId);
-						String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+						String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 						return MsgTemplate.failureMsg(msg);
 					}
 				}
@@ -1635,6 +1638,7 @@ public class AllocationServiceImpl implements AllocationService {
 							order.setWarehouseAreaName(areaName);
 							order.setWarehouseLocId(locationBO.getWarehouseLocId());
 							order.setWarehouseLocName(locationBO.getWarehouseLocName());
+							order.setDeliveryAmount(String.valueOf(detail.getFamount()));
 							ordersList.add(order);
 						}
 					}
@@ -1697,7 +1701,7 @@ public class AllocationServiceImpl implements AllocationService {
 					}
 				}else{
 					String error = warehouseOrderDetailPO.getFchildorderid();
-					String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+					String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 					//释放同时确认配货,确认优化公共锁
 					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 					//删除同时确认优化锁
