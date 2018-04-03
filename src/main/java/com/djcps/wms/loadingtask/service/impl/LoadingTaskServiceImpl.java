@@ -273,13 +273,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             }
         }
 
-        // 正常装车
-        /*
-         * orderIdBO.setOrderId(param.getOrderId()); orderIdBO.setStatus("25");
-         * orderIdBO.setPartnerId(param.getPartnerId());
-         * orderIdBO.setVersion(param.getVersion()); HttpResult updateResult =
-         * loadingTaskOrderServer.updateOrderStatus(orderIdBO);
-         */
         if (updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25, param.getOrderId(), param.getPartnerId(),
                 param.getVersion())) {
             HttpResult result = loadingTaskServer.loading(param);
@@ -318,7 +311,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         return MsgTemplate.customMsg(result);
     }
 
-    /**
+    /**     
      * 驳回申请
      *
      * @param param
