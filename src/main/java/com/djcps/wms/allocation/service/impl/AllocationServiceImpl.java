@@ -736,7 +736,6 @@ public class AllocationServiceImpl implements AllocationService {
 				map.put(addAllocationOrderBO.getOrderId(), addAllocationOrderBO);
 			}
 			for (AddAllocationOrderBO addAllocationOrderBO : param) {
-				addAllocationOrderBO.setDeliveryAmount(addAllocationOrderBO.getOrderAmount());
 				map.put(addAllocationOrderBO.getOrderId(), addAllocationOrderBO);
 			}
 			cacheList = new ArrayList<>();
@@ -748,6 +747,9 @@ public class AllocationServiceImpl implements AllocationService {
 			redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(cacheList));
 		}else{
 			redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(param));
+		}
+		for (AddAllocationOrderBO addAllocationOrderBO : param) {
+			addAllocationOrderBO.setDeliveryAmount(addAllocationOrderBO.getOrderAmount());
 		}
 		HttpResult result = allocationServer.verifyAddOrder(param);
 		return MsgTemplate.customMsg(result);
