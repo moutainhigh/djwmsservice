@@ -33,6 +33,11 @@ public class AppConstant {
      * 盘点任务编号前缀
      */
     public static final String TS="TS";
+    
+    /**
+     * 出库任务编号前缀
+     */
+    public static final String CK="CK";
 
     /**
      * 团购服务获取订单,double双写值

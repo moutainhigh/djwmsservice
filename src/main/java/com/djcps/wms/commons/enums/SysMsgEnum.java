@@ -101,7 +101,9 @@ public enum SysMsgEnum implements MsgInterface {
 	
 	NO_HAVE_WAREHOUSE(880025,"当前无可用仓库"),
 	
-	WAREHOUSE_ERROR(880026,"该仓库有误请重新核实")
+	WAREHOUSE_ERROR(880026,"该仓库有误请重新核实"),
+	
+	OUTORDER_FAIL(880027,"生成出库单失败")
 	;
 
     private int code;
