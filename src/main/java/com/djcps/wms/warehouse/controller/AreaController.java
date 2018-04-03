@@ -11,7 +11,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.area.*;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
@@ -72,7 +71,7 @@ public class AreaController {
 							new HibernateSupportedValidator<ProvinceCityBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -108,7 +107,7 @@ public class AreaController {
 							new HibernateSupportedValidator<AddAreaBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
-					.on(addArea.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(addArea.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(otherRet);
@@ -143,7 +142,7 @@ public class AreaController {
 							new HibernateSupportedValidator<ProvinceCityBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -179,7 +178,7 @@ public class AreaController {
 							new HibernateSupportedValidator<UpdateAreaBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
-					.on(updateArea.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(updateArea.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(otherRet);

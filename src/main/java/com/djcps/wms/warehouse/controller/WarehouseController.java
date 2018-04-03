@@ -14,7 +14,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.service.WarehouseService;
@@ -70,15 +69,15 @@ public class WarehouseController {
 					.on(param,
 							new HibernateSupportedValidator<AddWarehouseBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -113,15 +112,15 @@ public class WarehouseController {
 					.on(param,
 							new HibernateSupportedValidator<UpdateWarehouseBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);

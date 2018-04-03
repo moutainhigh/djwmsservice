@@ -1,12 +1,19 @@
 package com.djcps.wms.allocation.service.impl;
 
 
-import com.djcps.log.DjcpsLogger;
-import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.allocation.constant.AllocationConstant;
-import com.djcps.wms.allocation.model.*;
-import com.djcps.wms.allocation.server.AllocationServer;
-import com.djcps.wms.allocation.service.AllocationService;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
@@ -16,6 +23,47 @@ import com.djcps.wms.commons.constant.RedisPrefixContant;
 import com.djcps.wms.commons.enums.FluteTypeEnum;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.allocation.constant.AllocationConstant;
+import com.djcps.wms.allocation.enums.AllocationMsgEnum;
+import com.djcps.wms.allocation.model.AddAllocationBO;
+import com.djcps.wms.allocation.model.AddAllocationOrderBO;
+import com.djcps.wms.allocation.model.AddExcellentAllocationBO;
+import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
+import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
+import com.djcps.wms.allocation.model.CancelAllocationBO;
+import com.djcps.wms.allocation.model.CarInfo;
+import com.djcps.wms.allocation.model.ChangeCarInfoBO;
+import com.djcps.wms.allocation.model.DeliveryOrderPO;
+import com.djcps.wms.allocation.model.GetAllocationManageListPO;
+import com.djcps.wms.allocation.model.IntelligentAllocationPO;
+import com.djcps.wms.allocation.model.LoadingPersonPO;
+import com.djcps.wms.allocation.model.MergeModelBO;
+import com.djcps.wms.allocation.model.MoveOrderPO;
+import com.djcps.wms.allocation.model.OrderPO;
+import com.djcps.wms.allocation.model.PickerPO;
+import com.djcps.wms.allocation.model.RelativeIdBO;
+import com.djcps.wms.allocation.model.SequenceBO;
+import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
+import com.djcps.wms.allocation.model.VerifyAllocationBO;
+import com.djcps.wms.allocation.model.WarehousePO;
+import com.djcps.wms.allocation.model.WaybillDeliveryOrderPO;
+import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
+import com.djcps.wms.allocation.model.GetExcellentLodingBO;
+import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
+import com.djcps.wms.allocation.model.GetOrderIdByOrderType;
+import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
+import com.djcps.wms.allocation.server.AllocationServer;
+import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -26,24 +74,23 @@ import com.djcps.wms.loadingtable.server.LoadingTableServer;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
-import com.djcps.wms.order.model.*;
+import com.djcps.wms.loadingtask.service.LoadingTaskService;
+import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.OrderIdsBO;
+import com.djcps.wms.order.model.WarehouseAreaBO;
+import com.djcps.wms.order.model.WarehouseLocationBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.push.model.PushMsgBO;
 import com.djcps.wms.push.service.PushService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * 混合配货业务层实现类
@@ -312,7 +359,7 @@ public class AllocationServiceImpl implements AllocationService {
 				}else{
 					//删除确认配货,确认优化公共锁
 					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-					return MsgTemplate.failureMsg(SysMsgEnum.VERIFY_ALLOCATION_ERROR);
+					return MsgTemplate.failureMsg(AllocationMsgEnum.VERIFY_ALLOCATION_ERROR);
 				}
 			}else{
 				while(true){
@@ -329,7 +376,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}else{
 							//删除确认配货,确认优化公共锁
 							redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-							return MsgTemplate.failureMsg(SysMsgEnum.VERIFY_ALLOCATION_ERROR);
+							return MsgTemplate.failureMsg(AllocationMsgEnum.VERIFY_ALLOCATION_ERROR);
 						}
 					}
 					//休息一秒,再进行下一次循环
@@ -356,7 +403,7 @@ public class AllocationServiceImpl implements AllocationService {
 			if(flag.equals(AllocationConstant.ALLOCATION_EFFECT)){
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-				return MsgTemplate.failureMsg(SysMsgEnum.ALREADY_INTELLIGENT_ALLOCATION);
+				return MsgTemplate.failureMsg(AllocationMsgEnum.ALREADY_INTELLIGENT_ALLOCATION);
 			}
 		}
 		List<String> orderIds = new ArrayList<>();
@@ -376,7 +423,7 @@ public class AllocationServiceImpl implements AllocationService {
 				String error = orderPO.getOrderId();
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-				String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+				String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 				return MsgTemplate.failureMsg(msg);
 			}
 		}
@@ -445,7 +492,7 @@ public class AllocationServiceImpl implements AllocationService {
 				push.setExtraField(pushExtraFieldBO);
 				//消息推送
 				Map<String, Object> sendAppMsg = pushService.sendAppMsg(push);
-				if(!(Boolean)sendAppMsg.get("success")){
+				if(!(Boolean)sendAppMsg.get(AllocationConstant.HTTP_SUCCESS)){
 					LOGGER.error("==========智能配货生成提货单推送消息失败==========");
 				}
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
@@ -1275,7 +1322,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}else{
 				//删除确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-				return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
+				return MsgTemplate.failureMsg(AllocationMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
 			}
 		}else{
 			try {
@@ -1293,7 +1340,7 @@ public class AllocationServiceImpl implements AllocationService {
 						}else{
 							//删除确认配货,确认优化公共锁
 							redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-							return MsgTemplate.failureMsg(SysMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
+							return MsgTemplate.failureMsg(AllocationMsgEnum.AGAIN_VERIFY_ALLOCATION_ERROR);
 						}
 					}
 					//休息一秒,再进行下一次循环
@@ -1544,7 +1591,7 @@ public class AllocationServiceImpl implements AllocationService {
 						redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 						//删除同时确认优化锁
 					    redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+waybillId);
-						String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+						String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 						return MsgTemplate.failureMsg(msg);
 					}
 				}
@@ -1651,7 +1698,7 @@ public class AllocationServiceImpl implements AllocationService {
 					}
 				}else{
 					String error = warehouseOrderDetailPO.getFchildorderid();
-					String msg = new StringBuffer().append(error).append(":").append(SysMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+					String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
 					//释放同时确认配货,确认优化公共锁
 					redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 					//删除同时确认优化锁

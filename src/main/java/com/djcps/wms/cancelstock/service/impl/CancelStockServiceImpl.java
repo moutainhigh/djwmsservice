@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.inject.spi.Bean;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.cancelstock.enums.CancelStockEnum;
+import com.djcps.wms.cancelstock.enums.CancelStockMsgEnum;
 import com.djcps.wms.cancelstock.model.CancalOrderAttributePO;
 import com.djcps.wms.cancelstock.model.CancelStockPO;
 import com.djcps.wms.cancelstock.model.param.AddCancelStockBO;
@@ -23,8 +23,6 @@ import com.djcps.wms.cancelstock.server.CancelStockServer;
 import com.djcps.wms.cancelstock.service.CancelStockService;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.FluteTypeEnum;
-import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
-import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
@@ -56,14 +54,14 @@ public class CancelStockServiceImpl implements CancelStockService {
 	public Map<String, Object> getOrderByOrderId(CancelOrderIdBO param) {
 		HttpResult result = cancelStockServer.getOrderByOrderId(param);
 		if(!result.isSuccess()){
-			return MsgTemplate.failureMsg(SysMsgEnum.ORDER_IS_NULL);
+			return MsgTemplate.failureMsg(CancelStockMsgEnum.ORDER_IS_NULL);
 		}
 		CancalOrderAttributePO orderAttribute = gson.fromJson(gson.toJson(result.getData()), CancalOrderAttributePO.class);
 		OrderIdBO orderIdBO = new OrderIdBO();
 		orderIdBO.setChildOrderId(param.getOrderId());
 		HttpResult orderResult = orderServer.getOrderByOrderId(orderIdBO);
 		if(ObjectUtils.isEmpty(orderResult.getData())){
-			return MsgTemplate.failureMsg(SysMsgEnum.ORDER_IS_NULL);
+			return MsgTemplate.failureMsg(CancelStockMsgEnum.ORDER_IS_NULL);
 		}
 		if(!ObjectUtils.isEmpty(orderResult)){
 			WarehouseOrderDetailPO orderDetailPO = gson.fromJson(gson.toJson(orderResult.getData()), WarehouseOrderDetailPO.class);

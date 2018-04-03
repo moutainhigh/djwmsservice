@@ -198,4 +198,5 @@ public class AllocationConstant {
     
     public static final String PUSH_DELIVERY_TEXT="您有新的提货任务,请打开任务系统查看";
     
+    public static final String HTTP_SUCCESS="success";
 }
