@@ -190,6 +190,21 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     public Map<String, Object> updatePdaStatus(UpdateStocktakingTaskBO updateStocktakingTaskBO) {
         updateStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_1);
         HttpResult result=stocktakingTaskServer.updateTaskState(updateStocktakingTaskBO);
+        //TODO 调用下发推送
+//        PushExtraFieldBO pushExtraFieldBO = new PushExtraFieldBO();
+//        pushExtraFieldBO.setUserId(param.getPickerId());
+//        pushExtraFieldBO.setOpenType(AppConstant.PUSH_OPEN_TYPE_DELIVERY);
+//        PushMsgBO push = new PushMsgBO();
+//        push.setUserid(param.getPickerId());
+//		  push.setMsg(AllocationConstant.PUSH_DELIVERY_MSG);
+//        push.setAppSystem(AppConstant.WMS);
+//        push.setMid(param.getDeliveryId());
+//        push.setType(AllocationConstant.PUSH_DELIVERY_TYPE);
+//        push.setTitle(AllocationConstant.PUSH_DELIVERY_TITLE);
+//        push.setText(AllocationConstant.PUSH_DELIVERY_TEXT);
+//        push.setExtraField(pushExtraFieldBO);
+//        //消息推送
+//        Map<String, Object> sendAppMsg = pushService.sendAppMsg(push);
         return MsgTemplate.customMsg(result);
     }
 
