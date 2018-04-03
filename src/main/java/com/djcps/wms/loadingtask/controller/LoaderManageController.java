@@ -25,7 +25,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.loadingtask.model.DelLoaderBO;
 import com.djcps.wms.loadingtask.model.GetLoadingPersonInfoBO;
 import com.djcps.wms.loadingtask.model.SaveLoaderBO;
@@ -100,12 +99,12 @@ public class LoaderManageController {
                             new HibernateSupportedValidator<UpdataLoaderBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .on(param.getName().length(),
-							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
-                    .on(param.getSex(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,1))
-					.on(param.getIdCard(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,18))
-					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
-					.on(param.getAddress(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
-					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+							new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
+                    .on(param.getSex(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,1))
+					.on(param.getIdCard(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,18))
+					.on(param.getPhone(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getAddress(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,30))
+					.on(param.getRemark(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,50))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
@@ -171,12 +170,12 @@ public class LoaderManageController {
                             new HibernateSupportedValidator<SaveLoaderBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .on(param.getName().length(),
-							new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
-                    .on(param.getSex(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,1))
-					.on(param.getIdCard(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,18))
-					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
-					.on(param.getAddress(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,30))
-					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+							new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
+                    .on(param.getSex(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,1))
+					.on(param.getIdCard(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,18))
+					.on(param.getPhone(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getAddress(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,30))
+					.on(param.getRemark(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,50))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);

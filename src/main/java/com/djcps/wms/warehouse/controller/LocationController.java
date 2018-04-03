@@ -11,7 +11,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.location.*;
 import com.djcps.wms.warehouse.service.LocationService;
@@ -68,7 +67,7 @@ public class LocationController {
 							new HibernateSupportedValidator<AddLocationBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					//库区名称
-					.on(param.getWarehouseAreaName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getWarehouseAreaName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
