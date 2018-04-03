@@ -491,7 +491,7 @@ public class AllocationServiceImpl implements AllocationService {
 				push.setExtraField(pushExtraFieldBO);
 				//消息推送
 				Map<String, Object> sendAppMsg = pushService.sendAppMsg(push);
-				if(!(Boolean)sendAppMsg.get("success")){
+				if(!(Boolean)sendAppMsg.get(AllocationConstant.HTTP_SUCCESS)){
 					LOGGER.error("==========智能配货生成提货单推送消息失败==========");
 				}
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
