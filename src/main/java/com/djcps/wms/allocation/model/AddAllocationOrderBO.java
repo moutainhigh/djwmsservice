@@ -91,6 +91,11 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	 */
 	@NotBlank
 	private String orderAmount;
+	
+	/**
+	 * 提货数量
+	 */
+	private String deliveryAmount;
 	/**
 	 * 收货地址
 	 */
@@ -102,6 +107,12 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	@NotBlank
 	private String unit;
 	
+	public String getDeliveryAmount() {
+		return deliveryAmount;
+	}
+	public void setDeliveryAmount(String deliveryAmount) {
+		this.deliveryAmount = deliveryAmount;
+	}
 	public String getCustomerName() {
 		return customerName;
 	}
@@ -211,8 +222,8 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 				+ ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
 				+ ", warehouseLocName=" + warehouseLocName + ", productName=" + productName + ", materialName="
 				+ materialName + ", customerName=" + customerName + ", contacts=" + contacts + ", deliveryTime="
-				+ deliveryTime + ", sequence=" + sequence + ", orderAmount=" + orderAmount + ", address=" + address
-				+ ", unit=" + unit + "]";
+				+ deliveryTime + ", sequence=" + sequence + ", orderAmount=" + orderAmount + ", deliveryAmount="
+				+ deliveryAmount + ", address=" + address + ", unit=" + unit + "]";
 	}
 	
 }

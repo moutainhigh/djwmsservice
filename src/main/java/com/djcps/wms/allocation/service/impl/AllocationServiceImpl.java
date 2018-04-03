@@ -748,7 +748,9 @@ public class AllocationServiceImpl implements AllocationService {
 		}else{
 			redisClient.set(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(param));
 		}
-		//订单表中存入订单数据
+		for (AddAllocationOrderBO addAllocationOrderBO : param) {
+			addAllocationOrderBO.setDeliveryAmount(addAllocationOrderBO.getOrderAmount());
+		}
 		HttpResult result = allocationServer.verifyAddOrder(param);
 		return MsgTemplate.customMsg(result);
 	}
@@ -1636,6 +1638,7 @@ public class AllocationServiceImpl implements AllocationService {
 							order.setWarehouseAreaName(areaName);
 							order.setWarehouseLocId(locationBO.getWarehouseLocId());
 							order.setWarehouseLocName(locationBO.getWarehouseLocName());
+							order.setDeliveryAmount(String.valueOf(detail.getFamount()));
 							ordersList.add(order);
 						}
 					}
