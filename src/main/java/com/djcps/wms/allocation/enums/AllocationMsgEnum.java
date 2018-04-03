@@ -38,13 +38,13 @@ public enum AllocationMsgEnum implements MsgInterface {
 	
 	ORDER_STATUS_ERROR(7,"订单状态有误"),
 	
-	AGAIN_CHOOSE_ORDER(8,"订单有误,请重新选择"),
+	AGAIN_CHOOSE_ORDER(8,"该订单有误,请重新选择"),
 	
 	VERIFY_ALLOCATION_ERROR(9,"请勿同时进行确认配货"),
 	
 	AGAIN_VERIFY_ALLOCATION_ERROR(10,"请勿同时进行确认优化"),
 	
-	ALREADY_INTELLIGENT_ALLOCATION(11,"该配货结果已确认")
+	ALREADY_INTELLIGENT_ALLOCATION(11,"此次配货已被确认,请重新获取")
 
 	;
 

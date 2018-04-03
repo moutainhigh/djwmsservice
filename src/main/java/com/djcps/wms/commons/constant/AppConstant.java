@@ -99,8 +99,23 @@ public class AppConstant {
     public static final Integer WMS_MSG_ENUM_PREFIX = 880000;
     
     /**
+     * 系统msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_SYS_ENUM_PREFIX = 100;
+    
+    /**
      * 配货msg枚举前缀
      */
-    public static final Integer WMS_MODULE_ALLOCATION_ENUM_PREFIX = 100;
+    public static final Integer WMS_MODULE_ALLOCATION_ENUM_PREFIX = 200;
+    
+    /**
+     * 退库msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_CANCELSTOCK_ENUM_PREFIX = 300;
+    
+    /**
+     * 仓库msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_WAREHOUSE_ENUM_PREFIX = 400;
     
 }

@@ -9,6 +9,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
 import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.server.WarehouseServer;
@@ -63,7 +64,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 				if(!verifyCode.isSuccess()){
 					flag = false;
 					LOGGER.error("----wms基础服务编码确认失败----");
-					return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+					return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_CODE_ERROE);
 				}
 				return MsgTemplate.customMsg(verifyCode);
 			}else{
@@ -71,7 +72,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 				return MsgTemplate.customMsg(result);
 			}
 		}else{
-			return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+			return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_CODE_ERROE);
 		}
 	}
 
@@ -109,7 +110,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 				return MsgTemplate.customMsg(deleteCode);
 			}else{
 				LOGGER.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
-				return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+				return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_CODE_ERROE);
 			}
 		}
 		return MsgTemplate.customMsg(result);
