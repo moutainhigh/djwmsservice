@@ -400,7 +400,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 if (!LoadingTaskConstant.ORDERTSTATUS_25.equals(info.getStatus())) {
                     return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
                 }
-            } 
+            }
         }
         param.setStatus(LoadingTaskConstant.WAYBILLID_STATUS_20);
         HttpResult updateResult = loadingTaskServer.updateWayBill(param);

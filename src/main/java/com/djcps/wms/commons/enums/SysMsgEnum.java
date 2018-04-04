@@ -74,7 +74,7 @@ public enum SysMsgEnum implements MsgInterface {
 	private String msg;
 
 	SysMsgEnum(int code, String msg) {
-		this.code = AppConstant.WMS_MODULE_SYS_ENUM_PREFIX + AppConstant.WMS_MODULE_SYS_ENUM_PREFIX + code;
+		this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_MODULE_SYS_ENUM_PREFIX + code;
 		this.msg = msg;
 	}
 
