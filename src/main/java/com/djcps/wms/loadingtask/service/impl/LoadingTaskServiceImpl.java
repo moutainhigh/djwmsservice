@@ -1,13 +1,10 @@
 package com.djcps.wms.loadingtask.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
@@ -29,6 +26,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
+import com.djcps.wms.loadingtask.enums.LoadingtaskEnum;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
@@ -411,20 +409,36 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
              */
             //先向出库单服务端根据运单号获取订单id、车辆id、车牌号等信息
             HttpResult outOrderResult = loadingTaskServer.getInfoByWayBillId(param);
-            GetOrderByWayBillIdPO getOrderById = gson.fromJson(gson.toJson(outOrderResult.getData()), GetOrderByWayBillIdPO.class);
+            GetOrderByWayBillIdPO getOrderById = null;
+            if(!ObjectUtils.isEmpty(outOrderResult.getData())){
+            	 getOrderById = gson.fromJson(gson.toJson(outOrderResult.getData()), GetOrderByWayBillIdPO.class);
+            }else{
+            	return MsgTemplate.failureMsg(LoadingtaskEnum.WAYBILLID_ERROR);
+            }
             //获取订单id
             List<String> orders = getOrderById.getOrderId();
+            List<String> orderList = new ArrayList<>();
             for(String order:orders){
             	if(order.contains("-")){
             		order = order.substring(0,order.lastIndexOf("-"));
+            		orderList.add(order);
+            	}else{
+            		orderList.add(order);
             	}
             }
             OrderIdsBO orderParam = new OrderIdsBO();
-            orderParam.setChildOrderIds(orders);
+            orderParam.setChildOrderIds(orderList);
             //根据订单id从订单服务获取订单详情
             List<ChildOrderBO> childOrder = orderServer.getChildOrderList(orderParam);
-            List<OrderInfoBO> orderInfoBOs = new ArrayList<OrderInfoBO>();
+            //根据是否分发字段判断订单
+            List<ChildOrderBO> childOrderList = new ArrayList<>();
             for(ChildOrderBO child:childOrder){
+    			if(AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())){
+    				childOrderList.add(child);
+    			}
+    		}
+            List<OrderInfoBO> orderInfoBOs = new ArrayList<OrderInfoBO>();
+            for(ChildOrderBO child:childOrderList){
             	OrderInfoBO orderInfo = new OrderInfoBO();
             	BeanUtils.copyProperties(child, orderInfo);
             	orderInfoBOs.add(orderInfo);
@@ -458,7 +472,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             for(int i=0;i<customers.size();i++){
             	CustomerBO customerBO = customers.get(i);
             	if(orderIdsUsed.contains(customerBO.getOrderIds())){
-            		System.out.println("已经被归并的订单id集合："+customerBO.getOrderIds());
             		continue;
             	}
             	orderIds.add(customerBO.getOrderIds());
@@ -488,7 +501,11 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             	List<String> orderIdsAttr = new ArrayList<>();
             	orderIdsAttr.addAll(orderIds);
             	//订单数组
-            	String str = orderIdsAttr.toString().substring(1).substring(0,orderIdsAttr.toString().lastIndexOf("]")-1);
+            	StringBuffer buffer = new StringBuffer();
+            	for(String str : orderIdsAttr){
+            		buffer.append(str).append(",");
+            	}
+            	String str = buffer.toString().substring(0,buffer.toString().lastIndexOf(","));
             	outOrder.setOrderIds(str);
             	HttpResult numResult = loadingTaskServer.getNumber(1);
             	//出库单id
@@ -510,13 +527,11 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             	outOrderInfos.add(outOrder);
             	orderIds.clear();
             }
-            System.out.println(outOrderInfos);
             HttpResult insertResult = loadingTaskServer.insertOutOrder(outOrderInfos);
             if(!insertResult.isSuccess()){
-            	return MsgTemplate.failureMsg(SysMsgEnum.OUTORDER_FAIL);
+            	return MsgTemplate.failureMsg(LoadingtaskEnum.OUTORDER_FAIL);
             }
         }
-        
         return MsgTemplate.customMsg(updateResult);
     }
 

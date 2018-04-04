@@ -45,20 +45,23 @@ public class OutOrderServiceImpl implements OutOrderService{
 		//先根据出库单号获取订单编号
 		HttpResult result = outOrderServer.getOrderIdsByOutOrderId(param);
 		//获取出库单号字符串
-		String childOrderIdStr = result.getData().toString();
-		String[] childOrderIds = childOrderIdStr.split(",");
-		List<String> list = Arrays.asList(childOrderIds);
-		OrderIdsBO orderIdsBO = new OrderIdsBO();
-		orderIdsBO.setChildOrderIds(list);
-		//获取订单明细详情list
-		List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
+		OrderIdsBO orderIdsBO = null;
+		List<ChildOrderBO> childOrderList = null;
+		if(!ObjectUtils.isEmpty(result.getData())){
+			String childOrderIdStr = result.getData().toString();
+			String[] childOrderIds = childOrderIdStr.split(",");
+			List<String> list = Arrays.asList(childOrderIds);
+			orderIdsBO = new OrderIdsBO();
+			orderIdsBO.setChildOrderIds(list);
+			//获取订单明细详情list
+			childOrderList = orderServer.getChildOrderList(orderIdsBO);
+		}
 		List<ChildOrderBO> childOrders = new ArrayList<ChildOrderBO>();
 		for(ChildOrderBO child:childOrderList){
 			if(AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())){
 				childOrders.add(child);
 			}
 		}
-		
 		List<OrderDetailBO> orderDetailList = new ArrayList<OrderDetailBO>();
 		if(!childOrderList.isEmpty()){
 			for(ChildOrderBO childOrderBO:childOrders){

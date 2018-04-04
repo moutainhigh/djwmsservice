@@ -351,8 +351,6 @@ public class AllocationController {
 					return MsgTemplate.failureMsg(ret);
 				}
 			}
-			System.err.println("==========遍历校验花费的时间==========");
-			System.err.println(System.currentTimeMillis()-start);
 			return allocationService.verifyAddOrder(param);
 		} catch (Exception e) {
 			e.printStackTrace();
