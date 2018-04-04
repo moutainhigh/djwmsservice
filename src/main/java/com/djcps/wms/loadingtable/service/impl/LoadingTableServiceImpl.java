@@ -70,7 +70,7 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 				List<LoadingTablePO> loadingTableList = gson.fromJson(gson.toJson(baseVO.getResult()), new TypeToken<ArrayList<LoadingTablePO>>(){}.getType());
 				//组织假数据,取要权限好了去or取
 				for (LoadingTablePO loadingTablePO : loadingTableList) {
-					loadingTablePO.setBindingUserName("叮叮当当");
+					loadingTablePO.setBindingUserName("假数据,请先点击更换账号绑定账户,才会生效");
 				}
 				baseVO.setResult(loadingTableList);
 			}
@@ -114,13 +114,10 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 	public Map<String, Object> getUserList(GetUserListBO param) {
 		//假数据到最后还是需要删除
 		List<UserPO> list = new ArrayList<>();
-		int ten = 10;
-		for(int i=0;i<ten;i++){
-			UserPO user = new UserPO();
-			user.setBindingUserName("一号账号"+i);
-			user.setBindingUserId(String.valueOf(i));
-			list.add(user);
-		}
+		UserPO user = new UserPO();
+		user.setBindingUserName(param.getOperator());
+		user.setBindingUserId(param.getOperatorId());
+		list.add(user);
 		return  MsgTemplate.successMsg(list);
 	}
 

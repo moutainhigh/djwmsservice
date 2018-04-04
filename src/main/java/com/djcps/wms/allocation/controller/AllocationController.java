@@ -754,6 +754,9 @@ public class AllocationController {
 	public Map<String, Object> getPicker(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			LOGGER.debug("json : " + json);
+			BaseAddBO param = new BaseAddBO();
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
 //			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
 //			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 //			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -766,7 +769,7 @@ public class AllocationController {
 //			if (!ret.isSuccess()) {
 //				return MsgTemplate.failureMsg(ret);
 //			}
-			return allocationService.getPicker();
+			return allocationService.getPicker(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

@@ -139,7 +139,7 @@ public class InnerUserServiceImpl implements InnerUserService {
     public Map<String, Object> changeInnerUserPassword(InnerUserChangePasswordBO innerUserChangePasswordBO) {
         try{
             UserInfoVO userInfoVO = innerUserRedisDao.getInnerUserInfo(innerUserChangePasswordBO.getToken());
-            String userCode = innerUserServer.getUserCode(userInfoVO.getUids());
+            String userCode = innerUserServer.getUserCode(userInfoVO.getId());
             if(!ObjectUtils.isEmpty(userInfoVO) && StringUtils.isNotBlank(userCode)){
                 String oldPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getOldPassword()+userCode);
                 String newPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getNewPassword()+userCode);

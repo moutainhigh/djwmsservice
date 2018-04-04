@@ -1,6 +1,8 @@
 package com.djcps.wms.allocation.service.impl;
 
 
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,6 +85,7 @@ import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.push.model.PushMsgBO;
+import com.djcps.wms.push.mq.producer.AppProducer;
 import com.djcps.wms.push.service.PushService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
@@ -93,7 +96,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * 混合配货业务层实现类
+ * 混合配货业务层实现类  
  * @description:
  * @company:djwms
  * @author:zdx
@@ -117,12 +120,14 @@ public class AllocationServiceImpl implements AllocationService {
 	@Autowired
 	@Qualifier("redisClientCluster")
 	private RedisClient redisClient;
-	@Resource
-    private PushService pushService;
 	@Autowired
     private LoadingTaskServer loadingTaskServer;
 	@Autowired
 	private LoadingTableServer loadingTableServer;
+    @Resource
+    private AppProducer appProducer;
+	
+	
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
 		HttpResult result = allocationServer.getOrderType(baseBO);
@@ -394,8 +399,9 @@ public class AllocationServiceImpl implements AllocationService {
 	 * 确认配货执行逻辑方法
 	 * @param param
 	 * @return
+	 * @throws InterruptedException 
 	 */
-	private Map<String, Object> verifyAllocationSon(VerifyAllocationBO param) {
+	private Map<String, Object> verifyAllocationSon(VerifyAllocationBO param) throws InterruptedException {
 		//确认配货之前先校验该智能配货结果是否已配货
 		HttpResult existHttpResult = allocationServer.existIntelligentAlloca(param.getAllocationId());
 		if(!ObjectUtils.isEmpty(existHttpResult.getData())){
@@ -437,7 +443,7 @@ public class AllocationServiceImpl implements AllocationService {
 			//判断修改成功才能继续往下走(这里需要批量修改)
 			HttpResult updateOrderResult = orderServer.updateOrderStatus(orderId);
 		}
-		//TODO 修改提货员和装车员的状态
+		//TODO 修改提货员和装车员的状态,修改装车台状态
 		//修改配货表中的标志，修改为确认配货,且插入提货单数据(插入提货单确认状态feffect为1)
 		//并通过智能配货id,修改配货订单表中的提货单id(该id原先是为null的),修改装车顺序
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -451,13 +457,25 @@ public class AllocationServiceImpl implements AllocationService {
 		
 		
 		//伪代码要删除
-		HttpResult talbeResult =  allocationServer.getDeliveryTableId();
-		if(ObjectUtils.isEmpty(talbeResult.getData())){
-			return MsgTemplate.failureMsg("当前无空闲装车台请等待");
+		HttpResult talbeResult =  allocationServer.getDeliveryTableId(param);
+		if(!ObjectUtils.isEmpty(talbeResult.getData())){
+			JsonObject asJsonObject = new JsonParser().parse(gson.toJson(talbeResult.getData())).getAsJsonObject();
+			String loadingTableId = asJsonObject.get("loadingTableId").getAsString();
+			String loadingTableName = asJsonObject.get("loadingTableName").getAsString();
+			JsonElement jsonElement = asJsonObject.get("pickerId");
+			if(jsonElement==null){
+				param.setPickerId(param.getOperatorId());
+			}else{
+				return MsgTemplate.failureMsg("当前无可用提货员,请等待");
+			}
+			
+			if(StringUtils.isEmpty(loadingTableId) || StringUtils.isEmpty(loadingTableId)){
+				return MsgTemplate.failureMsg("请绑定装车台账号");
+			}
+			param.setLoadingTableId(loadingTableId);
+			param.setLoadingTableName(loadingTableName);
 		}else{
-			JsonObject asJsonObject = new JsonParser().parse(gson.toJson(talbeResult.getData())).getAsJsonArray().get(0).getAsJsonObject();
-			param.setLoadingTableId(asJsonObject.get("loadingTableId").getAsString());
-			param.setLoadingTableName(asJsonObject.get("loadingTableName").getAsString());
+			return MsgTemplate.failureMsg("请检查是否有可用的装车台或检查装车台是否已绑定装车台账号");
 		}
 		//伪代码要删除
 		
@@ -477,7 +495,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 			HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
 			if(updateOrderRedunResult.isSuccess()){
-				//最后通知提货员
+				//TODO 最后通知提货员和装车台账户
 				PushExtraFieldBO pushExtraFieldBO = new PushExtraFieldBO();
 				pushExtraFieldBO.setUserId(param.getPickerId());
 				pushExtraFieldBO.setOpenType(AppConstant.PUSH_OPEN_TYPE_DELIVERY);
@@ -491,10 +509,8 @@ public class AllocationServiceImpl implements AllocationService {
 				push.setText(AllocationConstant.PUSH_DELIVERY_TEXT);
 				push.setExtraField(pushExtraFieldBO);
 				//消息推送
-				Map<String, Object> sendAppMsg = pushService.sendAppMsg(push);
-				if(!(Boolean)sendAppMsg.get(AllocationConstant.HTTP_SUCCESS)){
-					LOGGER.error("==========智能配货生成提货单推送消息失败==========");
-				}
+				String json = gson.toJson(push);
+				appProducer.sendPushMsg(json);
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
@@ -1290,22 +1306,18 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 
 	@Override
-	public Map<String, Object> getPicker() {
-		PickerPO picker1 = new PickerPO("1000933","周德星","15157780633","空闲");
-		PickerPO picker2 = new PickerPO("1000933","郑杰","15157780633","空闲");
+	public Map<String, Object> getPicker(BaseAddBO param) {
+		PickerPO picker2 = new PickerPO(param.getOperatorId(),param.getOperator(),"15157780633","空闲");
 		List<PickerPO> list = new ArrayList<>();
-		list.add(picker1);
 		list.add(picker2);
 		return MsgTemplate.successMsg(list);
 	}
 
 	@Override
 	public Map<String, Object> getLoadingPerson() {
-		LoadingPersonPO picker1 = new LoadingPersonPO("977","郑天伟","15157780633","空闲");
-		LoadingPersonPO picker2 = new LoadingPersonPO("977","郭全凯","15157780633","空闲");
+		LoadingPersonPO picker1 = new LoadingPersonPO("1000933","郑天伟","15157780633","空闲");
 		List<LoadingPersonPO> list = new ArrayList<>();
 		list.add(picker1);
-		list.add(picker2);
 		return MsgTemplate.successMsg(list);
 	}
 

@@ -112,4 +112,15 @@ public interface WmsForLoadingTaskHttpRequest {
     @Headers("content-type:application/json")
     @POST("loadingtask/updateWayBill.do")
     HTTPResponse updateWayBill(@Body RequestBody json);
+    
+    /**
+     * 根据用户id获取装车台id
+     * @param rb
+     * @return
+     * @author:zdx
+     * @date:2018年4月4日
+     */
+    @Headers("content-type:application/json")
+    @POST("loadingtask/getLoadingTableIdByUserId.do")
+	HTTPResponse getLoadingTableIdByUserId(@Body RequestBody rb);
 }
