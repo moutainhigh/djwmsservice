@@ -23,6 +23,18 @@ public class FinishLoadingBO extends BaseAddBO {
      * 运单状态 1待提货,5部分提货,10提货完成,15部分装车,20装车完成
      */
     private Integer status;
+    /**
+     * 装车台编号
+     */
+    private String loadingTableId;
+
+    public String getLoadingTableId() {
+        return loadingTableId;
+    }
+
+    public void setLoadingTableId(String loadingTableId) {
+        this.loadingTableId = loadingTableId;
+    }
 
     public String getWayBillId() {
         return wayBillId;
@@ -42,7 +54,8 @@ public class FinishLoadingBO extends BaseAddBO {
 
     @Override
     public String toString() {
-        return "FinishLoadingBO [wayBillId=" + wayBillId + ", status=" + status + "]";
+        return "FinishLoadingBO [wayBillId=" + wayBillId + ", status=" + status + ", loadingTableId=" + loadingTableId
+                + "]";
     }
 
 }
