@@ -190,6 +190,21 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     public Map<String, Object> updatePdaStatus(UpdateStocktakingTaskBO updateStocktakingTaskBO) {
         updateStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_1);
         HttpResult result=stocktakingTaskServer.updateTaskState(updateStocktakingTaskBO);
+        //TODO 调用下发推送
+//        PushExtraFieldBO pushExtraFieldBO = new PushExtraFieldBO();
+//        pushExtraFieldBO.setUserId(param.getPickerId());
+//        pushExtraFieldBO.setOpenType(AppConstant.PUSH_OPEN_TYPE_DELIVERY);
+//        PushMsgBO push = new PushMsgBO();
+//        push.setUserid(param.getPickerId());
+//		  push.setMsg(AllocationConstant.PUSH_DELIVERY_MSG);
+//        push.setAppSystem(AppConstant.WMS);
+//        push.setMid(param.getDeliveryId());
+//        push.setType(AllocationConstant.PUSH_DELIVERY_TYPE);
+//        push.setTitle(AllocationConstant.PUSH_DELIVERY_TITLE);
+//        push.setText(AllocationConstant.PUSH_DELIVERY_TEXT);
+//        push.setExtraField(pushExtraFieldBO);
+//        //消息推送
+//        Map<String, Object> sendAppMsg = pushService.sendAppMsg(push);
         return MsgTemplate.customMsg(result);
     }
 
@@ -917,7 +932,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             }
         }
         //异常订单逻辑
-        //获取异常订单collectList
+        //TODO 获取异常订单collectList
         List<SaveStocktakingOrderInfoBO> collectList = saveStocktakingOrderInfoBOList.getSaveStocktaking().stream()
                 .filter(b -> b.getDifferenceValue()!=0)
                 .collect(Collectors.toList());
@@ -942,7 +957,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 orderIdListBO.setList(orderidList);
                 //查询是否有异常订单
                 HttpResult orderResult= abnormalServer.getOrderByOrderIdList(orderIdListBO);
-                //已存在异常订单执行更新和插入
+                //TODO 已存在异常订单执行更新和插入
                 if(!ObjectUtils.isEmpty(orderResult.getData())){
                     String data = gson.toJson(orderResult.getData());
                     List<AbnormalOrderPO> abnormalOrderPOList=  JSONArray.parseArray(data, AbnormalOrderPO.class);
@@ -967,6 +982,10 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                                updateOrderBO.setAbnomalAmount(""+surplusOrderAmount+"");
                                updateOrderBO.setReason(reson.toString());
                                updateOrderBO.setSubmiter(allAbnormalOrder.getOperator());
+                               updateOrderBO.setResult(null);
+                               updateOrderBO.setRemark(null);
+                               updateOrderBO.setSubmitTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                               updateOrderBO.setStatus("0");
                                HttpResult abnormalResult = abnormalServer.updateAbnormal(updateOrderBO);
                            }
                            //插入异常订单
