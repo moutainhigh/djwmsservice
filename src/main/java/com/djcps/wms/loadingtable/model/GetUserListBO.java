@@ -19,7 +19,6 @@ public class GetUserListBO extends BaseAddBO implements Serializable{
 	/**
 	 * 仓库编码
 	 */
-	@NotBlank
 	private String warehouseId;
 
 	public String getWarehouseId() {

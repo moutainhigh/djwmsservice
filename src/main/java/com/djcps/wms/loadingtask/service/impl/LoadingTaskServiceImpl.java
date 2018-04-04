@@ -21,9 +21,11 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.enums.LoadingtaskEnum;
@@ -534,5 +536,12 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         }
         return MsgTemplate.customMsg(updateResult);
     }
+
+	@Override
+	public Map<String, Object> getLoadingTableIdByUserId(PartnerInfoBO partnerInfoBO) {
+		//伪代码
+		HttpResult result = loadingTaskServer.getLoadingTableIdByUserId(partnerInfoBO);
+		return MsgTemplate.customMsg(result);
+	}
 
 }

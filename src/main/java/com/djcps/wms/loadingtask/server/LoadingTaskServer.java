@@ -9,6 +9,7 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.NumberServerHttpRequest;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
@@ -252,6 +253,14 @@ public class LoadingTaskServer {
     	
     }
     
+    public HttpResult getLoadingTableIdByUserId(PartnerInfoBO params) {
+    	String json = gson.toJson(params);
+    	RequestBody rb =RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json);
+    	HTTPResponse response = wmsForLoadingTaskHttpRequest.getLoadingTableIdByUserId(rb);
+    	HttpResult result = returnResult(response);
+    	return result;
+	}
+    
     /**
      * 公共返回
      *
@@ -273,6 +282,8 @@ public class LoadingTaskServer {
         }
         return null;
     }
+
+	
     
     
 }
