@@ -495,7 +495,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 			HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
 			if(updateOrderRedunResult.isSuccess()){
-				//最后通知提货员
+				//TODO 最后通知提货员和装车台账户
 				PushExtraFieldBO pushExtraFieldBO = new PushExtraFieldBO();
 				pushExtraFieldBO.setUserId(param.getPickerId());
 				pushExtraFieldBO.setOpenType(AppConstant.PUSH_OPEN_TYPE_DELIVERY);
