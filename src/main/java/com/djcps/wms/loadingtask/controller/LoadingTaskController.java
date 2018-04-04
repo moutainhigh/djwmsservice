@@ -18,6 +18,7 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -302,6 +303,28 @@ public class LoadingTaskController {
                 return MsgTemplate.failureMsg(ret);
             }
             return loadingTaskService.addOrderApplicationList(param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
+    }
+    
+    /**
+     * 根据用户登录id获取装车台id
+     * @param json
+     * @param request
+     * @return
+     * @author:zdx
+     * @date:2018年4月4日
+     */
+    @RequestMapping(name = "根据用户登录id获取装车台id", value = "/getLoadingTableIdByUserId", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> getLoadingTableIdByUserId(@RequestBody(required = false) String json, HttpServletRequest request) {
+        try {
+            LOGGER.debug("json : " + json);
+            //伪代码
+            PartnerInfoBO partnerInfoBO = (PartnerInfoBO) request.getAttribute("partnerInfo");
+            return loadingTaskService.getLoadingTableIdByUserId(partnerInfoBO);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error(e.getMessage());

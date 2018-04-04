@@ -2,6 +2,8 @@ package com.djcps.wms.loadingtask.service;
 
 import java.util.Map;
 
+import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
@@ -98,4 +100,13 @@ public interface LoadingTaskService {
      * @return
      */
     Map<String, Object> finishLoading(FinishLoadingBO param);
+
+	/**
+	 * 根据用户登录id获取装车台id
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年4月4日
+	 */
+	Map<String, Object> getLoadingTableIdByUserId(PartnerInfoBO partnerInfoBO);
 }
