@@ -142,7 +142,7 @@ public class DeliveryController {
             SaveDeliveryBO param = gson.fromJson(json, SaveDeliveryBO.class);
             param.setPartnerId(userInfoVO.getUcompany());
             param.setOperator(userInfoVO.getUname());
-            param.setOperatorId(String.valueOf(userInfoVO.getId()));
+            param.setOperatorId(String.valueOf(userInfoVO.getUids()));
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<SaveDeliveryBO>()
@@ -174,7 +174,7 @@ public class DeliveryController {
             LOGGER.debug("json : " + json);
             DeliveryOrderBO param = gson.fromJson(json, DeliveryOrderBO.class);
             param.setPartnerId(userInfoVO.getUcompany());
-            param.setPickerId(String.valueOf(userInfoVO.getId()));
+            param.setPickerId(String.valueOf(userInfoVO.getUids()));
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<DeliveryOrderBO>()
@@ -207,7 +207,7 @@ public class DeliveryController {
             LOGGER.debug("json : " + json);
             DeliveryOrderBO param = gson.fromJson(json, DeliveryOrderBO.class);
             param.setPartnerId(userInfoVO.getUcompany());
-            param.setPickerId(String.valueOf(userInfoVO.getId()));
+            param.setPickerId(String.valueOf(userInfoVO.getUids()));
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<DeliveryOrderBO>()
