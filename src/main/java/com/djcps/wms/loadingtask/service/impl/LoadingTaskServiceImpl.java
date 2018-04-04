@@ -203,7 +203,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             }
             return MsgTemplate.successMsg(confirmPO);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 
     }
 
@@ -256,7 +256,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             HttpResult result = loadingTaskServer.loading(param);
                             return MsgTemplate.customMsg(result);
                         } else {
-                            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+                            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
                         }
 
                     } else {
@@ -292,7 +292,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             HttpResult result = loadingTaskServer.loading(param);
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     public boolean updateOrderStatus(String status, String orderId, String partnerId, String version) {
@@ -400,7 +400,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 if (!LoadingTaskConstant.ORDERTSTATUS_25.equals(info.getStatus())) {
                     return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
                 }
-            } 
+            }
         }
         param.setStatus(LoadingTaskConstant.WAYBILLID_STATUS_20);
         HttpResult updateResult = loadingTaskServer.updateWayBill(param);

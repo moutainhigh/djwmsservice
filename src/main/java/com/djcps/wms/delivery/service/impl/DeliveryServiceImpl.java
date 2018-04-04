@@ -60,7 +60,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -88,7 +88,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
 
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -105,7 +105,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -127,7 +127,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             orderServer.updateOrderStatus(orderIdBO);
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -191,7 +191,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -219,7 +219,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -260,7 +260,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
