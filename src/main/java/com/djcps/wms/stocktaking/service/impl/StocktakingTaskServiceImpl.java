@@ -8,7 +8,6 @@ import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -21,6 +20,7 @@ import com.djcps.wms.record.model.StocktakingRecordListBO;
 import com.djcps.wms.record.server.OperationRecordServer;
 import com.djcps.wms.record.util.StockTakingOperationRecordUtil;
 import com.djcps.wms.stocktaking.constant.StocktakingTaskConstant;
+import com.djcps.wms.stocktaking.enums.StocktakingMsgEnum;
 import com.djcps.wms.stocktaking.model.*;
 import com.djcps.wms.stocktaking.model.orderresult.InnerDate;
 import com.djcps.wms.stocktaking.model.orderresult.OrderInfoListResult;
@@ -595,7 +595,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //Http获取订单详细信息
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
         if(ObjectUtils.isEmpty(childOrderList) ){
-            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
+            return MsgTemplate.failureMsg(StocktakingMsgEnum.STOCKTAKING_ORDER_WRONG);
         }
         //组装订单信息
         OrderInfoBO orderInfoBO=getOrderDetail(childOrderList);
@@ -642,7 +642,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             //请求订单详细信息
             HttpResult orderResult=stocktakingOrderServer.getInfoByChildIds(map);
             if(ObjectUtils.isEmpty(orderResult.getData()) ){
-                return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
+                return MsgTemplate.failureMsg(StocktakingMsgEnum.STOCKTAKING_ORDER_WRONG);
             }
             JsonArray orderJsonArray = new JsonParser().parse(gson.toJson(orderResult.getData())).getAsJsonArray();
             //筛选fdblflag为0的订单信息
@@ -682,7 +682,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //Http获取订单详细信息
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
         if(ObjectUtils.isEmpty(childOrderList) ){
-            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
+            return MsgTemplate.failureMsg(StocktakingMsgEnum.STOCKTAKING_ORDER_WRONG);
         }
         //组装订单信息
         OrderInfoBO orderInfoBO=getOrderDetail(childOrderList);
@@ -1168,7 +1168,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //获取批量订单信息列表,判断是不是作业单号写错了
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
         if(ObjectUtils.isEmpty(childOrderList) ){
-            return MsgTemplate.failureMsg(SysMsgEnum.ORDER_WRONG);
+            return MsgTemplate.failureMsg(StocktakingMsgEnum.STOCKTAKING_ORDER_WRONG);
         }
 
         HttpResult result=stocktakingTaskServer.pdaStocktakingOrderInfo(pdaStocktakingOrderInfo);
@@ -1234,7 +1234,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 for (WarehouseAreaAndLocBO warehouseAreaAndLocBO:pdaOderInfoBO.getOrderAreaAndLocList()){
                     if (saveStocktakingOrderInfoBO.getWarehouseAreaId().equals(warehouseAreaAndLocBO.getWarehouseAreaId()) && saveStocktakingOrderInfoBO.getWarehouseLocId().equals(warehouseAreaAndLocBO.getWarehouseLocId())){
                         //该新增订单已存在
-                        return MsgTemplate.failureMsg(SysMsgEnum.ORDER_EXIST);
+                        return MsgTemplate.failureMsg(StocktakingMsgEnum.STOCKTAKING_ORDER_EXIST);
                     }
                 }
             }
