@@ -119,6 +119,7 @@ public class StockServiceImpl implements StockService{
 			RecommendLocaParamBO rl = new RecommendLocaParamBO();
 			rl.setPartnerId(param.getPartnerId());
 			rl.setStreetCode(mapLocationPo.getStreetCode());
+			rl.setWarehouseId(param.getWarehouseId());
 			addList.add(rl);
 			param.setParam(addList);
 			HttpResult result = stockServer.getRecommendLoca(param);

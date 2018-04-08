@@ -67,8 +67,8 @@ public enum SysMsgEnum implements MsgInterface {
 
 	WAREHOUSE_ERROR(14, "该仓库有误请重新核实"),
 
-	OUTORDER_FAIL(15, "生成出库单失败");
-
+	OUTORDER_FAIL(15, "生成出库单失败"),
+    NOTLOADING(16,"还未提货无法装车");
 	private int code;
 
 	private String msg;

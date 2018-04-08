@@ -83,6 +83,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         //获取订单库位信息list
         String data = gson.toJson(result.getData());
         List<LocationOrderInfoBO> locationOrderInfoBOList = JSONArray.parseArray(data,LocationOrderInfoBO.class);
+        
         locationOrderInfoBOList.stream().forEach(locationOrderInfoBO -> {
             locationOrderInfoBO.setWarehouseId(warehouseid);
             locationOrderInfoBO.setWarehouseName(warehousename);
