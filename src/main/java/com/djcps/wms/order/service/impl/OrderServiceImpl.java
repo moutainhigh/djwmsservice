@@ -117,6 +117,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Map<String, Object> getOrderByOrderId(OrderIdBO param) {
+	    
 		HttpResult result = orderServer.getOrderByOrderId(param);
 		if(result.isSuccess()){
 			WarehouseOrderDetailPO paperOrder = new WarehouseOrderDetailPO();
