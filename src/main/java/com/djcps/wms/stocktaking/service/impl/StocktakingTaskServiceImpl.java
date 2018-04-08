@@ -77,7 +77,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         String warehousename=addTaskBO.getWarehouseName();
         //Http获取库位关联订单信息
         HttpResult result=stocktakingTaskServer.increaseTask(addTaskBO);
-        if(ObjectUtils.isEmpty(result)){
+        if(ObjectUtils.isEmpty(result.getData())){
             return MsgTemplate.successMsg();
         }
         //获取订单库位信息list
@@ -223,7 +223,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         inventoryClerkBO.setInventoryClerkId("1001028");
         InventoryClerkBO inventoryClerkBO2=new InventoryClerkBO();
         inventoryClerkBO2.setInventoryClerk("郑杰");
-        inventoryClerkBO2.setInventoryClerkId("1000933");
+        inventoryClerkBO2.setInventoryClerkId("1000977");
         list.add(inventoryClerkBO);
         list.add(inventoryClerkBO2);
         return MsgTemplate.successMsg(list);
@@ -970,6 +970,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                                StringBuffer reson=new StringBuffer();
                                Integer surplusOrderAmount=0;
                                if (allAbnormalOrder.getDifferenceValue()>0){
+                                   //surplusOrderAmount=Math.abs(allAbnormalOrder.getTakeStockAmount()-allAbnormalOrder);
                                    surplusOrderAmount= allAbnormalOrder.getDifferenceValue();
                                    reson.append(AbnormalConstant.ABNORMAL_ERROR_MORE).append(surplusOrderAmount);
                                }else{
@@ -1014,7 +1015,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                         });
                     });
                 }
-                //不存在异常订单信息全部执行插入
+                //TODO 不存在异常订单信息全部执行插入
                 else{
                     collectList.stream().forEach(s-> {
                         StringBuffer reson=new StringBuffer();
@@ -1028,7 +1029,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                         }
                         //直接插入异常订单数据
                         AddAbnormal addAbnormal = new AddAbnormal();
-                        BeanUtils.copyProperties(s, addAbnormal);
+                        BeanUtils.copyProperties(s, addAbnormal,"remark");
                         addAbnormal.setLink(AbnormalConstant.ABNORMAL_LINK_ADD_STOCKTAKING);
                         addAbnormal.setReason(reson.toString());
                         addAbnormal.setAbnomalAmount(surplusOrderAmount);
@@ -1204,6 +1205,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
 
         OrderIdsBO orderIdsBO = new OrderIdsBO();
         orderIdsBO.setChildOrderIds(orderidlist);
+        //TODO 获取订单信息
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIdsBO);
         Optional optional=childOrderList.stream().filter(b -> b.getFdblflag().equals(StocktakingTaskConstant.FDBLFLAG))
                 .findFirst();
@@ -1219,7 +1221,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         else{
             saveStocktakingOrderInfoBO.setStatus(StocktakingTaskConstant.STATUS_3);
         }
-        //是正常新增时做校验
+        //TODO 是正常新增时做校验
         if (saveStocktakingOrderInfoBO.getIsAdd().equals(StocktakingTaskConstant.ISADD_NEW)){
             //判断新增订单的库区库位是否已在盘点任务列表中
             PdaStocktakingOrderInfo pdaStocktakingOrderInfo=new PdaStocktakingOrderInfo();
@@ -1247,17 +1249,19 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             return MsgTemplate.customMsg(result);
         }
 
-        //正常保存和盘盈时
+        //TODO 正常保存和盘盈时
         GetAmountBO getAmountBO=new GetAmountBO();
         getAmountBO.setOrderId(saveStocktakingOrderInfoBO.getOrderId());
         getAmountBO.setWarehouseAreaId(saveStocktakingOrderInfoBO.getWarehouseAreaId());
         getAmountBO.setWarehouseLocId(saveStocktakingOrderInfoBO.getWarehouseLocId());
+        getAmountBO.setPartnerId(saveStocktakingOrderInfoBO.getPartnerId());
         //获取在库数量,计算差异量
         HttpResult amountResult=stocktakingTaskServer.getAmount(getAmountBO);
         if(!ObjectUtils.isEmpty(amountResult.getData())){
+            //数字格式化在库数量
             int trueAmount = Integer.parseInt(new java.text.DecimalFormat("0").format(amountResult.getData()));
             saveStocktakingOrderInfoBO.setInstockAmount(trueAmount);
-            saveStocktakingOrderInfoBO.setDifferenceValue(saveStocktakingOrderInfoBO.getTakeStockAmount()-trueAmount);
+            saveStocktakingOrderInfoBO.setDifferenceValue(trueAmount-saveStocktakingOrderInfoBO.getTakeStockAmount());
         }
         //保存盘点结果
         HttpResult result=stocktakingTaskServer.savePdaStocktakingResult(saveStocktakingOrderInfoBO);
@@ -1272,7 +1276,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             updateStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_2);
             updateStocktakingTaskBO.setWarehouseId(saveStocktakingOrderInfoBO.getWarehouseId());
             Map<String,Object> upmap=updateTaskState(updateStocktakingTaskBO);
-            System.out.println(updateStocktakingTaskBO);
         }
         saveOperationRecord(saveStocktakingOrderInfoBO);
         return MsgTemplate.customMsg(result);
