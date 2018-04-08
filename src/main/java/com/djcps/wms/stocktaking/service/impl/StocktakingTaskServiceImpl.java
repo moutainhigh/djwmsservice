@@ -224,7 +224,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         inventoryClerkBO.setInventoryClerkId("1001028");
         InventoryClerkBO inventoryClerkBO2=new InventoryClerkBO();
         inventoryClerkBO2.setInventoryClerk("郑杰");
-        inventoryClerkBO2.setInventoryClerkId("1000933");
+        inventoryClerkBO2.setInventoryClerkId("977");
         list.add(inventoryClerkBO);
         list.add(inventoryClerkBO2);
         return MsgTemplate.successMsg(list);
@@ -1090,6 +1090,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> pdaStocktakingTaskList(PdaStocktakingTaskBO pdaStocktakingTaskBO) {
+        
         HttpResult result=stocktakingTaskServer.pdaStocktakingTaskList(pdaStocktakingTaskBO);
         if(!result.isSuccess()){
             HttpResult otherResult = new HttpResult();

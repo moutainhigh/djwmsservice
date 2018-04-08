@@ -59,16 +59,12 @@ public enum SysMsgEnum implements MsgInterface {
 	 */
 	ORDER_WRONG(10, "订单号错误"),
 
-	NOT_DEAL(11, "还有任务未处理无法完成装车"),
+	NO_HAVE_WAREHOUSE(11, "当前无可用仓库"),
 
-	NOT_TASK(12, "当前没有任务"),
+	WAREHOUSE_ERROR(12, "该仓库有误请重新核实"),
 
-	NO_HAVE_WAREHOUSE(13, "当前无可用仓库"),
-
-	WAREHOUSE_ERROR(14, "该仓库有误请重新核实"),
-
-	OUTORDER_FAIL(15, "生成出库单失败"),
-    NOTLOADING(16,"还未提货无法装车");
+	OUTORDER_FAIL(13, "生成出库单失败");
+    
 	private int code;
 
 	private String msg;
