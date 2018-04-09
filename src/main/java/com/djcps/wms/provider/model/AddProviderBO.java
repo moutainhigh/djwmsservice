@@ -61,15 +61,14 @@ public class AddProviderBO extends BaseAddBO implements Serializable{
 	 */
 	private String cityCode;
 	
-	/**
-	 * 区名称
-	 */
-	private String areaName;
-	
-	/**
-	 * 区编码
-	 */
-	private String areaCode;
+	 /**
+     * 区名称
+     */
+    private String countyName;
+    /**
+     * 区编码
+     */
+    private String countyCode;
 	
 	/**
 	 * 供应商地址,50个字
@@ -170,20 +169,20 @@ public class AddProviderBO extends BaseAddBO implements Serializable{
 		this.cityCode = cityCode;
 	}
 
-	public String getAreaName() {
-		return areaName;
+	public String getCountyName() {
+		return countyName;
 	}
 
-	public void setAreaName(String areaName) {
-		this.areaName = areaName;
+	public void setCountyName(String countyName) {
+		this.countyName = countyName;
 	}
 
-	public String getAreaCode() {
-		return areaCode;
+	public String getCountyCode() {
+		return countyCode;
 	}
 
-	public void setAreaCode(String areaCode) {
-		this.areaCode = areaCode;
+	public void setCountyCode(String countyCode) {
+		this.countyCode = countyCode;
 	}
 
 	public String getAddress() {
@@ -246,9 +245,9 @@ public class AddProviderBO extends BaseAddBO implements Serializable{
 	public String toString() {
 		return "AddProviderBO [providerId=" + providerId + ", name=" + name + ", shortName=" + shortName + ", webUrl="
 				+ webUrl + ", provinceName=" + provinceName + ", provinceCode=" + provinceCode + ", cityName="
-				+ cityName + ", cityCode=" + cityCode + ", areaName=" + areaName + ", areaCode=" + areaCode
+				+ cityName + ", cityCode=" + cityCode + ", countyName=" + countyName + ", countyCode=" + countyCode
 				+ ", address=" + address + ", contacts=" + contacts + ", tel=" + tel + ", phone=" + phone + ", fax="
 				+ fax + ", email=" + email + ", remark=" + remark + "]";
 	}
-	
+
 }
