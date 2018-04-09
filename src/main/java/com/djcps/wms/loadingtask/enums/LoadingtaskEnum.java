@@ -1,5 +1,6 @@
 package com.djcps.wms.loadingtask.enums;
 
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.msg.MsgInterface;
 /**
  * 
@@ -10,11 +11,15 @@ public enum LoadingtaskEnum implements MsgInterface {
 	/**
 	 * 运单号错误
 	 */
-	WAYBILLID_ERROR(880026,"运单号错误"),
+	WAYBILLID_ERROR(6,"运单号错误,获取不到信息"),
+	/**
+	 * 
+	 */
+	GET_ORDERDETAIL_FAIL(7,"获取订单详情失败"),
 	/**
 	 * 生成出库单失败
 	 */
-	OUTORDER_FAIL(880025,"生成出库单失败")
+	OUTORDER_FAIL(8,"生成出库单失败")
 	;
 	
 	 private int code;
@@ -22,17 +27,17 @@ public enum LoadingtaskEnum implements MsgInterface {
     private String msg;
 
     LoadingtaskEnum(int code,String msg){
-        this.code = code;
-        this.msg = msg;
+    	this.code = AppConstant.WMS_MSG_ENUM_PREFIX+AppConstant.WMS_MODULE_LOADINGTASK_ENUM_PREFIX+code;
+	    this.msg = msg;
     }
 	@Override
 	public int getCode() {
-		return 0;
+		return code;
 	}
 
 	@Override
 	public String getMsg() {
-		return null;
+		return msg;
 	}
 
 }
