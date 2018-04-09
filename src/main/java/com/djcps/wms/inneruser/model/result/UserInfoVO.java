@@ -10,7 +10,7 @@ public class UserInfoVO {
     /**
      * 用户id，可用与用户权限
      */
-    private Integer id;
+    private String id;
     /**
      * 用户邮箱
      */
@@ -88,14 +88,14 @@ public class UserInfoVO {
     /**
      * 获取 用户id，可用与用户权限
      */
-    public Integer getId() {
+    public String getId() {
         return this.id;
     }
 
     /**
      * 设置 用户id，可用与用户权限
      */
-    public UserInfoVO setId(Integer id) {
+    public UserInfoVO setId(String id) {
         this.id = id;
         return this;
     }

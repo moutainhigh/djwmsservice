@@ -57,7 +57,7 @@ public class PushController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            param.setUserid(innerUser.getUids());
+            param.setUserid(innerUser.getId());
             param.setAppsystem(AppConstant.WMS);
             return pushService.registerMsg(param);
         }
@@ -87,7 +87,7 @@ public class PushController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            param.setUserid(innerUser.getUids());
+            param.setUserid(innerUser.getId());
             param.setAppsystem(AppConstant.WMS);
             return pushService.logoutMsg(param);
         }

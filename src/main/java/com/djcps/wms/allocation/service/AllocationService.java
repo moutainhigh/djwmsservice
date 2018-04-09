@@ -227,7 +227,7 @@ public interface AllocationService {
 	 * @author:zdx
 	 * @date:2018年2月4日
 	 */
-	Map<String, Object> getPicker();
+	Map<String, Object> getPicker(BaseAddBO param);
 
 
 	/**
