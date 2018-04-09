@@ -8,20 +8,25 @@ import com.djcps.wms.commons.msg.MsgInterface;
  *
  */
 public enum LoadingTaskEnum implements MsgInterface {
-    /**
-     * 装车任务消息提醒
-     */
+
     NOT_TASK(1, "当前没有任务"),
+    
     NOTLOADING(2,"还未提货无法装车"),
+    
     NOT_DEAL(3, "还有任务未处理无法完成装车"),
+    
 	/**
 	 * 运单号错误
 	 */
-	WAYBILLID_ERROR(880026,"运单号错误"),
+	WAYBILLID_ERROR(4,"运单号错误,获取不到信息"),
+	/**
+	 * 
+	 */
+	GET_ORDERDETAIL_FAIL(5,"获取订单详情失败"),
 	/**
 	 * 生成出库单失败
 	 */
-	OUTORDER_FAIL(880025,"生成出库单失败")
+	OUTORDER_FAIL(6,"生成出库单失败")
 	;
 	
 	 private int code;

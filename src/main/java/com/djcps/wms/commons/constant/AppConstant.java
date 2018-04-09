@@ -126,4 +126,22 @@ public class AppConstant {
      */
     public static final Integer WMS_DELIVERY_ENUM_PREFIX = 600;
     
+     /**
+     * 盘点msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_STOCKTAKING_ENUM_PREFIX = 700;
+
+    /**
+     * 装车msg枚举前缀
+     */
+    public static final Integer WMS_LOADING_TABLE_ENUM_PREFIX = 800;
+    /**
+     * 入库msg枚举前缀
+     */
+    public static final Integer WMS_ENTRY_ENUM_PREFIX = 900;
+    
+    /**
+     * 出库msg枚举类型
+     */
+    public static final Integer WMS_MODULE_OUTORDER_ENUM_PREFIX = 1100;
 }
