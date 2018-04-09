@@ -135,7 +135,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
         HttpResult result = loadingTaskServer.getOrderList(param);
         if (ObjectUtils.isEmpty(result.getData())) {
-            return MsgTemplate.failureMsg(SysMsgEnum.NOT_TASK);
+            return MsgTemplate.failureMsg(LoadingtaskEnum.NOT_TASK);
         }
         if (result.isSuccess()) {
             loadingTaskServer.updateLoadPersonStatus(param);
@@ -244,7 +244,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         List<OrderInfoPO> orderInfo = loadingTaskOrderServer.getChildOrderList(orderIdsBO);
         for (OrderInfoPO orderInfoPO : orderInfo) {
             if (!orderInfoPO.getFstatus().equals(LoadingTaskConstant.ORDERSTATUS_24)) {
-                return MsgTemplate.failureMsg(SysMsgEnum.NOTLOADING);
+                return MsgTemplate.failureMsg(LoadingtaskEnum.NOTLOADING);
             }
         }
 
@@ -252,8 +252,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             Integer loadingAmount = param.getLoadingAmount();
             Integer orderAmount = param.getOrderAmount();
             if (!orderAmount.equals(loadingAmount)) {
-                param.setOnceOrderid(new StringBuffer(param.getOrderId()).append("-1").toString());
-                param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append("-2").toString());
+                param.setOnceOrderid(new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_1).toString());
+                param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_2).toString());
                 if (!ObjectUtils.isEmpty(loadingAmount)) {
                     // 全部退库
                     if (loadingAmount == 0) {
@@ -401,14 +401,14 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         System.out.println(result.getLoadingTaskPO());
         System.out.println(param);
         if (ObjectUtils.isEmpty(result.getLoadingTaskPO())) {
-            return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
+            return MsgTemplate.failureMsg(LoadingtaskEnum.NOT_DEAL);
         }
         // 该订单数据状态应到订单自取
         List<OrderRedundantPO> orderPOList = result.getOrderPOList();
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {
                 if (!LoadingTaskConstant.ORDERTSTATUS_25.equals(info.getStatus())) {
-                    return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
+                    return MsgTemplate.failureMsg(LoadingtaskEnum.NOT_DEAL);
                 }
             }
         }

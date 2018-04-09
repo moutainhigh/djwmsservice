@@ -32,6 +32,7 @@ public class RecommendLocaBO extends BaseBO implements Serializable {
     /**
      * 仓库编号
      */
+    @NotBlank
     private String warehouseId;
 
     private List<RecommendLocaParamBO> param;
