@@ -28,7 +28,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
-import com.djcps.wms.loadingtask.enums.LoadingtaskEnum;
+import com.djcps.wms.loadingtask.enums.LoadingTaskEnum;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
@@ -135,7 +135,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
         HttpResult result = loadingTaskServer.getOrderList(param);
         if (ObjectUtils.isEmpty(result.getData())) {
-            return MsgTemplate.failureMsg(LoadingtaskEnum.NOT_TASK);
+            return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_TASK);
         }
         if (result.isSuccess()) {
             loadingTaskServer.updateLoadPersonStatus(param);
@@ -244,7 +244,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         List<OrderInfoPO> orderInfo = loadingTaskOrderServer.getChildOrderList(orderIdsBO);
         for (OrderInfoPO orderInfoPO : orderInfo) {
             if (!orderInfoPO.getFstatus().equals(LoadingTaskConstant.ORDERSTATUS_24)) {
-                return MsgTemplate.failureMsg(LoadingtaskEnum.NOTLOADING);
+                return MsgTemplate.failureMsg(LoadingTaskEnum.NOTLOADING);
             }
         }
 
@@ -401,14 +401,14 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         System.out.println(result.getLoadingTaskPO());
         System.out.println(param);
         if (ObjectUtils.isEmpty(result.getLoadingTaskPO())) {
-            return MsgTemplate.failureMsg(LoadingtaskEnum.NOT_DEAL);
+            return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_DEAL);
         }
         // 该订单数据状态应到订单自取
         List<OrderRedundantPO> orderPOList = result.getOrderPOList();
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {
                 if (!LoadingTaskConstant.ORDERTSTATUS_25.equals(info.getStatus())) {
-                    return MsgTemplate.failureMsg(LoadingtaskEnum.NOT_DEAL);
+                    return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_DEAL);
                 }
             }
         }
@@ -425,7 +425,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             if (!ObjectUtils.isEmpty(outOrderResult.getData())) {
                 getOrderById = gson.fromJson(gson.toJson(outOrderResult.getData()), GetOrderByWayBillIdPO.class);
             } else {
-                return MsgTemplate.failureMsg(LoadingtaskEnum.WAYBILLID_ERROR);
+                return MsgTemplate.failureMsg(LoadingTaskEnum.WAYBILLID_ERROR);
             }
             // 获取订单id
             List<String> orders = getOrderById.getOrderId();
@@ -542,7 +542,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             }
             HttpResult insertResult = loadingTaskServer.insertOutOrder(outOrderInfos);
             if (!insertResult.isSuccess()) {
-                return MsgTemplate.failureMsg(LoadingtaskEnum.OUTORDER_FAIL);
+                return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
             }
         }
         return MsgTemplate.customMsg(updateResult);

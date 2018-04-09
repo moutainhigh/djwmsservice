@@ -7,7 +7,7 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @author ldh
  *
  */
-public enum LoadingtaskEnum implements MsgInterface {
+public enum LoadingTaskEnum implements MsgInterface {
     /**
      * 装车任务消息提醒
      */
@@ -28,7 +28,7 @@ public enum LoadingtaskEnum implements MsgInterface {
 
     private String msg;
 
-    LoadingtaskEnum(int code,String msg){
+    LoadingTaskEnum(int code,String msg){
         this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_LOADINGTASK_ENUM_PREFIX + code;
         this.msg = msg;
     }
