@@ -8,6 +8,9 @@ import com.djcps.wms.commons.msg.MsgInterface;
  *
  */
 public enum LoadingtaskEnum implements MsgInterface {
+    /**
+     * 装车任务消息提醒
+     */
     NOT_TASK(1, "当前没有任务"),
     NOTLOADING(2,"还未提货无法装车"),
     NOT_DEAL(3, "还有任务未处理无法完成装车"),
