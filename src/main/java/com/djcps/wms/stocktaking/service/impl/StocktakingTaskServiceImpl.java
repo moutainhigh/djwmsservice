@@ -970,7 +970,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                                StringBuffer reson=new StringBuffer();
                                Integer surplusOrderAmount=0;
                                if (allAbnormalOrder.getDifferenceValue()>0){
-                                   //surplusOrderAmount=Math.abs(allAbnormalOrder.getTakeStockAmount()-allAbnormalOrder);
                                    surplusOrderAmount= allAbnormalOrder.getDifferenceValue();
                                    reson.append(AbnormalConstant.ABNORMAL_ERROR_MORE).append(surplusOrderAmount);
                                }else{

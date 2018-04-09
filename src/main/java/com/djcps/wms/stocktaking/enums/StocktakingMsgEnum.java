@@ -3,6 +3,11 @@ package com.djcps.wms.stocktaking.enums;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.msg.MsgInterface;
 
+/**
+ * 盘点枚举类
+ * @author:wzy
+ * @date:2018/4/9
+ **/
 public enum StocktakingMsgEnum implements MsgInterface{
 
     /**
