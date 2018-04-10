@@ -427,7 +427,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {
                 if (!LoadingTaskConstant.ORDERTSTATUS_25.equals(info.getStatus())) {
-                    return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_DEAL);
+                    return MsgTemplate.failureMsg(LoadingTaskEnum.NO_DEAL_ORDER);
                 }
             }
         }
