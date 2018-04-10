@@ -1577,6 +1577,7 @@ public class AllocationServiceImpl implements AllocationService {
 				allocation.setWaybillId(waybillId);
 				allocation.setStatus(Integer.valueOf(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue()));
 				allocation.setPlateNumber(param.getPlateNumber());
+				allocation.setAllocationId(param.getAllocationId());
 				againVerifyAllocation.add(allocation);
 			}
 			//修改装车顺序================
