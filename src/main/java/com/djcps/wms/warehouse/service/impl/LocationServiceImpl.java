@@ -108,6 +108,7 @@ public class LocationServiceImpl implements LocationService {
 
 	@Override
 	public Map<String, Object> getLocationByCode(SelectLocationByAttributeBO param) {
+	    
         HttpResult result = locationServer.getLocationByAttribute(param);
         Map map = (Map) result.getData();
         ArrayList list = (ArrayList) map.get("result");
@@ -117,7 +118,7 @@ public class LocationServiceImpl implements LocationService {
             return MsgTemplate.customMsg(result);
         }else{
         	result.setData(null);
-        	return MsgTemplate.customMsg(result);
+        	return MsgTemplate.failureMsg(WarehouseMsgEnum.NOT_INFO);
         }
     }
 }

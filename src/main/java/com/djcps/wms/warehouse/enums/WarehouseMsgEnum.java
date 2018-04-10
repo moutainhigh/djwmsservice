@@ -20,7 +20,12 @@ public enum WarehouseMsgEnum implements MsgInterface {
 	/**
 	 * 编码新增或删除有误,请联系管理员!!!
 	 */
-	DELETE_CODE_ERROE(2, "编码新增或删除有误,请联系管理员!!!");
+	DELETE_CODE_ERROE(2, "编码新增或删除有误,请联系管理员!!!"),
+	/**
+	 * 扫描库位入库时没有获取到相关信息
+	 */
+	NOT_INFO(3,"获取不到该相关信息")
+	;
 
 	private int code;
 
