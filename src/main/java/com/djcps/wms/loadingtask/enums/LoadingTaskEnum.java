@@ -37,10 +37,16 @@ public enum LoadingTaskEnum implements MsgInterface {
         this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_LOADINGTASK_ENUM_PREFIX + code;
         this.msg = msg;
     }
-	@Override
-	public int getCode() {
-		return code;
-	}
+    
+
+    @Override
+    public int getCode() {
+        return code;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
 	@Override
 	public String getMsg() {

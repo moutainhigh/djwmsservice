@@ -1,9 +1,5 @@
 package com.djcps.wms.loadingtask.model.result;
 
-import org.springframework.util.ObjectUtils;
-
-import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
-
 /**
  * 获取订单编号及装车数量实体类
  * 
@@ -27,6 +23,18 @@ public class OrderIdAndLoadingAmountPO {
      * 异常数量
      */
     private Integer abnomalAmount;
+    /**
+     * 实际提货数量
+     */
+    private Integer realDeliveryAmount;
+
+    public Integer getRealDeliveryAmount() {
+        return realDeliveryAmount;
+    }
+
+    public void setRealDeliveryAmount(Integer realDeliveryAmount) {
+        this.realDeliveryAmount = realDeliveryAmount;
+    }
 
     public Integer getAbnomalAmount() {
         return abnomalAmount;
@@ -37,7 +45,7 @@ public class OrderIdAndLoadingAmountPO {
     }
 
     public String getOrderId() {
-        
+
         return orderId;
     }
 
@@ -64,7 +72,7 @@ public class OrderIdAndLoadingAmountPO {
     @Override
     public String toString() {
         return "OrderIdAndLoadingAmountPO [orderId=" + orderId + ", loadingAmount=" + loadingAmount + ", orderStatus="
-                + orderStatus + ", abnomalAmount=" + abnomalAmount + "]";
+                + orderStatus + ", abnomalAmount=" + abnomalAmount + ", realDeliveryAmount=" + realDeliveryAmount + "]";
     }
 
 }
