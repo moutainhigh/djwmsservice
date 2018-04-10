@@ -225,8 +225,12 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         InventoryClerkBO inventoryClerkBO2=new InventoryClerkBO();
         inventoryClerkBO2.setInventoryClerk("郑杰");
         inventoryClerkBO2.setInventoryClerkId("977");
+        InventoryClerkBO inventoryClerkBO3=new InventoryClerkBO();
+        inventoryClerkBO3.setInventoryClerk("超級管理員");
+        inventoryClerkBO3.setInventoryClerkId("81");
         list.add(inventoryClerkBO);
         list.add(inventoryClerkBO2);
+        list.add(inventoryClerkBO3);
         return MsgTemplate.successMsg(list);
     }
 

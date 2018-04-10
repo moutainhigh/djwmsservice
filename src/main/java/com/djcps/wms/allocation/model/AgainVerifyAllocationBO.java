@@ -64,6 +64,22 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	 */
 	private String plateNumber;
 
+	/**
+	 * 智能配货id
+	 */
+	@NotBlank
+	private String allocationId;
+	
+	public String getAllocationId() {
+		return allocationId;
+	}
+
+
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
+	}
+
+
 	public String getPlateNumber() {
 		return plateNumber;
 	}
@@ -138,7 +154,7 @@ public class AgainVerifyAllocationBO extends BaseAddBO implements Serializable{
 	public String toString() {
 		return "AgainVerifyAllocationBO [deliveryId=" + deliveryId + ", waybillId=" + waybillId + ", deliveryIdEffect="
 				+ deliveryIdEffect + ", orderId=" + orderId + ", sequence=" + sequence + ", status=" + status
-				+ ", plateNumber=" + plateNumber + "]";
+				+ ", plateNumber=" + plateNumber + ", allocationId=" + allocationId + "]";
 	}
 
 }
