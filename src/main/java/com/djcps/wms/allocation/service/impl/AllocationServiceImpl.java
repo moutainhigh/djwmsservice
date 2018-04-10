@@ -345,6 +345,7 @@ public class AllocationServiceImpl implements AllocationService {
 			resultMap.put("total", result.getTotal());
 			return resultMap;
 		}else{
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+allocationId);
 			return MsgTemplate.successMsg();
 		}
 	}
@@ -407,11 +408,49 @@ public class AllocationServiceImpl implements AllocationService {
 		if(!ObjectUtils.isEmpty(existHttpResult.getData())){
 			String flag = (String)existHttpResult.getData();
 			if(flag.equals(AllocationConstant.ALLOCATION_EFFECT)){
+				//删除同时确认配货锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 				return MsgTemplate.failureMsg(AllocationMsgEnum.ALREADY_INTELLIGENT_ALLOCATION);
 			}
 		}
+		
+		//伪代码要删除
+		HttpResult talbeResult =  allocationServer.getDeliveryTableId(param);
+		if(!ObjectUtils.isEmpty(talbeResult.getData())){
+			JsonObject asJsonObject = new JsonParser().parse(gson.toJson(talbeResult.getData())).getAsJsonObject();
+			String loadingTableId = asJsonObject.get("loadingTableId").getAsString();
+			String loadingTableName = asJsonObject.get("loadingTableName").getAsString();
+			JsonElement jsonElement = asJsonObject.get("pickerId");
+			if(jsonElement==null){
+				param.setPickerId(param.getOperatorId());
+			}else{
+				//删除同时确认配货锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
+				//释放同时确认配货,确认优化公共锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+				return MsgTemplate.failureMsg("当前无可用提货员,请等待");
+			}
+			
+			if(StringUtils.isEmpty(loadingTableId) || StringUtils.isEmpty(loadingTableId)){
+				//删除同时确认配货锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
+				//释放同时确认配货,确认优化公共锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+				return MsgTemplate.failureMsg("请绑定装车台账号");
+			}
+			param.setLoadingTableId(loadingTableId);
+			param.setLoadingTableName(loadingTableName);
+		}else{
+			//删除同时确认配货锁
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
+			//释放同时确认配货,确认优化公共锁
+			redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+			return MsgTemplate.failureMsg("请检查是否有可用的装车台或检查装车台是否已绑定装车台账号");
+		}
+		//伪代码要删除
+		
 		List<String> orderIds = new ArrayList<>();
 		List<SequenceBO> sequenceList = param.getOrderIds();
 		//取出所有的订单号
@@ -427,6 +466,8 @@ public class AllocationServiceImpl implements AllocationService {
 			Integer orderStatus = orderPO.getOrderStatus();
 			if(!OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
 				String error = orderPO.getOrderId();
+				//删除同时确认配货锁
+				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
 				//释放同时确认配货,确认优化公共锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 				String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
@@ -453,31 +494,6 @@ public class AllocationServiceImpl implements AllocationService {
 		param.setWaybillIdCreateTime(time);
 		param.setDeliveryCreateTime(time);
 		param.setDeliveryIdEffect(AllocationConstant.DELIVERY_EFFEFT);
-		
-		
-		
-		//伪代码要删除
-		HttpResult talbeResult =  allocationServer.getDeliveryTableId(param);
-		if(!ObjectUtils.isEmpty(talbeResult.getData())){
-			JsonObject asJsonObject = new JsonParser().parse(gson.toJson(talbeResult.getData())).getAsJsonObject();
-			String loadingTableId = asJsonObject.get("loadingTableId").getAsString();
-			String loadingTableName = asJsonObject.get("loadingTableName").getAsString();
-			JsonElement jsonElement = asJsonObject.get("pickerId");
-			if(jsonElement==null){
-				param.setPickerId(param.getOperatorId());
-			}else{
-				return MsgTemplate.failureMsg("当前无可用提货员,请等待");
-			}
-			
-			if(StringUtils.isEmpty(loadingTableId) || StringUtils.isEmpty(loadingTableId)){
-				return MsgTemplate.failureMsg("请绑定装车台账号");
-			}
-			param.setLoadingTableId(loadingTableId);
-			param.setLoadingTableName(loadingTableName);
-		}else{
-			return MsgTemplate.failureMsg("请检查是否有可用的装车台或检查装车台是否已绑定装车台账号");
-		}
-		//伪代码要删除
 		
 		HttpResult result = allocationServer.verifyAllocation(param);
 		if(result.isSuccess()){

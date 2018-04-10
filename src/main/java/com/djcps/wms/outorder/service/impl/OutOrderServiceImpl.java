@@ -18,6 +18,7 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.outorder.enums.OutOrderEnums;
 import com.djcps.wms.outorder.model.OrderDetailBO;
 import com.djcps.wms.outorder.model.OutOrderBO;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
@@ -55,35 +56,14 @@ public class OutOrderServiceImpl implements OutOrderService{
 			orderIdsBO.setChildOrderIds(list);
 			//获取订单明细详情list
 			childOrderList = orderServer.getChildOrderList(orderIdsBO);
-		}
-		List<ChildOrderBO> childOrders = new ArrayList<ChildOrderBO>();
-		for(ChildOrderBO child:childOrderList){
-			if(AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())){
-				childOrders.add(child);
-			}
+		}else{
+			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDER_ID_FAIL);
 		}
 		List<OrderDetailBO> orderDetailList = new ArrayList<OrderDetailBO>();
-		if(!childOrderList.isEmpty()){
-			for(ChildOrderBO childOrderBO:childOrders){
-				OrderDetailBO orderDetail = new OrderDetailBO();
-				orderDetail.setChildOrderId(childOrderBO.getFchildorderid());
-				orderDetail.setGroupGoodName(childOrderBO.getFgroupgoodname());
-				if(!ObjectUtils.isEmpty(childOrderBO.getFmateriallength())&&!ObjectUtils.isEmpty(childOrderBO.getFmaterialwidth())){
-					StringBuffer buff = new StringBuffer().append(childOrderBO.getFmateriallength()).append("*").append(childOrderBO.getFmaterialwidth());
-					orderDetail.setMaterial(buff.toString());
-				}
-				if(!ObjectUtils.isEmpty(childOrderBO.getFboxlength())&&!ObjectUtils.isEmpty(childOrderBO.getFboxwidth())
-						&&!ObjectUtils.isEmpty(childOrderBO.getFboxheight())){
-					StringBuffer stringBuff = new StringBuffer().append(childOrderBO.getFboxlength()).append("*").
-							append(childOrderBO.getFboxwidth()).append("*").append(childOrderBO.getFboxheight());
-					orderDetail.setBox(stringBuff.toString());
-				}
-				orderDetail.setAmount(childOrderBO.getFamountpiece());
-				orderDetail.setUnitPrice(childOrderBO.getFunitprice());
-				orderDetail.setAmountPrice(childOrderBO.getFamountprice());
-				orderDetailList.add(orderDetail);
-				
-			}
+		if(!ObjectUtils.isEmpty(childOrderList)){
+			orderDetailList = getOrderDetails(orderDetailList, childOrderList);
+		}else{
+			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDERDETAIL_FAIL);
 		}
 		
 		Double totalPrice = 0.0;
@@ -100,6 +80,41 @@ public class OutOrderServiceImpl implements OutOrderService{
 		orderDetailVO.setTotalAmount(totalAmount);
 		orderDetailVO.setTotalPrice(totalPrice);
 		return MsgTemplate.successMsg(orderDetailVO);
+	}
+	
+	/**
+	 * 组织参数，订单详情
+	 * @param orderDetailList 订单详情集合
+	 * @param childOrderList 从订单服务获取的订单详情
+	 * @return
+	 */
+	public List<OrderDetailBO> getOrderDetails(List<OrderDetailBO> orderDetailList,List<ChildOrderBO> childOrderList){
+		List<ChildOrderBO> childOrders = new ArrayList<ChildOrderBO>();
+		for(ChildOrderBO child:childOrderList){
+			if(AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())){
+				childOrders.add(child);
+			}
+		}
+		for(ChildOrderBO childOrderBO:childOrders){
+			OrderDetailBO orderDetail = new OrderDetailBO();
+			orderDetail.setChildOrderId(childOrderBO.getFchildorderid());
+			orderDetail.setGroupGoodName(childOrderBO.getFgroupgoodname());
+			if(!ObjectUtils.isEmpty(childOrderBO.getFmateriallength())&&!ObjectUtils.isEmpty(childOrderBO.getFmaterialwidth())){
+				StringBuffer buff = new StringBuffer().append(childOrderBO.getFmateriallength()).append("*").append(childOrderBO.getFmaterialwidth());
+				orderDetail.setMaterial(buff.toString());
+			}
+			if(!ObjectUtils.isEmpty(childOrderBO.getFboxlength())&&!ObjectUtils.isEmpty(childOrderBO.getFboxwidth())
+					&&!ObjectUtils.isEmpty(childOrderBO.getFboxheight())){
+				StringBuffer stringBuff = new StringBuffer().append(childOrderBO.getFboxlength()).append("*").
+						append(childOrderBO.getFboxwidth()).append("*").append(childOrderBO.getFboxheight());
+				orderDetail.setBox(stringBuff.toString());
+			}
+			orderDetail.setAmount(childOrderBO.getFamountpiece());
+			orderDetail.setUnitPrice(childOrderBO.getFunitprice());
+			orderDetail.setAmountPrice(childOrderBO.getFamountprice());
+			orderDetailList.add(orderDetail);
+		}
+		return orderDetailList;
 	}
 	
 	@Override

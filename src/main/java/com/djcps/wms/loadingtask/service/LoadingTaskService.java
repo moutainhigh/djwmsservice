@@ -103,7 +103,7 @@ public interface LoadingTaskService {
 
 	/**
 	 * 根据用户登录id获取装车台id
-	 * @param param
+	 * @param partnerInfoBO
 	 * @return
 	 * @author:zdx
 	 * @date:2018年4月4日

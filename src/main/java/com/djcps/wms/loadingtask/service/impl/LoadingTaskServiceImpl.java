@@ -28,7 +28,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
-import com.djcps.wms.loadingtask.enums.LoadingtaskEnum;
+import com.djcps.wms.loadingtask.enums.LoadingTaskEnum;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
@@ -135,7 +135,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
         HttpResult result = loadingTaskServer.getOrderList(param);
         if (ObjectUtils.isEmpty(result.getData())) {
-            return MsgTemplate.failureMsg(SysMsgEnum.NOT_TASK);
+            return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_TASK);
         }
         if (result.isSuccess()) {
             loadingTaskServer.updateLoadPersonStatus(param);
@@ -244,16 +244,18 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         List<OrderInfoPO> orderInfo = loadingTaskOrderServer.getChildOrderList(orderIdsBO);
         for (OrderInfoPO orderInfoPO : orderInfo) {
             if (!orderInfoPO.getFstatus().equals(LoadingTaskConstant.ORDERSTATUS_24)) {
-                return MsgTemplate.failureMsg(SysMsgEnum.NOTLOADING);
+                return MsgTemplate.failureMsg(LoadingTaskEnum.NOTLOADING);
             }
         }
-
+        
         if (!ObjectUtils.isEmpty(param)) {
             Integer loadingAmount = param.getLoadingAmount();
             Integer orderAmount = param.getOrderAmount();
             if (!orderAmount.equals(loadingAmount)) {
-                param.setOnceOrderid(new StringBuffer(param.getOrderId()).append("-1").toString());
-                param.setTwiceOrderid(new StringBuffer(param.getOrderId()).append("-2").toString());
+                param.setOnceOrderid(
+                        new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_1).toString());
+                param.setTwiceOrderid(
+                        new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_2).toString());
                 if (!ObjectUtils.isEmpty(loadingAmount)) {
                     // 全部退库
                     if (loadingAmount == 0) {
@@ -279,19 +281,22 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                                 param.getPartnerId(), param.getVersion());
                         return MsgTemplate.customMsg(result);
                         // 更新-1订订单状态
-                        /*
-                         * Boolean updateOnce =
-                         * updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25,
-                         * param.getOnceOrderid(), param.getPartnerId(), param.getVersion()); Boolean
-                         * updateTwice = false; if (updateOnce) { // 更新-2订单状态 updateTwice =
-                         * updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24,
-                         * param.getTwiceOrderid(), param.getPartnerId(), param.getVersion()); } else {
-                         * return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE); }
-                         */
-                        /*
-                         * if (updateTwice) { HttpResult result = loadingTaskServer.loading(param);
-                         * return MsgTemplate.customMsg(result); }
-                         */
+
+//                        Boolean updateOnce = updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_25,
+//                                param.getOnceOrderid(), param.getPartnerId(), param.getVersion());
+//                        Boolean updateTwice = false;
+//                        if (updateOnce) { // 更新-2订单状态 updateTwice =
+//                            updateOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24, param.getTwiceOrderid(),
+//                                    param.getPartnerId(), param.getVersion());
+//                        } else {
+//                            return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+//                        }
+//
+//                        if (updateTwice) {
+//                            HttpResult result = loadingTaskServer.loading(param);
+//                            return MsgTemplate.customMsg(result);
+//                        }
+
                     }
                 }
             }
@@ -328,6 +333,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> additionalOrder(AdditionalOrderBO param) {
+
         param.setApplicationTime("NOW()");
         param.setProposer(param.getOperator());
         param.setOperatorId(param.getOperatorId());
@@ -401,14 +407,14 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         System.out.println(result.getLoadingTaskPO());
         System.out.println(param);
         if (ObjectUtils.isEmpty(result.getLoadingTaskPO())) {
-            return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
+            return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_DEAL);
         }
         // 该订单数据状态应到订单自取
         List<OrderRedundantPO> orderPOList = result.getOrderPOList();
         if (!ObjectUtils.isEmpty(orderPOList)) {
             for (OrderRedundantPO info : orderPOList) {
                 if (!LoadingTaskConstant.ORDERTSTATUS_25.equals(info.getStatus())) {
-                    return MsgTemplate.failureMsg(SysMsgEnum.NOT_DEAL);
+                    return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_DEAL);
                 }
             }
         }
@@ -425,7 +431,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             if (!ObjectUtils.isEmpty(outOrderResult.getData())) {
                 getOrderById = gson.fromJson(gson.toJson(outOrderResult.getData()), GetOrderByWayBillIdPO.class);
             } else {
-                return MsgTemplate.failureMsg(LoadingtaskEnum.WAYBILLID_ERROR);
+                return MsgTemplate.failureMsg(LoadingTaskEnum.WAYBILLID_ERROR);
             }
             // 获取订单id
             List<String> orders = getOrderById.getOrderId();
@@ -444,108 +450,142 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             List<ChildOrderBO> childOrder = orderServer.getChildOrderList(orderParam);
             // 根据是否分发字段判断订单
             List<ChildOrderBO> childOrderList = new ArrayList<>();
-            for (ChildOrderBO child : childOrder) {
-                if (AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())) {
-                    childOrderList.add(child);
-                }
-            }
-            List<OrderInfoBO> orderInfoBOs = new ArrayList<OrderInfoBO>();
-            for (ChildOrderBO child : childOrderList) {
-                OrderInfoBO orderInfo = new OrderInfoBO();
-                BeanUtils.copyProperties(child, orderInfo);
-                orderInfoBOs.add(orderInfo);
-            }
-            // 客户详情
-            List<CustomerBO> customers = new ArrayList<>();
-            for (OrderInfoBO orderInfoBO : orderInfoBOs) {
-                CustomerBO customerBO = new CustomerBO();
-                // 设置订单id
-                customerBO.setOrderIds(orderInfoBO.getFchildorderid());
-                // 设置联系人
-                customerBO.setContacts(orderInfoBO.getFconsignee());
-                // 设置客户姓名
-                if (!StringUtils.isEmpty(orderInfoBO.getFcusername())) {
-                    customerBO.setCustomerName(orderInfoBO.getFcusername());
-                } else {
-                    customerBO.setCustomerName(orderInfoBO.getFpusername());
-                }
-                // 设置联系方式
-                customerBO.setContactway(orderInfoBO.getFcontactway());
-                // 设置地址
-                customerBO.setAddress(new StringBuffer(orderInfoBO.getFcodeprovince()).append(" ")
-                        .append(orderInfoBO.getFaddressdetail()).toString());
-                customers.add(customerBO);
-            }
-            // 记录归并的订单id集合
-            List<String> orderIds = new ArrayList<>();
-            // 记录已经被归并过的订单id集合
-            List<String> orderIdsUsed = new ArrayList<>();
-            // 出库单数据
-            List<OutOrderInfoBO> outOrderInfos = new ArrayList<OutOrderInfoBO>();
-            for (int i = 0; i < customers.size(); i++) {
-                CustomerBO customerBO = customers.get(i);
-                if (orderIdsUsed.contains(customerBO.getOrderIds())) {
-                    continue;
-                }
-                orderIds.add(customerBO.getOrderIds());
-                orderIdsUsed.add(customerBO.getOrderIds());
-                if ((i + 1) != customers.size()) {
-                    for (int j = i + 1; j < customers.size(); j++) {
-                        CustomerBO customerJ = customers.get(j);
-                        boolean b1 = customerBO.getCustomerName().equals(customerJ.getCustomerName());
-                        boolean b2 = customerBO.getContacts().equals(customerJ.getContacts());
-                        boolean b3 = customerBO.getContactway().equals(customerJ.getContactway());
-                        boolean b4 = customerBO.getAddress().equals(customerJ.getAddress());
-                        if (b1 && b2 && b3 && b4) {
-                            orderIds.add(customerJ.getOrderIds());
-                            orderIdsUsed.add(customerJ.getOrderIds());
-                        }
+            if (!ObjectUtils.isEmpty(childOrder)) {
+                for (ChildOrderBO child : childOrder) {
+                    if (AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())) {
+                        childOrderList.add(child);
                     }
                 }
-                OutOrderInfoBO outOrder = new OutOrderInfoBO();
-                // 客户地址
-                outOrder.setAddress(customerBO.getAddress());
-                // 联系人
-                outOrder.setContacts(customerBO.getContacts());
-                // 联系方式
-                outOrder.setContactway(customerBO.getContactway());
-                // 客户名称
-                outOrder.setCustomerName(customerBO.getCustomerName());
-                List<String> orderIdsAttr = new ArrayList<>();
-                orderIdsAttr.addAll(orderIds);
-                // 订单数组
-                StringBuffer buffer = new StringBuffer();
-                for (String str : orderIdsAttr) {
-                    buffer.append(str).append(",");
-                }
-                String str = buffer.toString().substring(0, buffer.toString().lastIndexOf(","));
-                outOrder.setOrderIds(str);
-                HttpResult numResult = loadingTaskServer.getNumber(1);
-                // 出库单id
-                outOrder.setId(numResult.getData().toString());
-                outOrder.setOperatorId(param.getOperatorId());
-                outOrder.setOperator(param.getOperator());
-                outOrder.setPartnerArea(param.getPartnerArea());
-                outOrder.setPartnerId(param.getPartnerId());
-                outOrder.setPartnerName(param.getPartnerName());
-                // 配货时间
-                outOrder.setAllocationTime(getOrderById.getAllocationTime());
-                // 先写死，到时候去TMS拿数据
-                // 司机id
-                outOrder.setDriverId("111122233");
-                // 司机名称
-                outOrder.setDriverName("刘德煌");
-                // 车牌号
-                outOrder.setPlateNumber(getOrderById.getCarId());
-                outOrderInfos.add(outOrder);
-                orderIds.clear();
+            } else {
+                return MsgTemplate.failureMsg(LoadingTaskEnum.GET_ORDERDETAIL_FAIL);
             }
+            // 获取客户信息
+            List<CustomerBO> customers = getCustomers(childOrderList);
+            // 获取出库单信息
+            List<OutOrderInfoBO> outOrderInfos = getOutOrderInfos(customers, param, getOrderById);
             HttpResult insertResult = loadingTaskServer.insertOutOrder(outOrderInfos);
             if (!insertResult.isSuccess()) {
-                return MsgTemplate.failureMsg(LoadingtaskEnum.OUTORDER_FAIL);
+                return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
             }
         }
         return MsgTemplate.customMsg(updateResult);
+    }
+
+    /**
+     * 生成出库单
+     * 
+     * @param customers
+     *            客户详情
+     * @param param
+     *            运单对象
+     * @param getOrderById
+     *            获取车辆id，配货时间，订单号对象
+     * @return
+     */
+    public List<OutOrderInfoBO> getOutOrderInfos(List<CustomerBO> customers, FinishLoadingBO param,
+            GetOrderByWayBillIdPO getOrderById) {
+        // 记录归并的订单id集合
+        List<String> orderIds = new ArrayList<>();
+        // 记录已经被归并过的订单id集合
+        List<String> orderIdsUsed = new ArrayList<>();
+        // 出库单数据
+        List<OutOrderInfoBO> outOrderInfos = new ArrayList<OutOrderInfoBO>();
+        for (int i = 0; i < customers.size(); i++) {
+            CustomerBO customerBO = customers.get(i);
+            if (orderIdsUsed.contains(customerBO.getOrderIds())) {
+                continue;
+            }
+            orderIds.add(customerBO.getOrderIds());
+            orderIdsUsed.add(customerBO.getOrderIds());
+            if ((i + 1) != customers.size()) {
+                for (int j = i + 1; j < customers.size(); j++) {
+                    CustomerBO customerJ = customers.get(j);
+                    boolean b1 = customerBO.getCustomerName().equals(customerJ.getCustomerName());
+                    boolean b2 = customerBO.getContacts().equals(customerJ.getContacts());
+                    boolean b3 = customerBO.getContactway().equals(customerJ.getContactway());
+                    boolean b4 = customerBO.getAddress().equals(customerJ.getAddress());
+                    if (b1 && b2 && b3 && b4) {
+                        orderIds.add(customerJ.getOrderIds());
+                        orderIdsUsed.add(customerJ.getOrderIds());
+                    }
+                }
+            }
+            OutOrderInfoBO outOrder = new OutOrderInfoBO();
+            // 客户地址
+            outOrder.setAddress(customerBO.getAddress());
+            // 联系人
+            outOrder.setContacts(customerBO.getContacts());
+            // 联系方式
+            outOrder.setContactway(customerBO.getContactway());
+            // 客户名称
+            outOrder.setCustomerName(customerBO.getCustomerName());
+            List<String> orderIdsAttr = new ArrayList<>();
+            orderIdsAttr.addAll(orderIds);
+            // 订单数组
+            StringBuffer buffer = new StringBuffer();
+            for (String str : orderIdsAttr) {
+                buffer.append(str).append(",");
+            }
+            String str = buffer.toString().substring(0, buffer.toString().lastIndexOf(","));
+            outOrder.setOrderIds(str);
+            HttpResult numResult = loadingTaskServer.getNumber(1);
+            // 出库单id
+            outOrder.setId(numResult.getData().toString());
+            outOrder.setOperatorId(param.getOperatorId());
+            outOrder.setOperator(param.getOperator());
+            outOrder.setPartnerArea(param.getPartnerArea());
+            outOrder.setPartnerId(param.getPartnerId());
+            outOrder.setPartnerName(param.getPartnerName());
+            // 配货时间
+            outOrder.setAllocationTime(getOrderById.getAllocationTime());
+            // 先写死，到时候去TMS拿数据
+            // 司机id
+            outOrder.setDriverId("111122233");
+            // 司机名称
+            outOrder.setDriverName("刘德煌");
+            // 车牌号
+            outOrder.setPlateNumber(getOrderById.getCarId());
+            outOrderInfos.add(outOrder);
+            orderIds.clear();
+        }
+        return outOrderInfos;
+    }
+
+    /**
+     * 获取客户信息
+     * 
+     * @param childOrderList
+     * @return
+     */
+    public List<CustomerBO> getCustomers(List<ChildOrderBO> childOrderList) {
+        List<OrderInfoBO> orderInfoBOs = new ArrayList<OrderInfoBO>();
+        for (ChildOrderBO child : childOrderList) {
+            OrderInfoBO orderInfo = new OrderInfoBO();
+            BeanUtils.copyProperties(child, orderInfo);
+            orderInfoBOs.add(orderInfo);
+        }
+        // 客户详情
+        List<CustomerBO> customers = new ArrayList<>();
+        for (OrderInfoBO orderInfoBO : orderInfoBOs) {
+            CustomerBO customerBO = new CustomerBO();
+            // 设置订单id
+            customerBO.setOrderIds(orderInfoBO.getFchildorderid());
+            // 设置联系人
+            customerBO.setContacts(orderInfoBO.getFconsignee());
+            // 设置客户姓名
+            if (!StringUtils.isEmpty(orderInfoBO.getFcusername())) {
+                customerBO.setCustomerName(orderInfoBO.getFcusername());
+            } else {
+                customerBO.setCustomerName(orderInfoBO.getFpusername());
+            }
+            // 设置联系方式
+            customerBO.setContactway(orderInfoBO.getFcontactway());
+            // 设置地址
+            customerBO.setAddress(new StringBuffer(orderInfoBO.getFcodeprovince()).append(" ")
+                    .append(orderInfoBO.getFaddressdetail()).toString());
+            customers.add(customerBO);
+        }
+        return customers;
     }
 
     @Override

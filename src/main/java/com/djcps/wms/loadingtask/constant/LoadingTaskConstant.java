@@ -64,7 +64,7 @@ public class LoadingTaskConstant {
     public static final String REDUNDANTSTATUS_23 = "23";
 
     /**
-     * 冗余表订单状态 24, 已提货
+     * 订单对应状态24, 已提货
      */
     public static final String REDUNDANTSTATUS_24 = "24";
     /**
@@ -72,11 +72,11 @@ public class LoadingTaskConstant {
      */
     public static final Integer ORDERSTATUS_24 = 24;
     /**
-     * 冗余表订单状态 25, 已装车
+     * 订单对应状态25, 已装车
      */
     public static final String REDUNDANTSTATUS_25 = "25";
     /**
-     * 订单对应状态 25, 已装车
+     * 冗余表订单状态 25, 已装车
      */
     public static final Integer ORDERTSTATUS_25 = 25;
     /**
@@ -103,4 +103,13 @@ public class LoadingTaskConstant {
      * 截取拆分订单编号
      */
     public static final String SUBSTRING_ORDER = "-";
+    /**
+     * 拆分订单-1
+     */
+    public static final String BREAK_UP_ORDER_1 = "-1";
+    /**
+     * 拆分订单-2
+     */
+    public static final String BREAK_UP_ORDER_2 = "-2";
+    
 }

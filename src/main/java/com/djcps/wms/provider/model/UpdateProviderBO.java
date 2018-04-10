@@ -63,12 +63,12 @@ public class UpdateProviderBO extends BaseUpdateAndDeleteBO implements Serializa
 	/**
 	 * 区名称
 	 */
-	private String areaName;
+	private String countyName;
 	
 	/**
 	 * 区编码
 	 */
-	private String areaCode;
+	private String countyCode;
 	
 	/**
 	 * 供应商地址,50个字
@@ -169,20 +169,21 @@ public class UpdateProviderBO extends BaseUpdateAndDeleteBO implements Serializa
 		this.cityCode = cityCode;
 	}
 
-	public String getAreaName() {
-		return areaName;
+
+	public String getCountyName() {
+		return countyName;
 	}
 
-	public void setAreaName(String areaName) {
-		this.areaName = areaName;
+	public void setCountyName(String countyName) {
+		this.countyName = countyName;
 	}
 
-	public String getAreaCode() {
-		return areaCode;
+	public String getCountyCode() {
+		return countyCode;
 	}
 
-	public void setAreaCode(String areaCode) {
-		this.areaCode = areaCode;
+	public void setCountyCode(String countyCode) {
+		this.countyCode = countyCode;
 	}
 
 	public String getAddress() {
@@ -243,11 +244,12 @@ public class UpdateProviderBO extends BaseUpdateAndDeleteBO implements Serializa
 
 	@Override
 	public String toString() {
-		return "UpdateProviderVO [id=" + id + ", name=" + name + ", shortName=" + shortName + ", webUrl=" + webUrl
+		return "UpdateProviderBO [id=" + id + ", name=" + name + ", shortName=" + shortName + ", webUrl=" + webUrl
 				+ ", provinceName=" + provinceName + ", provinceCode=" + provinceCode + ", cityName=" + cityName
-				+ ", cityCode=" + cityCode + ", areaName=" + areaName + ", areaCode=" + areaCode + ", address="
+				+ ", cityCode=" + cityCode + ", countyName=" + countyName + ", countyCode=" + countyCode + ", address="
 				+ address + ", contacts=" + contacts + ", tel=" + tel + ", phone=" + phone + ", fax=" + fax + ", email="
 				+ email + ", remark=" + remark + "]";
 	}
+
 
 }
