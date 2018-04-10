@@ -117,7 +117,15 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 		UserPO user = new UserPO();
 		user.setBindingUserName(param.getOperator());
 		user.setBindingUserId(param.getOperatorId());
+		UserPO user2 = new UserPO();
+		user2.setBindingUserName("Admin");
+		user2.setBindingUserId("81");
+		UserPO user3 = new UserPO();
+		user3.setBindingUserName("鄭傑");
+		user3.setBindingUserId("977");
 		list.add(user);
+		list.add(user2);
+		list.add(user3);
 		return  MsgTemplate.successMsg(list);
 	}
 

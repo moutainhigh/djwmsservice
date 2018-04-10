@@ -424,7 +424,7 @@ public class AllocationServiceImpl implements AllocationService {
 			String loadingTableName = asJsonObject.get("loadingTableName").getAsString();
 			JsonElement jsonElement = asJsonObject.get("pickerId");
 			if(jsonElement==null){
-				param.setPickerId(param.getOperatorId());
+				param.setPickerId(param.getPickerId());
 			}else{
 				//删除同时确认配货锁
 				redisClient.del(RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
@@ -1324,8 +1324,10 @@ public class AllocationServiceImpl implements AllocationService {
 	@Override
 	public Map<String, Object> getPicker(BaseAddBO param) {
 		PickerPO picker2 = new PickerPO(param.getOperatorId(),param.getOperator(),"15157780633","空闲");
+		PickerPO picker3 = new PickerPO("81","Admin","1000000","空闲");
 		List<PickerPO> list = new ArrayList<>();
 		list.add(picker2);
+		list.add(picker3);
 		return MsgTemplate.successMsg(list);
 	}
 
@@ -1342,10 +1344,10 @@ public class AllocationServiceImpl implements AllocationService {
 		//确认配货,确认优化公共锁
 		Boolean setnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
 				"上锁", AllocationConstant.REDIS_LOCK_TIME);
-		//同时确认配货锁
-		Boolean waybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
-				"上锁", AllocationConstant.REDIS_LOCK_TIME);
 		if(setnx){
+			//同时确认配货锁
+			Boolean waybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
+					"上锁", AllocationConstant.REDIS_LOCK_TIME);
 			if(waybillSetnx){
 				//确认配货执行逻辑方法
 				return againVerifyAllocationSon(param,partnerInfoBean);
@@ -1360,10 +1362,10 @@ public class AllocationServiceImpl implements AllocationService {
 					//确认配货,确认优化公共锁
 					Boolean againSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
 							"上锁", AllocationConstant.REDIS_LOCK_TIME);
-					//同时确认配货锁
-					Boolean againWaybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
-							"上锁", AllocationConstant.REDIS_LOCK_TIME);
 					if(againSetnx){
+						//同时确认配货锁
+						Boolean againWaybillSetnx = RedisUtil.setnx(redisClient, RedisPrefixContant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+param.getWaybillId(), 
+								"上锁", AllocationConstant.REDIS_LOCK_TIME);
 						if(againWaybillSetnx){
 							//确认配货执行逻辑方法
 							return againVerifyAllocationSon(param,partnerInfoBean);
