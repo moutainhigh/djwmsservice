@@ -39,12 +39,12 @@ public enum LoadingTaskEnum implements MsgInterface {
     }
 	@Override
 	public int getCode() {
-		return 0;
+		return code;
 	}
 
 	@Override
 	public String getMsg() {
-		return null;
+		return msg;
 	}
 
 }
