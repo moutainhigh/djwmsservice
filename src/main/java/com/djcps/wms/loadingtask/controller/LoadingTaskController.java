@@ -85,7 +85,7 @@ public class LoadingTaskController {
     }
 
     /**
-     * 装车员确认接口
+     * 更新装车员状态并获取装车任务列表
      * 
      * @autuor wyb
      * @since 2018/3/19
@@ -93,7 +93,7 @@ public class LoadingTaskController {
      * @param json
      * @return
      */
-    @RequestMapping(name = "装车员确认接口", value = "/confirm", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(name = "更新装车员状态并获取装车任务列表", value = "/confirm", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> confirm(@RequestBody(required = false) String json, HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
