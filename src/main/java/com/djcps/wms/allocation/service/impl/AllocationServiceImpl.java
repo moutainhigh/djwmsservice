@@ -1773,6 +1773,7 @@ public class AllocationServiceImpl implements AllocationService {
 			//需要订单服务修改订单状态成功情况下,移除订单表数据,并且修改冗余表订单状态(该逻辑在服务端)
 			moveOrder.setStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 			moveOrder.setOrderIds(orderIdsList);
+			moveOrder.setAllocationId(param.getAllocationId());
 		}
 		//配货管理移除订单===================
 		
