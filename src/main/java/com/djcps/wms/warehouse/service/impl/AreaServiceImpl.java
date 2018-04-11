@@ -1,5 +1,6 @@
 package com.djcps.wms.warehouse.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.warehouse.controller.AreaController;
+import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
 import com.djcps.wms.warehouse.model.area.AddAreaBO;
 import com.djcps.wms.warehouse.model.area.CountyBO;
@@ -28,7 +30,9 @@ import com.djcps.wms.warehouse.model.area.ProvinceCityBO;
 import com.djcps.wms.warehouse.model.area.SelectAllAreaListBO;
 import com.djcps.wms.warehouse.model.area.StreetBO;
 import com.djcps.wms.warehouse.model.area.UpdateAreaBO;
+import com.djcps.wms.warehouse.model.area.WarehouseAreaPO;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
+import com.djcps.wms.warehouse.model.warehouse.WarehousePO;
 import com.djcps.wms.warehouse.server.AreaServer;
 import com.djcps.wms.warehouse.service.AreaService;
 import com.fasterxml.jackson.databind.util.BeanUtil;
@@ -74,27 +78,39 @@ public class AreaServiceImpl implements AreaService {
 		if(!isUseResult.isSuccess()){
 			return MsgTemplate.customMsg(isUseResult);
 		}
-		//标志只有才true的情况下才能新增,保存编码的唯一性,false的情况表示确认编码失败.不允许新增了
-		Boolean flag = true;
-		if(flag){
-			HttpResult result = wareAreaServer.addArea(param);
-			//新增成功
-			if(result.isSuccess()){
-				//编码确认
-				HttpResult verifyCode = wareAreaServer.verifyCode(param);
-				//编码确认失败打印错误，将标志改成false
-				if(!verifyCode.isSuccess()){
-					flag = false;
-					LOGGER.error("----wms基础服务编码确认失败----");
-					return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_CODE_ERROE);
+		
+		HttpResult result = wareAreaServer.addArea(param);
+		//新增成功
+		if(result.isSuccess()){
+			//编码确认
+			HttpResult verifyCode = wareAreaServer.verifyCode(param);
+			//编码确认失败打印错误，将标志改成false
+			if(!verifyCode.isSuccess()){
+				LOGGER.error("----wms基础服务编码确认失败----");
+				SelectAllAreaListBO selectAllAreaListBO = new SelectAllAreaListBO();
+				BeanUtils.copyProperties(param, selectAllAreaListBO);
+				HttpResult areaResult = wareAreaServer.getAreaAllList(selectAllAreaListBO);
+				List<WarehouseAreaPO> areaList = gson.fromJson(gson.toJson(areaResult.getData()), new TypeToken<ArrayList<WarehouseAreaPO>>(){}.getType());
+				for (WarehouseAreaPO warehouseAreaPO : areaList) {
+					if(warehouseAreaPO.getName().equals(param.getName())){
+						DeleteAreaBO delete = new DeleteAreaBO();
+						BeanUtils.copyProperties(param, delete);
+						delete.setId(warehouseAreaPO.getId());
+						delete.setCodeType(WareHouseTypeEnum.WAREHOUSE_AREA_CODE.getValue());
+						HttpResult deleteResult = wareAreaServer.deleteArea(delete);
+						if(!deleteResult.isSuccess()){
+							LOGGER.error("----wms基础服务编码确认失败,并且删除先存入的库区也失败----");
+							return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_AREA_CODE_ERROE);
+						}
+						return MsgTemplate.customMsg(deleteResult); 
+					}
+					
 				}
-				return MsgTemplate.customMsg(verifyCode);
-			}else{
-				//新增失败直接返回错误信息
-				return MsgTemplate.customMsg(result);
 			}
+			return MsgTemplate.customMsg(verifyCode);
 		}else{
-			return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_CODE_ERROE);
+			//新增失败直接返回错误信息
+			return MsgTemplate.customMsg(result);
 		}
 	}
 
@@ -128,12 +144,10 @@ public class AreaServiceImpl implements AreaService {
 		//删除编码
 		if(result.isSuccess()){
 			HttpResult deleteCode = wareAreaServer.deleteCode(param);
-			if(deleteCode.isSuccess()){
-				return MsgTemplate.customMsg(deleteCode);
-			}else{
+			if(!deleteCode.isSuccess()){
 				LOGGER.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
-				return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_CODE_ERROE);
 			}
+			return MsgTemplate.customMsg(deleteCode);
 		}
 		return MsgTemplate.customMsg(result);
 	}
