@@ -1029,6 +1029,36 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 		}
 		
+		//统一根据订单号获取订单状态,不管上面代码是否已经获取订单状态,这里统一从订单服务获取
+		//key是订单号,value是订单状态
+		Map<String,Integer> orderStatusMap = new HashMap<>();
+		List<String> orderIdsList = new ArrayList<>();
+		List<DeliveryOrderPO> newDeliveryList = waybillDeliveryOrder.getDeliveryOrder();
+		for (DeliveryOrderPO deliveryOrderPO : newDeliveryList) {
+			List<OrderPO> newOrderList = deliveryOrderPO.getOrders();
+			for (OrderPO orderPO : newOrderList) {
+				String orderId = orderPO.getOrderId();
+				orderIdsList.add(orderId);
+			}
+		}
+		OrderIdsBO orderIds = new OrderIdsBO();
+		orderIds.setChildOrderIds(orderIdsList);
+		//根据订单号批量查询订单详情信息
+		HttpResult orderIdsResult = orderServer.getOrderByOrderIds(orderIds);
+		List<WarehouseOrderDetailPO> fromJsonDetailList = gson.fromJson(gson.toJson(orderIdsResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
+		for (WarehouseOrderDetailPO warehouseOrderDetailPO : fromJsonDetailList) {
+			if(AppConstant.GROUP_ORDER_DOUBLE.equals(warehouseOrderDetailPO.getFdblflag())){
+				orderStatusMap.put(warehouseOrderDetailPO.getFchildorderid(), warehouseOrderDetailPO.getFstatus());
+			}
+		}
+		//再次遍历原数据,将订单状态赋值上去
+		for (DeliveryOrderPO deliveryOrderPO : newDeliveryList) {
+			List<OrderPO> newOrderList = deliveryOrderPO.getOrders();
+			for (OrderPO orderPO : newOrderList) {
+				orderPO.setOrderStatus(orderStatusMap.get(orderPO.getOrderId()));
+			}
+		}
+		
 		int size = 0;
 		List<OrderPO> orderList = new ArrayList<>();
 		List<DeliveryOrderPO> deliveryList = waybillDeliveryOrder.getDeliveryOrder();

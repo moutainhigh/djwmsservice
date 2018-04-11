@@ -26,7 +26,9 @@ public enum LoadingTaskEnum implements MsgInterface {
 	/**
 	 * 生成出库单失败
 	 */
-	OUTORDER_FAIL(6,"生成出库单失败")
+	OUTORDER_FAIL(6,"生成出库单失败"),
+	
+	NO_DEAL_ORDER(7, "部分订单未进行装车,无法完成装车")
 	;
 	
 	 private int code;
