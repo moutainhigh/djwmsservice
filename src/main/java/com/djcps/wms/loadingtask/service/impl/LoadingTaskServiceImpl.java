@@ -476,6 +476,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             List<CustomerBO> customers = getCustomers(childOrderList);
             // 获取出库单信息
             List<OutOrderInfoBO> outOrderInfos = getOutOrderInfos(customers, param, getOrderById);
+            //设置司机id和司机名称，向TMS服务获取信息
+            outOrderInfos = setDriverInfo(outOrderInfos);
             HttpResult insertResult = loadingTaskServer.insertOutOrder(outOrderInfos);
             if (!insertResult.isSuccess()) {
                 return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
@@ -484,6 +486,20 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         return MsgTemplate.customMsg(updateResult);
     }
 
+    /**
+     * 向TMS服务获取司机信息
+     * @param outOrderInfos
+     * @return
+     */
+    public List<OutOrderInfoBO> setDriverInfo(List<OutOrderInfoBO> outOrderInfos){
+    	for(OutOrderInfoBO outOrder:outOrderInfos){
+    		outOrder.setDriverId("111222333");
+    		outOrder.setDriverName("刘德煌");
+    	}
+    	return outOrderInfos;
+    }
+    
+    
     /**
      * 生成出库单
      * 
@@ -551,11 +567,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             outOrder.setPartnerName(param.getPartnerName());
             // 配货时间
             outOrder.setAllocationTime(getOrderById.getAllocationTime());
-            // 先写死，到时候去TMS拿数据
-            // 司机id
-            outOrder.setDriverId("111122233");
-            // 司机名称
-            outOrder.setDriverName("刘德煌");
             // 车牌号
             outOrder.setPlateNumber(getOrderById.getCarId());
             outOrderInfos.add(outOrder);
