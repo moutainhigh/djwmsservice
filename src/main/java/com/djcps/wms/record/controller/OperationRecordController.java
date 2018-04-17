@@ -21,9 +21,9 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.record.model.EntryRecordListBO;
-import com.djcps.wms.record.model.SaveOperationRecordBO;
-import com.djcps.wms.record.model.StocktakingRecordListBO;
+import com.djcps.wms.record.model.param.EntryRecordListBO;
+import com.djcps.wms.record.model.param.SaveOperationRecordBO;
+import com.djcps.wms.record.model.param.StocktakingRecordListBO;
 import com.djcps.wms.record.service.OperationRecordService;
 import com.google.gson.Gson;
 

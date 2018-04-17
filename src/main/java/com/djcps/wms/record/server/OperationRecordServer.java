@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.record.model.EntryRecordListBO;
-import com.djcps.wms.record.model.SaveOperationRecordBO;
-import com.djcps.wms.record.model.StocktakingRecordListBO;
+import com.djcps.wms.record.model.param.EntryRecordListBO;
+import com.djcps.wms.record.model.param.SaveOperationRecordBO;
+import com.djcps.wms.record.model.param.StocktakingRecordListBO;
 import com.djcps.wms.record.model.result.OperationRecordResult;
 import com.djcps.wms.record.request.OperationRecordHttpRequest;
 import com.google.gson.Gson;

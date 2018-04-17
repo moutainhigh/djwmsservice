@@ -120,7 +120,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     public Map<String, Object> completeOrder(SaveDeliveryBO param) {
         HttpResult result = deliveryServer.completeOrder(param);
         OrderIdBO orderIdBO = new OrderIdBO();
-        if (!ObjectUtils.isEmpty(result)) {
+        if (result.isSuccess()) {
             orderIdBO.setOrderId(param.getOrderId());
             orderIdBO.setPartnerId(param.getPartnerId());
             orderIdBO.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
