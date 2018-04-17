@@ -124,7 +124,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> confirm(ConfirmBO param) {
-
+        
         List<LoadingPersonIdBO> list = param.getList();
         if (!ObjectUtils.isEmpty(list)) {
             for (LoadingPersonIdBO info : list) {
