@@ -61,7 +61,17 @@ public class ParamsConfig {
 	 * 临时天伟订单修改服务
 	 */
 	public static String UPDATE_ORDER_SERVER = "";
-	
+
+	public static String ORG_SERVER = "";
+
+	public static String getOrgServer() {
+		return ORG_SERVER;
+	}
+
+	public static void setOrgServer(String orgServer) {
+		ORG_SERVER = orgServer;
+	}
+
 	public static String getUpdateOrderServer() {
 		return UPDATE_ORDER_SERVER;
 	}

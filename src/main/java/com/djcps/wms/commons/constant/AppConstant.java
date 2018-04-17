@@ -144,4 +144,9 @@ public class AppConstant {
      * 出库msg枚举类型
      */
     public static final Integer WMS_MODULE_OUTORDER_ENUM_PREFIX = 1100;
+
+    /**
+     * 用户管理msg枚举类型
+     */
+    public static final Integer WMS_USER_ENUM_PREFIX = 1500;
 }

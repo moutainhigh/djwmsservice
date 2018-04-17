@@ -1,0 +1,110 @@
+package com.djcps.wms.inneruser.model.userparam;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+/**
+ * 条件获取用户列表
+ * @author:wzy
+ * @date:2018/4/13
+ **/
+public class PageGetUserBO {
+    /**
+     * 用户id
+     */
+    private String userId;
+
+    /**
+     * 工作状态 空闲、忙碌、休息中
+     */
+    private Integer workStatus ;
+
+    /**
+     * 合作方id
+     */
+    private String operator;
+
+    /**
+     * 请求者ip
+     */
+    @NotBlank
+    private String ip;
+
+    /**
+     * 调用的业务系统WMS
+     */
+    @NotBlank
+    private String bussion;
+
+    private String pageSize;
+
+    private String pageNo;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Integer getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(Integer workStatus) {
+        this.workStatus = workStatus;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getBussion() {
+        return bussion;
+    }
+
+    public void setBussion(String bussion) {
+        this.bussion = bussion;
+    }
+
+    public String getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(String pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public String getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(String pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    @Override
+    public String toString() {
+        return "PageGetUserBO{" +
+                "userId='" + userId + '\'' +
+                ", workStatus=" + workStatus +
+                ", operator='" + operator + '\'' +
+                ", ip='" + ip + '\'' +
+                ", bussion='" + bussion + '\'' +
+                ", pageSize='" + pageSize + '\'' +
+                ", pageNo='" + pageNo + '\'' +
+                '}';
+    }
+}
