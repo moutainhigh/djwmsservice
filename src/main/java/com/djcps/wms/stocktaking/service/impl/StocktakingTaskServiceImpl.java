@@ -15,8 +15,8 @@ import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.order.model.*;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.record.constant.StockTakingOperationConstant;
-import com.djcps.wms.record.model.SaveOperationRecordBO;
-import com.djcps.wms.record.model.StocktakingRecordListBO;
+import com.djcps.wms.record.model.param.SaveOperationRecordBO;
+import com.djcps.wms.record.model.param.StocktakingRecordListBO;
 import com.djcps.wms.record.server.OperationRecordServer;
 import com.djcps.wms.record.util.StockTakingOperationRecordUtil;
 import com.djcps.wms.stocktaking.constant.StocktakingTaskConstant;
@@ -225,8 +225,12 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         InventoryClerkBO inventoryClerkBO2=new InventoryClerkBO();
         inventoryClerkBO2.setInventoryClerk("郑杰");
         inventoryClerkBO2.setInventoryClerkId("977");
+        InventoryClerkBO inventoryClerkBO3=new InventoryClerkBO();
+        inventoryClerkBO3.setInventoryClerk("超級管理員");
+        inventoryClerkBO3.setInventoryClerkId("81");
         list.add(inventoryClerkBO);
         list.add(inventoryClerkBO2);
+        list.add(inventoryClerkBO3);
         return MsgTemplate.successMsg(list);
     }
 

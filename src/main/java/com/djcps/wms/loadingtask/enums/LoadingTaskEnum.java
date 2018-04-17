@@ -26,7 +26,9 @@ public enum LoadingTaskEnum implements MsgInterface {
 	/**
 	 * 生成出库单失败
 	 */
-	OUTORDER_FAIL(6,"生成出库单失败")
+	OUTORDER_FAIL(6,"生成出库单失败"),
+	
+	NO_DEAL_ORDER(7, "部分订单未进行装车,无法完成装车")
 	;
 	
 	 private int code;
@@ -37,14 +39,18 @@ public enum LoadingTaskEnum implements MsgInterface {
         this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_LOADINGTASK_ENUM_PREFIX + code;
         this.msg = msg;
     }
-	@Override
-	public int getCode() {
-		return 0;
-	}
+    @Override
+    public int getCode() {
+        return code;
+    }
 
-	@Override
-	public String getMsg() {
-		return null;
-	}
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    @Override
+    public String getMsg() {
+        return msg;
+    }
 
 }

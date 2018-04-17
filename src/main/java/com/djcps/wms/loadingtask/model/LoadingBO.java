@@ -53,6 +53,18 @@ public class LoadingBO extends BaseAddBO {
      * 新订单id-2
      */
     private String twiceOrderid;
+    /**
+     * 实际提货数量
+     */
+    private Integer realDeliveryAmount;
+
+    public Integer getRealDeliveryAmount() {
+        return realDeliveryAmount;
+    }
+
+    public void setRealDeliveryAmount(Integer realDeliveryAmount) {
+        this.realDeliveryAmount = realDeliveryAmount;
+    }
 
     public Integer getStatus() {
         return status;
@@ -131,7 +143,7 @@ public class LoadingBO extends BaseAddBO {
         return "LoadingBO [loadingAmount=" + loadingAmount + ", orderAmount=" + orderAmount + ", orderId=" + orderId
                 + ", wayBillId=" + wayBillId + ", status=" + status + ", cancelStockAmount=" + cancelStockAmount
                 + ", cancelType=" + cancelType + ", onceOrderid=" + onceOrderid + ", twiceOrderid=" + twiceOrderid
-                + "]";
+                + ", realDeliveryAmount=" + realDeliveryAmount + "]";
     }
 
 }
