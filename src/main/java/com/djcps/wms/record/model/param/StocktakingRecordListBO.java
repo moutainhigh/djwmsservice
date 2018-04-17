@@ -1,4 +1,4 @@
-package com.djcps.wms.record.model;
+package com.djcps.wms.record.model.param;
 
 import java.util.List;
 
