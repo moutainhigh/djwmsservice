@@ -1,6 +1,8 @@
 package com.djcps.wms.warehouse.server;
 
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.request.GetCodeRequest;
@@ -29,7 +31,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class AreaServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(AreaServer.class);	
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AreaServer.class);	
 	
 	private Gson gson = new Gson();
 	
@@ -45,7 +47,6 @@ public class AreaServer {
 	public HttpResult addArea(AddAreaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.addArea(rb);
@@ -56,7 +57,6 @@ public class AreaServer {
 	public HttpResult modifyArea(UpdateAreaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.modifyArea(rb);
@@ -67,7 +67,6 @@ public class AreaServer {
 	public HttpResult deleteArea(DeleteAreaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.deleteArea(rb);
@@ -78,7 +77,6 @@ public class AreaServer {
 	public HttpResult getAreaAllList(SelectAllAreaListBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.getAreaAllList(rb);
@@ -89,7 +87,6 @@ public class AreaServer {
 	public HttpResult getAreaById(SelectWarehouseByIdBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.getAreaById(rb);
@@ -105,7 +102,6 @@ public class AreaServer {
 	public HttpResult getAreaCode(GetCodeBO getCodeBO){
 		//将请求参数转化为requestbody格式
 		String json=gson.toJson(getCodeBO);
-		System.out.println("---http请求参数转化为json格式---:"+getCodeBO);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json
 		);
 		//调用接口获取信息
@@ -116,7 +112,6 @@ public class AreaServer {
 	public HttpResult verifyCode(AddAreaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.verifyCode(rb);
@@ -127,7 +122,6 @@ public class AreaServer {
 	public HttpResult deleteCode(DeleteAreaBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.deleteCode(rb);
@@ -138,7 +132,6 @@ public class AreaServer {
 	public HttpResult isUsedStreet(IsUseStreetBO isUseStreetBO) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(isUseStreetBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = warehouseAreaHttpRequest.isUsedStreet(rb);
@@ -162,7 +155,7 @@ public class AreaServer {
 		}
 		if(result == null){
 			System.err.println("Http请求出错,HttpResult结果为null");
-			logger.error("Http请求出错,HttpResult结果为null");
+			LOGGER.error("Http请求出错,HttpResult结果为null");
 		}
 		return result;
 	}

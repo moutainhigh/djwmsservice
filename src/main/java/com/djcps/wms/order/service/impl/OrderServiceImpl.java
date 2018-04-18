@@ -42,8 +42,6 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class OrderServiceImpl implements OrderService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);	
-	
 	private Gson gson = new Gson();
 	
 	private JsonParser jsonParser = new JsonParser();
@@ -119,6 +117,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Map<String, Object> getOrderByOrderId(OrderIdBO param) {
+	    
 		HttpResult result = orderServer.getOrderByOrderId(param);
 		if(result.isSuccess()){
 			WarehouseOrderDetailPO paperOrder = new WarehouseOrderDetailPO();

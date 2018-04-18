@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.service.impl;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -32,7 +34,7 @@ import java.util.Map;
 @Service
 public class InnerUserServiceImpl implements InnerUserService {
 
-    private static Logger logger = LoggerFactory.getLogger(InnerUserServiceImpl.class);
+    private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(InnerUserServiceImpl.class);
 
     @Autowired
     private InnerUserServer innerUserServer;
@@ -137,7 +139,7 @@ public class InnerUserServiceImpl implements InnerUserService {
     public Map<String, Object> changeInnerUserPassword(InnerUserChangePasswordBO innerUserChangePasswordBO) {
         try{
             UserInfoVO userInfoVO = innerUserRedisDao.getInnerUserInfo(innerUserChangePasswordBO.getToken());
-            String userCode = innerUserServer.getUserCode(userInfoVO.getUids());
+            String userCode = innerUserServer.getUserCode(userInfoVO.getId());
             if(!ObjectUtils.isEmpty(userInfoVO) && StringUtils.isNotBlank(userCode)){
                 String oldPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getOldPassword()+userCode);
                 String newPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getNewPassword()+userCode);
@@ -147,7 +149,7 @@ public class InnerUserServiceImpl implements InnerUserService {
                 }
             }
         }catch (Exception e){
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             e.printStackTrace();
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
@@ -160,7 +162,7 @@ public class InnerUserServiceImpl implements InnerUserService {
             userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
         }catch (Exception e){
             e.printStackTrace();
-            logger.error("内部用户信息 {}",e.getMessage());
+            LOGGER.error("内部用户信息 {}",e.getMessage());
         }
         return userInfoVO;
     }

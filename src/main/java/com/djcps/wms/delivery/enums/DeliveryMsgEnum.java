@@ -1,5 +1,6 @@
 package com.djcps.wms.delivery.enums;
 
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.msg.MsgInterface;
 
 /**
@@ -10,15 +11,15 @@ public enum DeliveryMsgEnum implements MsgInterface {
     /**
      * 提货错误代码
      */
-    DELIVERY_NOT_EXIT(870001,"获取提货信息失败"),
-    ORDER_NOT_EXIT(870002,"获取提货订单信息失败");
+    DELIVERY_NOT_EXIT(1,"获取提货信息失败"),
+    ORDER_NOT_EXIT(2,"获取提货订单信息失败");
 
     private int code;
 
     private String msg;
 
     DeliveryMsgEnum(int code, String msg) {
-        this.code = code;
+        this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_DELIVERY_ENUM_PREFIX + code;
         this.msg = msg;
     }
     @Override

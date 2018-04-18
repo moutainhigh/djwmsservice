@@ -1,5 +1,7 @@
 package com.djcps.wms.stocktaking.server;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtable.request.NumberServerHttpRequest;
@@ -8,8 +10,6 @@ import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingTaskHttpRequest;
 import com.google.gson.Gson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
@@ -23,7 +23,7 @@ import rpc.plugin.http.HTTPResponse;
  **/
 @Component
 public class StocktakingTaskServer {
-    private static final Logger logger = LoggerFactory.getLogger(StocktakingTaskServer.class);
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(StocktakingTaskServer.class);
 
     private Gson gson = new Gson();
 
@@ -38,7 +38,6 @@ public class StocktakingTaskServer {
 
     public HttpResult getAllStocktakingInfo(AddStocktakingBO addStocktakingBO){
         String json = gson.toJson(addStocktakingBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.getAllStocktakingInfo(rb) ;
         //校验请求是否成功
@@ -47,7 +46,6 @@ public class StocktakingTaskServer {
 
     public HttpResult getPartStocktakingInfo(AddStocktakingBO addStocktakingBO){
         String json = gson.toJson(addStocktakingBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.getPartStocktakingInfo(rb) ;
         //校验请求是否成功
@@ -63,7 +61,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult updateTaskState(UpdateStocktakingTaskBO updateStocktakingTaskBO){
         String json = gson.toJson(updateStocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.updateTaskState(rb) ;
         //校验请求是否成功
@@ -72,7 +69,6 @@ public class StocktakingTaskServer {
 
     public HttpResult getInventoryclerk(){
         String json = "";
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.getInventoryclerk(rb) ;
         //校验请求是否成功
@@ -88,7 +84,6 @@ public class StocktakingTaskServer {
         GetNumberBO getNumberBO=new GetNumberBO();
         getNumberBO.setCount(1);
         String json=gson.toJson(getNumberBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = numberServerHttp.getnumber(rb);
@@ -98,7 +93,6 @@ public class StocktakingTaskServer {
 
     public HttpResult saveSoctakingTask(SaveStocktakingTaskBO saveStocktakingTaskBO){
         String json = gson.toJson(saveStocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.saveSoctakingTask(rb) ;
         //校验请求是否成功
@@ -107,7 +101,6 @@ public class StocktakingTaskServer {
 
     public HttpResult stocktakingOrderInfoList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
         String json = gson.toJson(pdaGetStocktakingOrderBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.stocktakingOrderInfoList(rb) ;
         //校验请求是否成功
@@ -116,7 +109,6 @@ public class StocktakingTaskServer {
 
     public HttpResult stocktakingOrderInfoByOrderId(StocktakingTaskBO stocktakingTaskBO){
         String json = gson.toJson(stocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.stocktakingOrderInfoByOrderId(rb) ;
         //校验请求是否成功
@@ -132,7 +124,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult saveStocktakingResult(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList){
         String json = gson.toJson(saveStocktakingOrderInfoBOList);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.saveStocktakingResult(rb) ;
         //校验请求是否成功
@@ -141,7 +132,6 @@ public class StocktakingTaskServer {
 
     public HttpResult completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList){
         String json = gson.toJson(saveStocktakingOrderInfoBOList);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.completeStocktakingTask(rb) ;
         //校验请求是否成功
@@ -150,7 +140,6 @@ public class StocktakingTaskServer {
 
     public OrderResult stocktakingTaskList(GetStocktakingTaskBO getStocktakingTaskBO){
         String json = gson.toJson(getStocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.stocktakingTaskList(rb) ;
         //校验请求是否成功
@@ -160,14 +149,13 @@ public class StocktakingTaskServer {
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }
 
     public OrderResult searchTaskList(GetStocktakingTaskBO getStocktakingTaskBO){
         String json = gson.toJson(getStocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.searchTaskList(rb) ;
         //校验请求是否成功
@@ -178,7 +166,7 @@ public class StocktakingTaskServer {
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }
@@ -192,7 +180,6 @@ public class StocktakingTaskServer {
      **/
     public OrderResult operationRecordList(GetStocktakingTaskBO getStocktakingTaskBO){
         String json = gson.toJson(getStocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.operationRecordList(rb) ;
         //校验请求是否成功
@@ -202,7 +189,7 @@ public class StocktakingTaskServer {
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }
@@ -216,7 +203,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult pdaStocktakingTaskList(PdaStocktakingTaskBO pdaStocktakingTaskBO){
         String json = gson.toJson(pdaStocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.pdaStocktakingTaskList(rb) ;
         //校验请求是否成功
@@ -232,7 +218,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult pdaStocktakingOrderList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
         String json = gson.toJson(pdaGetStocktakingOrderBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.pdaStocktakingOrderList(rb) ;
         //校验请求是否成功
@@ -248,7 +233,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult pdaStocktakingOrderInfo(PdaStocktakingOrderInfo pdaStocktakingOrderInfo){
         String json = gson.toJson(pdaStocktakingOrderInfo);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.pdaStocktakingOrderInfo(rb) ;
         //校验请求是否成功
@@ -264,7 +248,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult savePdaStocktakingResult(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO){
         String json = gson.toJson(saveStocktakingOrderInfoBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.savePdaStocktakingResult(rb) ;
         //校验请求是否成功
@@ -280,7 +263,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult getOrderAmount(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
         String json = gson.toJson(pdaGetStocktakingOrderBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.getOrderAmount(rb) ;
         //校验请求是否成功
@@ -297,7 +279,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult pdaCompleteStocktaking(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
         String json = gson.toJson(pdaGetStocktakingOrderBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.pdaCompleteStocktaking(rb) ;
         //校验请求是否成功
@@ -313,7 +294,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult pdaWarehouseAreaAndLocInfo(StocktakingTaskBO stocktakingTaskBO){
         String json = gson.toJson(stocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.warehouseAreaAndLocInfo(rb) ;
         //校验请求是否成功
@@ -329,7 +309,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult stocktakingResultList(PdaGetStocktakingOrderBO pdaGetStocktakingOrderBO){
         String json = gson.toJson(pdaGetStocktakingOrderBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.stocktakingResultList(rb) ;
         //校验请求是否成功
@@ -345,7 +324,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult saveInventoryProfitInfo(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO){
         String json = gson.toJson(saveStocktakingOrderInfoBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.saveInventoryProfitInfo(rb) ;
         //校验请求是否成功
@@ -361,7 +339,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult stocktakingCompleteStatus(GetStocktakingTaskBO getStocktakingTaskBO){
         String json = gson.toJson(getStocktakingTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.stocktakingCompleteStatus(rb) ;
         //校验请求是否成功
@@ -377,7 +354,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult orderWarehouseLocInfo(OrderWarehouseLocInfoBO orderWarehouseLocInfoBO){
         String json = gson.toJson(orderWarehouseLocInfoBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingOrderHttpRequest.orderWarehouseLocInfo(rb);
         //校验请求是否成功
@@ -393,7 +369,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult getAmount(GetAmountBO amountBO){
         String json = gson.toJson(amountBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingOrderHttpRequest.getAmount(rb);
         //校验请求是否成功
@@ -409,7 +384,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult areaAndLocInfo(JobAndWarehouseBO jobAndWarehouseBO){
         String json = gson.toJson(jobAndWarehouseBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.areaAndLocInfo(rb);
         //校验请求是否成功
@@ -425,7 +399,6 @@ public class StocktakingTaskServer {
      **/
     public OrderResult getLocationAllList(JobAndWarehouseBO jobAndWarehouseBO){
         String json = gson.toJson(jobAndWarehouseBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.getLocationAllList(rb);
         //校验请求是否成功
@@ -435,7 +408,7 @@ public class StocktakingTaskServer {
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }
@@ -449,7 +422,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult addTaskByPart(ListAddTaskByPartBO listAddTaskByPartBO){
         String json = gson.toJson(listAddTaskByPartBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.test(rb);
         //校验请求是否成功
@@ -465,7 +437,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult increaseTask(AddTaskBO addTaskBO){
         String json = gson.toJson(addTaskBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.increaseTask(rb);
         //校验请求是否成功
@@ -481,7 +452,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult printCount(PrintCountBO printCountBO){
         String json = gson.toJson(printCountBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.printCount(rb);
         //校验请求是否成功
@@ -497,7 +467,6 @@ public class StocktakingTaskServer {
      **/
     public HttpResult noSendOrderInfo(PrintCountBO printCountBO){
         String json = gson.toJson(printCountBO);
-        System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =stocktakingTaskHttpRequest.noSendOrderInfo(rb);
         //校验请求是否成功
@@ -519,7 +488,7 @@ public class StocktakingTaskServer {
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }

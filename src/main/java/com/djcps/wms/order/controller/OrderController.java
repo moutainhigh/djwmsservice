@@ -18,6 +18,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -38,7 +40,7 @@ import com.google.gson.Gson;
 @RequestMapping(value = "/order")
 public class OrderController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OrderController.class);
 	
 	private Gson gson = new Gson();
 	
@@ -58,7 +60,7 @@ public class OrderController {
 	public Map<String, Object> getAllOrderList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			//仓库类型,1,2,3,4,5(纸板，纸箱，积分商城仓库，物料仓库，退货仓库)
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			OrderParamBO param = gson.fromJson(json, OrderParamBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -73,7 +75,7 @@ public class OrderController {
 			return orderService.getAllOrderList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -81,7 +83,7 @@ public class OrderController {
 	@RequestMapping(name="根据订单获取订单",value = "/getOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getOrderByOrderId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			OrderIdBO param = gson.fromJson(json, OrderIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -96,7 +98,7 @@ public class OrderController {
 			return orderService.getOrderByOrderId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

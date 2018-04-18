@@ -18,7 +18,7 @@ public enum WareHouseTypeEnum {
     /**
      * 库位编码类型
      */
-    WAREHOUSE_AREA_LOCA_CODE("3")
+    WAREHOUSE_AREA_LOC_CODE("3")
     ;
 
     private String value;

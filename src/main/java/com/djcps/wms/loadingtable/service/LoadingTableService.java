@@ -2,10 +2,10 @@ package com.djcps.wms.loadingtable.service;
 
 import java.util.Map;
 
-import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
 import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
+import com.djcps.wms.loadingtable.model.GetUserListBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByIdBO;
 import com.djcps.wms.loadingtable.model.SelectLoadingTableByAttributeBO;
 import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
@@ -108,5 +108,14 @@ public interface LoadingTableService {
 	 * @create  2017/12/22 13:34
 	 **/
 	Map<String,Object> getnumber(int count);
+
+	/**
+	 * 获取所有的装车台账号列表
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年3月22日
+	 */
+	Map<String, Object> getUserList(GetUserListBO param);
 	
 }

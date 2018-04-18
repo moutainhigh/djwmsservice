@@ -4,6 +4,8 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -12,7 +14,6 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtable.enums.LoadingTableMsgEnum;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.service.WarehouseService;
@@ -40,7 +41,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/warehouse")
 public class WarehouseController {
-	private static final Logger logger = LoggerFactory.getLogger(WarehouseController.class);
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(WarehouseController.class);
 	
 	private Gson gson = new Gson();
 	
@@ -59,24 +60,24 @@ public class WarehouseController {
 	@RequestMapping(name="新增仓库",value = "/add", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> add(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			AddWarehouseBO param = gson.fromJson(json, AddWarehouseBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("AddWarehouseBO : " + param.toString());
+			LOGGER.debug("AddWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<AddWarehouseBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -85,7 +86,7 @@ public class WarehouseController {
 			return warehouseService.add(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -102,24 +103,24 @@ public class WarehouseController {
 	@RequestMapping(name="修改仓库",value = "/modify", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> modify(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			UpdateWarehouseBO param = gson.fromJson(json, UpdateWarehouseBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("PartnerInfoBean : " + param.toString());
+			LOGGER.debug("PartnerInfoBean : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<UpdateWarehouseBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(param.getName().length(),new ValidateNotNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getName().length(),new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//联系人10个字符
-					.on(param.getContacts(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,10))
+					.on(param.getContacts(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
 					//备注50个字符
-					.on(param.getRemark(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,50))
+					.on(param.getRemark(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,50))
 					//手机以1开头的11位数字
-					.on(param.getPhone(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,11))
+					.on(param.getPhone(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,11))
 					//固定电话最多15个字，只可输入数字或-
-					.on(param.getTel(),new ValidateNullInteger(LoadingTableMsgEnum.LENGTH_BEYOND,15))
+					.on(param.getTel(),new ValidateNullInteger(SysMsgEnum.LENGTH_BEYOND,15))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -127,7 +128,7 @@ public class WarehouseController {
 			return warehouseService.modify(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -144,11 +145,11 @@ public class WarehouseController {
 	@RequestMapping(name="删除仓库",value = "/delete", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> delete(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			DeleteWarehouseBO param = gson.fromJson(json, DeleteWarehouseBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("DeleteWarehouseBO : " + param.toString());
+			LOGGER.debug("DeleteWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<DeleteWarehouseBO>()
@@ -161,7 +162,7 @@ public class WarehouseController {
 			return warehouseService.delete(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -178,11 +179,11 @@ public class WarehouseController {
 	@RequestMapping(name="启用仓库",value = "/enable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> enable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			IsUseWarehouseBO param = gson.fromJson(json, IsUseWarehouseBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("IsUseWarehouseBO : " + param.toString());
+			LOGGER.debug("IsUseWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<IsUseWarehouseBO>()
@@ -194,7 +195,7 @@ public class WarehouseController {
 			return warehouseService.enable(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -211,11 +212,11 @@ public class WarehouseController {
 	@RequestMapping(name="禁用仓库",value = "/disable", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> disable(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			IsUseWarehouseBO param = gson.fromJson(json, IsUseWarehouseBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			logger.debug("IsUseWarehouseBO : " + param.toString());
+			LOGGER.debug("IsUseWarehouseBO : " + param.toString());
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<IsUseWarehouseBO>()
@@ -227,7 +228,7 @@ public class WarehouseController {
 			return warehouseService.disable(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -244,14 +245,14 @@ public class WarehouseController {
 	@RequestMapping(name="获取所有仓库列表",value = "/getAllList", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getAllList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			BaseListPartnerIdBO param = gson.fromJson(json, BaseListPartnerIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return warehouseService.getAllList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -268,7 +269,7 @@ public class WarehouseController {
 	@RequestMapping(name="根据id获取仓库",value = "/getWarehouseById", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseById(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			SelectWarehouseByIdBO param = gson.fromJson(json, SelectWarehouseByIdBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
@@ -283,7 +284,7 @@ public class WarehouseController {
 			return warehouseService.getWarehouseById(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -300,14 +301,14 @@ public class WarehouseController {
 	@RequestMapping(name="根据仓库属性模糊查询",value = "/getWarehouseByAttribute", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getWarehouseByAttribute(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
-			logger.debug("json : " + json);
+			LOGGER.debug("json : " + json);
 			SelectWarehouseByAttributeBO param = gson.fromJson(json, SelectWarehouseByAttributeBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			return warehouseService.getWarehouseByAttribute(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -331,7 +332,7 @@ public class WarehouseController {
 			return warehouseService.getWarehouseType(partnerId);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -355,7 +356,7 @@ public class WarehouseController {
 			return warehouseService.getAllWarehouseName(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -377,7 +378,7 @@ public class WarehouseController {
 			return  warehouseService.getWarehouseCode(getCodeBO);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

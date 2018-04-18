@@ -1,17 +1,24 @@
 package com.djcps.wms.warehouse.service.impl;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.allocation.model.AddAllocationOrderBO;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
+import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
+import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
 import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.server.WarehouseServer;
 import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +26,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,14 +40,12 @@ import java.util.Map;
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
 	
-	private static final Logger logger = LoggerFactory.getLogger(WarehouseServiceImpl.class);
-	
-	private Gson gson = new Gson();
+	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(WarehouseServiceImpl.class);
 	
 	@Autowired
 	private WarehouseServer warehouseServer;
 
-
+	Gson gson = new Gson();
 
 	/**
 	 * @title:新增仓库
@@ -51,27 +58,46 @@ public class WarehouseServiceImpl implements WarehouseService {
 	 */
 	@Override
 	public Map<String, Object> add(AddWarehouseBO addBean){
-		//标志只有才true的情况下才能新增,保存编码的唯一性,false的情况表示确认编码失败.不允许新增了
-		Boolean flag = true;
-		if(flag){
-			HttpResult result = warehouseServer.add(addBean);
-			//新增成功
-			if(result.isSuccess()){
-				//编码确认
-				HttpResult verifyCode = warehouseServer.verifyCode(addBean);
-				//编码确认失败打印错误，将标志改成false
-				if(!verifyCode.isSuccess()){
-					flag = false;
-					logger.error("----wms基础服务编码确认失败----");
-					return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+		HttpResult result = warehouseServer.add(addBean);
+		//新增成功
+		if(result.isSuccess()){
+			//编码确认
+			HttpResult verifyCode = warehouseServer.verifyCode(addBean);
+			//编码确认失败打印错误，将标志改成false
+			if(!verifyCode.isSuccess()){
+				LOGGER.error("----wms基础服务编码确认失败----");
+				BaseListPartnerIdBO baseListParam = new BaseListPartnerIdBO();
+				BeanUtils.copyProperties(addBean, baseListParam);
+				HttpResult warehouseResult = warehouseServer.getAllList(baseListParam);
+				BaseVO baseVO = gson.fromJson(gson.toJson(warehouseResult.getData()), BaseVO.class);
+				List<WarehousePO> warehouseList = gson.fromJson(gson.toJson(baseVO.getResult()), new TypeToken<ArrayList<WarehousePO>>(){}.getType());
+				for (WarehousePO warehousePO : warehouseList) {
+					if(warehousePO.getName().equals(addBean.getName())){
+						IsUseWarehouseBO isUseBean = new IsUseWarehouseBO();
+						BeanUtils.copyProperties(addBean, isUseBean);
+						isUseBean.setId(warehousePO.getId());
+						HttpResult isUseResult = warehouseServer.disable(isUseBean);
+						if(isUseResult.isSuccess()){
+							DeleteWarehouseBO deleteBean = new DeleteWarehouseBO();
+							BeanUtils.copyProperties(addBean, deleteBean);
+							deleteBean.setId(warehousePO.getId());
+							HttpResult deleteResult = warehouseServer.delete(deleteBean);
+							if(!deleteResult.isSuccess()){
+								LOGGER.error("----wms基础服务编码确认失败,并且删除先存入的仓库也失败----");
+								return MsgTemplate.failureMsg(WarehouseMsgEnum.DELETE_WAREHOUSE_CODE_ERROE);
+							}
+							return MsgTemplate.customMsg(deleteResult); 
+						}else{
+							LOGGER.error("----wms基础服务编码确认失败,并且删除先存入的仓库前,禁用该仓库失败----");
+							return MsgTemplate.customMsg(isUseResult); 
+						}
+					}
 				}
-				return MsgTemplate.customMsg(verifyCode);
-			}else{
-				//新增失败直接返回错误信息
-				return MsgTemplate.customMsg(result);
 			}
+			return MsgTemplate.customMsg(verifyCode);
 		}else{
-			return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+			//新增失败直接返回错误信息
+			return MsgTemplate.customMsg(result);
 		}
 	}
 
@@ -105,12 +131,10 @@ public class WarehouseServiceImpl implements WarehouseService {
 		//删除编码
 		if(result.isSuccess()){
 			HttpResult deleteCode = warehouseServer.deleteCode(deleteBean);
-			if(deleteCode.isSuccess()){
-				return MsgTemplate.customMsg(deleteCode);
-			}else{
-				logger.error("----wms基础服务编码删除失败,但库区实际已删除!!!!!!----");
-				return MsgTemplate.failureMsg(SysMsgEnum.DELETE_CODE_ERROE);
+			if(!deleteCode.isSuccess()){
+				LOGGER.error("----wms基础服务编码删除失败,但仓库实际已删除!!!!!!----");
 			}
+			return MsgTemplate.customMsg(deleteCode);
 		}
 		return MsgTemplate.customMsg(result);
 	}

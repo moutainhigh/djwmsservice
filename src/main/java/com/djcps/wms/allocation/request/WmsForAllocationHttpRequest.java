@@ -420,4 +420,15 @@ public interface WmsForAllocationHttpRequest {
 	@POST("operationRecord/getRecordByRrelativeId.do")
 	public HTTPResponse getRecordByRrelativeId(@Body RequestBody rb);
 
+	/**
+	 * 伪代码删除
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年3月28日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getDeliveryTableId.do")
+	public HTTPResponse getDeliveryTableId(@Body RequestBody rb);
+
 }

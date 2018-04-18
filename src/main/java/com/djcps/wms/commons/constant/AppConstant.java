@@ -33,6 +33,11 @@ public class AppConstant {
      * 盘点任务编号前缀
      */
     public static final String TS="TS";
+    
+    /**
+     * 出库任务编号前缀
+     */
+    public static final String CK="CK";
 
     /**
      * 团购服务获取订单,double双写值
@@ -73,4 +78,70 @@ public class AppConstant {
      */
     public static final String CARTON_ORDER ="3";
     
+    /**
+     * 盘点处理消息推送,openType
+     */
+    public static final Integer PUSH_OPEN_TYPE_STOCKTAKING =1;
+    
+    /**
+     * 追加订单处理消息推送,openType
+     */
+    public static final Integer PUSH_OPEN_TYPE_ADD_ORDER_HANDLE =2;
+    
+    /**
+     * 提货消息推送,openType
+     */
+    public static final Integer PUSH_OPEN_TYPE_DELIVERY =3;
+    
+    /**
+     * wms项目msg枚举前缀
+     */
+    public static final Integer WMS_MSG_ENUM_PREFIX = 880000;
+    
+    /**
+     * 系统msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_SYS_ENUM_PREFIX = 100;
+    
+    /**
+     * 配货msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_ALLOCATION_ENUM_PREFIX = 200;
+    
+    /**
+     * 退库msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_CANCELSTOCK_ENUM_PREFIX = 300;
+    
+    /**
+     * 仓库msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_WAREHOUSE_ENUM_PREFIX = 400;
+    /**
+     * 装车任务msg枚举前缀
+     */
+    public static final Integer WMS_LOADINGTASK_ENUM_PREFIX = 500;
+    /**
+     * 提货任务msg枚举前缀
+     */
+    public static final Integer WMS_DELIVERY_ENUM_PREFIX = 600;
+    
+     /**
+     * 盘点msg枚举前缀
+     */
+    public static final Integer WMS_MODULE_STOCKTAKING_ENUM_PREFIX = 700;
+
+    /**
+     * 装车msg枚举前缀
+     */
+    public static final Integer WMS_LOADING_TABLE_ENUM_PREFIX = 800;
+    /**
+     * 入库msg枚举前缀
+     */
+    public static final Integer WMS_ENTRY_ENUM_PREFIX = 900;
+    
+    /**
+     * 出库msg枚举类型
+     */
+    public static final Integer WMS_MODULE_OUTORDER_ENUM_PREFIX = 1100;
 }

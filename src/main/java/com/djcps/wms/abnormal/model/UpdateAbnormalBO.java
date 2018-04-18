@@ -6,8 +6,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 修改异常订单
  * @company:djwms
@@ -61,7 +59,24 @@ public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializa
      * 提报人
      */
     private String submiter;
-    
+
+	/**
+	 * 提报时间
+	 */
+	private String submitTime;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public String getSubmitTime() {
+		return submitTime;
+	}
+
+	public void setSubmitTime(String submitTime) {
+		this.submitTime = submitTime;
+	}
+
 	public String getSubmiter() {
 		return submiter;
 	}
@@ -136,9 +151,17 @@ public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializa
 
 	@Override
 	public String toString() {
-		return "UpdateAbnormalBO [result=" + result + ", orderId=" + orderId + ", loadingTableId=" + loadingTableId
-				+ ", loadingTableName=" + loadingTableName + ", remark=" + remark + ", abnomalAmount=" + abnomalAmount
-				+ ", status=" + status + ", reason=" + reason + ", submiter=" + submiter + "]";
+		return "UpdateAbnormalBO{" +
+				"result='" + result + '\'' +
+				", orderId='" + orderId + '\'' +
+				", loadingTableId='" + loadingTableId + '\'' +
+				", loadingTableName='" + loadingTableName + '\'' +
+				", remark='" + remark + '\'' +
+				", abnomalAmount='" + abnomalAmount + '\'' +
+				", status='" + status + '\'' +
+				", reason='" + reason + '\'' +
+				", submiter='" + submiter + '\'' +
+				", submitTime='" + submitTime + '\'' +
+				'}';
 	}
-
 }

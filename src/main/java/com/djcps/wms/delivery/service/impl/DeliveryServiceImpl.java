@@ -2,21 +2,24 @@ package com.djcps.wms.delivery.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListPO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.StringUtils;
+import com.djcps.wms.delivery.constant.DeliveryConstant;
 import com.djcps.wms.delivery.enums.DeliveryMsgEnum;
 import com.djcps.wms.delivery.enums.DeliveryStatusEnum;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.server.DeliveryServer;
 import com.djcps.wms.delivery.service.DeliveryService;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.ChildOrderBO;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.server.OrderServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -35,7 +38,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @Service
 public class DeliveryServiceImpl implements DeliveryService {
 
-    private static final Logger logger = LoggerFactory.getLogger(DeliveryService.class);
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(DeliveryService.class);
 
     @Autowired
     private DeliveryServer deliveryServer;
@@ -57,7 +60,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -85,7 +88,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
 
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -102,7 +105,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -116,10 +119,15 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public Map<String, Object> completeOrder(SaveDeliveryBO param) {
         HttpResult result = deliveryServer.completeOrder(param);
-        if (!ObjectUtils.isEmpty(result)) {
+        OrderIdBO orderIdBO = new OrderIdBO();
+        if (result.isSuccess()) {
+            orderIdBO.setOrderId(param.getOrderId());
+            orderIdBO.setPartnerId(param.getPartnerId());
+            orderIdBO.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+            orderServer.updateOrderStatus(orderIdBO);
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -183,7 +191,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -211,7 +219,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -252,7 +260,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             return MsgTemplate.customMsg(result);
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -312,7 +320,16 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     @Override
     public Map<String, Object> updateDeliveryEffect(UpdateDeliveryEffectBO param) {
+        OrderIdBO orderIdBO = new OrderIdBO();
         HttpResult result = deliveryServer.updateDeliveryEffect(param);
+        //更新订单状态为已入库
+        if(!ObjectUtils.isEmpty(param.getOrderIds())){
+            orderIdBO.setOrderId(param.getOrderIds().get(0));
+            orderIdBO.setPartnerId(param.getPartnerId());
+            orderIdBO.setStatus(DeliveryConstant.REDUNDANTSTATUS_22);
+            orderServer.updateOrderStatus(orderIdBO);
+        }
+        
         return MsgTemplate.customMsg(result);
     }
 }

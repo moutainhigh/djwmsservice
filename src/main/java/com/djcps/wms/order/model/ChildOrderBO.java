@@ -266,7 +266,7 @@ public class ChildOrderBO {
     /**
      * 是否分发
      */
-    private Integer fdbflage;
+    private String fdblflag;
 
     public String getForderId() {
         return forderId;
@@ -692,13 +692,14 @@ public class ChildOrderBO {
         this.fpaytype = fpaytype;
     }
 
-    public Integer getFdbflage() {
-        return fdbflage;
-    }
+	public String getFdblflag() {
+		return fdblflag;
+	}
 
-    public void setFdbflage(Integer fdbflage) {
-        this.fdbflage = fdbflage;
-    }
+	public void setFdblflag(String fdblflag) {
+		this.fdblflag = fdblflag;
+	}
+
 
     @Override
     public String toString() {
@@ -756,6 +757,7 @@ public class ChildOrderBO {
                 ", fgiveintegral=" + fgiveintegral +
                 ", fdeletestatus='" + fdeletestatus + '\'' +
                 ", fpaytype=" + fpaytype +
-                '}';
+                ", fdblflag='" + fdblflag + '\'' +
+                '}'; 
     }
 }

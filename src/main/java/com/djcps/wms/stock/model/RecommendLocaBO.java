@@ -9,55 +9,70 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 获取库区推荐对象
+ * 
  * @company:djwms
  * @author:zdx
  * @date:2017年12月20日
  */
-public class RecommendLocaBO extends BaseBO implements Serializable{
+public class RecommendLocaBO extends BaseBO implements Serializable {
 
-	private static final long serialVersionUID = -7237160364347242371L;
-	
-	/**
-	 * 经纬度
-	 */
-	@NotBlank
-	private String location;
-	
-	/**
-	 * 合作方id
-	 */
-	@NotBlank
-	private String partnerId;
-	
-	private List<RecommendLocaParamBO> param;
+    private static final long serialVersionUID = -7237160364347242371L;
 
-	public String getLocation() {
-		return location;
-	}
+    /**
+     * 经纬度
+     */
+    @NotBlank
+    private String location;
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    /**
+     * 合作方id
+     */
+    @NotBlank
+    private String partnerId;
+    /**
+     * 仓库编号
+     */
+    @NotBlank
+    private String warehouseId;
 
-	public String getPartnerId() {
-		return partnerId;
-	}
+    private List<RecommendLocaParamBO> param;
 
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
+    public String getWarehouseId() {
+        return warehouseId;
+    }
 
-	public List<RecommendLocaParamBO> getParam() {
-		return param;
-	}
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
-	public void setParam(List<RecommendLocaParamBO> param) {
-		this.param = param;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	@Override
-	public String toString() {
-		return "RecommendLocaBo [location=" + location + ", partnerId=" + partnerId + ", param=" + param + "]";
-	}
-	
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public List<RecommendLocaParamBO> getParam() {
+        return param;
+    }
+
+    public void setParam(List<RecommendLocaParamBO> param) {
+        this.param = param;
+    }
+
+    @Override
+    public String toString() {
+        return "RecommendLocaBO [location=" + location + ", partnerId=" + partnerId + ", warehouseId=" + warehouseId
+                + ", param=" + param + "]";
+    }
+
 }

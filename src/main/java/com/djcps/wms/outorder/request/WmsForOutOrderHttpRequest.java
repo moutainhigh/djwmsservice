@@ -22,7 +22,7 @@ public interface WmsForOutOrderHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("outOrder/getOrderList.do")
-	public HTTPResponse getOrderIdsByOutOrderId(@Body RequestBody rb);
+	HTTPResponse getOrderIdsByOutOrderId(@Body RequestBody rb);
 	
 	/**
 	 * 获取出库单中的所有数据
@@ -31,7 +31,7 @@ public interface WmsForOutOrderHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("outOrder/selectOutOrder.do")
-	public HTTPResponse getAllOutOrder(@Body RequestBody rb);
+	HTTPResponse getAllOutOrder(@Body RequestBody rb);
 	
 	/**
 	 * 根据出库单编号获取一条出库单数据
@@ -40,7 +40,7 @@ public interface WmsForOutOrderHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("")
-	public HTTPResponse getOutOrderByOutOrderId(@Body RequestBody rb);
+	HTTPResponse getOutOrderByOutOrderId(@Body RequestBody rb);
 	
 	/**
 	 * 根据出库单编号更新出库单状态和打印次数
@@ -49,6 +49,23 @@ public interface WmsForOutOrderHttpRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("outOrder/updateOutOrder.do")
-	public HTTPResponse updateOutOrderByOutOrderId(@Body RequestBody rb);
+	HTTPResponse updateOutOrderByOutOrderId(@Body RequestBody rb);
 	
+	/**
+	 * 根据运单id获取车辆id、客户信息、车牌号等
+	 * @param rb
+	 * @return
+	 */
+	@Headers("content-type:application/json")
+	@POST("outOrder/selectOrderByWayBillId.do")
+	HTTPResponse getInfoByWayBillId(@Body RequestBody rb);
+	
+	/**
+	 * 生成出库单数据
+	 * @param rb
+	 * @return
+	 */
+	@Headers("content-type:application/json")
+	@POST("outOrder/insertOutOrder.do")
+	HTTPResponse insertOutOrder(@Body RequestBody rb);
 }

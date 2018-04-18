@@ -103,7 +103,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 			//给合作方属性赋值
 			PartnerInfoBO partner = new PartnerInfoBO();
 			partner.setOperator(userInfo.getUname());
-			partner.setOperatorId(userInfo.getUids());
+			partner.setOperatorId(userInfo.getId());
 			partner.setPartnerId(userInfo.getUcompany());
 			partner.setPartnerName(userInfo.getOname());
 			partner.setPartnerArea(userInfo.getOcode());
