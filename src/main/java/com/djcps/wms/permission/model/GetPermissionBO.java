@@ -27,7 +27,7 @@ public class GetPermissionBO implements Serializable{
 	 */
 	private String companyID;
 	/**
-	 * 分页大小
+	 * 当前页
 	 */
 	private String page;
 	/**
@@ -35,7 +35,7 @@ public class GetPermissionBO implements Serializable{
 	 */
 	private String keyWord;
 	/**
-	 * 当前页
+	 * 分页大小
 	 */
 	private String pageSize;
 	public String getOperator() {
@@ -74,10 +74,11 @@ public class GetPermissionBO implements Serializable{
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
 	}
-	public String getCurrentPage() {
+	
+	public String getPageSize() {
 		return pageSize;
 	}
-	public void setCurrentPage(String pageSize) {
+	public void setPageSize(String pageSize) {
 		this.pageSize = pageSize;
 	}
 	@Override

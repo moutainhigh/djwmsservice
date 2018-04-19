@@ -21,7 +21,7 @@ import rpc.plugin.http.RPCClientFields;
  * 向or调取服务
  * 2018年4月12日
  */
-@RPCClientFields(urlfield="ORG",urlbean=ParamsConfig.class)
+@RPCClientFields(urlfield="ORG_SERVER",urlbean=ParamsConfig.class)
 public interface DjorForPermissionHttpRequest {
 	/**
 	 * 获取组合权限的数据
@@ -37,16 +37,24 @@ public interface DjorForPermissionHttpRequest {
 	 * @param map
 	 * @return
 	 */
-	@GET("getPerBaseAll.org")
+	@GET("getPerBase.org")
 	HTTPResponse getWmsPermission(@QueryMap Map<String,Object> map);
 	
 	/**
-	 * 新增/修改权限包
+	 * 新增权限包
+	 * @param map
+	 * @return
+	 */
+	@POST("addPostPerManage.org")
+	HTTPResponse insertPermission(@QueryMap Map<String,Object> map);
+	
+	/**
+	 * 修改权限包
 	 * @param map
 	 * @return
 	 */
 	@POST("updatePostPerManage.org")
-	HTTPResponse insertOrUpdatePermission(@QueryMap Map<String,Object> map);
+	HTTPResponse updatePermission(@QueryMap Map<String,Object> map);
 	
 	/**
 	 * 删除权限包

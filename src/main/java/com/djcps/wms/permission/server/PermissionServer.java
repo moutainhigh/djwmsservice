@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
@@ -15,9 +16,8 @@ import com.djcps.wms.permission.model.DeletePermissionBO;
 import com.djcps.wms.permission.model.GetPermissionBO;
 import com.djcps.wms.permission.model.GetPermissionChooseBO;
 import com.djcps.wms.permission.model.GetUserByPermissionIdBO;
-import com.djcps.wms.permission.model.UserIdBO;
+import com.djcps.wms.permission.model.InsertOrUpdatePermissionBO;
 import com.djcps.wms.permission.request.DjorForPermissionHttpRequest;
-import com.djcps.wms.permission.request.DjorForUserHttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,9 +32,6 @@ import rpc.plugin.http.HTTPResponse;
 public class PermissionServer {
 	@Autowired
 	private DjorForPermissionHttpRequest djorForPermissionHttpRequest;
-	
-	@Autowired
-	private DjorForUserHttpRequest djorForUserHttpRequest;
 
 	private Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -70,16 +67,28 @@ public class PermissionServer {
 	}
 	
 	/**
-	 * 新增/修改权限
+	 * 新增权限
 	 * @param param
 	 * @return
 	 */
-	public HttpResult insertOrUpdatePermission(BaseOrgBO param) {
+	public HttpResult insertPermission(InsertOrUpdatePermissionBO param) {
 		String json = gson.toJson(param);
 		LOGGER.debug("---http请求参数转化成json---:"+json);
 		Map<String,Object> map=gson.fromJson(json,Map.class);
-		//okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
-		HTTPResponse http = djorForPermissionHttpRequest.insertOrUpdatePermission(map);
+		HTTPResponse http = djorForPermissionHttpRequest.insertPermission(map);
+		return verifyHttpResult(http);
+	}
+	
+	/**
+	 * 修改权限
+	 * @param param
+	 * @return
+	 */
+	public HttpResult updatePermission(InsertOrUpdatePermissionBO param) {
+		String json = gson.toJson(param);
+		LOGGER.debug("---http请求参数转化成json---:"+json);
+		Map<String,Object> map=gson.fromJson(json,Map.class);
+		HTTPResponse http = djorForPermissionHttpRequest.updatePermission(map);
 		return verifyHttpResult(http);
 	}
 
@@ -114,13 +123,13 @@ public class PermissionServer {
 	 * 根据用户id获取用户信息
 	 * @param param
 	 * @return
-	 */
+	 *//*
 	public HttpResult getUserInfo(String json){
 		LOGGER.debug("---http请求参数转化成json---:"+json);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
 		HTTPResponse http = djorForUserHttpRequest.getUserInfo(rb);
 		return verifyHttpResult(http);
-	}
+	}*/
 	
 	/**
 	 * 根据组合权限id和公司id，获取获取组合权限集合

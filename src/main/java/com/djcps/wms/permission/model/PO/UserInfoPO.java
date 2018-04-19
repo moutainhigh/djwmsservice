@@ -1,4 +1,4 @@
-package com.djcps.wms.permission.model;
+package com.djcps.wms.permission.model.PO;
 
 import java.io.Serializable;
 
