@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.record.model.param.EntryRecordListBO;
 import com.djcps.wms.record.model.param.SaveOperationRecordBO;
@@ -17,7 +19,7 @@ import com.google.gson.Gson;
 import rpc.plugin.http.HTTPResponse;
 
 /**
- * @title:盘点任务调用http服务
+ * @title:调用http服务
  * @description:
  * @author:wyb
  * @company:djwms
@@ -25,7 +27,7 @@ import rpc.plugin.http.HTTPResponse;
  **/
 @Component
 public class OperationRecordServer {
-    private static final Logger logger = LoggerFactory.getLogger(OperationRecordServer.class);
+    private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OperationRecordServer.class);
 
     private Gson gson = new Gson();
     @Autowired
@@ -49,7 +51,7 @@ public class OperationRecordServer {
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }
@@ -104,7 +106,7 @@ public class OperationRecordServer {
         }
         if(ObjectUtils.isEmpty(result)){
             System.err.println("Http请求出错,HttpResult结果为null");
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }

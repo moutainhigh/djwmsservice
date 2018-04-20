@@ -52,7 +52,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param param
      * @return
      * @autuor Chengw
-     * @since 2018/1/31  09:26
+     * @since 2018/1/31 09:26
      */
     @Override
     public Map<String, Object> list(ListDeliveryBO param) {
@@ -69,7 +69,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param param
      * @return
      * @autuor Chengw
-     * @since 2018/1/31  09:26
+     * @since 2018/1/31 09:26
      */
     @Override
     public Map<String, Object> listOrder(ListDeliveryOrderBO param) {
@@ -78,8 +78,8 @@ public class DeliveryServiceImpl implements DeliveryService {
             if (result.isSuccess()) {
                 String data = JSONObject.toJSONString(result.getData());
                 BaseListPO baseListPO = gson.fromJson(data, BaseListPO.class);
-                List<DeliveryOrderPO> deliveryOrderList =
-                        JSONArray.parseArray(JSONObject.toJSONString(baseListPO.getList()), DeliveryOrderPO.class);
+                List<DeliveryOrderPO> deliveryOrderList = JSONArray
+                        .parseArray(JSONObject.toJSONString(baseListPO.getList()), DeliveryOrderPO.class);
                 deliveryOrderList = getOrder(deliveryOrderList);
                 baseListPO.setList(deliveryOrderList);
                 return MsgTemplate.successMsg(baseListPO);
@@ -97,7 +97,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param param
      * @return
      * @autuor Chengw
-     * @since 2018/1/31  09:28
+     * @since 2018/1/31 09:28
      */
     @Override
     public Map<String, Object> print(PrintDeliveryBO param) {
@@ -114,7 +114,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param param
      * @return
      * @autuor Chengw
-     * @since 2018/1/31  09:29
+     * @since 2018/1/31 09:29
      */
     @Override
     public Map<String, Object> completeOrder(SaveDeliveryBO param) {
@@ -138,22 +138,21 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     private List<DeliveryOrderPO> getOrder(List<DeliveryOrderPO> orderList) {
         List<String> orderIdList = new ArrayList<>();
-        orderList.stream().collect(
-                Collectors.groupingBy(DeliveryOrderPO::getOrderId, Collectors.toList())
-        ).forEach((name, groupList) -> {
-            orderIdList.add(name);
-        });
+        orderList.stream().collect(Collectors.groupingBy(DeliveryOrderPO::getOrderId, Collectors.toList()))
+                .forEach((name, groupList) -> {
+                    orderIdList.add(name);
+                });
         OrderIdsBO orderIds = new OrderIdsBO();
         orderIds.setChildOrderIds(orderIdList);
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
         if (!childOrderList.isEmpty()) {
             orderList.stream().forEach(order -> {
-                ChildOrderBO childOrderBO =  childOrderList.stream().filter(
-                        b -> b.getFchildorderid().equals(order.getOrderId())).findFirst().orElse(null);
-                if(!ObjectUtils.isEmpty(childOrderBO)) {
-                    //设置账户名称  母账户名称或者子账户名称
+                ChildOrderBO childOrderBO = childOrderList.stream()
+                        .filter(b -> b.getFchildorderid().equals(order.getOrderId())).findFirst().orElse(null);
+                if (!ObjectUtils.isEmpty(childOrderBO)) {
+                    // 设置账户名称 母账户名称或者子账户名称
                     String custommerName = childOrderBO.getFcusername();
-                    custommerName = ObjectUtils.isEmpty(custommerName)?childOrderBO.getFpusername():custommerName;
+                    custommerName = ObjectUtils.isEmpty(custommerName) ? childOrderBO.getFpusername() : custommerName;
                     order.setCustomerName(custommerName);
                     order.setBoxHeight(StringUtils.toString(childOrderBO.getFboxheight()));
                     order.setBoxWidth(StringUtils.toString(childOrderBO.getFboxwidth()));
@@ -175,7 +174,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param param
      * @return
      * @autuor Chengw
-     * @since 2018/2/1  13:18
+     * @since 2018/2/1 13:18
      */
     @Override
     public Map<String, Object> listOrderForPDA(DeliveryOrderBO param) {
@@ -200,7 +199,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param param
      * @return
      * @autuor Chengw
-     * @since 2018/2/1  13:10
+     * @since 2018/2/1 13:10
      */
     @Override
     public Map<String, Object> getDeliveryForPDA(DeliveryOrderBO param) {
@@ -241,13 +240,12 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     /**
-     * 获取提货订单详细信息 - PDA
-     * 订单详细信息、库存信息
+     * 获取提货订单详细信息 - PDA 订单详细信息、库存信息
      *
      * @param param
      * @return
      * @autuor Chengw
-     * @since 2018/2/1  13:09
+     * @since 2018/2/1 13:09
      */
     @Override
     public Map<String, Object> getOrderDetail(DeliveryOrderDetailBO param) {
@@ -275,9 +273,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
         if (!childOrderList.isEmpty()) {
             ChildOrderBO childOrderBO = childOrderList.stream()
-                    .filter(b -> b.getFchildorderid().equals(deliveryOrderDetailPO.getOrderId()))
-                    .findFirst().orElse(null);
-            if(!ObjectUtils.isEmpty(childOrderBO)) {
+                    .filter(b -> b.getFchildorderid().equals(deliveryOrderDetailPO.getOrderId())).findFirst()
+                    .orElse(null);
+            if (!ObjectUtils.isEmpty(childOrderBO)) {
                 deliveryOrderDetailPO.setMaterialName(childOrderBO.getFmaterialname());
                 deliveryOrderDetailPO.setMaterialLength(StringUtils.toString(childOrderBO.getFmateriallength()));
                 deliveryOrderDetailPO.setMaterialWidth(StringUtils.toString(childOrderBO.getFmaterialwidth()));
@@ -291,8 +289,8 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     /**
-     * 设置订单提货状态
-     * 库位提货状态为 1已提货 0为未提货
+     * 设置订单提货状态 库位提货状态为 1已提货 0为未提货
+     * 
      * @param orderList
      * @return
      */
@@ -301,18 +299,20 @@ public class DeliveryServiceImpl implements DeliveryService {
             List<OrderDeliveryPO> warehouseLocs = order.getWarehouseLocs();
             Long deliveryedCount = warehouseLocs.stream().filter(a -> a.getStatus().equals(1)).count();
             Long deliveryCount = warehouseLocs.stream().filter(a -> a.getStatus().equals(0)).count();
-            if(!deliveryCount.equals(0L)&& !deliveryedCount.equals(0L)){
+            if (!deliveryCount.equals(0L) && !deliveryedCount.equals(0L)) {
                 order.setDeliveryStatus(DeliveryStatusEnum.UNDONE_PART.getValue());
-            }else if(deliveryCount.equals(0L)&& !deliveryedCount.equals(0L)){
+            } else if (deliveryCount.equals(0L) && !deliveryedCount.equals(0L)) {
                 order.setDeliveryStatus(DeliveryStatusEnum.ACCOMPLISHED.getValue());
-            }else{
+            } else {
                 order.setDeliveryStatus(DeliveryStatusEnum.UNDONE.getValue());
             }
         });
         return orderList;
     }
+
     /**
      * 删除提货订单信息
+     * 
      * @autuor wyb
      * @since 2018/3/13
      * @param param
@@ -322,14 +322,15 @@ public class DeliveryServiceImpl implements DeliveryService {
     public Map<String, Object> updateDeliveryEffect(UpdateDeliveryEffectBO param) {
         OrderIdBO orderIdBO = new OrderIdBO();
         HttpResult result = deliveryServer.updateDeliveryEffect(param);
-        //更新订单状态为已入库
-        if(!ObjectUtils.isEmpty(param.getOrderIds())){
-            orderIdBO.setOrderId(param.getOrderIds().get(0));
-            orderIdBO.setPartnerId(param.getPartnerId());
-            orderIdBO.setStatus(DeliveryConstant.REDUNDANTSTATUS_22);
-            orderServer.updateOrderStatus(orderIdBO);
+        if (result.isSuccess()) {
+            // 更新订单状态为已入库
+            if (!ObjectUtils.isEmpty(param.getOrderIds())) {
+                orderIdBO.setOrderId(param.getOrderIds().get(0));
+                orderIdBO.setPartnerId(param.getPartnerId());
+                orderIdBO.setStatus(DeliveryConstant.REDUNDANTSTATUS_22);
+                orderServer.updateOrderStatus(orderIdBO);
+            }
         }
-        
         return MsgTemplate.customMsg(result);
     }
 }

@@ -99,4 +99,5 @@ public interface InnerUserRequest {
     @FormUrlEncoded
     @POST("sendLoginCode.do")
     HTTPResponse sendLoginCode(@Field("phone") String phone);
+
 }

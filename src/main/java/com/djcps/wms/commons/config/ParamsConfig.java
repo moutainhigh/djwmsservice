@@ -122,7 +122,7 @@ public class ParamsConfig {
 	public static String getOrgServer() {
 		return ORG_SERVER;
 	}
-
+ 
 	public static void setOrgServer(String oRG_SERVER) {
 		ORG_SERVER = oRG_SERVER;
 	}
