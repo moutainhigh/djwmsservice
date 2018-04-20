@@ -16,7 +16,7 @@ public class OrgRoleInfoBO extends BaseOrgBO {
     /**
      * 角色id
      */
-    private String rid;
+    private String id;
     /**
      * 角色类型
      */
@@ -34,10 +34,6 @@ public class OrgRoleInfoBO extends BaseOrgBO {
      */
     private String pid;
 
-    public String getRid() {
-        return rid;
-    }
-
     public String getRtype() {
         return rtype;
     }
@@ -52,10 +48,6 @@ public class OrgRoleInfoBO extends BaseOrgBO {
 
     public String getPid() {
         return pid;
-    }
-
-    public void setRid(String rid) {
-        this.rid = rid;
     }
 
     public void setRtype(String rtype) {
@@ -74,10 +66,18 @@ public class OrgRoleInfoBO extends BaseOrgBO {
         this.pid = pid;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
-        return "OrgRoleInfoBO [rid=" + rid + ", rtype=" + rtype + ", rname=" + rname + ", rdesc=" + rdesc + ", pid="
-                + pid + "]";
+        return "OrgRoleInfoBO [id=" + id + ", rtype=" + rtype + ", rname=" + rname + ", rdesc=" + rdesc + ", pid=" + pid
+                + "]";
     }
 
 }

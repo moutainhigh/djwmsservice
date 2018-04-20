@@ -14,7 +14,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.role.model.DeleteBO;
 import com.djcps.wms.role.model.OrgRoleInfoBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
@@ -70,7 +69,7 @@ public class OrgRoleHttpServer {
      * @param param
      * @return
      */
-    public HttpResult updatePostRoleManage(UpdateRoleInfoBO param){
+    public HttpResult updatePostRoleManage(OrgRoleInfoBO param){
         String json = gson.toJson(param);
         Map<String,Object> map=gson.fromJson(json,Map.class);
         HTTPResponse http =orgRoleHttpRequest.updatePostRoleManage(map);
@@ -102,7 +101,7 @@ public class OrgRoleHttpServer {
      * @param param
      * @return
      */
-    public HttpResult delRoleManage(DeleteBO param){
+    public HttpResult delRoleManage(OrgRoleInfoBO param){
         String json = gson.toJson(param);
         Map<String,Object> map=gson.fromJson(json,Map.class);
         HTTPResponse http =orgRoleHttpRequest.delRoleManage(map);
