@@ -262,9 +262,9 @@ public class UserServiceImpl implements UserService {
                 DeleteUserBO deleteUserBO=new DeleteUserBO();
                 deleteUserBO.setPartnerId(wmssaveUserBO.getPartnerId());
                 deleteUserBO.setUserId(wmssaveUserBO.getUserId());
-                UserRelevanceBO RelevanceBO = userServer.getUserRelevance(deleteUserBO);
+                UserRelevanceBO relevanceBO = userServer.getUserRelevance(deleteUserBO);
                 //用户不存在，新增用户关联信息
-                if(ObjectUtils.isEmpty(RelevanceBO)){
+                if(ObjectUtils.isEmpty(relevanceBO)){
                     UserRelevanceBO userRelevanceBO=new UserRelevanceBO();
                     userRelevanceBO.setUserId(orgsaveUserBO.getUids());
                     userRelevanceBO.setWarehouseId(StringUtils.isEmpty(saveUserBO.getWarehouseId())?null:saveUserBO.getWarehouseId());
@@ -408,8 +408,8 @@ public class UserServiceImpl implements UserService {
      * @date  2018/4/17 9:59
      **/
     @Override
-    public Map<String, Object> getDepartAndJob(OrgGetUserInfoById OrgGetUserInfoById) {
-        OrgUserInfoPO orgUserInfoPO=userServer.getUserByOrg(OrgGetUserInfoById);
+    public Map<String, Object> getDepartAndJob(OrgGetUserInfoById orgGetUserInfoById) {
+        OrgUserInfoPO orgUserInfoPO=userServer.getUserByOrg(orgGetUserInfoById);
         UserDepartAndJobBO userDepartAndJobBO=new UserDepartAndJobBO();
         if(!ObjectUtils.isEmpty(orgUserInfoPO)){
             userDepartAndJobBO.setDepartmentId(orgUserInfoPO.getUdepartment_id());
@@ -419,10 +419,10 @@ public class UserServiceImpl implements UserService {
             userDepartAndJobBO.setPositionName(orgUserInfoPO.getUposition_name());
             OrgGetDepartmentBO getDepartmentBO=new OrgGetDepartmentBO();
             OrgGetPositionBO orgGetPositionBO=new OrgGetPositionBO();
-            BeanUtils.copyProperties(OrgGetUserInfoById,getDepartmentBO);
+            BeanUtils.copyProperties(orgGetUserInfoById,getDepartmentBO);
             getDepartmentBO.setCompanyID(orgUserInfoPO.getCompany_id());
             getDepartmentBO.setType("1");
-            BeanUtils.copyProperties(OrgGetUserInfoById,orgGetPositionBO);
+            BeanUtils.copyProperties(orgGetUserInfoById,orgGetPositionBO);
             orgGetPositionBO.setDepartmentId(orgUserInfoPO.getUdepartment_id());
             //TODO 获取所有部门列表
             List<OrgDepartmentPO> orgDepartmentBOList=userServer.getDepartment(getDepartmentBO);

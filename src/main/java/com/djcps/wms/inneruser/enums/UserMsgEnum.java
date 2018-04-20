@@ -3,6 +3,11 @@ package com.djcps.wms.inneruser.enums;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.msg.MsgInterface;
 
+/**
+ * 用户模块错误返回枚举
+ * @author:wzy
+ * @date:2018/4/20
+ **/
 public enum UserMsgEnum implements MsgInterface{
     USER_NOT_EXIET(1," 用户不存在"),
 
