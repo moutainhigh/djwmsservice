@@ -70,7 +70,18 @@ public interface RoleHttpRequest {
      * @create 2018/4/12
      **/
     @Headers("content-type:application/json")
-    @POST("user/getUserStatusList")
+    @POST("user/getUserStatusList.do")
     HTTPResponse getUserStatusList(@Body RequestBody json);
+    /**
+     * 获取角色类型信息列表
+     *
+     * @param json
+     * @return
+     * @author wyb
+     * @create 2018/4/12
+     **/
+    @Headers("content-type:application/json")
+    @POST("role/roleType.do")
+    HTTPResponse roleType(@Body RequestBody json);
     
 }

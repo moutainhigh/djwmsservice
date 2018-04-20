@@ -28,8 +28,8 @@ public interface OrgRoleHttpRequest {
      * @author wyb
      * @create 2018/4/12
      **/
-    @GET("getRoleFromId.org")
-    HTTPResponse getRoleFromId(@QueryMap Map<String,Object> map);
+    @GET("getRolePerInfo.org")
+    HTTPResponse getRolePerInfo(@QueryMap Map<String,Object> map);
     /**
      * 修改角色信息
      * @param map
@@ -39,13 +39,13 @@ public interface OrgRoleHttpRequest {
     @POST("updatePostRoleManage.org") 
     HTTPResponse updatePostRoleManage(@FieldMap Map<String,Object> map);
     /**
-     * 保存角色信息
+     * 新增角色信息
      * @param map
      * @return
      */
     @FormUrlEncoded
-    @POST("updatePostRoleManage.org") 
-    HTTPResponse savePostRoleManage(@FieldMap Map<String,Object> map);
+    @POST("addPostRoleManage.org") 
+    HTTPResponse addPostRoleManage(@FieldMap Map<String,Object> map);
     /**
      * 删除角色信息
      * @param map

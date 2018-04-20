@@ -20,7 +20,10 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.aop.inneruser.annotation.OperatorAnnotation;
+import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.model.OperatorInfoBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.role.model.DeleteBO;
@@ -53,8 +56,8 @@ public class RoleController {
      * @return
      */
     @RequestMapping(name = "角色列表", value = "/roleList", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> roleList(@RequestBody(required = false) String json,
-            HttpServletRequest request) {
+    public Map<String, Object> roleList(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO
+            ,HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
             RoleListBO param = gson.fromJson(json, RoleListBO.class);
@@ -119,23 +122,11 @@ public class RoleController {
      * @return
      */
     @RequestMapping(name = "获取角色及权限信息", value = "/getRoleInfo", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getRoleInfo(@RequestBody(required = false) String json,
-            HttpServletRequest request) {
+    public Map<String, Object> getRoleInfo(HttpServletRequest request) {
         try {
-            LOGGER.debug("json : " + json);
-            RoleListBO param = gson.fromJson(json, RoleListBO.class);
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            BeanUtils.copyProperties(partnerInfoBo, param);
-            param.setOperator(partnerInfoBo.getPartnerId());
-            ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(param,
-                            new HibernateSupportedValidator<RoleListBO>()
-                                    .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-                    .doValidate().result(ResultCollectors.toComplex());
-            if (!ret.isSuccess()) {
-                return MsgTemplate.failureMsg(ret);
-            }
-            return roleService.roleInfo(param);
+            // 解析参数
+            BaseBO param = new BaseBO();
+            return roleService.getRoleType(param);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error(e.getMessage());

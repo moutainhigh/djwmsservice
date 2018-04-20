@@ -19,11 +19,16 @@ public class UpdateRoleInfoBO extends BaseOrgBO {
     /**
      * 角色id
      */
-    private String id;
+    private String roleId;
     /**
-     * 角色类型
+     * 角色类型编码
      */
-    private String roleType;
+    private String roleTypeCode;
+    /**
+     * 合作方id
+     */
+    @NotBlank
+    private String partnerId;
     /**
      * 角色名称
      */
@@ -31,69 +36,64 @@ public class UpdateRoleInfoBO extends BaseOrgBO {
     /**
      * 角色描述
      */
-    private String rdesc;
+    private String roleDesc;
     /**
      * 权限id
      */
-    private String pid;
-    /**
-     * 合作方id
-     */
-    @NotBlank
-    private String partnerId;
+    private String perId;
 
-    public String getRdesc() {
-        return rdesc;
+    public String getRoleId() {
+        return roleId;
     }
 
-    public String getPid() {
-        return pid;
+    public String getRoleTypeCode() {
+        return roleTypeCode;
     }
 
     public String getPartnerId() {
         return partnerId;
     }
 
-    public String getId() {
-        return id;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getRoleDesc() {
+        return roleDesc;
     }
 
-    public void setRdesc(String rdesc) {
-        this.rdesc = rdesc;
+    public String getPerId() {
+        return perId;
     }
 
-    public void setPid(String pid) {
-        this.pid = pid;
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public void setRoleTypeCode(String roleTypeCode) {
+        this.roleTypeCode = roleTypeCode;
     }
 
     public void setPartnerId(String partnerId) {
         this.partnerId = partnerId;
     }
 
-    public String getRoleType() {
-        return roleType;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
-    }
-
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 
+    public void setRoleDesc(String roleDesc) {
+        this.roleDesc = roleDesc;
+    }
+
+    public void setPerId(String perId) {
+        this.perId = perId;
+    }
+
     @Override
     public String toString() {
-        return "UpdateRoleInfoBO [id=" + id + ", roleType=" + roleType + ", roleName=" + roleName + ", rdesc=" + rdesc
-                + ", pid=" + pid + ", partnerId=" + partnerId + "]";
+        return "UpdateRoleInfoBO [roleId=" + roleId + ", roleTypeCode=" + roleTypeCode + ", partnerId=" + partnerId
+                + ", roleName=" + roleName + ", roleDesc=" + roleDesc + ", perId=" + perId + "]";
     }
 
 }

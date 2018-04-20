@@ -1,6 +1,5 @@
 package com.djcps.wms.role.model;
 
-
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseOrgBO;
@@ -11,7 +10,7 @@ import com.djcps.wms.commons.base.BaseOrgBO;
  * @author WYB
  * @since 2018/4/12
  */
-public class RoleListBO extends BaseOrgBO {
+public class RoleListBO extends BaseOrgBO{
 
     /**
      * 
@@ -20,57 +19,58 @@ public class RoleListBO extends BaseOrgBO {
     /**
      * 角色id
      */
-    private String rid;
+    private String roleId;
     /**
-     * 角色类型
+     * 角色类型编码
      */
-    private String roleType;
+    private String roleTypeCode;
     /**
      * 角色名称
      */
     private String roleName;
+
     /**
-     * /** 合作方id
+     * 合作方id
      */
     @NotBlank
     private String partnerId;
 
-    public String getRid() {
-        return rid;
+    public String getRoleId() {
+        return roleId;
     }
 
-    public void setRid(String rid) {
-        this.rid = rid;
-    }
-
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
-    }
-
-    public String getRoleType() {
-        return roleType;
+    public String getRoleTypeCode() {
+        return roleTypeCode;
     }
 
     public String getRoleName() {
         return roleName;
     }
 
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public void setRoleTypeCode(String roleTypeCode) {
+        this.roleTypeCode = roleTypeCode;
     }
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
     @Override
     public String toString() {
-        return "RoleListBO [rid=" + rid + ", roleType=" + roleType + ", roleName=" + roleName + ", partnerId="
-                + partnerId + "]";
+        return "RoleListBO [roleId=" + roleId + ", roleTypeCode=" + roleTypeCode + ", roleName=" + roleName
+                + ", partnerId=" + partnerId + "]";
     }
 
 }

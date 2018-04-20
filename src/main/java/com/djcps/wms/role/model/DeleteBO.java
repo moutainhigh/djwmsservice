@@ -3,6 +3,7 @@ package com.djcps.wms.role.model;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseOrgBO;
+
 /**
  * 删除角色信息信息参数
  * 
@@ -16,26 +17,14 @@ public class DeleteBO extends BaseOrgBO {
      */
     private static final long serialVersionUID = -3717534663639108351L;
     /**
-     * 角色编号
+     * 角色id
      */
-    private String id;
+    private String roleId;
     /**
      * /** 合作方id
      */
     @NotBlank
     private String partnerId;
-    /**
-     * 角色类型
-     */
-    private String roleType;
-
-    public String getRoleType() {
-        return roleType;
-    }
-
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
-    }
 
     public String getPartnerId() {
         return partnerId;
@@ -45,17 +34,17 @@ public class DeleteBO extends BaseOrgBO {
         this.partnerId = partnerId;
     }
 
-    public String getId() {
-        return id;
+    public String getRoleId() {
+        return roleId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 
     @Override
     public String toString() {
-        return "DeleteBO [id=" + id + ", partnerId=" + partnerId + ", roleType=" + roleType + "]";
+        return "DeleteBO [roleId=" + roleId + ", partnerId=" + partnerId + "]";
     }
 
 }

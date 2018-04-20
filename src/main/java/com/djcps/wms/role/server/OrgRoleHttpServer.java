@@ -14,11 +14,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.role.model.DeleteBO;
-import com.djcps.wms.role.model.RoleListBO;
-import com.djcps.wms.role.model.SaveBO;
+import com.djcps.wms.role.model.OrgRoleInfoBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
-import com.djcps.wms.role.model.request.RoleListPO;
+import com.djcps.wms.role.model.request.OrgRoleListPO;
+import com.djcps.wms.role.model.request.OrgSavePO;
 import com.djcps.wms.role.request.OrgRoleHttpRequest;
 import com.google.gson.Gson;
 
@@ -45,18 +46,18 @@ public class OrgRoleHttpServer {
      * @return 
      * @create  2018/4/12
      **/
-    public List<RoleListPO> getRoleFromId(RoleListBO roleListBO){
-        String json = gson.toJson(roleListBO);
+    public List<OrgRoleListPO> getRoleFromId(OrgRoleInfoBO orgRoleInfoBO){
+        String json = gson.toJson(orgRoleInfoBO);
         Map<String,Object> map=gson.fromJson(json,Map.class);
-        HTTPResponse http =orgRoleHttpRequest.getRoleFromId(map);
+        HTTPResponse http =orgRoleHttpRequest.getRolePerInfo(map);
       //校验请求是否成功
         HttpResult result = null;
-        List<RoleListPO> list= null;
+        List<OrgRoleListPO> list= null;
         if(http.isSuccessful()){
             result = gson.fromJson(http.getBodyString(), HttpResult.class);
             String data = gson.toJson(result.getData());
             list = new ArrayList<>();
-            list  = JSONArray.parseArray(data, RoleListPO.class);
+            list  = JSONArray.parseArray(data, OrgRoleListPO.class);
         }
         if(ObjectUtils.isEmpty(list)){
             System.err.println("Http请求出错,HttpResult结果为null");
@@ -81,12 +82,20 @@ public class OrgRoleHttpServer {
      * @param param
      * @return
      */
-    public HttpResult savePostRoleManage(SaveBO param){
+    public OrgSavePO addPostRoleManage(OrgRoleInfoBO param){
         String json = gson.toJson(param);
         Map<String,Object> map=gson.fromJson(json,Map.class);
-        HTTPResponse http =orgRoleHttpRequest.updatePostRoleManage(map);
-      //校验请求是否成功
-        return returnResult(http);
+        HTTPResponse httpResponse =orgRoleHttpRequest.addPostRoleManage(map);
+        HttpResult httpResult = returnResult(httpResponse);
+        OrgSavePO result = null;
+        if(httpResponse.isSuccessful()){
+            String http = gson.toJson(httpResult.getData());
+            result = gson.fromJson(http, OrgSavePO.class);
+        }
+        if(result == null){
+            LOGGER.error("Http请求出错,HttpResult结果为null");
+        }
+        return result;
     }
     /**
      * 删除角色信息

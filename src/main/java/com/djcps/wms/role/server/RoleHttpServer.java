@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.role.model.DeleteBO;
 import com.djcps.wms.role.model.RoleListBO;
@@ -16,6 +17,7 @@ import com.djcps.wms.role.model.SaveBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
 import com.djcps.wms.role.model.request.GetUserStatusPO;
 import com.djcps.wms.role.model.request.RoleInfoResultPO;
+import com.djcps.wms.role.model.request.RoleTypeInfoPO;
 import com.djcps.wms.role.request.RoleHttpRequest;
 import com.google.gson.Gson;
 
@@ -48,17 +50,21 @@ public class RoleHttpServer {
         System.out.println("---http请求参数转化为json格式---:"+json);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http =roleHttpRequest.list(rb);
-        RoleInfoResultPO result = null;
+        RoleInfoResultPO roleInfoResultPO = null;
+        HttpResult result = null;
       //校验请求是否成功
         if(http.isSuccessful()){
-            result = gson.fromJson(http.getBodyString(), RoleInfoResultPO.class);
+            result = gson.fromJson(http.getBodyString(), HttpResult.class);
+            String data = gson.toJson(result.getData());
+            roleInfoResultPO = gson.fromJson(data, RoleInfoResultPO.class);
         }
         if(result == null){
             System.err.println("Http请求出错,HttpResult结果为null");
             LOGGER.error("Http请求出错,HttpResult结果为null");
         }
-        return result;
+        return roleInfoResultPO;
     }
+    
     /**
      * 更新角色关联信息
      * @param param
@@ -79,7 +85,7 @@ public class RoleHttpServer {
     public HttpResult delete(DeleteBO param){
         String paramJson = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse http =roleHttpRequest.update(requestBody);
+        HTTPResponse http =roleHttpRequest.delete(requestBody);
       //校验请求是否成功
         return returnResult(http);
     }
@@ -118,6 +124,18 @@ public class RoleHttpServer {
               LOGGER.error("Http请求出错,HttpResult结果为null");
           }
           return list;
+    }
+    
+    /**
+     * 获取角色类型信息
+     * @return
+     */
+    public HttpResult getRoleType(BaseBO param){
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse http =roleHttpRequest.roleType(requestBody);
+        //校验请求是否成功
+          return returnResult(http);
     }
     /**
      * 公共返回

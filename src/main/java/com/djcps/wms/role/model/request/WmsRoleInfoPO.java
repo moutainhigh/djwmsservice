@@ -1,22 +1,19 @@
-package com.djcps.wms.role.model;
+package com.djcps.wms.role.model.request;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import com.djcps.wms.commons.base.BaseBO;
-import com.djcps.wms.commons.base.BaseOrgBO;
+import java.io.Serializable;
+import java.util.List;
 
 /**
- * 新增角色信息参数
+ * WMS角色列表信息实体类
  * 
  * @author WYB
  * @since 2018/4/12
  */
-public class SaveBO extends BaseOrgBO {
-
+public class WmsRoleInfoPO implements Serializable {
     /**
      * 
      */
-    private static final long serialVersionUID = 696280916702489605L;
+    private static final long serialVersionUID = -6873138815646253068L;
     /**
      * 角色id
      */
@@ -38,14 +35,9 @@ public class SaveBO extends BaseOrgBO {
      */
     private String roleDesc;
     /**
-     * 权限id
+     * 权限信息
      */
-    private String perId;
-    /**
-     * 合作方id
-     */
-    @NotBlank
-    private String partnerId;
+    private List<OrgPerssionsInfoPO> perssions;
 
     public String getRoleId() {
         return roleId;
@@ -65,14 +57,6 @@ public class SaveBO extends BaseOrgBO {
 
     public String getRoleDesc() {
         return roleDesc;
-    }
-
-    public String getPerId() {
-        return perId;
-    }
-
-    public String getPartnerId() {
-        return partnerId;
     }
 
     public void setRoleId(String roleId) {
@@ -95,19 +79,18 @@ public class SaveBO extends BaseOrgBO {
         this.roleDesc = roleDesc;
     }
 
-    public void setPerId(String perId) {
-        this.perId = perId;
+    public List<OrgPerssionsInfoPO> getPerssions() {
+        return perssions;
     }
 
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
+    public void setPerssions(List<OrgPerssionsInfoPO> perssions) {
+        this.perssions = perssions;
     }
 
     @Override
     public String toString() {
-        return "SaveBO [roleId=" + roleId + ", roleTypeName=" + roleTypeName + ", roleTypeCode=" + roleTypeCode
-                + ", roleName=" + roleName + ", roleDesc=" + roleDesc + ", perId=" + perId + ", partnerId=" + partnerId
-                + "]";
+        return "WmsRoleInfoPO [roleId=" + roleId + ", roleTypeName=" + roleTypeName + ", roleTypeCode=" + roleTypeCode
+                + ", roleName=" + roleName + ", roleDesc=" + roleDesc + ", perssions=" + perssions + "]";
     }
 
 }

@@ -322,7 +322,13 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
-
+    /**
+     * 更新订单状态
+     *
+     * @return
+     * @author WYB
+     * @since 2018/3/21
+     */
     public boolean updateOrderStatus(String status, String orderId, String partnerId, String version) {
         OrderIdBO orderIdBO = new OrderIdBO();
         orderIdBO.setOrderId(orderId);

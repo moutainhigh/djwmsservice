@@ -2,6 +2,7 @@ package com.djcps.wms.role.service;
 
 import java.util.Map;
 
+import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.role.model.DeleteBO;
 import com.djcps.wms.role.model.RoleListBO;
 import com.djcps.wms.role.model.SaveBO;
@@ -30,12 +31,6 @@ public interface RoleService {
      */
     Map<String,Object> update(UpdateRoleInfoBO UpdateRoleInfoBO);
     /**
-     * 获取角色信息
-     * @param roleListBO
-     * @return
-     */
-    Map<String, Object> roleInfo(RoleListBO roleListBO);
-    /**
      * 删除角色信息
      * @param deleteBO
      * @return
@@ -47,4 +42,9 @@ public interface RoleService {
      * @return
      */
     Map<String, Object> save(SaveBO saveBO);
+    /**
+     * 获取角色类型信息列表
+     * @return
+     */
+    Map<String, Object> getRoleType(BaseBO param);
 }

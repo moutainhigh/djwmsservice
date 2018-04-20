@@ -16,13 +16,13 @@ public class RoleInfoResultPO {
     /**
      * 返回结果集
      */
-    private List<RoleListPO> result;
-    
+    private List<WmsRoleInfoPO> result;
+
     public Integer getTotal() {
         return total;
     }
 
-    public List<RoleListPO> getResult() {
+    public List<WmsRoleInfoPO> getResult() {
         return result;
     }
 
@@ -30,7 +30,7 @@ public class RoleInfoResultPO {
         this.total = total;
     }
 
-    public void setResult(List<RoleListPO> result) {
+    public void setResult(List<WmsRoleInfoPO> result) {
         this.result = result;
     }
 
