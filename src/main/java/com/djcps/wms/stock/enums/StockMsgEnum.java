@@ -11,6 +11,9 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @date:2017年11月28日
  */
 public enum StockMsgEnum implements MsgInterface {
+    /**
+     * 错误代码枚举
+     */
 	
 	REDUNDANT_FAIL(1, "冗余表订单插入失败,请联系管理员"),
 	

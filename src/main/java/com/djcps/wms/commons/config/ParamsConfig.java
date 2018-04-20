@@ -66,7 +66,7 @@ public class ParamsConfig {
 	 * ORG服务
 	 */
 	public static String ORG_SERVER = "";
-	
+	 
 	public static String getUpdateOrderServer() {
 		return UPDATE_ORDER_SERVER;
 	}
@@ -122,7 +122,7 @@ public class ParamsConfig {
 	public static String getOrgServer() {
 		return ORG_SERVER;
 	}
-
+ 
 	public static void setOrgServer(String oRG_SERVER) {
 		ORG_SERVER = oRG_SERVER;
 	}
