@@ -1,12 +1,21 @@
 package com.djcps.wms.record.model.param;
 
 import java.io.Serializable;
+
+
 import java.util.Date;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.djcps.wms.commons.base.BaseBO;
+
+/**
+ * 
+ * 
+ * @author py
+ *
+ */
 
 public class DeleteOrderRecordBO extends BaseBO implements Serializable{
     

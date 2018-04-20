@@ -1,6 +1,12 @@
 package com.djcps.wms.workrecords.model;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+/**
+ * 
+ * 
+ * @author py
+ *
+ */
 
 public class WorkRecordsPO extends BaseAddBO{
 	/**

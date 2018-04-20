@@ -1,5 +1,12 @@
 package com.djcps.wms.record.constant;
 
+/**
+ * 
+ * 
+ * @author py
+ *
+ */
+
 public class RecordConstant {
     
     public static String Batch_By_Id = "id";

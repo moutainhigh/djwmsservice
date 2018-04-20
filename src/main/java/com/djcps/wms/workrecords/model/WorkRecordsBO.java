@@ -2,6 +2,11 @@ package com.djcps.wms.workrecords.model;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * 
+ * @author py
+ */
+
 import com.djcps.wms.commons.base.BaseListBO;
 
 public class WorkRecordsBO extends BaseListBO{
@@ -31,6 +36,14 @@ public class WorkRecordsBO extends BaseListBO{
 	@NotNull
 	private Integer operationType;
 	
+	private WorkRecordsPO workRecordsPO;
+	
+	public WorkRecordsPO getWorkRecordsPO() {
+		return workRecordsPO;
+	}
+	public void setWorkRecordsPO(WorkRecordsPO workRecordsPO) {
+		this.workRecordsPO = workRecordsPO;
+	}
 	public String getStartTime() {
 		return startTime;
 	}

@@ -20,13 +20,45 @@ public interface WorkRecordHttpRequest {
 	
 	
 	 /**
-     * 获取入库移库操作记录
+     * 根据操作类型获取工作记录
      * @param rb
      * @return
      * @author:py
-     * @date:2018/3/6
      */
     @Headers("content-type:application/json")
-    @POST("workRecord/entryList.do")
-    HTTPResponse workRecordList(@Body RequestBody rb);
+    @POST("workRecords/listWorkRecordsByOperationType.do")
+    HTTPResponse getAllRecordListByOperationType(@Body RequestBody rb);
+    
+    
+    /**
+     * 根据操作人id、楞型、和操作类型获取工作记录明细
+     * @param rb
+     * @return
+     * @author:py
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listWorkRecordsInfoByParam.do")
+    HTTPResponse getWorkRecordsDetail(@Body RequestBody rb);
+    
+    /**
+     * 获取提货工作记录记录
+     * @param rb
+     * @return
+     * @author:py
+     */
+    
+    @Headers("content-type:application/json")
+    @POST("workRecords/listDeliveryWorkRecordsByOperationType.do")
+    HTTPResponse getDeliveryRecordList(@Body RequestBody rb);
+   
+    /**
+     * 获取提货工作记录记录详情
+     * @param rb
+     * @return
+     * @author:py
+     */
+    
+    @Headers("content-type:application/json")
+    @POST("workRecords/listDeliveryWorkRecordsInfoByParam.do")
+    HTTPResponse  getDeliveryWorkRecordsDetail(@Body RequestBody rb);
 }
