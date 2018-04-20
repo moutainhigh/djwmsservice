@@ -2,12 +2,12 @@ package com.djcps.wms.permission.service;
 
 import java.util.Map;
 
-import com.djcps.wms.permission.model.BaseOrgBO;
-import com.djcps.wms.permission.model.DeletePermissionBO;
-import com.djcps.wms.permission.model.GetPermissionBO;
-import com.djcps.wms.permission.model.GetPermissionChooseBO;
-import com.djcps.wms.permission.model.GetWmsPermissionBO;
-import com.djcps.wms.permission.model.InsertOrUpdatePermissionBO;
+import com.djcps.wms.permission.model.bo.BaseOrgBO;
+import com.djcps.wms.permission.model.bo.DeletePermissionBO;
+import com.djcps.wms.permission.model.bo.GetPermissionBO;
+import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
+import com.djcps.wms.permission.model.bo.GetWmsPermissionBO;
+import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
 
 
 
@@ -22,7 +22,7 @@ public interface PermissionService {
 	 * 获取组合权限列表
 	 * @return
 	 */
-	Map<String, Object> getPermissionList(GetPermissionBO param,GetPermissionBO param_count);
+	Map<String, Object> getPermissionList(GetPermissionBO param);
 	
 	/**
 	 * 获取WMS权限
