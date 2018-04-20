@@ -42,17 +42,17 @@ public class UserDepartAndJobBO {
     /**
      * 或有部门列表
      */
-    List<OrgDepartmentPO> allDepartmentList;
+    List<DepartmentPO> allDepartmentList;
 
     /**
      * 所有职务列表
      */
-    List<OrgUjobPO> allJobList;
+    List<JobPO> allJobList;
 
     /**
      * 所有职位列表
      */
-    List<OrgPositionPO> allPositionList;
+    List<PositionPO> allPositionList;
 
     public String getDepartmentId() {
         return departmentId;
@@ -102,27 +102,27 @@ public class UserDepartAndJobBO {
         this.jobName = jobName;
     }
 
-    public List<OrgDepartmentPO> getAllDepartmentList() {
+    public List<DepartmentPO> getAllDepartmentList() {
         return allDepartmentList;
     }
 
-    public void setAllDepartmentList(List<OrgDepartmentPO> allDepartmentList) {
+    public void setAllDepartmentList(List<DepartmentPO> allDepartmentList) {
         this.allDepartmentList = allDepartmentList;
     }
 
-    public List<OrgUjobPO> getAllJobList() {
+    public List<JobPO> getAllJobList() {
         return allJobList;
     }
 
-    public void setAllJobList(List<OrgUjobPO> allJobList) {
+    public void setAllJobList(List<JobPO> allJobList) {
         this.allJobList = allJobList;
     }
 
-    public List<OrgPositionPO> getAllPositionList() {
+    public List<PositionPO> getAllPositionList() {
         return allPositionList;
     }
 
-    public void setAllPositionList(List<OrgPositionPO> allPositionList) {
+    public void setAllPositionList(List<PositionPO> allPositionList) {
         this.allPositionList = allPositionList;
     }
 

@@ -79,25 +79,25 @@ public interface UserService {
      * @return
      * @date  2018/4/16 9:38
      **/
-    Map<String,Object> saveUser(SaveUserBO saveUserBO);
+    Map<String,Object> saveUser(WmsSaveUserBO saveUserBO);
 
     /**
      * 获取公司所有部门信息
      * @author  wzy
-     * @param orgGetDepartmentBO
+     * @param getDepartmentBO
      * @return  map
      * @date  2018/4/16 11:43
      **/
-    Map<String,Object> getAllDepartment(OrgGetDepartmentBO orgGetDepartmentBO);
+    Map<String,Object> getAllDepartment(GetDepartmentBO getDepartmentBO);
 
     /**
      * 获取公司所有职务信息
      * @author  wzy
-     * @param orgGetDepartmentBO
+     * @param getJobBO
      * @return map
      * @date  2018/4/17 9:37
      **/
-    Map<String,Object> getUjob(OrgGetDepartmentBO orgGetDepartmentBO);
+    Map<String,Object> getUjob(GetJobBO getJobBO);
 
     /**
      * 获取公司所有职位信息

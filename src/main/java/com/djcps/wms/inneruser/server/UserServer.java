@@ -83,7 +83,9 @@ public class UserServer {
                 String data = gson.toJson(result.getData());
                 orgUserInfoPO=new OrgUserInfoPO();
                 list= JSONArray.parseArray(data,OrgUserInfoPO.class);
-                orgUserInfoPO=list.get(0);
+                if(list.size()>0){
+                    orgUserInfoPO=list.get(0);
+                }
             }
         }
         return orgUserInfoPO;
@@ -371,8 +373,10 @@ public class UserServer {
         HttpResult result=null;
         if (httpResponse.isSuccessful()){
             result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
-            String json=gson.toJson(result.getData());
-            warehouseList= JSONArray.parseArray(json,String.class);
+            if(result.isSuccess()){
+                String json=gson.toJson(result.getData());
+                warehouseList= JSONArray.parseArray(json,String.class);
+            }
         }
         return warehouseList;
     }

@@ -2,8 +2,6 @@ package com.djcps.wms.inneruser.model.userparam;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 修改用户工作状态参数
  * @author:wzy
@@ -20,7 +18,6 @@ public class UpdateUserStatusBO {
     /**
      * 工作状态 空闲、忙碌、休息中
      */
-    @NotNull
     private Integer workStatus ;
 
     private String partnerId;

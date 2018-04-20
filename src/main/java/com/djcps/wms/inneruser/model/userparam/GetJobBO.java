@@ -2,31 +2,22 @@ package com.djcps.wms.inneruser.model.userparam;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-public class OrgGetUserInfoById {
-
-    /**
-     * 合作方id
-     */
-    @NotBlank
+/**
+ * 获取职务参数类
+ * @author:wzy
+ * @date:2018/4/18
+ **/
+public class GetJobBO {
     private String operator;
 
-    /**
-     * 请求者ip
-     */
-    @NotBlank
+
     private String ip;
 
-    /**
-     * 调用的业务系统WMS
-     */
-    @NotBlank
+
     private String bussion;
 
-    /**
-     * 用户id
-     */
     @NotBlank
-    private String userId;
+    private String companyId;
 
     public String getOperator() {
         return operator;
@@ -52,21 +43,21 @@ public class OrgGetUserInfoById {
         this.bussion = bussion;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getCompanyId() {
+        return companyId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 
     @Override
     public String toString() {
-        return "OrgGetUserInfoById{" +
+        return "GetJobBO{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
                 ", bussion='" + bussion + '\'' +
-                ", userId='" + userId + '\'' +
+                ", companyId='" + companyId + '\'' +
                 '}';
     }
 }

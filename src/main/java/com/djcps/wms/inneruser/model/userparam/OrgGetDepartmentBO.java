@@ -1,7 +1,5 @@
 package com.djcps.wms.inneruser.model.userparam;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 /**
  * 获取公司所有的部门和职务参数类
  * @author:wzy
@@ -9,16 +7,16 @@ import org.hibernate.validator.constraints.NotBlank;
  **/
 public class OrgGetDepartmentBO {
 
-   @NotBlank
+
     private String operator;
 
-    @NotBlank
+
     private String ip;
 
-    @NotBlank
+
     private String bussion;
 
-    @NotBlank
+
     private String companyID;
 
     private String type;

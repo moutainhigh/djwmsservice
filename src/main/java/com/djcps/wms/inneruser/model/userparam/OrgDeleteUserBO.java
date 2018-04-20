@@ -2,8 +2,6 @@ package com.djcps.wms.inneruser.model.userparam;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * org删除用户参数类
  * @author:wzy
@@ -15,12 +13,11 @@ public class OrgDeleteUserBO {
      * 给org的用户id
      */
     @NotBlank
-    private String id;
+    private String userId;
 
     /**
-     * org用户状态
+     * org用户状态 0启用，1禁用
      */
-    @NotNull
     private Integer status;
 
     private String operator;
@@ -31,12 +28,22 @@ public class OrgDeleteUserBO {
     @NotBlank
     private String bussion;
 
-    public String getId() {
-        return id;
+    private String partnerId;
+
+    public String getPartnerId() {
+        return partnerId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Integer getStatus() {
@@ -74,11 +81,12 @@ public class OrgDeleteUserBO {
     @Override
     public String toString() {
         return "OrgDeleteUserBO{" +
-                "id='" + id + '\'' +
-                ", status='" + status + '\'' +
+                "userId='" + userId + '\'' +
+                ", status=" + status +
                 ", operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
                 ", bussion='" + bussion + '\'' +
+                ", partnerId='" + partnerId + '\'' +
                 '}';
     }
 }

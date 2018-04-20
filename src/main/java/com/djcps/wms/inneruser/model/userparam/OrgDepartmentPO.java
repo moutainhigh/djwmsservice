@@ -13,9 +13,10 @@ public class OrgDepartmentPO {
     private String oname;
 
     /**
-     * 部门名称
+     * 部门id
      */
     private String id;
+
 
     public String getOname() {
         return oname;

@@ -29,7 +29,7 @@ public class SaveUserBO {
     /**
      * 角色类型
      */
-    private String roleType  ;
+    private String roleType;
 
     private String uids;
 
@@ -51,9 +51,9 @@ public class SaveUserBO {
 
     private String ubirthday;
 
-    private String ufdepartment_id;
+    private String fdepartment_id;
 
-    private String ufdepartment;
+    private String fdepartment;
 
     private String uemail;
 
@@ -65,7 +65,7 @@ public class SaveUserBO {
 
     private String ucode;
 
-    private String userstatus;
+    private String userStatus;
 
     private String udataAuthorityString;
 
@@ -89,6 +89,14 @@ public class SaveUserBO {
 
     private String ueducation;
 
+    /**
+     * 公司编号
+     */
+    private String companyID;
+
+    /**
+     * 婚姻状态
+     */
     private String umarital_status;
 
     private String uid_card;
@@ -103,6 +111,9 @@ public class SaveUserBO {
 
     private String uleave_date;
 
+    /**
+     * 政治面貌
+     */
     private String upolitical_outlook;
 
     private String uregistered_residence;
@@ -127,7 +138,14 @@ public class SaveUserBO {
 
     private String rule_name;
 
+    private String roleids;
+
+    /**
+     * 新增时返回的用户id
+     */
     private String id;
+
+    private String positionId;
 
     private String isdel;
 
@@ -136,6 +154,40 @@ public class SaveUserBO {
     private String create_time;
 
     private String update_time;
+
+    private String onlineUserId;
+
+    public String getOnlineUserId() {
+        return onlineUserId;
+    }
+
+    public void setOnlineUserId(String onlineUserId) {
+        this.onlineUserId = onlineUserId;
+    }
+
+    public String getRoleids() {
+        return roleids;
+    }
+
+    public void setRoleids(String roleids) {
+        this.roleids = roleids;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
 
     public String getWarehouseId() {
         return warehouseId;
@@ -265,20 +317,20 @@ public class SaveUserBO {
         this.ubirthday = ubirthday;
     }
 
-    public String getUfdepartment_id() {
-        return ufdepartment_id;
+    public String getFdepartment_id() {
+        return fdepartment_id;
     }
 
-    public void setUfdepartment_id(String ufdepartment_id) {
-        this.ufdepartment_id = ufdepartment_id;
+    public void setFdepartment_id(String fdepartment_id) {
+        this.fdepartment_id = fdepartment_id;
     }
 
-    public String getUfdepartment() {
-        return ufdepartment;
+    public String getFdepartment() {
+        return fdepartment;
     }
 
-    public void setUfdepartment(String ufdepartment) {
-        this.ufdepartment = ufdepartment;
+    public void setFdepartment(String fdepartment) {
+        this.fdepartment = fdepartment;
     }
 
     public String getUemail() {
@@ -321,12 +373,12 @@ public class SaveUserBO {
         this.ucode = ucode;
     }
 
-    public String getUserstatus() {
-        return userstatus;
+    public String getUserStatus() {
+        return userStatus;
     }
 
-    public void setUserstatus(String userstatus) {
-        this.userstatus = userstatus;
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus;
     }
 
     public String getUdataAuthorityString() {
@@ -628,14 +680,14 @@ public class SaveUserBO {
                 ", uimage='" + uimage + '\'' +
                 ", uinduction='" + uinduction + '\'' +
                 ", ubirthday='" + ubirthday + '\'' +
-                ", ufdepartment_id='" + ufdepartment_id + '\'' +
-                ", ufdepartment='" + ufdepartment + '\'' +
+                ", fdepartment_id='" + fdepartment_id + '\'' +
+                ", fdepartment='" + fdepartment + '\'' +
                 ", uemail='" + uemail + '\'' +
                 ", usex='" + usex + '\'' +
                 ", utype='" + utype + '\'' +
                 ", ucompany='" + ucompany + '\'' +
                 ", ucode='" + ucode + '\'' +
-                ", userstatus='" + userstatus + '\'' +
+                ", userStatus='" + userStatus + '\'' +
                 ", udataAuthorityString='" + udataAuthorityString + '\'' +
                 ", udataAuthority='" + udataAuthority + '\'' +
                 ", cmp_user_position__id='" + cmp_user_position__id + '\'' +
@@ -647,6 +699,7 @@ public class SaveUserBO {
                 ", ujob='" + ujob + '\'' +
                 ", cmp_user_appearance__id='" + cmp_user_appearance__id + '\'' +
                 ", ueducation='" + ueducation + '\'' +
+                ", companyID='" + companyID + '\'' +
                 ", umarital_status='" + umarital_status + '\'' +
                 ", uid_card='" + uid_card + '\'' +
                 ", unation='" + unation + '\'' +
@@ -666,11 +719,14 @@ public class SaveUserBO {
                 ", company_id='" + company_id + '\'' +
                 ", type='" + type + '\'' +
                 ", rule_name='" + rule_name + '\'' +
+                ", roleids='" + roleids + '\'' +
                 ", id='" + id + '\'' +
+                ", positionId='" + positionId + '\'' +
                 ", isdel='" + isdel + '\'' +
                 ", isdel_per='" + isdel_per + '\'' +
                 ", create_time='" + create_time + '\'' +
                 ", update_time='" + update_time + '\'' +
+                ", onlineUserId='" + onlineUserId + '\'' +
                 '}';
     }
 }

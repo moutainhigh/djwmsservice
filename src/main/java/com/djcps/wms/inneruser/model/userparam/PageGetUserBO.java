@@ -19,7 +19,7 @@ public class PageGetUserBO {
     private Integer workStatus ;
 
     /**
-     * 合作方id
+     * 当前操作者
      */
     private String operator;
 
@@ -38,6 +38,36 @@ public class PageGetUserBO {
     private String pageSize;
 
     private String pageNo;
+
+    private String partnerId;
+
+    private String roleType;
+
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
 
     public String getUserId() {
         return userId;
@@ -105,6 +135,9 @@ public class PageGetUserBO {
                 ", bussion='" + bussion + '\'' +
                 ", pageSize='" + pageSize + '\'' +
                 ", pageNo='" + pageNo + '\'' +
+                ", partnerId='" + partnerId + '\'' +
+                ", roleType='" + roleType + '\'' +
+                ", userName='" + userName + '\'' +
                 '}';
     }
 }

@@ -8,9 +8,13 @@ public enum UserMsgEnum implements MsgInterface{
 
     USER_BUSY(2," 用户忙碌,无法删除"),
 
-    DEL_USER_FAIL(3," 用户忙碌,无法删除"),
+    DEL_USER_FAIL(3," 删除用户失败"),
 
     SAVE_USER_FAIL(4," 保存用户信息失败"),
+
+    GET_USER_FAIL(5," 获取用户关联信息失败"),
+    NULL_RESULT(6," 请求结果为空"),
+    ROLETYPE_NULL(7," 无用户类型"),
     ;
 
     private int code;
