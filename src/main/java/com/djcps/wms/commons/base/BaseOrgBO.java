@@ -26,7 +26,7 @@ public class BaseOrgBO extends BaseListBO implements Serializable {
     /**
      * 调用的业务系统OA、CRM、BI、CRM、OMS、WMS、TMS
      */
-    private String bussion;
+    private String business;
     /**
      * 公司id
      */
@@ -56,10 +56,6 @@ public class BaseOrgBO extends BaseListBO implements Serializable {
         return ip;
     }
 
-    public String getBussion() {
-        return bussion;
-    }
-
     public String getCompanyID() {
         return companyID;
     }
@@ -76,10 +72,6 @@ public class BaseOrgBO extends BaseListBO implements Serializable {
         this.ip = ip;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
-    }
-
     public void setCompanyID(String companyID) {
         this.companyID = companyID;
     }
@@ -88,9 +80,17 @@ public class BaseOrgBO extends BaseListBO implements Serializable {
         this.userid = userid;
     }
 
+    public String getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(String business) {
+        this.business = business;
+    }
+
     @Override
     public String toString() {
-        return "BaseOrgBO [operator=" + operator + ", ip=" + ip + ", bussion=" + bussion + ", companyID=" + companyID
+        return "BaseOrgBO [operator=" + operator + ", ip=" + ip + ", business=" + business + ", companyID=" + companyID
                 + ", userid=" + userid + ", oid=" + oid + "]";
     }
 

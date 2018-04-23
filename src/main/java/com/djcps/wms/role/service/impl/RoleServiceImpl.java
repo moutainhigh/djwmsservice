@@ -58,16 +58,14 @@ public class RoleServiceImpl implements RoleService {
      **/
     @Override
     public Map<String, Object> roleList(RoleListBO roleListBO) {
-        roleListBO.setBussion("WMS");
-        roleListBO.setIp("192.168.10.71");
-        roleListBO.setCompanyID("100");
+        roleListBO.setCompanyID(roleListBO.getCompanyId());
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         // 从wms服务获取角色关联信息
         RoleInfoResultPO wmsRoleInfo = roleHttpServer.roleList(roleListBO);
         if (!ObjectUtils.isEmpty(wmsRoleInfo.getResult())) {
             BeanUtils.copyProperties(roleListBO, orgRoleInfoBO);
             for (WmsRoleInfoPO roleId : wmsRoleInfo.getResult()) {
-                orgRoleInfoBO.setId(roleId.getRoleId());;
+                orgRoleInfoBO.setId(roleId.getRoleId());
                 // 通过角色id从org获取角色信息
                 List<OrgRoleListPO> orgRoleInfo = orgRoleHttpServer.getRoleFromId(orgRoleInfoBO);
                 if (ObjectUtils.isEmpty(orgRoleInfo)) {
@@ -100,17 +98,15 @@ public class RoleServiceImpl implements RoleService {
     /**
      * 更新角色信息
      * 
-     * @param UpdateRoleInfoBO
+     * @param updateRoleInfoBO
      * @return
      * @create 2018/4/12
      */
     @Override
     public Map<String, Object> update(UpdateRoleInfoBO updateRoleInfoBO) {
-        updateRoleInfoBO.setBussion("WMS");
-        updateRoleInfoBO.setIp("192.168.10.71");
-        updateRoleInfoBO.setOid("100");
-        updateRoleInfoBO.setCompanyID("100");
-        updateRoleInfoBO.setUserid("100");
+        updateRoleInfoBO.setOid(updateRoleInfoBO.getCompanyId());
+        updateRoleInfoBO.setCompanyID(updateRoleInfoBO.getCompanyId());
+        updateRoleInfoBO.setUserid(updateRoleInfoBO.getOperator());
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         // 更新wms角色关联信息
         HttpResult baseResult = roleHttpServer.update(updateRoleInfoBO);
@@ -118,8 +114,8 @@ public class RoleServiceImpl implements RoleService {
         if (baseResult.isSuccess()) {
             BeanUtils.copyProperties(updateRoleInfoBO, orgRoleInfoBO);
             // 实体类匹配字段数值请求org服务
-            if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleTypeCode())) {
-                orgRoleInfoBO.setRtype(updateRoleInfoBO.getRoleTypeCode());
+            if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleType())) {
+                orgRoleInfoBO.setRtype(updateRoleInfoBO.getRoleType());
             }
             if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleName())) {
                 orgRoleInfoBO.setRname(updateRoleInfoBO.getRoleName());
@@ -149,13 +145,18 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Map<String, Object> delete(DeleteBO deleteBO) {
-        deleteBO.setBussion("WMS");
-        deleteBO.setIp("192.168.10.71");
-        deleteBO.setCompanyID("100");
-        deleteBO.setUserid("100");
+        deleteBO.setCompanyID(deleteBO.getCompanyId());
+        deleteBO.setUserid(deleteBO.getOperator());
         List<DeleteBO> list = new ArrayList<DeleteBO>();
         HttpResult result = null;
         if (!ObjectUtils.isEmpty(deleteBO)) {
+          /*  String[] roleTypeCode = deleteBO.getRoleTypeCode().split(",");
+            for(String s : roleTypeCode) {
+                DeleteBO roleType = new DeleteBO();
+                roleType.setRoleTypeCode(s);
+                roleType.setPartnerId(deleteBO.getPartnerId());
+                list.add(roleType);
+            }*/
             list.add(deleteBO);
             // 获取该角色类型的所有用户状态
             List<GetUserStatusPO> userStatusList = roleHttpServer.getUserStatusList(list);
@@ -189,17 +190,16 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Map<String, Object> save(SaveBO saveBO) {
-        saveBO.setBussion("WMS");
-        saveBO.setIp("192.168.10.71");
-        saveBO.setOid("100");
-        saveBO.setCompanyID("100");
-        saveBO.setUserid("100");
+        saveBO.setOid(saveBO.getCompanyId());
+        saveBO.setCompanyID(saveBO.getCompanyId());
+        saveBO.setUserid(saveBO.getOperator());
+        saveBO.setRoleType(RoleConstant.SYSTEM);
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         BeanUtils.copyProperties(saveBO, orgRoleInfoBO);
         orgRoleInfoBO.setPid(saveBO.getPerId());
         orgRoleInfoBO.setRdesc(saveBO.getRoleDesc());
         orgRoleInfoBO.setRname(saveBO.getRoleName());
-        orgRoleInfoBO.setRtype(saveBO.getRoleTypeCode());
+        orgRoleInfoBO.setRtype(saveBO.getRoleType());
         // 新增org角色关联信息
         OrgSavePO orgSavePO = orgRoleHttpServer.addPostRoleManage(orgRoleInfoBO);
         HttpResult save = null;
@@ -212,7 +212,7 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * 获取角色以及权限信息
-     * 
+     * @param param
      * @return
      * @create 2018/4/12
      */

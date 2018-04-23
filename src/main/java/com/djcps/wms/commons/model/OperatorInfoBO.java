@@ -21,7 +21,15 @@ public class OperatorInfoBO {
     /**
      * 业务
      */
-    private String bussion;
+    private String business;
+
+    public String getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(String business) {
+        this.business = business;
+    }
 
     public String getOperator() {
         return operator;
@@ -37,13 +45,5 @@ public class OperatorInfoBO {
 
     public void setIp(String ip) {
         this.ip = ip;
-    }
-
-    public String getBussion() {
-        return bussion;
-    }
-
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
     }
 }

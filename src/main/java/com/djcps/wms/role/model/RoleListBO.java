@@ -10,7 +10,7 @@ import com.djcps.wms.commons.base.BaseOrgBO;
  * @author WYB
  * @since 2018/4/12
  */
-public class RoleListBO extends BaseOrgBO{
+public class RoleListBO extends BaseOrgBO {
 
     /**
      * 
@@ -34,6 +34,18 @@ public class RoleListBO extends BaseOrgBO{
      */
     @NotBlank
     private String partnerId;
+    /**
+     * 公司id
+     */
+    private String companyId;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
 
     public String getRoleId() {
         return roleId;
@@ -70,7 +82,7 @@ public class RoleListBO extends BaseOrgBO{
     @Override
     public String toString() {
         return "RoleListBO [roleId=" + roleId + ", roleTypeCode=" + roleTypeCode + ", roleName=" + roleName
-                + ", partnerId=" + partnerId + "]";
+                + ", partnerId=" + partnerId + ", companyId=" + companyId + "]";
     }
 
 }
