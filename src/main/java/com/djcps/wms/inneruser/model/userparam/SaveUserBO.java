@@ -12,7 +12,7 @@ public class SaveUserBO {
     /**
      * 调用的业务系统OA、CRM、BI、CRM、OMS、WMS、TMS
      */
-    private String bussion;
+    private String business;
 
     /**
      * 请求者的ip地址
@@ -221,12 +221,12 @@ public class SaveUserBO {
         this.operator = operator;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getIp() {
@@ -665,7 +665,7 @@ public class SaveUserBO {
     public String toString() {
         return "SaveUserBO{" +
                 "operator='" + operator + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", ip='" + ip + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
                 ", warehouseName='" + warehouseName + '\'' +

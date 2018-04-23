@@ -113,7 +113,7 @@ public interface UserService {
     /**
      * 获取个人部门职位信息和全部信息
      * @author  wzy
-     * @param OrgGetUserInfoById
+     * @param orgGetUserInfoById
      * @return map
      * @date  2018/4/17 9:58
      **/

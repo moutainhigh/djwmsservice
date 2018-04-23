@@ -20,7 +20,7 @@ public class OrgGetUserInfoById {
      * 调用的业务系统WMS
      */
     @NotBlank
-    private String bussion;
+    private String business;
 
     /**
      * 用户id
@@ -66,12 +66,12 @@ public class OrgGetUserInfoById {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getUserId() {
@@ -87,7 +87,7 @@ public class OrgGetUserInfoById {
         return "OrgGetUserInfoById{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", userId='" + userId + '\'' +
                 ", id='" + id + '\'' +
                 ", partnerId='" + partnerId + '\'' +

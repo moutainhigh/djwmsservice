@@ -220,19 +220,21 @@ public class UserServiceImpl implements UserService {
                                         listBOList.setPartnerId(pageGetUserBO.getPartnerId());
                                         //拆分仓库id字符串
                                         String warehouses=userRelevanceBO.getWarehouseId();
-                                        List<String> warehouseList=new ArrayList<>();
-                                        //分割出来的字符数组
-                                        String[] warehouse = warehouses.split(",");
-                                        AddUserWarehouseBO addUserWarehouseBO=null;
-                                        for (int i = 0; i < warehouse.length; i++) {
-                                            warehouseList.add(warehouse[i]);
-                                        }
-                                        listBOList.setList(warehouseList);
-                                        List<WarehouseListPO> warehouseListPOList=userServer.getUserWarehouseList(listBOList);
-                                        if(!ObjectUtils.isEmpty(warehouseListPOList)){
-                                            warehouseListPOList.stream().forEach(warehouseListPO -> {
-                                                warehouseNameStr.append(warehouseListPO.getWarehouseName()+",");
-                                            });
+                                        if(!StringUtils.isEmpty(warehouses)){
+                                            List<String> warehouseList=new ArrayList<>();
+                                            //分割出来的字符数组
+                                            String[] warehouse = warehouses.split(",");
+                                            AddUserWarehouseBO addUserWarehouseBO=null;
+                                            for (int i = 0; i < warehouse.length; i++) {
+                                                warehouseList.add(warehouse[i]);
+                                            }
+                                            listBOList.setList(warehouseList);
+                                            List<WarehouseListPO> warehouseListPOList=userServer.getUserWarehouseList(listBOList);
+                                            if(!ObjectUtils.isEmpty(warehouseListPOList)){
+                                                warehouseListPOList.stream().forEach(warehouseListPO -> {
+                                                    warehouseNameStr.append(warehouseListPO.getWarehouseName()+",");
+                                                });
+                                            }
                                         }
                                         userRelevanceBO.setWarehouseName(warehouseNameStr.toString());
                                     }
@@ -270,7 +272,7 @@ public class UserServiceImpl implements UserService {
             list.add(wmssaveUserBO);
             List saveUserList=list.stream().map(x->new SaveUserBO() {
                 {
-                    setBussion(x.getBussion());
+                    setBusiness(x.getBusiness());
                     setOperator(x.getOperator());
                     setIp(x.getIp());
                     setWarehouseId(x.getWarehouseId());
