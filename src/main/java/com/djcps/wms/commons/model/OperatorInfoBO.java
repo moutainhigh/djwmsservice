@@ -46,4 +46,13 @@ public class OperatorInfoBO {
     public void setBussion(String bussion) {
         this.bussion = bussion;
     }
+
+    @Override
+    public String toString() {
+        return "OperatorInfoBO{" +
+                "operator='" + operator + '\'' +
+                ", ip='" + ip + '\'' +
+                ", bussion='" + bussion + '\'' +
+                '}';
+    }
 }

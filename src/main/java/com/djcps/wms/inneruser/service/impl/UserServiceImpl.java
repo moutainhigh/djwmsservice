@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
      **/
     @Override
     public Map<String, Object> getUser(OrgGetUserInfoById orgGetUserInfo) {
-        OrgUserInfoPO orgUserInfoPO=userServer.getUserByOrg(orgGetUserInfo);
+        OrgUserInfoPO orgUserInfoPO = userServer.getUserByOrg(orgGetUserInfo);
         UserInfoPO userInfoPO=new UserInfoPO();
         userInfoPO.setUserName(orgUserInfoPO.getUname());
         userInfoPO.setIdCard(orgUserInfoPO.getUid_card());
