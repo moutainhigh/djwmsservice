@@ -29,7 +29,6 @@ public interface DjorForPermissionHttpRequest {
 	 * @param map
 	 * @return
 	 */
-	//@FormUrlEncoded
 	@GET("getPerManageList.org")
 	HTTPResponse getPermissionList(@QueryMap Map<String,Object> map);
 	
