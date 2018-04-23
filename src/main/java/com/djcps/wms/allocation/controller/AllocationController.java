@@ -819,4 +819,22 @@ public class AllocationController {
 		}
 	}
 	
+	/**
+     * 获取车辆排队信息（test 对接TMS）
+     * @param json
+     * @param request
+     * @return
+     */
+    @RequestMapping(name="获取车辆排队信息（test 对接TMS）",value = "/TmsVehicleQueuingList", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> TmsVehicleQueuingList(@RequestBody(required = false) String json, HttpServletRequest request) {
+        try {
+            LOGGER.debug("json : " + json);
+            return allocationService.TmsVehicleQueuingList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+            return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        }
+    }
+	
 }

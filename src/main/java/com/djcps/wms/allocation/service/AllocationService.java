@@ -286,4 +286,7 @@ public interface AllocationService {
 	Map<String, Object> getRecordByRrelativeId(RelativeIdBO param);
 
 
+    Map<String, Object> TmsVehicleQueuingList();
+
+
 }
