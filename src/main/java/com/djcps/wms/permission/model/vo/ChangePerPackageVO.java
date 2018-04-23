@@ -1,4 +1,4 @@
-package com.djcps.wms.permission.model.PO;
+package com.djcps.wms.permission.model.vo;
 
 import java.io.Serializable;
 /**
@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 将得到的权限包数据字段转化
  * 2018年4月18日
  */
-public class ChangePerPackagePO implements Serializable {
+public class ChangePerPackageVO implements Serializable {
 
 	private static final long serialVersionUID = -1614555952685626481L;
 

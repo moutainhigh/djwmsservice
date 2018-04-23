@@ -1,5 +1,6 @@
 package com.djcps.wms.permission.server;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +10,15 @@ import org.springframework.util.ObjectUtils;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
 import com.djcps.wms.outorder.server.OutOrderServer;
-import com.djcps.wms.permission.model.BaseOrgBO;
-import com.djcps.wms.permission.model.DeletePermissionBO;
-import com.djcps.wms.permission.model.GetPermissionBO;
-import com.djcps.wms.permission.model.GetPermissionChooseBO;
-import com.djcps.wms.permission.model.GetUserByPermissionIdBO;
-import com.djcps.wms.permission.model.InsertOrUpdatePermissionBO;
+import com.djcps.wms.permission.model.bo.BaseOrgBO;
+import com.djcps.wms.permission.model.bo.DeletePermissionBO;
+import com.djcps.wms.permission.model.bo.GetPermissionBO;
+import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
+import com.djcps.wms.permission.model.bo.GetUserByPermissionIdBO;
+import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
 import com.djcps.wms.permission.request.DjorForPermissionHttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,14 +44,12 @@ public class PermissionServer {
 	 * @param param
 	 * @return
 	 */
-	public HttpResult getPermissionList(GetPermissionBO param) {
+	public OtherHttpResult getPermissionList(GetPermissionBO param) {
 		String json = gson.toJson(param);
 		LOGGER.debug("---http请求参数转化成json---:"+json);
 		Map<String,Object> map=gson.fromJson(json,Map.class);
 		HTTPResponse http =djorForPermissionHttpRequest.getPermissionList(map);
-		//okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"), json);
-		//HTTPResponse http = djorForPermissionHttpRequest.getPermissionList(rb);
-		return verifyHttpResult(http);
+		return verifyOtherHttpResult(http);
 	}
 	
 	/**
@@ -101,7 +101,6 @@ public class PermissionServer {
 		String json = gson.toJson(param);
 		LOGGER.debug("---http请求参数转化成json---:"+json);
 		Map<String,Object> map=gson.fromJson(json,Map.class);
-		//okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
 		HTTPResponse http = djorForPermissionHttpRequest.deletePermission(map);
 		return verifyHttpResult(http);
 	}
@@ -118,19 +117,7 @@ public class PermissionServer {
 		HTTPResponse http = djorForPermissionHttpRequest.getUserByPermissionId(map);
 		return verifyHttpResult(http);
 	}
-	
-	/**
-	 * 根据用户id获取用户信息
-	 * @param param
-	 * @return
-	 *//*
-	public HttpResult getUserInfo(String json){
-		LOGGER.debug("---http请求参数转化成json---:"+json);
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
-		HTTPResponse http = djorForUserHttpRequest.getUserInfo(rb);
-		return verifyHttpResult(http);
-	}*/
-	
+		
 	/**
 	 * 根据组合权限id和公司id，获取获取组合权限集合
 	 * @param param
@@ -149,6 +136,18 @@ public class PermissionServer {
 		//校验请求是否成功
 		if(http.isSuccessful()){
 			result = gson.fromJson(http.getBodyString(), HttpResult.class);
+		}
+		if(result == null){
+			LOGGER.error("Http请求出错,HttpResult结果为null");
+		}
+		return result;
+	}
+	
+	private OtherHttpResult verifyOtherHttpResult(HTTPResponse http){
+		OtherHttpResult result=null;
+		//校验请求是否成功
+		if(http.isSuccessful()){
+			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
 		}
 		if(result == null){
 			LOGGER.error("Http请求出错,HttpResult结果为null");

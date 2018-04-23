@@ -1,4 +1,4 @@
-package com.djcps.wms.permission.model.PO;
+package com.djcps.wms.permission.model.vo;
 
 import java.io.Serializable;
 /**
@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 将得到的WMS权限字段转化
  * 2018年4月19日
  */
-public class ChangeWmsPerPO implements Serializable{
+public class ChangeWmsPerVO implements Serializable{
 	
 	private String id;
 	

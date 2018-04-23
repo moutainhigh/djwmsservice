@@ -1,15 +1,6 @@
-package com.djcps.wms.permission.model;
+package com.djcps.wms.permission.model.bo;
 
-import java.io.Serializable;
-
-/**
- * @author zhq
- * 获取组合权限列表
- * 2018年4月12日
- */
-public class GetPermissionBO implements Serializable{
-
-	private static final long serialVersionUID = 8671143928748955433L;
+public class PermissionBO {
 	/**
 	 * 操作人
 	 */
@@ -25,7 +16,7 @@ public class GetPermissionBO implements Serializable{
 	/**
 	 * 公司id
 	 */
-	private String companyID;
+	private String companyId;
 	/**
 	 * 当前页
 	 */
@@ -56,11 +47,12 @@ public class GetPermissionBO implements Serializable{
 	public void setBussion(String bussion) {
 		this.bussion = bussion;
 	}
-	public String getCompanyID() {
-		return companyID;
+	
+	public String getCompanyId() {
+		return companyId;
 	}
-	public void setCompanyID(String companyID) {
-		this.companyID = companyID;
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 	public String getPage() {
 		return page;
@@ -83,8 +75,8 @@ public class GetPermissionBO implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "GetPermissionBO [operator=" + operator + ", ip=" + ip + ", bussion=" + bussion + ", companyID="
-				+ companyID + ", page=" + page + ", keyWord=" + keyWord + ", pageSize=" + pageSize + "]";
+		return "ChangePermissionBO [operator=" + operator + ", ip=" + ip + ", bussion=" + bussion + ", companyId="
+				+ companyId + ", page=" + page + ", keyWord=" + keyWord + ", pageSize=" + pageSize + "]";
 	}
 
 }
