@@ -32,18 +32,22 @@ public class WorkRecordsBO extends BaseListBO{
 	private Integer fluteType;
 	/**
 	 * 操作类型
+	 * 1 入库
+	 * 2 推荐库区
+	 * 3 移库
+	 * 4 配货
+	 * 5 取消配货
+	 * 6 提货
+	 * 7 退款
+	 * 8 装车
+	 * 9 盘点
+	 * 10 发起异常
+	 * 11 异常处理
+	 * 12 拆单处理
 	 */
 	@NotNull
 	private Integer operationType;
 	
-	private WorkRecordsPO workRecordsPO;
-	
-	public WorkRecordsPO getWorkRecordsPO() {
-		return workRecordsPO;
-	}
-	public void setWorkRecordsPO(WorkRecordsPO workRecordsPO) {
-		this.workRecordsPO = workRecordsPO;
-	}
 	public String getStartTime() {
 		return startTime;
 	}

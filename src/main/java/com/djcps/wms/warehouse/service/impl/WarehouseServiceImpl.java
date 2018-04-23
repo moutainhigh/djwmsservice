@@ -2,26 +2,18 @@ package com.djcps.wms.warehouse.service.impl;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.allocation.model.AddAllocationOrderBO;
-import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.base.BaseVO;
-import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
-import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.server.WarehouseServer;
 import com.djcps.wms.warehouse.service.WarehouseService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
