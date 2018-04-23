@@ -34,6 +34,7 @@ public class OperationRecordServiceImpl implements OperationRecordService{
      * @return 
      * @create  2018/3/6
      **/
+    
     @Override
     public Map<String, Object> stocktakingRecordList(StocktakingRecordListBO stocktakingRecordListBO) {
         OperationRecordResult operationRecordResult=operationRecordServer.stocktakingRecordList(stocktakingRecordListBO);

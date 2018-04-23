@@ -58,12 +58,16 @@ public enum SysMsgEnum implements MsgInterface {
 	 * 订单号错误
 	 */
 	ORDER_WRONG(10, "订单号错误"),
+	
+	
+	 
 
 	NO_HAVE_WAREHOUSE(11, "当前无可用仓库"),
 
 	WAREHOUSE_ERROR(12, "该仓库有误请重新核实"),
 
 	OUTORDER_FAIL(13, "生成出库单失败");
+	
     
 	private int code;
 
