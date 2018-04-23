@@ -9,6 +9,9 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @date:2018/4/20
  **/
 public enum UserMsgEnum implements MsgInterface{
+    /**
+     * 用户不存在
+     */
     USER_NOT_EXIET(1," 用户不存在"),
 
     USER_BUSY(2," 用户忙碌,无法删除"),

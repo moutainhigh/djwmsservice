@@ -29,6 +29,7 @@ public class WmsSaveUserBO {
     private String warehouseId;
 
     private String warehouseName;
+
     private String phone;
     /**
      * 角色类型

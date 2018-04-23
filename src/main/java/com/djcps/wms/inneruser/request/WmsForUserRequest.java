@@ -52,8 +52,8 @@ public interface WmsForUserRequest {
     /**
      * WMS条件获取用户相关信息分页
      * @author  wzy
-     * @param
-     * @return
+     * @param json
+     * @return http
      * @date  2018/4/13 14:53
      **/
     @Headers("content-type:application/json")
@@ -63,8 +63,8 @@ public interface WmsForUserRequest {
     /**
      * WMS新增用户关联信息
      * @author  wzy
-     * @param
-     * @return
+     * @param json
+     * @return http
      * @date  2018/4/16 10:11
      **/
     @Headers("content-type:application/json")
@@ -74,19 +74,31 @@ public interface WmsForUserRequest {
     /**
      * WMS新增用户关联仓库信息
      * @author  wzy
-     * @param
-     * @return
+     * @param json
+     * @return http
      * @date  2018/4/16 11:03
      **/
     @Headers("content-type:application/json")
     @POST("user/insertUserWarehouse.do")
     HTTPResponse insertUserWarehouse(@Body RequestBody json);
 
+
+    /**
+     * WMS新增用户关联仓库信息
+     * @author  wzy
+     * @param json
+     * @return http
+     * @date  2018/4/16 11:03
+     **/
+    @Headers("content-type:application/json")
+    @POST("user/insertUserWarehouseList.do")
+    HTTPResponse insertUserWarehouseList(@Body RequestBody json);
+
     /**
      *根绝角色类型编码获取角色列表
      * @author  wzy
-     * @param
-     * @return
+     * @param json
+     * @return http
      * @date  2018/4/16 15:42
      **/
     @Headers("content-type:application/json")
@@ -103,4 +115,15 @@ public interface WmsForUserRequest {
     @Headers("content-type:application/json")
     @POST("user/getUserWarehouse.do")
     HTTPResponse getUserWarehouse(@Body RequestBody json);
+
+    /**
+     * 批量获取用户关联仓库
+     * @author  wzy
+     * @param json
+     * @return  http
+     * @date  2018/4/17 11:03
+     **/
+    @Headers("content-type:application/json")
+    @POST("user/getUserWarehouseList.do")
+    HTTPResponse getUserWarehouseList(@Body RequestBody json);
 }

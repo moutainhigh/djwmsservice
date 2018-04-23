@@ -28,6 +28,28 @@ public class OrgGetUserInfoById {
     @NotBlank
     private String userId;
 
+    private String id;
+
+    private String partnerId;
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+
     public String getOperator() {
         return operator;
     }
@@ -67,6 +89,8 @@ public class OrgGetUserInfoById {
                 ", ip='" + ip + '\'' +
                 ", bussion='" + bussion + '\'' +
                 ", userId='" + userId + '\'' +
+                ", id='" + id + '\'' +
+                ", partnerId='" + partnerId + '\'' +
                 '}';
     }
 }

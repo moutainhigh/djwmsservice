@@ -20,8 +20,8 @@
         <!-- <property  name="wmsServer" value="http://192.168.2.94:8081/djwmsserver/" /> -->
       <!-- 	<property name="wmsServer" value="http://192.168.2.73:9900/djwmsserver/" /> -->
      	 <!-- <property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/>  -->
-      	<!-- <property name="wmsServer" value="http://localhost:9900/djwmsserver/"/> -->
-       <property name="wmsServer" value="http://192.168.2.76:8081/djwmsserver/"/>
+      	 <property name="wmsServer" value="http://localhost:8081/djwmsserver/"/>
+       <!--<property name="wmsServer" value="http://192.168.2.76:8081/djwmsserver/"/>-->
      	 <!-- <property name="wmsServer" value="http://192.168.2.111:8080/djwmsserver/" /> -->
      	<!-- 编号服务 -->       
         <property name="numberServer" value="http://192.168.10.200:80/djnumserver/"/>

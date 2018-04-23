@@ -197,6 +197,20 @@ public class UserServer {
     }
 
     /**
+     * wms批量新增用户关联仓库信息
+     * @author  wzy
+     * @param addUserWarehouseBOList
+     * @return http
+     * @date  2018/4/16 11:40
+     **/
+    public HttpResult  insertUserWarehouseList(List<AddUserWarehouseBO> addUserWarehouseBOList){
+        String paramJson = gson.toJson(addUserWarehouseBOList);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForUserRequest.insertUserWarehouseList(requestBody);
+        return returnResult(httpResponse);
+    }
+
+    /**
      * WMS条件获取用户列表
      * @author  wzy
      * @param pageGetUserBO
@@ -376,6 +390,29 @@ public class UserServer {
             if(result.isSuccess()){
                 String json=gson.toJson(result.getData());
                 warehouseList= JSONArray.parseArray(json,String.class);
+            }
+        }
+        return warehouseList;
+    }
+
+    /**
+     * 批量获取用户关联仓库信息
+     * @author  wzy
+     * @param getWarehouseListBOS
+     * @return /
+     * @date  2018/4/17 11:08
+     **/
+    public  List<WarehouseListPO>  getUserWarehouseList(GetWarehouseListBO getWarehouseListBOS){
+        String paramJson = gson.toJson(getWarehouseListBOS);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForUserRequest.getUserWarehouseList(requestBody);
+        List<WarehouseListPO> warehouseList=null;
+        HttpResult result=null;
+        if (httpResponse.isSuccessful()){
+            result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
+            if(result.isSuccess()){
+                String json=gson.toJson(result.getData());
+                warehouseList= JSONArray.parseArray(json,WarehouseListPO.class);
             }
         }
         return warehouseList;

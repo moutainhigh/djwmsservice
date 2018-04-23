@@ -55,8 +55,9 @@ public class UserController {
         try{
             PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
             OrgGetUserInfoById orgGetUserInfoById=gson.fromJson(json,OrgGetUserInfoById.class);
-            orgGetUserInfoById.setOperator(partnerInfoBo.getPartnerId());
+            orgGetUserInfoById.setId(orgGetUserInfoById.getUserId());
             BeanUtils.copyProperties(operatorInfoBO,orgGetUserInfoById);
+            orgGetUserInfoById.setPartnerId(partnerInfoBo.getPartnerId());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(orgGetUserInfoById,
                             new HibernateSupportedValidator<OrgGetUserInfoById>()
@@ -151,11 +152,11 @@ public class UserController {
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             PageGetUserBO pageGetUserBO = new PageGetUserBO();
-            pageGetUserBO.setPartnerId(partnerInfoBo.getPartnerId());
             if(!ObjectUtils.isEmpty(json)){
                 pageGetUserBO=gson.fromJson(json, PageGetUserBO.class);
             }
             BeanUtils.copyProperties(operatorInfoBO,pageGetUserBO);
+            pageGetUserBO.setPartnerId(partnerInfoBo.getPartnerId());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(pageGetUserBO,
                             new HibernateSupportedValidator<PageGetUserBO>()
@@ -257,7 +258,6 @@ public class UserController {
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
     }
-
 
     /**
      * 获取用户部门职位和所有部门职位职务信息

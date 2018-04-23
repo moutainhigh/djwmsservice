@@ -23,6 +23,8 @@ public interface UserService {
     /**
      * 从org获取一个用户的信息
      * @author:wzy
+     * @param orgGetUserInfo
+     * @return map
      * @date:2018/4/12
      **/
     Map<String,Object> getUser(OrgGetUserInfoById orgGetUserInfo);
@@ -66,8 +68,8 @@ public interface UserService {
     /**
      * 分页获取用户列表
      * @author  wzy
-     * @param
-     * @return 
+     * @param pageGetUserBO
+     * @return map
      * @date  2018/4/13 15:20
      **/
     Map<String,Object> pageGetUserRelevance(PageGetUserBO pageGetUserBO);
@@ -75,8 +77,8 @@ public interface UserService {
     /**
      * 保存用户信息新增/修改
      * @author  wzy
-     * @param
-     * @return
+     * @param saveUserBO
+     * @return map
      * @date  2018/4/16 9:38
      **/
     Map<String,Object> saveUser(WmsSaveUserBO saveUserBO);
@@ -115,7 +117,7 @@ public interface UserService {
      * @return map
      * @date  2018/4/17 9:58
      **/
-    Map<String,Object> getDepartAndJob(OrgGetUserInfoById OrgGetUserInfoById);
+    Map<String,Object> getDepartAndJob(OrgGetUserInfoById orgGetUserInfoById);
 
     /**
      * 获取角色列表，根据id获取或者获取全部

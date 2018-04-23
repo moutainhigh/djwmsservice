@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.model.userparam;
 
+import java.util.List;
+
 /**
  *wms用户关联信息参数
  * @author:wzy
@@ -58,6 +60,16 @@ public class UserRelevanceBO {
     private String warehouseId;
 
     private String warehouseName;
+
+    private List<String>  warehouseNameList;
+
+    public List<String> getWarehouseNameList() {
+        return warehouseNameList;
+    }
+
+    public void setWarehouseNameList(List<String> warehouseNameList) {
+        this.warehouseNameList = warehouseNameList;
+    }
 
     public String getWarehouseId() {
         return warehouseId;
@@ -161,7 +173,7 @@ public class UserRelevanceBO {
                 "userId='" + userId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", userName='" + userName + '\'' +
-                ", workStatus='" + workStatus + '\'' +
+                ", workStatus=" + workStatus +
                 ", lastLoginTime='" + lastLoginTime + '\'' +
                 ", loginCount='" + loginCount + '\'' +
                 ", roleType='" + roleType + '\'' +
@@ -170,6 +182,7 @@ public class UserRelevanceBO {
                 ", contactWay='" + contactWay + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +
                 ", warehouseName='" + warehouseName + '\'' +
+                ", warehouseNameList=" + warehouseNameList +
                 '}';
     }
 }

@@ -17,8 +17,8 @@ public interface UserRequest {
     /**
      * org根据批量用户id获取其用户基本信息(删除用户也可查询出来)
      * @author  wzy
-     * @param
-     * @return
+     * @param map
+     * @return http
      * @date  2018/4/12 11:26
      **/
     @GET("userInfoFromUserIDS.org")
@@ -27,8 +27,8 @@ public interface UserRequest {
     /**
      * org获取该用户的信息(包括角色组织用户全部信息)
      * @author  wzy
-     * @param
-     * @return
+     * @param map
+     * @return http
      * @date  2018/4/12 14:36
      **/
     @GET("useridAll.org")
@@ -37,8 +37,8 @@ public interface UserRequest {
     /**
      * org打开/禁用用户
      * @author  wzy
-     * @param
-     * @return
+     * @param map
+     * @return http
      * @date  2018/4/13 13:31
      **/
     @FormUrlEncoded
@@ -99,8 +99,8 @@ public interface UserRequest {
    /**
     * org修改保存用户信息
     * @author  wzy
-    * @param
-    * @return
+    * @param map
+    * @return http
     * @date  2018/4/16 9:46
     **/
     @FormUrlEncoded
