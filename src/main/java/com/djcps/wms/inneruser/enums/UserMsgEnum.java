@@ -4,6 +4,9 @@ import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.msg.MsgInterface;
 
 public enum UserMsgEnum implements MsgInterface{
+    /**
+     * 错误代码
+     */
     USER_NOT_EXIET(1," 用户不存在"),
 
     USER_BUSY(2," 用户忙碌,无法删除"),

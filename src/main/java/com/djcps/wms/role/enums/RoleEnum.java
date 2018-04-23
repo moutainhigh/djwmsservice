@@ -8,6 +8,9 @@ import com.djcps.wms.commons.msg.MsgInterface;
  *
  */
 public enum RoleEnum implements MsgInterface{
+    /**
+     * 错误代码
+     */
     USER_BUSY(1," 该角色的用户还在工作中,不可以进行删除操作"),
     ;
 
