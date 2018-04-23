@@ -23,7 +23,7 @@ public interface OrgRoleHttpRequest {
     /**
      * 获取角色列表接口
      *
-     * @param json
+     * @param map
      * @return
      * @author wyb
      * @create 2018/4/12

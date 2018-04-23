@@ -8,9 +8,11 @@ package com.djcps.wms.abnormal.constant;
  */
 public class AbnormalConstant {
 	
-	/**
+	/**常量类
 	 * 入库环节
+	 * ublic static final可以让访问变得很方便，而且不会被修改。一般可以放配置信息，还有一些状态码的定义。
 	 */
+	
 	public static final String ABNORMAL_LINK_ADD_STOCK = "1";
 
 	/**

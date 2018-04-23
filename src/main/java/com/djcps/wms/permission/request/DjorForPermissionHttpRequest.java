@@ -8,6 +8,7 @@ import com.djcps.wms.commons.config.ParamsConfig;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -45,24 +46,27 @@ public interface DjorForPermissionHttpRequest {
 	 * @param map
 	 * @return
 	 */
+	@FormUrlEncoded
 	@POST("addPostPerManage.org")
-	HTTPResponse insertPermission(@QueryMap Map<String,Object> map);
+	HTTPResponse insertPermission(@FieldMap Map<String,Object> map);
 	
 	/**
 	 * 修改权限包
 	 * @param map
 	 * @return
 	 */
+	@FormUrlEncoded
 	@POST("updatePostPerManage.org")
-	HTTPResponse updatePermission(@QueryMap Map<String,Object> map);
+	HTTPResponse updatePermission(@FieldMap Map<String,Object> map);
 	
 	/**
 	 * 删除权限包
 	 * @param map
 	 * @return
 	 */
+	@FormUrlEncoded
 	@POST("delPerManage.org")
-	HTTPResponse deletePermission(@QueryMap Map<String,Object> map);
+	HTTPResponse deletePermission(@FieldMap Map<String,Object> map);
 	
 	/**
 	 * 根据权限id获取用户信息
