@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 根据组合权限id和公司id，获取获取组合权限集合实体类
  * 2018年4月17日
  */
-public class GetPermissionChooseBO extends BaseOrgBO implements Serializable{
+public class GetPermissionChooseBO extends BaseOrgParamBO implements Serializable{
 
 	private static final long serialVersionUID = 3875308314077375040L;
 	/**

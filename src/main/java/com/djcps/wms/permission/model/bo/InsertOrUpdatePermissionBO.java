@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 新增/修改权限实体类
  * 2018年4月12日
  */
-public class InsertOrUpdatePermissionBO extends BaseOrgBO implements Serializable{
+public class InsertOrUpdatePermissionBO extends BaseOrgParamBO implements Serializable{
 
 	private static final long serialVersionUID = 337658715645866921L;
 	

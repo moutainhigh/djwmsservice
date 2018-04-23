@@ -1,5 +1,7 @@
 package com.djcps.wms.permission.model.bo;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * @author zhq
  * 权限包实体类
@@ -9,22 +11,27 @@ public class PermissionBO {
 	/**
 	 * 操作人
 	 */
+	@NotBlank
 	private String operator;
 	/**
 	 * ip
 	 */
+	@NotBlank
 	private String ip;
 	/**
 	 * 业务模块
 	 */
+	@NotBlank
 	private String bussion;
 	/**
 	 * 公司id
 	 */
+	@NotBlank
 	private String companyId;
 	/**
 	 * 当前页
 	 */
+	@NotBlank
 	private String page;
 	/**
 	 * 关键字
@@ -33,6 +40,7 @@ public class PermissionBO {
 	/**
 	 * 分页大小
 	 */
+	@NotBlank
 	private String pageSize;
 	public String getOperator() {
 		return operator;

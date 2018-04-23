@@ -18,6 +18,7 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.permission.constants.ParamConstants;
 import com.djcps.wms.permission.model.bo.BaseOrgBO;
+import com.djcps.wms.permission.model.bo.DeletePerParamBO;
 import com.djcps.wms.permission.model.bo.DeletePermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
@@ -27,6 +28,7 @@ import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
 import com.djcps.wms.permission.model.bo.PermissionBO;
 import com.djcps.wms.permission.model.bo.PermissionChooseBO;
 import com.djcps.wms.permission.model.bo.UpdatePermissionBO;
+import com.djcps.wms.permission.model.bo.WmsPermissionBO;
 import com.djcps.wms.permission.model.po.GetOnePermissionPO;
 import com.djcps.wms.permission.model.po.GetPermissionPackagePO;
 import com.djcps.wms.permission.model.po.GetWmsPerPO;
@@ -59,12 +61,13 @@ public class PermissionImpl implements PermissionService{
 	 */
 	@Override
 	public Map<String, Object> getPermissionList(PermissionBO param) {
-			/*if(ObjectUtils.isEmpty(param.getKeyWord())) {
+			if(ObjectUtils.isEmpty(param.getKeyWord())) {
 				param.setKeyWord("");
-			}*/
+			}
 			GetPermissionBO getPermissonBO=new GetPermissionBO();
 			BeanUtils.copyProperties(param, getPermissonBO);
 			getPermissonBO.setCompanyID(param.getCompanyId());
+			getPermissonBO.setBusiness((param.getBussion()));
 			//得到请求的数据
 			OtherHttpResult result =permissionServer.getPermissionList(getPermissonBO);
 			String data = JSONObject.toJSONString(result.getData());
@@ -72,19 +75,24 @@ public class PermissionImpl implements PermissionService{
 			Integer count =Integer.parseInt(countData);
 			ArrayList<GetPermissionPackagePO> listUser = gson.fromJson(data,new TypeToken<List<GetPermissionPackagePO>>() {}.getType());
 			//规范返回字段
-			List listUserChange=listUser.stream().map(x->new ChangePerPackageVO() {{
-					setBussion(x.getPbussion());
-					setDescribe(x.getPdes());
-					setId(x.getId());
-					setPerList(x.getPerlist());
-					setTitle(x.getPtitle());
-			}}).collect(Collectors.toList());
-			//组织返回数据
-			BaseListPO info=new BaseListPO() {{
-				setList(listUserChange);
-				setTotal(count);
-			}};
-			return MsgTemplate.successMsg(info);
+			if(!ObjectUtils.isEmpty(listUser)) {
+				List listUserChange=listUser.stream().map(x->new ChangePerPackageVO() {{
+						setBussion(x.getPbussion());
+						setDescribe(x.getPdes());
+						setId(x.getId());
+						setPerList(x.getPerlist());
+						setTitle(x.getPtitle());
+				}}).collect(Collectors.toList());
+				//组织返回数据
+				BaseListPO info=new BaseListPO() {{
+					setList(listUserChange);
+					setTotal(count);
+				}};
+				return MsgTemplate.successMsg(info);
+			}else {
+				return MsgTemplate.successMsg(null);
+			}
+			
 	}
 	
 
@@ -94,12 +102,16 @@ public class PermissionImpl implements PermissionService{
 	 */
 	@Override
 	public Map<String, Object> getWmsPermission(GetWmsPermissionBO param) {
+		WmsPermissionBO wmsPermissionBO=new WmsPermissionBO();
+		BeanUtils.copyProperties(param, wmsPermissionBO);
+		wmsPermissionBO.setBusiness(param.getBussion());
 		//得到wms权限数据
-		HttpResult result =permissionServer.getWmsPermission(param);
+		HttpResult result =permissionServer.getWmsPermission(wmsPermissionBO);
 		String data = JSONObject.toJSONString(result.getData());
 		ArrayList<GetWmsPerPO> listUser = gson.fromJson(data,new TypeToken<List<GetWmsPerPO>>() {}.getType());
 		//规范返回字段
-		List listUserChange=listUser.stream().map(x->new ChangeWmsPerVO() {{
+		if(!ObjectUtils.isEmpty(listUser)) {
+			List listUserChange=listUser.stream().map(x->new ChangeWmsPerVO() {{
 				setId(x.getId());
 				setTitle(x.getPtitle());
 				setLayer(x.getPolayer());
@@ -110,7 +122,11 @@ public class PermissionImpl implements PermissionService{
 				setIcon(x.getIcon());
 				setInterfaceInfo(x.getPinterface());
 		}}).collect(Collectors.toList());
-		return MsgTemplate.successMsg(listUserChange);
+			return MsgTemplate.successMsg(listUserChange);
+		}else {
+			return MsgTemplate.successMsg(null);
+		}
+		
 	}
 
 	/**
@@ -124,6 +140,7 @@ public class PermissionImpl implements PermissionService{
 		}
 		InsertOrUpdatePermissionBO insertOrUpdate = new InsertOrUpdatePermissionBO();
 		BeanUtils.copyProperties(param, insertOrUpdate);
+		insertOrUpdate.setBusiness(param.getBussion());
 		insertOrUpdate.setCompanyID(param.getCompanyId());
 		insertOrUpdate.setPdes(param.getDescribe());
 		insertOrUpdate.setPtitle(param.getTitle());
@@ -131,7 +148,8 @@ public class PermissionImpl implements PermissionService{
 		insertOrUpdate.setUserid(partnerInfoBo.getOperatorId());
 		insertOrUpdate.setPbussion(ParamConstants.BUSSION_ID);
 		HttpResult result =permissionServer.insertPermission(insertOrUpdate);
-		return MsgTemplate.customMsg(result);
+		String data = JSONObject.toJSONString(result.getData());
+		return MsgTemplate.successMsg(data);
 	}
 
 	/**
@@ -140,7 +158,7 @@ public class PermissionImpl implements PermissionService{
 	 * 如果有用户关联权限包，则不能删除
 	 */
 	@Override
-	public Map<String, Object> deletePermission(DeletePermissionBO param) {
+	public Map<String, Object> deletePermission(DeletePerParamBO param) {
 		//组织参数,获取关联了该权限的用户
 		GetUserByPermissionIdBO getUser=new GetUserByPermissionIdBO();
 		BeanUtils.copyProperties(param, getUser);
@@ -150,7 +168,8 @@ public class PermissionImpl implements PermissionService{
 			return MsgTemplate.failureMsg("有用户存在关联，删除失败");
 		}
 		HttpResult result =permissionServer.deletePermission(param);
-		return MsgTemplate.customMsg(result);
+		String data = JSONObject.toJSONString(result.getData());
+		return MsgTemplate.successMsg(data);
 	}
 		/*//如果有用户关联该权限，则进行后续判断
 		if(!ObjectUtils.isEmpty(result_user.getData())){
@@ -188,6 +207,7 @@ public class PermissionImpl implements PermissionService{
 		GetPermissionChooseBO getPerChoose=new GetPermissionChooseBO();
 		BeanUtils.copyProperties(param, getPerChoose);
 		getPerChoose.setCompanyID(param.getCompanyId());
+		getPerChoose.setBusiness(param.getBussion());
 		//得到查询权限信息
 		HttpResult result =permissionServer.getPerChoose(getPerChoose);
 		String data = JSONObject.toJSONString(result.getData());
@@ -218,12 +238,14 @@ public class PermissionImpl implements PermissionService{
 		InsertOrUpdatePermissionBO insertOrUpdate = new InsertOrUpdatePermissionBO();
 		BeanUtils.copyProperties(param, insertOrUpdate);
 		insertOrUpdate.setCompanyID(param.getCompanyId());
+		insertOrUpdate.setBusiness(param.getBussion());
 		insertOrUpdate.setPdes(param.getDescribe());
 		insertOrUpdate.setPtitle(param.getTitle());
 		insertOrUpdate.setUserid(partnerInfoBO.getOperatorId());
 		insertOrUpdate.setPbussion(ParamConstants.BUSSION_ID);
 		HttpResult result =permissionServer.updatePermission(insertOrUpdate);
-		return MsgTemplate.customMsg(result);
+		String data = JSONObject.toJSONString(result.getData());
+		return MsgTemplate.successMsg(data);
 	}
 
 	

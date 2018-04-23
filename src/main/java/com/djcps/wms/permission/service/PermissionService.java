@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.permission.model.bo.BaseOrgBO;
+import com.djcps.wms.permission.model.bo.DeletePerParamBO;
 import com.djcps.wms.permission.model.bo.DeletePermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
@@ -48,7 +49,7 @@ public interface PermissionService {
 	 * @param param
 	 * @return Map
 	 */
-	Map<String, Object> deletePermission(DeletePermissionBO param);
+	Map<String, Object> deletePermission(DeletePerParamBO param);
 	
 	/**
 	 * 根据组合权限id和公司id，获取获取组合权限集合

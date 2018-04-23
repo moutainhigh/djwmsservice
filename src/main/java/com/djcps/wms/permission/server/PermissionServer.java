@@ -14,11 +14,13 @@ import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
 import com.djcps.wms.outorder.server.OutOrderServer;
 import com.djcps.wms.permission.model.bo.BaseOrgBO;
+import com.djcps.wms.permission.model.bo.DeletePerParamBO;
 import com.djcps.wms.permission.model.bo.DeletePermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
 import com.djcps.wms.permission.model.bo.GetUserByPermissionIdBO;
 import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
+import com.djcps.wms.permission.model.bo.WmsPermissionBO;
 import com.djcps.wms.permission.request.DjorForPermissionHttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -57,7 +59,7 @@ public class PermissionServer {
 	 * @param param
 	 * @return
 	 */
-	public HttpResult getWmsPermission(BaseOrgBO param) {
+	public HttpResult getWmsPermission(WmsPermissionBO param) {
 		String json = gson.toJson(param);
 		LOGGER.debug("---http请求参数转化成json---:"+json);
 		Map<String,Object> map=gson.fromJson(json,Map.class);		
@@ -97,7 +99,7 @@ public class PermissionServer {
 	 * @param param
 	 * @return
 	 */
-	public HttpResult deletePermission(DeletePermissionBO param) {
+	public HttpResult deletePermission(DeletePerParamBO param) {
 		String json = gson.toJson(param);
 		LOGGER.debug("---http请求参数转化成json---:"+json);
 		Map<String,Object> map=gson.fromJson(json,Map.class);

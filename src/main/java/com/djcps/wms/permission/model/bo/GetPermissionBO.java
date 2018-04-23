@@ -21,7 +21,7 @@ public class GetPermissionBO implements Serializable{
 	/**
 	 * 业务模块
 	 */
-	private String bussion;
+	private String business;
 	/**
 	 * 公司id
 	 */
@@ -50,11 +50,12 @@ public class GetPermissionBO implements Serializable{
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-	public String getBussion() {
-		return bussion;
+	
+	public String getBusiness() {
+		return business;
 	}
-	public void setBussion(String bussion) {
-		this.bussion = bussion;
+	public void setBusiness(String business) {
+		this.business = business;
 	}
 	public String getCompanyID() {
 		return companyID;
@@ -83,7 +84,8 @@ public class GetPermissionBO implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "GetPermissionBO [operator=" + operator + ", ip=" + ip + ", bussion=" + bussion + ", companyID="
+		return "GetPermissionBO [operator=" + operator + ", ip=" + ip + ", business=" + business + ", companyID="
 				+ companyID + ", page=" + page + ", keyWord=" + keyWord + ", pageSize=" + pageSize + "]";
 	}
+	
 }
