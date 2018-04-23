@@ -182,6 +182,7 @@ public class UserController {
             wmsSaveUserBO.setPartnerId(partnerInfoBo.getPartnerId());
             BeanUtils.copyProperties(operatorInfoBO,wmsSaveUserBO);
             wmsSaveUserBO.setOperator(partnerInfoBo.getOperatorId());
+            wmsSaveUserBO.setOnlineUserId(partnerInfoBo.getOperatorId());
             return userService.saveUser(wmsSaveUserBO);
         } catch (Exception e) {
             LOGGER.error("保存信息异常：{} ", e.getMessage());

@@ -323,23 +323,24 @@ public class UserServer {
      * @return saveUserBO
      * @date  2018/4/16 9:58
      **/
-    public SaveUserBO  addPostUserInfo(SaveUserBO saveUserBO){
+    public HttpResult  addPostUserInfo(SaveUserBO saveUserBO){
         String json = gson.toJson(saveUserBO);
         Map<String,Object> map=gson.fromJson(json,Map.class);
         HTTPResponse httpResponse = userRequest.addPostUserInfo(map);
-        HttpResult result = null;
-        SaveUserBO saveUserBO1=null;
-        List<SaveUserBO> list=null;
-        if (httpResponse.isSuccessful()){
-            result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
-            if(!ObjectUtils.isEmpty(result)){
-                String data = gson.toJson(result.getData());
-                saveUserBO1=new SaveUserBO();
-                list= JSONArray.parseArray(data,SaveUserBO.class);
-                saveUserBO1=list.get(0);
-            }
-        }
-        return saveUserBO1;
+        return returnResult(httpResponse);
+       // HttpResult result = null;
+//        SaveUserBO saveUserBO1=null;
+//        List<SaveUserBO> list=null;
+//        if (httpResponse.isSuccessful()){
+          //  result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
+//            if(!ObjectUtils.isEmpty(result)){
+//                String data = gson.toJson(result.getData());
+//                saveUserBO1=new SaveUserBO();
+//                list= JSONArray.parseArray(data,SaveUserBO.class);
+//                saveUserBO1=list.get(0);
+//            }
+//        }
+//        return saveUserBO1;
     }
 
     /**
