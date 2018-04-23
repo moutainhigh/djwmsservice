@@ -1,5 +1,10 @@
 package com.djcps.wms.permission.model.bo;
 
+/**
+ * @author zhq
+ * 权限包实体类
+ * 2018年4月23日
+ */
 public class PermissionBO {
 	/**
 	 * 操作人
