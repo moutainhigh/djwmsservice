@@ -25,7 +25,7 @@ public enum WorkRecordEnums implements  MsgInterface {
 	 private String msg;
 	
 	 WorkRecordEnums(int code,String msg) {
-		 this.code = AppConstant.WMS_MSG_ENUM_PREFIX+AppConstant.WMS_MODULE_OUTORDER_ENUM_PREFIX+code;
+		 this.code = AppConstant.WMS_MSG_ENUM_PREFIX+AppConstant.WMS_OUTORDER_ENUM_PREFIX+code;
 	     this.msg = msg;
 	}
 	

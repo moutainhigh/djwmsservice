@@ -22,7 +22,7 @@ public enum LoadingTaskEnum implements MsgInterface {
 	 */
 	WAYBILLID_ERROR(4,"运单号错误,获取不到信息"),
 	/**
-	 * 
+	 * 根据订单id获取订单详情失败
 	 */
 	GET_ORDERDETAIL_FAIL(5,"获取订单详情失败"),
 	/**
@@ -41,6 +41,8 @@ public enum LoadingTaskEnum implements MsgInterface {
         this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_LOADINGTASK_ENUM_PREFIX + code;
         this.msg = msg;
     }
+    
+
     @Override
     public int getCode() {
         return code;
@@ -50,9 +52,9 @@ public enum LoadingTaskEnum implements MsgInterface {
         this.msg = msg;
     }
 
-    @Override
-    public String getMsg() {
-        return msg;
-    }
+	@Override
+	public String getMsg() {
+		return msg;
+	}
 
 }
