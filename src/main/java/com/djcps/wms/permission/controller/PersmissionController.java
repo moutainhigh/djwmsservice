@@ -158,7 +158,7 @@ public class PersmissionController {
             }
             DeletePerParamBO deletePerParam = new DeletePerParamBO();
             BeanUtils.copyProperties(deleteBO, deletePerParam);
-            deletePerParam.setBusiness(deleteBO.getBussion());
+            deletePerParam.setBusiness(deleteBO.getBusiness());
             return permissionService.deletePermission(deletePerParam);
         } catch (Exception e) {
             e.printStackTrace();
