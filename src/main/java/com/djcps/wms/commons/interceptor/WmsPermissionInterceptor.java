@@ -4,9 +4,7 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.constant.RedisPrefixConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
@@ -15,7 +13,6 @@ import com.djcps.wms.permission.constants.PermissionConstants;
 import com.djcps.wms.permission.model.bo.UserPermissionBO;
 import com.djcps.wms.permission.model.vo.UserPermissionVO;
 import com.djcps.wms.permission.service.PermissionService;
-import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -24,7 +21,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -80,10 +76,6 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
                     responseMsg(SysMsgEnum.NOT_PERMISSION, response, appLogin);
                     return false;
                 }
-            } else {
-                //用户不存在也代表未登入
-                responseMsg(SysMsgEnum.NOT_LOGIN, response, appLogin);
-                return false;
             }
         }
         return true;

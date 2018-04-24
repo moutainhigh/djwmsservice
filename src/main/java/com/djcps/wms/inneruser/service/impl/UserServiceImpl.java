@@ -239,7 +239,12 @@ public class UserServiceImpl implements UserService {
                                                 });
                                             }
                                         }
-                                        userRelevanceBO.setWarehouseName(warehouseNameStr.toString());
+                                        String warehouseNameSub=null;
+                                        if(!ObjectUtils.isEmpty(warehouseNameSub)){
+                                            warehouseNameSub=warehouseNameStr.toString();
+                                            warehouseNameSub=warehouseNameSub.substring(0,warehouseNameSub.length()-1);
+                                        }
+                                        userRelevanceBO.setWarehouseName(warehouseNameSub);
 
                                         List<GetRoleTypePO> getRoleList=new ArrayList<>();
                                         List<String> roletypeList=new ArrayList<>();
@@ -263,14 +268,17 @@ public class UserServiceImpl implements UserService {
                                         List<GetRoleTypePO> getRoleTypePOList = gson.fromJson(getRoleListStr, new TypeToken<ArrayList<GetRoleTypePO>>(){}.getType());
                                         if (!ObjectUtils.isEmpty(getRoleTypePOList)){
                                             getRoleTypePOList.stream().forEach(getRoleTypePO -> {
-                                                roleTypeName.append(getRoleTypePO.getRoleName()+",");
+                                                roleTypeName.append(getRoleTypePO.getRoleTypeName()+",");
                                                 roleId.append(getRoleTypePO.getRoleId()+",");
                                             });
-//                                            for (GetRoleTypePO getRoleTypePO:getRoleList){
-//
-//                                            }
                                         }
-                                        userRelevanceBO.setRoleType(roleTypeName.toString());
+                                        //去掉最后一个逗号
+                                        String roleTypesub=null;
+                                        if(!ObjectUtils.isEmpty(roleTypeName)){
+                                            roleTypesub=roleTypeName.toString();
+                                            roleTypesub=roleTypesub.substring(0,roleTypesub.length()-1);
+                                        }
+                                        userRelevanceBO.setRoleType(roleTypesub);
                                     }
                                 });
                             });
@@ -331,6 +339,7 @@ public class UserServiceImpl implements UserService {
                     setRoleids(x.getRoleIds());
                     setOnlineUserId(x.getOnlineUserId());
                     setUhome_address(x.getHomeAddress());
+                    setUregistered_residence(x.getRegisteredResidence());
                 }
             }).collect(Collectors.toList());
             SaveUserBO saveUserBOOne=(SaveUserBO) saveUserList.get(0);
