@@ -126,19 +126,19 @@ public class DeliveryServer {
         return returnResult(httpResponse);
     }
     /**
-     *  设置提货单的确认状态为未确认 
+     *  设置提货单的确认状态为未确认
      *
      * @param param
      * @return
      * @autuor wyb
-     * @since 2018/3/13  
+     * @since 2018/3/13
      */
     public HttpResult updateDeliveryEffect(UpdateDeliveryEffectBO param) {
         String paramJson = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForDeliveryHttpRequest.updateDeliveryEffect(requestBody);
         return returnResult(httpResponse);
-        
+
     }
     /**
      * 公共返回

@@ -38,7 +38,7 @@ public class DeliveryController {
     @Autowired
     private DeliveryService deliveryService;
 
-    /**
+    /**none
      * 获取提货单列表
      * 
      * @autuor Chengw
@@ -67,7 +67,7 @@ public class DeliveryController {
         }
     }
 
-    /**
+    /**yes
      * 获取提货单订单列表
      * 
      * @autuor Chengw
@@ -125,7 +125,7 @@ public class DeliveryController {
         }
     }
 
-    /**
+    /**yes
      * 完成单条提货订单
      * 
      * @autuor Chengw
@@ -159,7 +159,7 @@ public class DeliveryController {
         }
     }
 
-    /**
+    /**yes
      * 获取提货信息以及订单信息 -PDA
      * 
      * @autuor Chengw
@@ -193,7 +193,7 @@ public class DeliveryController {
 
     /**
      * 获取订单信息 -PDA
-     * 
+     * yes
      * @autuor Chengw
      * @since 2018/2/1 14:15
      * @param json
@@ -226,7 +226,7 @@ public class DeliveryController {
 
     /**
      * 获取订单信息
-     * 
+     * yes
      * @param json
      * @return
      */
@@ -253,7 +253,7 @@ public class DeliveryController {
         }
     }
 
-    /**
+    /**yes
      * 设置提货单的确认状态为未确认
      * 
      * @param json

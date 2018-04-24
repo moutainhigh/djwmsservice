@@ -19,6 +19,7 @@
         <!-- wms服务端 -->    
         <!-- <property  name="wmsServer" value="http://192.168.2.94:8081/djwmsserver/" /> -->
       <!-- 	<property name="wmsServer" value="http://192.168.2.73:9900/djwmsserver/" /> -->
+     	 
      	 <!-- <property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/>  -->
       	<property name="wmsServer" value="http://127.0.0.1:8080/djwmsserver/"/>
        <!--  <property name="wmsServer" value="http://192.168.2.76:8081/djwmsserver/"/> -->
