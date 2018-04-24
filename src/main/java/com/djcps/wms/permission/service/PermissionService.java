@@ -3,13 +3,8 @@ package com.djcps.wms.permission.service;
 import java.util.Map;
 
 import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.permission.model.bo.BaseOrgBO;
 import com.djcps.wms.permission.model.bo.DeletePerParamBO;
-import com.djcps.wms.permission.model.bo.DeletePermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
 import com.djcps.wms.permission.model.bo.GetWmsPermissionBO;
-import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
 import com.djcps.wms.permission.model.bo.PermissionBO;
 import com.djcps.wms.permission.model.bo.PermissionChooseBO;
 import com.djcps.wms.permission.model.bo.UpdatePermissionBO;

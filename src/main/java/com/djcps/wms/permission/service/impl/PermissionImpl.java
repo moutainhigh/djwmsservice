@@ -17,9 +17,7 @@ import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.permission.constants.ParamConstants;
-import com.djcps.wms.permission.model.bo.BaseOrgBO;
 import com.djcps.wms.permission.model.bo.DeletePerParamBO;
-import com.djcps.wms.permission.model.bo.DeletePermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionBO;
 import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
 import com.djcps.wms.permission.model.bo.GetUserByPermissionIdBO;
@@ -39,9 +37,6 @@ import com.djcps.wms.permission.server.PermissionServer;
 import com.djcps.wms.permission.service.PermissionService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.rabbitmq.http.client.domain.UserInfo;
-
-import retrofit2.http.QueryMap;
 
 /**
  * @author zhq
@@ -72,7 +67,7 @@ public class PermissionImpl implements PermissionService{
 			OtherHttpResult result =permissionServer.getPermissionList(getPermissonBO);
 			String data = JSONObject.toJSONString(result.getData());
 			String countData = JSONObject.toJSONString(result.getTotal());
-			Integer count =Integer.parseInt(countData);
+			Integer	count =Integer.parseInt(countData);
 			ArrayList<GetPermissionPackagePO> listUser = gson.fromJson(data,new TypeToken<List<GetPermissionPackagePO>>() {}.getType());
 			//规范返回字段
 			if(!ObjectUtils.isEmpty(listUser)) {
