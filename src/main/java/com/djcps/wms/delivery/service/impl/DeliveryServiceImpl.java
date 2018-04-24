@@ -19,7 +19,14 @@ import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
 import com.djcps.wms.order.server.OrderServer;
+import com.mysql.fabric.xmlrpc.base.Array;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -80,7 +87,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 BaseListPO baseListPO = gson.fromJson(data, BaseListPO.class);
                 List<DeliveryOrderPO> deliveryOrderList =
                         JSONArray.parseArray(JSONObject.toJSONString(baseListPO.getList()), DeliveryOrderPO.class);
-                deliveryOrderList = getOrder(deliveryOrderList);
+                deliveryOrderList = getOrder(deliveryOrderList,param.getPartnerArea());
                 baseListPO.setList(deliveryOrderList);
                 return MsgTemplate.successMsg(baseListPO);
             } else {
@@ -119,12 +126,26 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public Map<String, Object> completeOrder(SaveDeliveryBO param) {
         HttpResult result = deliveryServer.completeOrder(param);
-        OrderIdBO orderIdBO = new OrderIdBO();
         if (result.isSuccess()) {
-            orderIdBO.setOrderId(param.getOrderId());
-            orderIdBO.setPartnerId(param.getPartnerId());
-            orderIdBO.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
-            orderServer.updateOrderStatus(orderIdBO);
+        	List<String> order = new ArrayList<>();
+        	order.add(param.getOrderId());
+        	
+        	List<OrderIdBO> orderIdBOList = new ArrayList<>();
+        	OrderIdBO orderIdBO = new OrderIdBO();
+        	orderIdBO.setOrderId(param.getOrderId());
+        	orderIdBO.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+        	orderIdBOList.add(orderIdBO);
+        	
+            result = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
+            if(!result.isSuccess()){
+            	LOGGER.error("完成单条提货订单的提货,修改订单状态失败!!!");
+            }
+            List<String> orderId = new ArrayList<>();
+			orderId.add(param.getOrderId());
+			Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea());
+			if(compareOrderStatus==false){
+				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+			}
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
@@ -136,7 +157,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param orderList
      * @return
      */
-    private List<DeliveryOrderPO> getOrder(List<DeliveryOrderPO> orderList) {
+    private List<DeliveryOrderPO> getOrder(List<DeliveryOrderPO> orderList,String partnerArea) {
         List<String> orderIdList = new ArrayList<>();
         orderList.stream().collect(
                 Collectors.groupingBy(DeliveryOrderPO::getOrderId, Collectors.toList())
@@ -145,23 +166,15 @@ public class DeliveryServiceImpl implements DeliveryService {
         });
         OrderIdsBO orderIds = new OrderIdsBO();
         orderIds.setChildOrderIds(orderIdList);
+        orderIds.setPartnerArea(partnerArea);
         List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
         if (!childOrderList.isEmpty()) {
             orderList.stream().forEach(order -> {
                 ChildOrderBO childOrderBO =  childOrderList.stream().filter(
-                        b -> b.getFchildorderid().equals(order.getOrderId())).findFirst().orElse(null);
+                        b -> b.getChildOrderId().equals(order.getOrderId())).findFirst().orElse(null);
                 if(!ObjectUtils.isEmpty(childOrderBO)) {
                     //设置账户名称  母账户名称或者子账户名称
-                    String custommerName = childOrderBO.getFcusername();
-                    custommerName = ObjectUtils.isEmpty(custommerName)?childOrderBO.getFpusername():custommerName;
-                    order.setCustomerName(custommerName);
-                    order.setBoxHeight(StringUtils.toString(childOrderBO.getFboxheight()));
-                    order.setBoxWidth(StringUtils.toString(childOrderBO.getFboxwidth()));
-                    order.setBoxLength(StringUtils.toString(childOrderBO.getFboxlength()));
-                    order.setFluteType(childOrderBO.getFflutetype());
-                    order.setMaterialName(childOrderBO.getFmaterialname());
-                    order.setMaterialLength(StringUtils.toString(childOrderBO.getFmateriallength()));
-                    order.setMaterialWidth(StringUtils.toString(childOrderBO.getFmaterialwidth()));
+                    BeanUtils.copyProperties(childOrderBO, order);
                 }
             });
         }
@@ -182,7 +195,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         HttpResult result = deliveryServer.listOrderForPDA(param);
         if (!ObjectUtils.isEmpty(result)) {
             if (result.isSuccess()) {
-                List<DeliveryOrderPO> orderList = listOrder(param);
+                List<DeliveryOrderPO> orderList = listOrder(param,param.getPartnerArea());
                 if (orderList.isEmpty()) {
                     MsgTemplate.failureMsg(DeliveryMsgEnum.ORDER_NOT_EXIT);
                 }
@@ -209,7 +222,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
                 DeliveryPO deliveryPO = gson.fromJson(data, DeliveryPO.class);
-                List<DeliveryOrderPO> orderList = listOrder(param);
+                List<DeliveryOrderPO> orderList = listOrder(param,param.getPartnerArea());
                 if (orderList.isEmpty()) {
                     MsgTemplate.failureMsg(DeliveryMsgEnum.ORDER_NOT_EXIT);
                 }
@@ -228,13 +241,13 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param param
      * @return
      */
-    private List<DeliveryOrderPO> listOrder(DeliveryOrderBO param) {
+    private List<DeliveryOrderPO> listOrder(DeliveryOrderBO param,String partnerArea) {
         HttpResult result = deliveryServer.listOrderForPDA(param);
         if (!ObjectUtils.isEmpty(result)) {
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
                 List<DeliveryOrderPO> orderList = JSONArray.parseArray(data, DeliveryOrderPO.class);
-                return getOrder(orderList);
+                return getOrder(orderList,partnerArea);
             }
         }
         return null;
@@ -256,7 +269,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
                 DeliveryOrderDetailPO deliveryOrderDetailPO = gson.fromJson(data, DeliveryOrderDetailPO.class);
-                return MsgTemplate.successMsg(getOrderDetail(deliveryOrderDetailPO));
+                return MsgTemplate.successMsg(getOrderDetail(deliveryOrderDetailPO,param.getPartnerArea()));
             }
             return MsgTemplate.customMsg(result);
         }
@@ -269,23 +282,37 @@ public class DeliveryServiceImpl implements DeliveryService {
      * @param deliveryOrderDetailPO
      * @return
      */
-    private DeliveryOrderDetailPO getOrderDetail(DeliveryOrderDetailPO deliveryOrderDetailPO) {
+    private DeliveryOrderDetailPO getOrderDetail(DeliveryOrderDetailPO deliveryOrderDetailPO,String partnerArea) {
         OrderIdsBO orderIds = new OrderIdsBO();
         orderIds.setChildOrderIds(Arrays.asList(deliveryOrderDetailPO.getOrderId()));
-        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
-        if (!childOrderList.isEmpty()) {
-            ChildOrderBO childOrderBO = childOrderList.stream()
-                    .filter(b -> b.getFchildorderid().equals(deliveryOrderDetailPO.getOrderId()))
+        orderIds.setPartnerArea(partnerArea);
+        BatchOrderDetailListPO batchOrderDetailList = orderServer.getOrderOrSplitOrder(orderIds);
+        List<WarehouseOrderDetailPO> orderList = batchOrderDetailList.getOrderList();
+        if(!ObjectUtils.isEmpty(orderList)){
+        	List<WarehouseOrderDetailPO> joinOrderParamInfo =orderServer.joinOrderParamInfo(orderList);
+        	List<ChildOrderBO> childOrderBOList = new ArrayList<>();
+        	ChildOrderBO child = new ChildOrderBO();
+			BeanUtils.copyProperties(joinOrderParamInfo.get(0), child);
+			childOrderBOList.add(child);
+        	ChildOrderBO childOrderBO = childOrderBOList.stream()
+                    .filter(b -> b.getChildOrderId().equals(deliveryOrderDetailPO.getOrderId()))
                     .findFirst().orElse(null);
             if(!ObjectUtils.isEmpty(childOrderBO)) {
-                deliveryOrderDetailPO.setMaterialName(childOrderBO.getFmaterialname());
-                deliveryOrderDetailPO.setMaterialLength(StringUtils.toString(childOrderBO.getFmateriallength()));
-                deliveryOrderDetailPO.setMaterialWidth(StringUtils.toString(childOrderBO.getFmaterialwidth()));
-                deliveryOrderDetailPO.setBoxHeight(StringUtils.toString(childOrderBO.getFboxheight()));
-                deliveryOrderDetailPO.setBoxWidth(StringUtils.toString(childOrderBO.getFboxwidth()));
-                deliveryOrderDetailPO.setBoxLength(StringUtils.toString(childOrderBO.getFboxlength()));
-                deliveryOrderDetailPO.setFluteType(childOrderBO.getFflutetype());
+                BeanUtils.copyProperties(childOrderBO, deliveryOrderDetailPO);
             }
+        }else{
+        	List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailList.getSplitOrderList();
+        	List<WarehouseOrderDetailPO> joinOrderParamInfo =orderServer.joinOrderParamInfo(splitOrderList);
+        	List<ChildOrderBO> childOrderBOList = new ArrayList<>();
+        	ChildOrderBO child = new ChildOrderBO();
+        	BeanUtils.copyProperties(joinOrderParamInfo.get(0), child);
+        	childOrderBOList.add(child);
+        	ChildOrderBO childOrderBO = childOrderBOList.stream()
+        			.filter(b -> b.getChildOrderId().equals(deliveryOrderDetailPO.getOrderId()))
+        			.findFirst().orElse(null);
+        	if(!ObjectUtils.isEmpty(childOrderBO)) {
+            	BeanUtils.copyProperties(childOrderBO, deliveryOrderDetailPO);
+        	}
         }
         return deliveryOrderDetailPO;
     }
@@ -320,14 +347,27 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     @Override
     public Map<String, Object> updateDeliveryEffect(UpdateDeliveryEffectBO param) {
-        OrderIdBO orderIdBO = new OrderIdBO();
         HttpResult result = deliveryServer.updateDeliveryEffect(param);
         //更新订单状态为已入库
         if(!ObjectUtils.isEmpty(param.getOrderIds())){
-            orderIdBO.setOrderId(param.getOrderIds().get(0));
-            orderIdBO.setPartnerId(param.getPartnerId());
-            orderIdBO.setStatus(DeliveryConstant.REDUNDANTSTATUS_22);
-            orderServer.updateOrderStatus(orderIdBO);
+        	List<OrderIdBO> orderIdBOList = new ArrayList<>();
+        	List<String> orderIds = param.getOrderIds();
+        	for (String string : orderIds) {
+        		OrderIdBO orderIdBO = new OrderIdBO();
+            	orderIdBO.setOrderId(string);
+            	orderIdBO.setStatus(DeliveryConstant.REDUNDANTSTATUS_22);
+            	orderIdBOList.add(orderIdBO);
+			}
+        	
+            result = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
+            if(!result.isSuccess()){
+            	LOGGER.error("完成单条提货订单的提货,修改订单状态失败!!!");
+            }
+			Boolean compareOrderStatus = orderServer.compareOrderStatus(param.getOrderIds(),param.getPartnerArea());
+			if(compareOrderStatus==false){
+				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+			}
+            return MsgTemplate.customMsg(result);
         }
         
         return MsgTemplate.customMsg(result);

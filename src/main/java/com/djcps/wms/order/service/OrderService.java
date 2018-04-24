@@ -6,6 +6,11 @@ import java.util.Map;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderParamBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
+import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
+import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
+import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 
 /**
@@ -45,12 +50,21 @@ public interface OrderService {
 	List<WarehouseOrderDetailPO> getStockInfo(SelectAreaByOrderIdBO param);
 	
 	/**
-	 * 参数拼接
-	 * @param source
-	 * @param target
+	 * 获取线上纸板订单
+	 * @param param
 	 * @return
 	 * @author:zdx
-	 * @date:2018年1月8日
+	 * @date:2018年4月12日
 	 */
-	WarehouseOrderDetailPO getOrderDetail(WarehouseOrderDetailPO source,WarehouseOrderDetailPO target);
+	Map<String, Object> getOnlinePaperboardList(QueryObjectBO param);
+	
+	/**
+	 * 线上纸板订单根据订单号获取订单详情
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年4月23日
+	 */
+	Map<String, Object> getOnlinePaperboardByOrderId(BatchOrderIdListBO param);
+
 }

@@ -9,6 +9,16 @@ import org.hibernate.validator.constraints.NotBlank;
 public class OutOrderBO {
 	@NotBlank
 	private String outOrderId;
+	
+	private String partnerArea;
+
+	public String getPartnerArea() {
+		return partnerArea;
+	}
+
+	public void setPartnerArea(String partnerArea) {
+		this.partnerArea = partnerArea;
+	}
 
 	public String getOutOrderId() {
 		return outOrderId;
@@ -20,7 +30,7 @@ public class OutOrderBO {
 
 	@Override
 	public String toString() {
-		return "OutOrderBO [outOrderId=" + outOrderId + "]";
+		return "OutOrderBO [outOrderId=" + outOrderId + ", partnerArea=" + partnerArea + "]";
 	}
 	
 }

@@ -4,7 +4,7 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.config.ParamsConfig;
-import com.djcps.wms.commons.constant.RedisPrefixContant;
+import com.djcps.wms.commons.constant.RedisPrefixConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -68,7 +68,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		url = url.substring(contextPath.length());
 		//字符串分割去除.do
 		url = url.substring(0, url.indexOf("."));
-		String json = redisClient.get(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+url);
+		String json = redisClient.get(RedisPrefixConstant.REDIS_SYSTEM_URL_PREFIX+url);
 		SysUrlPO sysUrl = gson.fromJson(json,SysUrlPO.class);
 		//取不到url
 		if(sysUrl==null){

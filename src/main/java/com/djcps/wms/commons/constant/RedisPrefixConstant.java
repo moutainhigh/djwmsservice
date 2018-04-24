@@ -6,7 +6,7 @@ package com.djcps.wms.commons.constant;
  * @author:zdx
  * @date:2017年12月14日
  */
-public class RedisPrefixContant {
+public class RedisPrefixConstant {
 	
 	/**
 	 * SystemUrl的前缀

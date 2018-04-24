@@ -6,6 +6,7 @@ import java.io.Serializable;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 
 /**
  * 提货员就是退库远
@@ -13,7 +14,7 @@ import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
  * @author:zdx
  * @date:2018年3月19日
  */
-public class PickerIdBO extends BaseUpdateAndDeleteBO implements Serializable{
+public class PickerIdBO extends PartnerInfoBO implements Serializable{
 	
 	private static final long serialVersionUID = -243263474101809339L;
 	

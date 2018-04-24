@@ -44,7 +44,9 @@ public enum AllocationMsgEnum implements MsgInterface {
 	
 	AGAIN_VERIFY_ALLOCATION_ERROR(10,"请勿同时进行确认优化"),
 	
-	ALREADY_INTELLIGENT_ALLOCATION(11,"此次配货已被确认,请重新获取")
+	ALREADY_INTELLIGENT_ALLOCATION(11,"此次配货已被确认,请重新获取"),
+	
+	SPLIT_ORDER_ERROR(12,"拆单失败,只有已入库和部分入库的订单才能拆单")
 
 	;
 

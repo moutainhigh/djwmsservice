@@ -83,4 +83,15 @@ public interface WmsForStockHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("entry/orderWarehouseLocInfo.do")
 	HTTPResponse getAreaByOrderId(@Body RequestBody rb);
+
+	/**
+	 * 入库部分,根据订单号获取部分入库的拆分订单号
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年4月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("entry/getLessStockOrderId.do")
+	HTTPResponse getLessStockOrderId(@Body RequestBody rb);
 }

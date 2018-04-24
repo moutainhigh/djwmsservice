@@ -62,16 +62,17 @@ public class ParamsConfig {
 	 */
 	public static String UPDATE_ORDER_SERVER = "";
 	
-	public static String getUpdateOrderServer() {
-		return UPDATE_ORDER_SERVER;
+	/**
+	 * OMS服务
+	 */
+	public static String ONLINE_PAPERBOARD_SERVER = "";
+
+	public static void setOnlinePaperboardServer(String onlinePaperboardServer) {
+		ONLINE_PAPERBOARD_SERVER = onlinePaperboardServer;
 	}
 
 	public static void setUpdateOrderServer(String updateOrderServer) {
 		UPDATE_ORDER_SERVER = updateOrderServer;
-	}
-
-	public static String getOrderServer() {
-		return ORDER_SERVER;
 	}
 
 	public static void setOrderServer(String orderServer) {

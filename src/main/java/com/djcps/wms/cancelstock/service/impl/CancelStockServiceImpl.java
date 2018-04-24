@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.cancelstock.controller.CancelStockController;
 import com.djcps.wms.cancelstock.enums.CancelStockEnum;
 import com.djcps.wms.cancelstock.enums.CancelStockMsgEnum;
 import com.djcps.wms.cancelstock.model.CancalOrderAttributePO;
@@ -21,14 +24,16 @@ import com.djcps.wms.cancelstock.model.param.CancelOrderIdBO;
 import com.djcps.wms.cancelstock.model.param.PickerIdBO;
 import com.djcps.wms.cancelstock.server.CancelStockServer;
 import com.djcps.wms.cancelstock.service.CancelStockService;
-import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.enums.FluteTypeEnum;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.delivery.constant.DeliveryConstant;
 import com.djcps.wms.order.model.OrderIdBO;
-import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
+import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,6 +48,8 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class CancelStockServiceImpl implements CancelStockService {
 
+	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(CancelStockServiceImpl.class);
+	
 	Gson gson = new Gson();
 	
 	@Autowired
@@ -58,47 +65,26 @@ public class CancelStockServiceImpl implements CancelStockService {
 			return MsgTemplate.failureMsg(CancelStockMsgEnum.ORDER_IS_NULL);
 		}
 		CancalOrderAttributePO orderAttribute = gson.fromJson(gson.toJson(result.getData()), CancalOrderAttributePO.class);
-		OrderIdBO orderIdBO = new OrderIdBO();
-		orderIdBO.setChildOrderId(param.getOrderId());
-		HttpResult orderResult = orderServer.getOrderByOrderId(orderIdBO);
+		BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
+		List<String> orderIdsList = new ArrayList<>();
+		orderIdsList.add(param.getOrderId());
+		batchOrderIdListBO.setOrderIds(orderIdsList);
+		batchOrderIdListBO.setKeyArea(param.getPartnerArea());
+		HttpResult orderResult = orderServer.getOrderDeatilByIdList(batchOrderIdListBO);
 		if(ObjectUtils.isEmpty(orderResult.getData())){
 			return MsgTemplate.failureMsg(CancelStockMsgEnum.ORDER_IS_NULL);
-		}
-		if(!ObjectUtils.isEmpty(orderResult)){
-			WarehouseOrderDetailPO orderDetailPO = gson.fromJson(gson.toJson(orderResult.getData()), WarehouseOrderDetailPO.class);
-			String fflutetype = orderDetailPO.getFflutetype();
-        	switch(Integer.valueOf(fflutetype)){
-	        case 1:
-	        	orderAttribute.setFflutetype(FluteTypeEnum.BC.getValue());break;
-	        case 2:
-	        	orderAttribute.setFflutetype(FluteTypeEnum.BE.getValue());break;
-	        case 3:
-	        	orderAttribute.setFflutetype(FluteTypeEnum.C.getValue());break;
-	        case 4:
-	        	orderAttribute.setFflutetype(FluteTypeEnum.B.getValue());break;
-	        case 5:
-	        	orderAttribute.setFflutetype(FluteTypeEnum.E.getValue());break;
-	        case 6:
-	        	orderAttribute.setFflutetype(FluteTypeEnum.EBC.getValue());break;
-	        default:
-	        	orderAttribute.setFflutetype(FluteTypeEnum.EE.getValue());break;
-	        }
-			orderAttribute.setFmaterialname(orderDetailPO.getFmaterialname());
-			orderAttribute.setProductName(orderDetailPO.getFgroupgoodname());
-			orderAttribute.setLocation(orderDetailPO.getFlnglat());
-			//规格长宽高都不为null,才进行拼接
-			if(!ObjectUtils.isEmpty(orderDetailPO.getFboxlength()) && !ObjectUtils.isEmpty(orderDetailPO.getFboxwidth()) &&
-					!ObjectUtils.isEmpty(orderDetailPO.getFboxheight())){
-				//拼接字符串,拼接成产品规格和下料规格
-				orderAttribute.setFproductSize(new StringBuffer().append(orderDetailPO.getFboxlength()).append("*")
-						.append(orderDetailPO.getFboxwidth()).append("*").append(orderDetailPO.getFboxheight()).toString());
-			}
-			if(!ObjectUtils.isEmpty(orderDetailPO.getFmateriallength()) && !ObjectUtils.isEmpty(orderDetailPO.getFmaterialwidth())){
-				orderAttribute.setFmaterialSize(new StringBuffer().append(orderDetailPO.getFmateriallength()).append("*")
-						.append(orderDetailPO.getFmaterialwidth()).toString());
+		}else{
+			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
+			if(!ObjectUtils.isEmpty(orderList)){
+				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+				return MsgTemplate.successMsg(joinOrderParamInfo.get(0));
+			}else{
+				List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+				List<WarehouseOrderDetailPO> joinSplitOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
+				return MsgTemplate.successMsg(joinSplitOrderParamInfo.get(0));
 			}
 		}
-		return MsgTemplate.successMsg(orderAttribute);
 	}
 
 	@Override
@@ -113,11 +99,23 @@ public class CancelStockServiceImpl implements CancelStockService {
 		HttpResult result = cancelStockServer.addStock(param);
 		//修改订单服务拆分订单的订单状态
 		if(result.isSuccess()){
+	        //通知oms服务修改,需要批量执行
+			List<String> order = new ArrayList<>();
+			order.add(param.getOrderId());
+			
+			List<OrderIdBO> orderIdBOList = new ArrayList<>();
 			OrderIdBO orderIdBO = new OrderIdBO();
 			orderIdBO.setOrderId(param.getOrderId());
 			orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
-	        //通知订单服务修改,需要批量执行
-	        HttpResult updateResult = orderServer.updateOrderStatus(orderIdBO);
+			orderIdBOList.add(orderIdBO);
+			
+			result = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
+			List<String> orderId = new ArrayList<>();
+			orderId.add(param.getOrderId());
+			Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea());
+			if(compareOrderStatus==false){
+				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+			}
 		}
 		return MsgTemplate.customMsg(result);
 	}
@@ -136,50 +134,37 @@ public class CancelStockServiceImpl implements CancelStockService {
 		}else{
 			return MsgTemplate.successMsg();
 		}
-		OrderIdsBO orderIds = new OrderIdsBO();
-		orderIds.setChildOrderIds(orderIdList);
-		HttpResult orderResult = orderServer.getOrderByOrderIds(orderIds);
+		BatchOrderIdListBO batchOrder = new BatchOrderIdListBO();
+		batchOrder.setOrderIds(orderIdList);
+		batchOrder.setKeyArea(param.getPartnerArea());
+		HttpResult orderDeatilResult = orderServer.getOrderDeatilByIdList(batchOrder);
 		List<CancalOrderAttributePO> orderAttributeList = new ArrayList<>();
-		if(!ObjectUtils.isEmpty(orderResult)){
-			List<WarehouseOrderDetailPO> orderDetailList = gson.fromJson(gson.toJson(orderResult.getData()), new TypeToken<ArrayList<WarehouseOrderDetailPO>>(){}.getType());
-			for (WarehouseOrderDetailPO orderDetailPO : orderDetailList) {
-				if(AppConstant.GROUP_ORDER_DOUBLE.equals(orderDetailPO.getFdblflag())){
-					CancalOrderAttributePO orderAttribute = new CancalOrderAttributePO();
-					CancelStockPO cancelStockPO = map.get(orderDetailPO.getFchildorderid());
-					String fflutetype = orderDetailPO.getFflutetype();
-		        	switch(Integer.valueOf(fflutetype)){
-			        case 1:
-			        	orderAttribute.setFflutetype(FluteTypeEnum.BC.getValue());break;
-			        case 2:
-			        	orderAttribute.setFflutetype(FluteTypeEnum.BE.getValue());break;
-			        case 3:
-			        	orderAttribute.setFflutetype(FluteTypeEnum.C.getValue());break;
-			        case 4:
-			        	orderAttribute.setFflutetype(FluteTypeEnum.B.getValue());break;
-			        case 5:
-			        	orderAttribute.setFflutetype(FluteTypeEnum.E.getValue());break;
-			        case 6:
-			        	orderAttribute.setFflutetype(FluteTypeEnum.EBC.getValue());break;
-			        default:
-			        	orderAttribute.setFflutetype(FluteTypeEnum.EE.getValue());break;
-			        }
-					orderAttribute.setFmaterialname(orderDetailPO.getFmaterialname());
-					orderAttribute.setProductName(orderDetailPO.getFgroupgoodname());
-					BeanUtils.copyProperties(cancelStockPO,orderAttribute);
-					orderAttributeList.add(orderAttribute);
-					//规格长宽高都不为null,才进行拼接
-					if(!ObjectUtils.isEmpty(orderDetailPO.getFboxlength()) && !ObjectUtils.isEmpty(orderDetailPO.getFboxwidth()) &&
-							!ObjectUtils.isEmpty(orderDetailPO.getFboxheight())){
-						//拼接字符串,拼接成产品规格和下料规格
-						orderAttribute.setFproductSize(new StringBuffer().append(orderDetailPO.getFboxlength()).append("*")
-								.append(orderDetailPO.getFboxwidth()).append("*").append(orderDetailPO.getFboxheight()).toString());
-					}
-					if(!ObjectUtils.isEmpty(orderDetailPO.getFmateriallength()) && !ObjectUtils.isEmpty(orderDetailPO.getFmaterialwidth())){
-						orderAttribute.setFmaterialSize(new StringBuffer().append(orderDetailPO.getFmateriallength()).append("*")
-								.append(orderDetailPO.getFmaterialwidth()).toString());
-					}
-				}
-			}
+		if(!ObjectUtils.isEmpty(orderDeatilResult.getData())){
+			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderDeatilResult.getData()),BatchOrderDetailListPO.class);
+	        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
+	        if(!ObjectUtils.isEmpty(orderList)){
+	        	List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+	 			for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
+	 				CancalOrderAttributePO orderAttribute = new CancalOrderAttributePO();
+	 				CancelStockPO cancelStockPO = map.get(orderDetail.getChildOrderId());
+	 				BeanUtils.copyProperties(cancelStockPO,orderAttribute);
+	 				BeanUtils.copyProperties(orderDetail,orderAttribute);
+	 				orderAttributeList.add(orderAttribute);
+	 			}
+	        }
+	       
+			List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+			if(!ObjectUtils.isEmpty(splitOrderList)){
+				List<WarehouseOrderDetailPO> splitJoinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
+				for (WarehouseOrderDetailPO orderDetail : splitJoinOrderParamInfo) {
+						CancalOrderAttributePO orderAttribute = new CancalOrderAttributePO();
+						CancelStockPO cancelStockPO = map.get(orderDetail.getChildOrderId());
+						BeanUtils.copyProperties(cancelStockPO,orderAttribute);
+						BeanUtils.copyProperties(orderDetail,orderAttribute);
+						orderAttributeList.add(orderAttribute);
+				}	
+	        }
+			
 			
 		}
 		if(!ObjectUtils.isEmpty(orderAttributeList)){

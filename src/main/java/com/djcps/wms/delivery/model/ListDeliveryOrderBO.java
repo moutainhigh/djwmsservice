@@ -14,13 +14,25 @@ public class ListDeliveryOrderBO extends BaseListBO {
      * 合作方号
      */
     private String partnerId;
-
+    
+    /**
+     * 合作方区域
+     */
+    private String partnerArea;
     /**
      * 提货单号
      */
     private String deliveryId;
 
-    public String getPartnerId() {
+	public String getPartnerArea() {
+		return partnerArea;
+	}
+
+	public void setPartnerArea(String partnerArea) {
+		this.partnerArea = partnerArea;
+	}
+
+	public String getPartnerId() {
         return partnerId;
     }
 
@@ -36,11 +48,10 @@ public class ListDeliveryOrderBO extends BaseListBO {
         this.deliveryId = deliveryId;
     }
 
-    @Override
-    public String toString() {
-        return "ListDeliveryOrderBO{" +
-                "partnerId='" + partnerId + '\'' +
-                ", deliveryId='" + deliveryId + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "ListDeliveryOrderBO [partnerId=" + partnerId + ", partnerArea=" + partnerArea + ", deliveryId="
+				+ deliveryId + "]";
+	}
+
 }

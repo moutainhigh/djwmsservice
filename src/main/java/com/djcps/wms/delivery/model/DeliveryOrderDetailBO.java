@@ -4,6 +4,8 @@ import com.djcps.wms.commons.base.BaseBO;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * @author Chengw
  * @since 2018/2/1 13:14.
@@ -15,6 +17,9 @@ public class DeliveryOrderDetailBO extends BaseBO {
      */
     @NotNull
     private String partnerId;
+
+    @NotEmpty
+    private String partnerArea;
 
     /**
      * 提货单号
@@ -28,7 +33,15 @@ public class DeliveryOrderDetailBO extends BaseBO {
     @NotNull
     private String orderId;
 
-    public String getPartnerId() {
+    public String getPartnerArea() {
+		return partnerArea;
+	}
+
+	public void setPartnerArea(String partnerArea) {
+		this.partnerArea = partnerArea;
+	}
+
+	public String getPartnerId() {
         return partnerId;
     }
 
@@ -52,12 +65,10 @@ public class DeliveryOrderDetailBO extends BaseBO {
         this.orderId = orderId;
     }
 
-    @Override
-    public String toString() {
-        return "DeliveryOrderDetailBO{" +
-                "partnerId='" + partnerId + '\'' +
-                ", deliveryId='" + deliveryId + '\'' +
-                ", orderId='" + orderId + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "DeliveryOrderDetailBO [partnerId=" + partnerId + ", partnerArea=" + partnerArea + ", deliveryId="
+				+ deliveryId + ", orderId=" + orderId + "]";
+	}
+
 }

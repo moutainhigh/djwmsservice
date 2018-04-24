@@ -12,13 +12,26 @@ public class DeliveryOrderBO extends BaseBO{
      * 合作方号
      */
     private String partnerId;
+    
+    /**
+     * 合作方区域
+     */
+    private String partnerArea;
 
     /**
      * 提货员id
      */
     private String pickerId;
 
-    public String getPartnerId() {
+    public String getPartnerArea() {
+		return partnerArea;
+	}
+
+	public void setPartnerArea(String partnerArea) {
+		this.partnerArea = partnerArea;
+	}
+
+	public String getPartnerId() {
         return partnerId;
     }
 
@@ -34,11 +47,10 @@ public class DeliveryOrderBO extends BaseBO{
         this.pickerId = pickerId;
     }
 
-    @Override
-    public String toString() {
-        return "DeliveryOrderBO{" +
-                "partnerId='" + partnerId + '\'' +
-                ", pickerId='" + pickerId + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "DeliveryOrderBO [partnerId=" + partnerId + ", partnerArea=" + partnerArea + ", pickerId=" + pickerId
+				+ "]";
+	}
+
 }

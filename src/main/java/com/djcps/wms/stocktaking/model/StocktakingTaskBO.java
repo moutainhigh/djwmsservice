@@ -1,5 +1,6 @@
 package com.djcps.wms.stocktaking.model;
 
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 
 import java.io.Serializable;
@@ -11,7 +12,7 @@ import java.io.Serializable;
  * @company:djwms
  * @create:2018/1/10
  **/
-public class StocktakingTaskBO implements Serializable{
+public class StocktakingTaskBO extends PartnerInfoBO implements Serializable{
 
     private static final long serialVersionUID = -1634478108422100258L;
 
@@ -24,12 +25,6 @@ public class StocktakingTaskBO implements Serializable{
      * 作业单号
      */
     private String jobId;
-
-
-    /**
-     * 合作方id
-     */
-    private String partnerId;
 
     /**
      * 产品名称
@@ -109,14 +104,6 @@ public class StocktakingTaskBO implements Serializable{
         this.relativeId = relativeId;
     }
 
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
-    }
-
     public String getProductName() {
         return productName;
     }
@@ -189,23 +176,14 @@ public class StocktakingTaskBO implements Serializable{
         this.orderDetail = orderDetail;
     }
 
+	@Override
+	public String toString() {
+		return "StocktakingTaskBO [relativeId=" + relativeId + ", jobId=" + jobId + ", productName=" + productName
+				+ ", orderId=" + orderId + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName
+				+ ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+				+ ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", trueAmount="
+				+ trueAmount + ", orderDetail=" + orderDetail + "]";
+	}
 
-    @Override
-    public String toString() {
-        return "StocktakingTaskBO{" +
-                "relativeId='" + relativeId + '\'' +
-                ", jobId='" + jobId + '\'' +
-                ", partnerId='" + partnerId + '\'' +
-                ", productName='" + productName + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", warehouseAreaId='" + warehouseAreaId + '\'' +
-                ", warehouseAreaName='" + warehouseAreaName + '\'' +
-                ", warehouseLocId='" + warehouseLocId + '\'' +
-                ", warehouseLocName='" + warehouseLocName + '\'' +
-                ", trueAmount=" + trueAmount +
-                ", orderDetail=" + orderDetail +
-                '}';
-    }
+
 }

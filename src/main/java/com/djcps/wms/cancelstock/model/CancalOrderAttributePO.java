@@ -36,17 +36,17 @@ public class CancalOrderAttributePO implements Serializable{
 	/**
 	 * 下料规格
 	 */
-	private String fmaterialSize;
+	private String materialSize;
 	
 	/**
 	 * 产品规格
 	 */
-	private String fproductSize;
+	private String productSize;
 	
 	/**
 	 * 材料名称
 	 */
-	private String fmaterialname;
+	private String materialname;
 	
 	/**
 	 * 产品名称
@@ -110,29 +110,28 @@ public class CancalOrderAttributePO implements Serializable{
 	public void setFflutetype(String fflutetype) {
 		this.fflutetype = fflutetype;
 	}
-
-	public String getFmaterialSize() {
-		return fmaterialSize;
+	public String getMaterialSize() {
+		return materialSize;
 	}
 
-	public void setFmaterialSize(String fmaterialSize) {
-		this.fmaterialSize = fmaterialSize;
+	public void setMaterialSize(String materialSize) {
+		this.materialSize = materialSize;
 	}
 
-	public String getFproductSize() {
-		return fproductSize;
+	public String getProductSize() {
+		return productSize;
 	}
 
-	public void setFproductSize(String fproductSize) {
-		this.fproductSize = fproductSize;
+	public void setProductSize(String productSize) {
+		this.productSize = productSize;
 	}
 
-	public String getFmaterialname() {
-		return fmaterialname;
+	public String getMaterialname() {
+		return materialname;
 	}
 
-	public void setFmaterialname(String fmaterialname) {
-		this.fmaterialname = fmaterialname;
+	public void setMaterialname(String materialname) {
+		this.materialname = materialname;
 	}
 
 	public String getOrderId() {
@@ -162,8 +161,8 @@ public class CancalOrderAttributePO implements Serializable{
 	@Override
 	public String toString() {
 		return "CancalOrderAttributePO [orderId=" + orderId + ", id=" + id + ", cancelAmount=" + cancelAmount
-				+ ", fflutetype=" + fflutetype + ", fmaterialSize=" + fmaterialSize + ", fproductSize=" + fproductSize
-				+ ", fmaterialname=" + fmaterialname + ", productName=" + productName + ", status=" + status
+				+ ", fflutetype=" + fflutetype + ", materialSize=" + materialSize + ", productSize=" + productSize
+				+ ", materialname=" + materialname + ", productName=" + productName + ", status=" + status
 				+ ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", location=" + location + "]";
 	}
 

@@ -3,7 +3,6 @@ package com.djcps.wms.stocktaking.server;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.stocktaking.request.StocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
@@ -30,25 +29,6 @@ public class StocktakingOrderServer {
 
     @Autowired
     private WmsForStocktakingOrderHttpRequest wmsStocktakingOrderHttpRequest;
-
-    @Autowired
-   private StocktakingOrderHttpRequest stocktakingOrderHttpRequest;
-
-    /**
-     * 批量获取订单详情
-     * @author  wzy
-     * @param
-     * @return
-     * @create  2018/1/10 9:29
-     **/
-    public HttpResult getInfoByChildIds(Map<String,List<String>> map){
-        String json = gson.toJson(map);
-        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        //HTTPResponse http =wmsStocktakingOrderHttpRequest.getOrderDetailsList(rb) ;
-        HTTPResponse http=stocktakingOrderHttpRequest.getOrderDetailsList(rb);
-        //校验请求是否成功
-        return verifyHttpResult(http);
-    }
 
     /**
      *校验

@@ -1,5 +1,8 @@
 package com.djcps.wms.order.model;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 /**
  * 订单服务 子订单 返回实体类
  * @author Chengw
@@ -7,757 +10,554 @@ package com.djcps.wms.order.model;
  */
 public class ChildOrderBO {
 
-    /**
-     * 订单号
-     */
-    private String forderId;
-
-    /**
-     * 子订单号
-     */
-    private String fchildorderid;
-
-    /**
-     * 母账户名称
-     */
-    private String fpusername;
-
-    /**
-     * 子账户名称
-     */
-    private String fcusername;
-
-    /**
-     * 团购商品id
-     */
-    private String fgroupgoodid;
-
-    /**
-     * 团购商品
-     */
-    private String fgroupgoodname;
-
-    /**
-     * 产品单价
-     */
-    private Double funitprice;
-    /**
-     * 真实价格（最终价格）
-     */
-    private Double fsmallprice;
-    /**
-     * 金额
-     */
-    private Double famountprice;
-
-    /**
-     * 订单状态
-     */
-    private Integer fstatus;
-
-    /**
-     * 供应商ID
-     */
-    private String fmanufacturer;
-
-    /**
-     * 材料ID
-     */
-    private String fmateriafid;
-
-    /**
-     * 运单ID
-     */
-    private String ftransportsheet;
-
-    /**
-     * 楞型
-     */
-    private String fflutetype;
-
-    /**
-     * 箱型
-     */
-    private String fboxmodel;
-
-    /**
-     * 规格长
-     */
-    private Double fboxlength;
-
-    /**
-     * 规格宽
-     */
-    private Double fboxwidth;
-
-    /**
-     * 规格高
-     */
-    private Double fboxheight;
-
-    /**
-     * 下料规格长加系数
-     */
-    private Double fmateriallength;
-
-    /**
-     * 下料规格宽加系数
-     */
-    private Double fmaterialwidth;
-
-    /**
-     * 材料名称
-     */
-    private String fmaterialname;
-
-    /**
-     * 压线方式
-     */
-    private String fstavetype;
-
-    /**
-     * 成型方式
-     */
-    private String fseries;
-
-    /**
-     * 横向压线
-     */
-    private String fhline;
-
-    /**
-     * 纵向压线
-     */
-    private String fvline;
-
-    /**
-     * 横向压线公式
-     */
-    private String fhlineformula;
-
-    /**
-     * 纵向压线公式
-     */
-    private String fvlineformula;
-
-    /**
-     * 只数
-     */
-    private Integer famount;
-    /**
-     * 片数
-     */
-    private Integer famountpiece;
-
-    /**
-     * 层数
-     */
-    private Integer flayer;
-
-    private String fhformula;
-
-    private String fvformula;
-
-    /**
-     * 平方米面积
-     */
-    private Double fproductarea;
-
-    /**
-     * 营销方案
-     */
-    private String fmarktingplanid;
-
-    /**
-     * 营销方案（改）
-     */
-    private String fmktplanchangeid;
-
-    /**
-     * 订单类型
-     */
-    private Integer fordertype;
-
-    /**
-     * 接收人
-     */
-    private String fconsignee;
-
-    /**
-     * 接收人联系方式
-     */
-    private String fcontactway;
-
-    /**
-     * 省市区
-     */
-    private String fcodeprovince;
-
-    /**
-     * 交期
-     */
-    private String fdelivery;
-
-    /**
-     * 交期 格式化
-     */
-    private String fdeliveryString;
-
-    /**
-     * 分发时间
-     */
-    private String fdistime;
-
-    /**
-     * 签收时间
-     */
-    private String fsignintime;
-
-    /**
-     * 坐标
-     */
-    private String flnglat;
-
-    /**
-     * 详细地址
-     */
-    private String faddressdetail;
-
-    /**
-     * 地址备注
-     */
-    private String faddressremark;
-
-    /**
-     * 操作时间
-     */
-    private String foperatetime;
-
-    /**
-     * 操作人
-     */
-    private String foperator;
-
-    /**
-     * 区域拆分键
-     */
-    private String fkeyarea;
-
-    /**
-     * 急单
-     */
-    private Integer furgencyorder;
-
-    /**
-     * 赠送积分
-     */
-    private Integer fgiveintegral;
-
-    /**
-     * 删除状态
-     */
-    private String fdeletestatus;
-
-    /**
-     * 支付类型
-     */
-    private Integer fpaytype;
-
-    /**
-     * 是否分发
-     */
-    private String fdblflag;
-
-    public String getForderId() {
-        return forderId;
-    }
-
-    public void setForderId(String forderId) {
-        this.forderId = forderId;
-    }
-
-    public String getFchildorderid() {
-        return fchildorderid;
-    }
-
-    public void setFchildorderid(String fchildorderid) {
-        this.fchildorderid = fchildorderid;
-    }
-
-    public String getFpusername() {
-        return fpusername;
-    }
-
-    public void setFpusername(String fpusername) {
-        this.fpusername = fpusername;
-    }
-
-    public String getFcusername() {
-        return fcusername;
-    }
-
-    public void setFcusername(String fcusername) {
-        this.fcusername = fcusername;
-    }
-
-    public String getFgroupgoodid() {
-        return fgroupgoodid;
-    }
-
-    public void setFgroupgoodid(String fgroupgoodid) {
-        this.fgroupgoodid = fgroupgoodid;
-    }
-
-    public String getFgroupgoodname() {
-        return fgroupgoodname;
-    }
-
-    public void setFgroupgoodname(String fgroupgoodname) {
-        this.fgroupgoodname = fgroupgoodname;
-    }
-
-    public Double getFunitprice() {
-        return funitprice;
-    }
-
-    public void setFunitprice(Double funitprice) {
-        this.funitprice = funitprice;
-    }
-
-    public Double getFsmallprice() {
-        return fsmallprice;
-    }
-
-    public void setFsmallprice(Double fsmallprice) {
-        this.fsmallprice = fsmallprice;
-    }
-
-    public Double getFamountprice() {
-        return famountprice;
-    }
-
-    public void setFamountprice(Double famountprice) {
-        this.famountprice = famountprice;
-    }
-
-    public Integer getFstatus() {
-        return fstatus;
-    }
-
-    public void setFstatus(Integer fstatus) {
-        this.fstatus = fstatus;
-    }
-
-    public String getFmanufacturer() {
-        return fmanufacturer;
-    }
-
-    public void setFmanufacturer(String fmanufacturer) {
-        this.fmanufacturer = fmanufacturer;
-    }
-
-    public String getFmateriafid() {
-        return fmateriafid;
-    }
-
-    public void setFmateriafid(String fmateriafid) {
-        this.fmateriafid = fmateriafid;
-    }
-
-    public String getFtransportsheet() {
-        return ftransportsheet;
-    }
-
-    public void setFtransportsheet(String ftransportsheet) {
-        this.ftransportsheet = ftransportsheet;
-    }
-
-    public String getFflutetype() {
-        return fflutetype;
-    }
-
-    public void setFflutetype(String fflutetype) {
-        this.fflutetype = fflutetype;
-    }
-
-    public String getFboxmodel() {
-        return fboxmodel;
-    }
-
-    public void setFboxmodel(String fboxmodel) {
-        this.fboxmodel = fboxmodel;
-    }
-
-    public Double getFboxlength() {
-        return fboxlength;
-    }
-
-    public void setFboxlength(Double fboxlength) {
-        this.fboxlength = fboxlength;
-    }
-
-    public Double getFboxwidth() {
-        return fboxwidth;
-    }
-
-    public void setFboxwidth(Double fboxwidth) {
-        this.fboxwidth = fboxwidth;
-    }
-
-    public Double getFboxheight() {
-        return fboxheight;
-    }
-
-    public void setFboxheight(Double fboxheight) {
-        this.fboxheight = fboxheight;
-    }
-
-    public Double getFmateriallength() {
-        return fmateriallength;
-    }
-
-    public void setFmateriallength(Double fmateriallength) {
-        this.fmateriallength = fmateriallength;
-    }
-
-    public Double getFmaterialwidth() {
-        return fmaterialwidth;
-    }
-
-    public void setFmaterialwidth(Double fmaterialwidth) {
-        this.fmaterialwidth = fmaterialwidth;
-    }
-
-    public String getFmaterialname() {
-        return fmaterialname;
-    }
-
-    public void setFmaterialname(String fmaterialname) {
-        this.fmaterialname = fmaterialname;
-    }
-
-    public String getFstavetype() {
-        return fstavetype;
-    }
-
-    public void setFstavetype(String fstavetype) {
-        this.fstavetype = fstavetype;
-    }
-
-    public String getFseries() {
-        return fseries;
-    }
-
-    public void setFseries(String fseries) {
-        this.fseries = fseries;
-    }
-
-    public String getFhline() {
-        return fhline;
-    }
-
-    public void setFhline(String fhline) {
-        this.fhline = fhline;
-    }
-
-    public String getFvline() {
-        return fvline;
-    }
-
-    public void setFvline(String fvline) {
-        this.fvline = fvline;
-    }
-
-    public String getFhlineformula() {
-        return fhlineformula;
-    }
-
-    public void setFhlineformula(String fhlineformula) {
-        this.fhlineformula = fhlineformula;
-    }
-
-    public String getFvlineformula() {
-        return fvlineformula;
-    }
-
-    public void setFvlineformula(String fvlineformula) {
-        this.fvlineformula = fvlineformula;
-    }
-
-    public Integer getFamount() {
-        return famount;
-    }
-
-    public void setFamount(Integer famount) {
-        this.famount = famount;
-    }
-
-    public Integer getFamountpiece() {
-        return famountpiece;
-    }
-
-    public void setFamountpiece(Integer famountpiece) {
-        this.famountpiece = famountpiece;
-    }
-
-    public Integer getFlayer() {
-        return flayer;
-    }
-
-    public void setFlayer(Integer flayer) {
-        this.flayer = flayer;
-    }
-
-    public String getFhformula() {
-        return fhformula;
-    }
-
-    public void setFhformula(String fhformula) {
-        this.fhformula = fhformula;
-    }
-
-    public String getFvformula() {
-        return fvformula;
-    }
-
-    public void setFvformula(String fvformula) {
-        this.fvformula = fvformula;
-    }
-
-    public Double getFproductarea() {
-        return fproductarea;
-    }
-
-    public void setFproductarea(Double fproductarea) {
-        this.fproductarea = fproductarea;
-    }
-
-    public String getFmarktingplanid() {
-        return fmarktingplanid;
-    }
-
-    public void setFmarktingplanid(String fmarktingplanid) {
-        this.fmarktingplanid = fmarktingplanid;
-    }
-
-    public String getFmktplanchangeid() {
-        return fmktplanchangeid;
-    }
-
-    public void setFmktplanchangeid(String fmktplanchangeid) {
-        this.fmktplanchangeid = fmktplanchangeid;
-    }
-
-    public Integer getFordertype() {
-        return fordertype;
-    }
-
-    public void setFordertype(Integer fordertype) {
-        this.fordertype = fordertype;
-    }
-
-    public String getFconsignee() {
-        return fconsignee;
-    }
-
-    public void setFconsignee(String fconsignee) {
-        this.fconsignee = fconsignee;
-    }
-
-    public String getFcontactway() {
-        return fcontactway;
-    }
-
-    public void setFcontactway(String fcontactway) {
-        this.fcontactway = fcontactway;
-    }
-
-    public String getFcodeprovince() {
-        return fcodeprovince;
-    }
-
-    public void setFcodeprovince(String fcodeprovince) {
-        this.fcodeprovince = fcodeprovince;
-    }
-
-    public String getFdelivery() {
-        return fdelivery;
-    }
-
-    public void setFdelivery(String fdelivery) {
-        this.fdelivery = fdelivery;
-    }
-
-    public String getFdeliveryString() {
-        return fdeliveryString;
-    }
-
-    public void setFdeliveryString(String fdeliveryString) {
-        this.fdeliveryString = fdeliveryString;
-    }
-
-    public String getFdistime() {
-        return fdistime;
-    }
-
-    public void setFdistime(String fdistime) {
-        this.fdistime = fdistime;
-    }
-
-    public String getFsignintime() {
-        return fsignintime;
-    }
-
-    public void setFsignintime(String fsignintime) {
-        this.fsignintime = fsignintime;
-    }
-
-    public String getFlnglat() {
-        return flnglat;
-    }
-
-    public void setFlnglat(String flnglat) {
-        this.flnglat = flnglat;
-    }
-
-    public String getFaddressdetail() {
-        return faddressdetail;
-    }
-
-    public void setFaddressdetail(String faddressdetail) {
-        this.faddressdetail = faddressdetail;
-    }
-
-    public String getFaddressremark() {
-        return faddressremark;
-    }
-
-    public void setFaddressremark(String faddressremark) {
-        this.faddressremark = faddressremark;
-    }
-
-    public String getFoperatetime() {
-        return foperatetime;
-    }
-
-    public void setFoperatetime(String foperatetime) {
-        this.foperatetime = foperatetime;
-    }
-
-    public String getFoperator() {
-        return foperator;
-    }
-
-    public void setFoperator(String foperator) {
-        this.foperator = foperator;
-    }
-
-    public String getFkeyarea() {
-        return fkeyarea;
-    }
-
-    public void setFkeyarea(String fkeyarea) {
-        this.fkeyarea = fkeyarea;
-    }
-
-    public Integer getFurgencyorder() {
-        return furgencyorder;
-    }
-
-    public void setFurgencyorder(Integer furgencyorder) {
-        this.furgencyorder = furgencyorder;
-    }
-
-    public Integer getFgiveintegral() {
-        return fgiveintegral;
-    }
-
-    public void setFgiveintegral(Integer fgiveintegral) {
-        this.fgiveintegral = fgiveintegral;
-    }
-
-    public String getFdeletestatus() {
-        return fdeletestatus;
-    }
-
-    public void setFdeletestatus(String fdeletestatus) {
-        this.fdeletestatus = fdeletestatus;
-    }
-
-    public Integer getFpaytype() {
-        return fpaytype;
-    }
-
-    public void setFpaytype(Integer fpaytype) {
-        this.fpaytype = fpaytype;
-    }
-
+	private String fdblflag;
+	
+	private String unit;
+	
+	private String orderId;
+	
+	/**
+	 * ================子订单属性======================
+	 */
+	
+	/**
+	 * 区域中间键
+	 */
+	private Integer keyArea;
+	/**
+	 * 合作方id
+	 */
+	private String partnerId;
+	
+	/**
+	 * 平台订单编号
+	 */
+	private String childOrderId;
+	/**
+	 * 状态
+	 */
+	private Integer orderStatus;
+	/**
+	 * 下单时间
+	 */
+	private Date orderTime;
+
+	/**
+	 * 支付时间
+	 */
+	private Date payTime;
+	/**
+	 * 交期
+	 */
+	private Date deliveryTime;
+	/**
+	 * 产品名称
+	 */
+	private String productName;
+	
+	/**
+	 * 材料id
+	 */
+	private String materiaFid;
+	
+	/**
+	 * 材料名称
+	 */
+	private String materialName;
+	/**
+	 * 楞型
+	 */
+	private String fluteType;
+	/**
+	 * 只数
+	 */
+	private Integer amount;
+	/**
+	 * 片数
+	 */
+	private Integer amountPiece;
+	/**
+	 * 连做方式
+	 */
+	private String series;
+	/**
+	 * 箱型
+	 */
+	private Integer boxModel;
+	/**
+	 * 纸箱规格长
+	 */
+	private String boxLength;
+	/**
+	 * 纸箱规格宽
+	 */
+	private String boxWidth;
+	/**
+	 * 纸箱规格高
+	 */
+	private String boxHeight;
+	/**
+	 * 落料长
+	 */
+	private String materialLength;
+	/**
+	 * 落料宽
+	 */
+	private String materialWidth;
+	/**
+	 * 压线方式
+	 */
+	private String staveType;
+	/**
+	 * 横向压线
+	 */
+	private String hline;
+	/**
+	 * 纵向压线
+	 */
+	private String vline;
+	/**
+	 * 纵向压线（1位小数）
+	 */
+	private String newVline;
+	/**
+	 * 横压公式
+	 */
+	private String hlineFormula;
+	/**
+	 * 纵压公式
+	 */
+	private String vlineFormula;
+	/**
+	 * 面积
+	 */
+	private BigDecimal productArea;
+	/**
+	 * 单价
+	 */
+	private BigDecimal unitPrice;
+	/**
+	 * 金额
+	 */
+	private BigDecimal amountPrice;
+	/**
+	 * 区域
+	 */
+	private String codeProvince;
+	/**
+	 * 合作方名称
+	 */
+	private String partnerName;
+	/**
+	 * 客户名称
+	 */
+	private String customerName;
+	/**
+	 * 收货人
+	 */
+	private String consignee;
+	/**
+	 * 联系方式
+	 */
+	private String contactWay;
+	/**
+	 * 收货地址
+	 */
+	private String addressDetail;
+	/**
+	 * 是否急单 1：是 0：否
+	 */
+	private Integer urgencyOrder;
+	/**
+	 * 异常订单状态
+	 */
+	private Integer excpStatus;
+	/**
+	 * 表的区域拆分键
+	 */
+	private int goKeyArea;
+	/**
+	 * 营销方案
+	 */
+	private String marktingplanId;
+	/**
+	 * 母账号用户ID
+	 */
+	private String userId;
+
+	/**
+	 * 生产订单编号
+	 */
+	private String productionNo;
+
+	/**
+	 * 拆单状态
+	 */
+	private int splitOrder;
+	/**
+	 * 母账号名称
+	 */
+	private String puserName;
+	/**
+	 * 子账号名称
+	 */
+	private String cuserName;
+	/**
+	 * 经纬度
+	 */
+	private String lnglat;
+	
+	/**
+	 * 下料规格
+	 */
+	private String materialSize;
+	
+	/**
+	 * 产品规格
+	 */
+	private String productSize;
+	
+	/**
+	 * 省市区外加地址详情拼接
+	 */
+	private String addressDetailProvince;
+	
+	/**
+	 * 订单数量
+	 */
+	private Integer orderAmount;
+	
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public Integer getOrderAmount() {
+		return orderAmount;
+	}
+	public void setOrderAmount(Integer orderAmount) {
+		this.orderAmount = orderAmount;
+	}
+	public String getMaterialSize() {
+		return materialSize;
+	}
+	public void setMaterialSize(String materialSize) {
+		this.materialSize = materialSize;
+	}
+	public String getProductSize() {
+		return productSize;
+	}
+	public void setProductSize(String productSize) {
+		this.productSize = productSize;
+	}
+	public String getAddressDetailProvince() {
+		return addressDetailProvince;
+	}
+	public void setAddressDetailProvince(String addressDetailProvince) {
+		this.addressDetailProvince = addressDetailProvince;
+	}
 	public String getFdblflag() {
 		return fdblflag;
 	}
-
 	public void setFdblflag(String fdblflag) {
 		this.fdblflag = fdblflag;
 	}
-
-
-    @Override
-    public String toString() {
-        return "ChildOrderBO{" +
-                "forderId='" + forderId + '\'' +
-                ", fchildorderid='" + fchildorderid + '\'' +
-                ", fpusername='" + fpusername + '\'' +
-                ", fcusername='" + fcusername + '\'' +
-                ", fgroupgoodid='" + fgroupgoodid + '\'' +
-                ", fgroupgoodname='" + fgroupgoodname + '\'' +
-                ", funitprice=" + funitprice +
-                ", fsmallprice=" + fsmallprice +
-                ", famountprice=" + famountprice +
-                ", fstatus=" + fstatus +
-                ", fmanufacturer='" + fmanufacturer + '\'' +
-                ", fmateriafid='" + fmateriafid + '\'' +
-                ", ftransportsheet='" + ftransportsheet + '\'' +
-                ", fflutetype='" + fflutetype + '\'' +
-                ", fboxmodel='" + fboxmodel + '\'' +
-                ", fboxlength=" + fboxlength +
-                ", fboxwidth=" + fboxwidth +
-                ", fboxheight=" + fboxheight +
-                ", fmateriallength=" + fmateriallength +
-                ", fmaterialwidth=" + fmaterialwidth +
-                ", fmaterialname='" + fmaterialname + '\'' +
-                ", fstavetype='" + fstavetype + '\'' +
-                ", fseries='" + fseries + '\'' +
-                ", fhline='" + fhline + '\'' +
-                ", fvline='" + fvline + '\'' +
-                ", fhlineformula='" + fhlineformula + '\'' +
-                ", fvlineformula='" + fvlineformula + '\'' +
-                ", famount=" + famount +
-                ", famountpiece=" + famountpiece +
-                ", flayer=" + flayer +
-                ", fhformula='" + fhformula + '\'' +
-                ", fvformula='" + fvformula + '\'' +
-                ", fproductarea=" + fproductarea +
-                ", fmarktingplanid='" + fmarktingplanid + '\'' +
-                ", fmktplanchangeid='" + fmktplanchangeid + '\'' +
-                ", fordertype=" + fordertype +
-                ", fconsignee='" + fconsignee + '\'' +
-                ", fcontactway='" + fcontactway + '\'' +
-                ", fcodeprovince='" + fcodeprovince + '\'' +
-                ", fdelivery='" + fdelivery + '\'' +
-                ", fdeliveryString='" + fdeliveryString + '\'' +
-                ", fdistime='" + fdistime + '\'' +
-                ", fsignintime='" + fsignintime + '\'' +
-                ", flnglat='" + flnglat + '\'' +
-                ", faddressdetail='" + faddressdetail + '\'' +
-                ", faddressremark='" + faddressremark + '\'' +
-                ", foperatetime='" + foperatetime + '\'' +
-                ", foperator='" + foperator + '\'' +
-                ", fkeyarea='" + fkeyarea + '\'' +
-                ", furgencyorder=" + furgencyorder +
-                ", fgiveintegral=" + fgiveintegral +
-                ", fdeletestatus='" + fdeletestatus + '\'' +
-                ", fpaytype=" + fpaytype +
-                ", fdblflag='" + fdblflag + '\'' +
-                '}'; 
-    }
+	public String getUnit() {
+		return unit;
+	}
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+	public Integer getKeyArea() {
+		return keyArea;
+	}
+	public void setKeyArea(Integer keyArea) {
+		this.keyArea = keyArea;
+	}
+	public String getPartnerId() {
+		return partnerId;
+	}
+	public void setPartnerId(String partnerId) {
+		this.partnerId = partnerId;
+	}
+	public String getChildOrderId() {
+		return childOrderId;
+	}
+	public void setChildOrderId(String childOrderId) {
+		this.childOrderId = childOrderId;
+	}
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	public Date getOrderTime() {
+		return orderTime;
+	}
+	public void setOrderTime(Date orderTime) {
+		this.orderTime = orderTime;
+	}
+	public Date getPayTime() {
+		return payTime;
+	}
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
+	}
+	public Date getDeliveryTime() {
+		return deliveryTime;
+	}
+	public void setDeliveryTime(Date deliveryTime) {
+		this.deliveryTime = deliveryTime;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public String getMaterialName() {
+		return materialName;
+	}
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
+	public String getFluteType() {
+		return fluteType;
+	}
+	public void setFluteType(String fluteType) {
+		this.fluteType = fluteType;
+	}
+	public Integer getAmount() {
+		return amount;
+	}
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+	public Integer getAmountPiece() {
+		return amountPiece;
+	}
+	public void setAmountPiece(Integer amountPiece) {
+		this.amountPiece = amountPiece;
+	}
+	public String getSeries() {
+		return series;
+	}
+	public void setSeries(String series) {
+		this.series = series;
+	}
+	public Integer getBoxModel() {
+		return boxModel;
+	}
+	public void setBoxModel(Integer boxModel) {
+		this.boxModel = boxModel;
+	}
+	public String getBoxLength() {
+		return boxLength;
+	}
+	public void setBoxLength(String boxLength) {
+		this.boxLength = boxLength;
+	}
+	public String getBoxWidth() {
+		return boxWidth;
+	}
+	public void setBoxWidth(String boxWidth) {
+		this.boxWidth = boxWidth;
+	}
+	public String getBoxHeight() {
+		return boxHeight;
+	}
+	public void setBoxHeight(String boxHeight) {
+		this.boxHeight = boxHeight;
+	}
+	public String getMaterialLength() {
+		return materialLength;
+	}
+	public void setMaterialLength(String materialLength) {
+		this.materialLength = materialLength;
+	}
+	public String getMaterialWidth() {
+		return materialWidth;
+	}
+	public void setMaterialWidth(String materialWidth) {
+		this.materialWidth = materialWidth;
+	}
+	public String getStaveType() {
+		return staveType;
+	}
+	public void setStaveType(String staveType) {
+		this.staveType = staveType;
+	}
+	public String getHline() {
+		return hline;
+	}
+	public void setHline(String hline) {
+		this.hline = hline;
+	}
+	public String getVline() {
+		return vline;
+	}
+	public void setVline(String vline) {
+		this.vline = vline;
+	}
+	public String getNewVline() {
+		return newVline;
+	}
+	public void setNewVline(String newVline) {
+		this.newVline = newVline;
+	}
+	public String getHlineFormula() {
+		return hlineFormula;
+	}
+	public void setHlineFormula(String hlineFormula) {
+		this.hlineFormula = hlineFormula;
+	}
+	public String getVlineFormula() {
+		return vlineFormula;
+	}
+	public void setVlineFormula(String vlineFormula) {
+		this.vlineFormula = vlineFormula;
+	}
+	public BigDecimal getProductArea() {
+		return productArea;
+	}
+	public void setProductArea(BigDecimal productArea) {
+		this.productArea = productArea;
+	}
+	public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+	public void setUnitPrice(BigDecimal unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+	public BigDecimal getAmountPrice() {
+		return amountPrice;
+	}
+	public void setAmountPrice(BigDecimal amountPrice) {
+		this.amountPrice = amountPrice;
+	}
+	public String getCodeProvince() {
+		return codeProvince;
+	}
+	public void setCodeProvince(String codeProvince) {
+		this.codeProvince = codeProvince;
+	}
+	public String getPartnerName() {
+		return partnerName;
+	}
+	public void setPartnerName(String partnerName) {
+		this.partnerName = partnerName;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getConsignee() {
+		return consignee;
+	}
+	public void setConsignee(String consignee) {
+		this.consignee = consignee;
+	}
+	public String getContactWay() {
+		return contactWay;
+	}
+	public void setContactWay(String contactWay) {
+		this.contactWay = contactWay;
+	}
+	public String getAddressDetail() {
+		return addressDetail;
+	}
+	public void setAddressDetail(String addressDetail) {
+		this.addressDetail = addressDetail;
+	}
+	public Integer getUrgencyOrder() {
+		return urgencyOrder;
+	}
+	public void setUrgencyOrder(Integer urgencyOrder) {
+		this.urgencyOrder = urgencyOrder;
+	}
+	public Integer getExcpStatus() {
+		return excpStatus;
+	}
+	public void setExcpStatus(Integer excpStatus) {
+		this.excpStatus = excpStatus;
+	}
+	public int getGoKeyArea() {
+		return goKeyArea;
+	}
+	public void setGoKeyArea(int goKeyArea) {
+		this.goKeyArea = goKeyArea;
+	}
+	public String getMarktingplanId() {
+		return marktingplanId;
+	}
+	public void setMarktingplanId(String marktingplanId) {
+		this.marktingplanId = marktingplanId;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	public String getProductionNo() {
+		return productionNo;
+	}
+	public void setProductionNo(String productionNo) {
+		this.productionNo = productionNo;
+	}
+	public int getSplitOrder() {
+		return splitOrder;
+	}
+	public void setSplitOrder(int splitOrder) {
+		this.splitOrder = splitOrder;
+	}
+	public String getPuserName() {
+		return puserName;
+	}
+	public void setPuserName(String puserName) {
+		this.puserName = puserName;
+	}
+	public String getCuserName() {
+		return cuserName;
+	}
+	public void setCuserName(String cuserName) {
+		this.cuserName = cuserName;
+	}
+	public String getLnglat() {
+		return lnglat;
+	}
+	public void setLnglat(String lnglat) {
+		this.lnglat = lnglat;
+	}
+	
+	public String getMateriaFid() {
+		return materiaFid;
+	}
+	public void setMateriaFid(String materiaFid) {
+		this.materiaFid = materiaFid;
+	}
+	@Override
+	public String toString() {
+		return "ChildOrderBO [fdblflag=" + fdblflag + ", unit=" + unit + ", orderId=" + orderId + ", keyArea=" + keyArea
+				+ ", partnerId=" + partnerId + ", childOrderId=" + childOrderId + ", orderStatus=" + orderStatus
+				+ ", orderTime=" + orderTime + ", payTime=" + payTime + ", deliveryTime=" + deliveryTime
+				+ ", productName=" + productName + ", materiaFid=" + materiaFid + ", materialName=" + materialName
+				+ ", fluteType=" + fluteType + ", amount=" + amount + ", amountPiece=" + amountPiece + ", series="
+				+ series + ", boxModel=" + boxModel + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth
+				+ ", boxHeight=" + boxHeight + ", materialLength=" + materialLength + ", materialWidth=" + materialWidth
+				+ ", staveType=" + staveType + ", hline=" + hline + ", vline=" + vline + ", newVline=" + newVline
+				+ ", hlineFormula=" + hlineFormula + ", vlineFormula=" + vlineFormula + ", productArea=" + productArea
+				+ ", unitPrice=" + unitPrice + ", amountPrice=" + amountPrice + ", codeProvince=" + codeProvince
+				+ ", partnerName=" + partnerName + ", customerName=" + customerName + ", consignee=" + consignee
+				+ ", contactWay=" + contactWay + ", addressDetail=" + addressDetail + ", urgencyOrder=" + urgencyOrder
+				+ ", excpStatus=" + excpStatus + ", goKeyArea=" + goKeyArea + ", marktingplanId=" + marktingplanId
+				+ ", userId=" + userId + ", productionNo=" + productionNo + ", splitOrder=" + splitOrder
+				+ ", puserName=" + puserName + ", cuserName=" + cuserName + ", lnglat=" + lnglat + ", materialSize="
+				+ materialSize + ", productSize=" + productSize + ", addressDetailProvince=" + addressDetailProvince
+				+ ", orderAmount=" + orderAmount + "]";
+	}
 }

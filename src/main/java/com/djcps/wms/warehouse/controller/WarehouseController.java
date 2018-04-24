@@ -326,10 +326,7 @@ public class WarehouseController {
 	public Map<String, Object> getWarehouseType(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			String str = partnerInfoBean.getPartnerId();
-			//该方法查询只需要传合作方id即可
-			String partnerId = "{\"partnerId\":"+str+"}";
-			return warehouseService.getWarehouseType(partnerId);
+			return warehouseService.getWarehouseType(partnerInfoBean);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

@@ -37,8 +37,23 @@ public class AddTaskBO implements Serializable{
      *合作方id
      */
     private String partnerId;
+    
+    private String partnerArea;
 
-    public String getPartnerId() {
+    
+    public String getPartnerArea() {
+		return partnerArea;
+	}
+
+	public void setPartnerArea(String partnerArea) {
+		this.partnerArea = partnerArea;
+	}
+
+	public void setFtype(Integer ftype) {
+		this.ftype = ftype;
+	}
+
+	public String getPartnerId() {
         return partnerId;
     }
 
@@ -70,13 +85,10 @@ public class AddTaskBO implements Serializable{
         this.warehouseId = warehouseId;
     }
 
-    @Override
-    public String toString() {
-        return "AddTaskBO{" +
-                "ftype=" + ftype +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", partnerId='" + partnerId + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "AddTaskBO [ftype=" + ftype + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName
+				+ ", partnerId=" + partnerId + ", partnerArea=" + partnerArea + "]";
+	}
+
 }

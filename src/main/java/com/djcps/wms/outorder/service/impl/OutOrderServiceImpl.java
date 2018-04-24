@@ -17,6 +17,8 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdsBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.outorder.enums.OutOrderEnums;
 import com.djcps.wms.outorder.model.OrderDetailBO;
@@ -47,74 +49,65 @@ public class OutOrderServiceImpl implements OutOrderService{
 		HttpResult result = outOrderServer.getOrderIdsByOutOrderId(param);
 		//获取出库单号字符串
 		OrderIdsBO orderIdsBO = null;
-		List<ChildOrderBO> childOrderList = null;
+		List<OrderDetailBO> childOrderList = new ArrayList<>();
+		List<OrderDetailBO> splitChildOrderList = new ArrayList<>();
 		if(!ObjectUtils.isEmpty(result.getData())){
 			String childOrderIdStr = result.getData().toString();
 			String[] childOrderIds = childOrderIdStr.split(",");
 			List<String> list = Arrays.asList(childOrderIds);
 			orderIdsBO = new OrderIdsBO();
 			orderIdsBO.setChildOrderIds(list);
+			orderIdsBO.setPartnerArea(param.getPartnerArea());
 			//获取订单明细详情list
-			childOrderList = orderServer.getChildOrderList(orderIdsBO);
+			BatchOrderDetailListPO batchOrderDetailListPO = orderServer.getOrderOrSplitOrder(orderIdsBO);
+			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
+			if(!ObjectUtils.isEmpty(orderList)){
+				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+					OrderDetailBO child = new OrderDetailBO();
+					BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+					childOrderList.add(child);
+				}
+			}
+			
+			
+			List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+			if(!ObjectUtils.isEmpty(splitOrderList)){
+				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+					OrderDetailBO child = new OrderDetailBO();
+					BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+					splitChildOrderList.add(child);
+				}
+			}
 		}else{
 			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDER_ID_FAIL);
 		}
+		
 		List<OrderDetailBO> orderDetailList = new ArrayList<OrderDetailBO>();
 		if(!ObjectUtils.isEmpty(childOrderList)){
-			orderDetailList = getOrderDetails(orderDetailList, childOrderList);
+			orderDetailList.addAll(childOrderList);
 		}else{
 			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDERDETAIL_FAIL);
 		}
 		
-		Double totalPrice = 0.0;
+		if(!ObjectUtils.isEmpty(splitChildOrderList)){
+			orderDetailList.addAll(splitChildOrderList);
+		}else{
+			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDERDETAIL_FAIL);
+		}
+		
+		BigDecimal totalPrice = new BigDecimal(0.00);
 		Integer totalAmount = 0;
 		for(OrderDetailBO orderDetail:orderDetailList){
-			totalPrice += orderDetail.getAmountPrice();
-			totalAmount += orderDetail.getAmount();
+			totalPrice.add(orderDetail.getAmountPrice());
+			totalAmount += orderDetail.getOrderAmount();
 		}
-		DecimalFormat df = new DecimalFormat("######0.00"); 
-		totalPrice = Double.valueOf(df.format(totalPrice)) ;
-		
 		OrderDetailInfoVO orderDetailVO = new OrderDetailInfoVO();
 		orderDetailVO.setOrderDetails(orderDetailList);
 		orderDetailVO.setTotalAmount(totalAmount);
-		orderDetailVO.setTotalPrice(totalPrice);
+		orderDetailVO.setTotalPrice(totalPrice.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 		return MsgTemplate.successMsg(orderDetailVO);
-	}
-	
-	/**
-	 * 组织参数，订单详情
-	 * @param orderDetailList 订单详情集合
-	 * @param childOrderList 从订单服务获取的订单详情
-	 * @return
-	 */
-	public List<OrderDetailBO> getOrderDetails(List<OrderDetailBO> orderDetailList,List<ChildOrderBO> childOrderList){
-		List<ChildOrderBO> childOrders = new ArrayList<ChildOrderBO>();
-		for(ChildOrderBO child:childOrderList){
-			if(AppConstant.GROUP_ORDER_DOUBLE.equals(child.getFdblflag())){
-				childOrders.add(child);
-			}
-		}
-		for(ChildOrderBO childOrderBO:childOrders){
-			OrderDetailBO orderDetail = new OrderDetailBO();
-			orderDetail.setChildOrderId(childOrderBO.getFchildorderid());
-			orderDetail.setGroupGoodName(childOrderBO.getFgroupgoodname());
-			if(!ObjectUtils.isEmpty(childOrderBO.getFmateriallength())&&!ObjectUtils.isEmpty(childOrderBO.getFmaterialwidth())){
-				StringBuffer buff = new StringBuffer().append(childOrderBO.getFmateriallength()).append("*").append(childOrderBO.getFmaterialwidth());
-				orderDetail.setMaterial(buff.toString());
-			}
-			if(!ObjectUtils.isEmpty(childOrderBO.getFboxlength())&&!ObjectUtils.isEmpty(childOrderBO.getFboxwidth())
-					&&!ObjectUtils.isEmpty(childOrderBO.getFboxheight())){
-				StringBuffer stringBuff = new StringBuffer().append(childOrderBO.getFboxlength()).append("*").
-						append(childOrderBO.getFboxwidth()).append("*").append(childOrderBO.getFboxheight());
-				orderDetail.setBox(stringBuff.toString());
-			}
-			orderDetail.setAmount(childOrderBO.getFamountpiece());
-			orderDetail.setUnitPrice(childOrderBO.getFunitprice());
-			orderDetail.setAmountPrice(childOrderBO.getFamountprice());
-			orderDetailList.add(orderDetail);
-		}
-		return orderDetailList;
 	}
 	
 	@Override

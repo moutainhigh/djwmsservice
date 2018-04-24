@@ -19,13 +19,13 @@ public enum FluteTypeEnum {
     "EBC瓦"= 6
     "EE瓦"= 7
      */
-    BC("BC瓦"),
-    BE("BE瓦"),
-    C("单C瓦"),
-    B("单B瓦"),
-    E("单E瓦"),
-    EBC("EBC瓦"),
-    EE("EE瓦");
+    BC("1"),
+    BE("2"),
+    C("3"),
+    B("4"),
+    E("5"),
+    EBC("6"),
+    EE("7");
 	
     private String value;
 
