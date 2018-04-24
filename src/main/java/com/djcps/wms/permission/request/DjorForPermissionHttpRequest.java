@@ -31,7 +31,7 @@ public interface DjorForPermissionHttpRequest {
 	 */
 	//@FormUrlEncoded
 	@GET("getPerManageList.org")
-	HTTPResponse getPermissionList(@QueryMap Map<String,Object> map);
+	HTTPResponse getPermissionList(@QueryMap Map<String, Object> map);
 	
 	/**
 	 * 获取WMS权限
@@ -39,7 +39,7 @@ public interface DjorForPermissionHttpRequest {
 	 * @return
 	 */
 	@GET("getPerBase.org")
-	HTTPResponse getWmsPermission(@QueryMap Map<String,Object> map);
+	HTTPResponse getWmsPermission(@QueryMap Map<String, Object> map);
 	
 	/**
 	 * 新增权限包
@@ -48,7 +48,7 @@ public interface DjorForPermissionHttpRequest {
 	 */
 	@FormUrlEncoded
 	@POST("addPostPerManage.org")
-	HTTPResponse insertPermission(@FieldMap Map<String,Object> map);
+	HTTPResponse insertPermission(@FieldMap Map<String, Object> map);
 	
 	/**
 	 * 修改权限包
@@ -57,7 +57,7 @@ public interface DjorForPermissionHttpRequest {
 	 */
 	@FormUrlEncoded
 	@POST("updatePostPerManage.org")
-	HTTPResponse updatePermission(@FieldMap Map<String,Object> map);
+	HTTPResponse updatePermission(@FieldMap Map<String, Object> map);
 	
 	/**
 	 * 删除权限包
@@ -66,7 +66,7 @@ public interface DjorForPermissionHttpRequest {
 	 */
 	@FormUrlEncoded
 	@POST("delPerManage.org")
-	HTTPResponse deletePermission(@FieldMap Map<String,Object> map);
+	HTTPResponse deletePermission(@FieldMap Map<String, Object> map);
 	
 	/**
 	 * 根据权限id获取用户信息
@@ -74,7 +74,7 @@ public interface DjorForPermissionHttpRequest {
 	 * @return
 	 */
 	@GET("getPerToUser.org")
-	HTTPResponse getUserByPermissionId(@QueryMap Map<String,Object> map);
+	HTTPResponse getUserByPermissionId(@QueryMap Map<String, Object> map);
 	
 	/**
 	 * 根据组合权限id和公司id，获取获取组合权限集合
@@ -82,5 +82,5 @@ public interface DjorForPermissionHttpRequest {
 	 * @return
 	 */
 	@GET("getPerChoose.org")
-	HTTPResponse getPerChoose(@QueryMap Map<String,Object> map);
+	HTTPResponse getPerChoose(@QueryMap Map<String, Object> map);
 }

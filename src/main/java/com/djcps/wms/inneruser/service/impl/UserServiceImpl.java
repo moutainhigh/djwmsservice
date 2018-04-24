@@ -527,7 +527,8 @@ public class UserServiceImpl implements UserService {
             OrgGetDepartmentBO getDepartmentBO=new OrgGetDepartmentBO();
             OrgGetPositionBO orgGetPositionBO=new OrgGetPositionBO();
             BeanUtils.copyProperties(orgGetUserInfoById,getDepartmentBO);
-            getDepartmentBO.setCompanyID(orgUserInfoPO.getCompany_id());
+            //getDepartmentBO.setCompanyID(orgUserInfoPO.getCompany_id());
+            getDepartmentBO.setCompanyID(orgUserInfoPO.getUcompany_id());
             getDepartmentBO.setType("1");
             BeanUtils.copyProperties(orgGetUserInfoById,orgGetPositionBO);
             orgGetPositionBO.setDepartmentId(orgUserInfoPO.getUdepartment_id());
