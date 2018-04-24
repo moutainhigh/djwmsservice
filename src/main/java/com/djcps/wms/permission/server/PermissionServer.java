@@ -1,39 +1,24 @@
 package com.djcps.wms.permission.server;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OtherHttpResult;
-import com.djcps.wms.outorder.model.SelectOutOrderBO;
-import com.djcps.wms.outorder.server.OutOrderServer;
 import com.djcps.wms.permission.constants.PermissionConstants;
-import com.djcps.wms.permission.model.bo.BaseOrgBO;
-import com.djcps.wms.permission.model.bo.DeletePerParamBO;
-import com.djcps.wms.permission.model.bo.DeletePermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
-import com.djcps.wms.permission.model.bo.GetUserByPermissionIdBO;
-import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
-import com.djcps.wms.permission.model.bo.UserPermissionBO;
-import com.djcps.wms.permission.model.bo.WmsPermissionBO;
+import com.djcps.wms.permission.model.bo.*;
 import com.djcps.wms.permission.model.po.UserPermissionPO;
 import com.djcps.wms.permission.model.vo.UserPermissionVO;
 import com.djcps.wms.permission.request.DjorForPermissionHttpRequest;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @author zhq 
@@ -44,8 +29,6 @@ import rpc.plugin.http.HTTPResponse;
 public class PermissionServer {
 	@Autowired
 	private DjorForPermissionHttpRequest djorForPermissionHttpRequest;
-
-	private Gson gson = new GsonBuilder().serializeNulls().create();
 
 	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(PermissionServer.class);
 	

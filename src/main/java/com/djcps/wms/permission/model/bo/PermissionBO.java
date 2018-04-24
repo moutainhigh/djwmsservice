@@ -22,7 +22,7 @@ public class PermissionBO {
 	 * 业务模块
 	 */
 	@NotBlank
-	private String bussion;
+	private String business;
 	/**
 	 * 公司id
 	 */
@@ -54,13 +54,15 @@ public class PermissionBO {
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-	public String getBussion() {
-		return bussion;
+
+	public String getBusiness() {
+		return business;
 	}
-	public void setBussion(String bussion) {
-		this.bussion = bussion;
+
+	public void setBusiness(String business) {
+		this.business = business;
 	}
-	
+
 	public String getCompanyId() {
 		return companyId;
 	}
@@ -86,10 +88,17 @@ public class PermissionBO {
 	public void setPageSize(String pageSize) {
 		this.pageSize = pageSize;
 	}
+
 	@Override
 	public String toString() {
-		return "ChangePermissionBO [operator=" + operator + ", ip=" + ip + ", bussion=" + bussion + ", companyId="
-				+ companyId + ", page=" + page + ", keyWord=" + keyWord + ", pageSize=" + pageSize + "]";
+		return "PermissionBO{" +
+				"operator='" + operator + '\'' +
+				", ip='" + ip + '\'' +
+				", business='" + business + '\'' +
+				", companyId='" + companyId + '\'' +
+				", page='" + page + '\'' +
+				", keyWord='" + keyWord + '\'' +
+				", pageSize='" + pageSize + '\'' +
+				'}';
 	}
-
 }

@@ -44,8 +44,9 @@ import com.djcps.wms.permission.model.vo.UserPermissionVO;
 import com.djcps.wms.permission.redis.PermissionRedisDao;
 import com.djcps.wms.permission.server.PermissionServer;
 import com.djcps.wms.permission.service.PermissionService;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @author zhq
@@ -59,8 +60,6 @@ public class PermissionServiceImpl implements PermissionService{
     
 	@Autowired
 	private PermissionServer permissionServer;
-	
-	private Gson gson = new Gson();
 	
 	@Autowired
 	private PermissionRedisDao permissionRedisDao;
@@ -76,7 +75,7 @@ public class PermissionServiceImpl implements PermissionService{
 			GetPermissionBO getPermissonBO=new GetPermissionBO();
 			BeanUtils.copyProperties(param, getPermissonBO);
 			getPermissonBO.setCompanyID(param.getCompanyId());
-			getPermissonBO.setBusiness((param.getBussion()));
+			getPermissonBO.setBusiness((param.getBusiness()));
 			//得到请求的数据
 			OtherHttpResult result =permissionServer.getPermissionList(getPermissonBO);
 			String data = JSONObject.toJSONString(result.getData());
@@ -113,7 +112,7 @@ public class PermissionServiceImpl implements PermissionService{
 	public Map<String, Object> getWmsPermission(GetWmsPermissionBO param) {
 		WmsPermissionBO wmsPermissionBO=new WmsPermissionBO();
 		BeanUtils.copyProperties(param, wmsPermissionBO);
-		wmsPermissionBO.setBusiness(param.getBussion());
+		wmsPermissionBO.setBusiness(param.getBusiness());
 		//得到wms权限数据
 		HttpResult result =permissionServer.getWmsPermission(wmsPermissionBO);
 		String data = JSONObject.toJSONString(result.getData());
@@ -149,7 +148,7 @@ public class PermissionServiceImpl implements PermissionService{
 		}
 		InsertOrUpdatePermissionBO insertOrUpdate = new InsertOrUpdatePermissionBO();
 		BeanUtils.copyProperties(param, insertOrUpdate);
-		insertOrUpdate.setBusiness(param.getBussion());
+		insertOrUpdate.setBusiness(param.getBusiness());
 		insertOrUpdate.setCompanyID(param.getCompanyId());
 		insertOrUpdate.setPdes(param.getDescribe());
 		insertOrUpdate.setPtitle(param.getTitle());
@@ -216,7 +215,7 @@ public class PermissionServiceImpl implements PermissionService{
 		GetPermissionChooseBO getPerChoose=new GetPermissionChooseBO();
 		BeanUtils.copyProperties(param, getPerChoose);
 		getPerChoose.setCompanyID(param.getCompanyId());
-		getPerChoose.setBusiness(param.getBussion());
+		getPerChoose.setBusiness(param.getBusiness());
 		//得到查询权限信息
 		HttpResult result =permissionServer.getPerChoose(getPerChoose);
 		String data = JSONObject.toJSONString(result.getData());
@@ -247,7 +246,7 @@ public class PermissionServiceImpl implements PermissionService{
 		InsertOrUpdatePermissionBO insertOrUpdate = new InsertOrUpdatePermissionBO();
 		BeanUtils.copyProperties(param, insertOrUpdate);
 		insertOrUpdate.setCompanyID(param.getCompanyId());
-		insertOrUpdate.setBusiness(param.getBussion());
+		insertOrUpdate.setBusiness(param.getBusiness());
 		insertOrUpdate.setPdes(param.getDescribe());
 		insertOrUpdate.setPtitle(param.getTitle());
 		insertOrUpdate.setUserid(partnerInfoBO.getOperatorId());
@@ -285,7 +284,7 @@ public class PermissionServiceImpl implements PermissionService{
         BaseOrgBO param = new BaseOrgBO();
         param.setOperator("-1");
         param.setIp("");
-        param.setBussion(AppConstant.WMS);
+        param.setBusiness(AppConstant.WMS);
         List<UserPermissionVO> basicPermissionList = permissionServer.listBasicPermission(param);
         Optional optional = basicPermissionList.stream().filter(x ->
                 x.getInterfaceName().split(AppConstant.W).clone()[0].equals(url)
