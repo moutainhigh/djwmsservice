@@ -19,6 +19,7 @@ import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
+import com.djcps.wms.permission.service.PermissionService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,9 @@ public class InnerUserController {
 
     @Autowired
     private InnerUserService innerUserService;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @RequestMapping(name = "test", value = "/test", method = {RequestMethod.GET,RequestMethod.POST})
     public Map<String, Object> login(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
@@ -229,12 +233,13 @@ public class InnerUserController {
      * @return map
      */
     @RequestMapping(name = "用户登出系统", value = "/logout")
-    public Map<String, Object> logout(@InnerUserToken String token, HttpServletResponse response) {
+    public Map<String, Object> logout(@InnerUserToken String token, HttpServletResponse response,@InnerUserToken UserInfoVO userInfoVO) {
         Boolean isSuccess = innerUserService.logout(token);
         //无论是否成功退出内部统一登录系统，本系统内直接可以退出
         if(isSuccess) {
             CookiesUtil.setCookie(response,ParamsConfig.INNER_USER_COOKIE_NAME,"",0);
             UserLogoutVO userLogoutVO = new UserLogoutVO(ParamsConfig.INNER_USER_LOGIN_URL);
+            permissionService.delUserRedisPermission(userInfoVO.getId());
             return MsgTemplate.successMsg(userLogoutVO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);

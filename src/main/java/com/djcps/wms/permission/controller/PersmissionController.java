@@ -1,17 +1,5 @@
 package com.djcps.wms.permission.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
@@ -19,21 +7,25 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.inneruser.annotation.OperatorAnnotation;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.OperatorInfoBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.permission.constants.ParamConstants;
-import com.djcps.wms.permission.model.bo.DeletePermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
-import com.djcps.wms.permission.model.bo.GetWmsPermissionBO;
-import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionChooseBO;
-import com.djcps.wms.permission.model.bo.UpdatePermissionBO;
+import com.djcps.wms.permission.constants.PermissionConstants;
+import com.djcps.wms.permission.model.bo.*;
 import com.djcps.wms.permission.service.PermissionService;
 import com.google.gson.Gson;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.Map;
 
 
 /**
@@ -56,7 +48,7 @@ public class PersmissionController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	@RequestMapping(name = "得到组合权限列表" ,value = "/list", method = RequestMethod.POST)
 	public Map<String, Object> getPermissionAll(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
 		try {
 			LOGGER.debug("json:"+json);
@@ -82,7 +74,7 @@ public class PersmissionController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/getWmsPermission", method = RequestMethod.POST)
+	@RequestMapping(name = "得到wms权限", value = "/getWmsPermission", method = RequestMethod.POST)
 	public Map<String, Object> getWmsPermission(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
 		try {
 			LOGGER.debug("json:"+json);
@@ -90,7 +82,7 @@ public class PersmissionController {
 			GetWmsPermissionBO wmsPerBO=new GetWmsPermissionBO();
 			BeanUtils.copyProperties(operatorInfoBO, wmsPerBO);
 			//wms对应的id
-			wmsPerBO.setFirstnode(ParamConstants.BUSSION_ID);
+			wmsPerBO.setFirstnode(PermissionConstants.BUSINESS_ID);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(wmsPerBO,new HibernateSupportedValidator<GetWmsPermissionBO>()
 					.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
@@ -111,7 +103,7 @@ public class PersmissionController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/insertWmsPermission", method = RequestMethod.POST)
+	@RequestMapping(name = "新增权限包" ,value = "/insertWmsPermission", method = RequestMethod.POST)
 	public Map<String, Object> insertWmsPermission(@RequestBody(required = false) String json,HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
 		try {
 			PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -138,7 +130,7 @@ public class PersmissionController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/deletePermission", method = RequestMethod.POST)
+	@RequestMapping(name = "删除权限包", value = "/deletePermission", method = RequestMethod.POST)
 	public Map<String, Object> deletePermission(@RequestBody(required = false) String json,HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
 		try {
 			PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -166,7 +158,7 @@ public class PersmissionController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/getPermissionChoose", method = RequestMethod.POST)
+	@RequestMapping(name = "获取获取组合权限信息", value = "/getPermissionChoose", method = RequestMethod.POST)
 	public Map<String, Object> getPermissionList(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
 		try {
 			LOGGER.debug("json:"+json);
@@ -192,7 +184,7 @@ public class PersmissionController {
 	 * @param json
 	 * @return
 	 */
-	@RequestMapping(value = "/updateWmsPermission", method = RequestMethod.POST)
+	@RequestMapping(name = "修改权限包", value = "/updateWmsPermission", method = RequestMethod.POST)
 	public Map<String, Object> updateWmsPermission(@RequestBody(required = false) String json,HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
 		try {
 			PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
@@ -210,6 +202,37 @@ public class PersmissionController {
 		}catch(Exception e) {
 			e.printStackTrace();
 			LOGGER.error("修改权限异常:{}"+e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+
+	/**
+	 * 获取用户权限数据项
+	 * @param json
+	 * @param operatorInfoBO
+	 * @return
+	 */
+	@RequestMapping(name = "获取用户权限数据项", value = "/userPermission", method = RequestMethod.POST)
+	public Map<String, Object> userPermissionForPda(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+		try {
+			LOGGER.debug("json:"+json);
+			UserPermissionBO userPermissionBO = gson.fromJson(json, UserPermissionBO.class);
+			userPermissionBO.setId(operatorInfoBO.getOperator());
+			userPermissionBO.setBusiness(AppConstant.WMS);
+			userPermissionBO.setpBusiness(PermissionConstants.BUSINESS_ID);
+			userPermissionBO.setIp(operatorInfoBO.getIp());
+			BeanUtils.copyProperties(operatorInfoBO, userPermissionBO);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(userPermissionBO,new HibernateSupportedValidator<UserPermissionBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return permissionService.getUserPermission(userPermissionBO);
+		}catch(Exception e) {
+			e.printStackTrace();
+			LOGGER.error("获取用户权限异常:{}"+e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}

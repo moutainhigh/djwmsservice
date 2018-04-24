@@ -1,18 +1,11 @@
 package com.djcps.wms.permission.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.permission.model.bo.BaseOrgBO;
-import com.djcps.wms.permission.model.bo.DeletePermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
-import com.djcps.wms.permission.model.bo.GetWmsPermissionBO;
-import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionChooseBO;
-import com.djcps.wms.permission.model.bo.UpdatePermissionBO;
-
+import com.djcps.wms.permission.model.bo.*;
+import com.djcps.wms.permission.model.vo.UserPermissionVO;
 
 
 /**
@@ -63,4 +56,36 @@ public interface PermissionService {
 	 * @return Map
 	 */
 	Map<String, Object> updatePermission(UpdatePermissionBO param,PartnerInfoBO partnerInfoBO);
+
+	/**
+	 * 获取用户所有权限 
+	 * @autuor Chengw
+	 * @since 2018/4/23  20:33
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> getUserPermission(UserPermissionBO param);
+
+	/**
+	 * 获取用户所有权限 list 
+	 * @autuor Chengw
+	 * @since 2018/4/23  20:34
+	 * @param param
+	 * @return
+	 */
+	List<UserPermissionVO> listUserPermission(UserPermissionBO param);
+
+	/**
+	 * 校验是否不存在系统权限项
+	 * @param userId
+	 * @param url
+	 * @return
+	 */
+	Boolean notExistSystemPermission(String userId,String url);
+
+	/**
+	 * 删除redis 权限缓存
+	 * @param userId
+	 */
+	void delUserRedisPermission(String userId);
 }
