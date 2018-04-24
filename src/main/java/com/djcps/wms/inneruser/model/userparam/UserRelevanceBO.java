@@ -42,6 +42,11 @@ public class UserRelevanceBO {
     private String roleType  ;
 
     /**
+     * 角色id
+     */
+    private String roleId;
+
+    /**
      * 所属部门
      */
     private String department;
@@ -62,6 +67,14 @@ public class UserRelevanceBO {
     private String warehouseName;
 
     private List<String>  warehouseNameList;
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
 
     public List<String> getWarehouseNameList() {
         return warehouseNameList;
@@ -177,6 +190,7 @@ public class UserRelevanceBO {
                 ", lastLoginTime='" + lastLoginTime + '\'' +
                 ", loginCount='" + loginCount + '\'' +
                 ", roleType='" + roleType + '\'' +
+                ", roleId='" + roleId + '\'' +
                 ", department='" + department + '\'' +
                 ", warehouse='" + warehouse + '\'' +
                 ", contactWay='" + contactWay + '\'' +

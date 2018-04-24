@@ -193,7 +193,7 @@ public class UserServiceImpl implements UserService {
         OrderResult userRelevanceResult=userServer.pageGetUserRelevance(pageGetUserBO);
         if(userRelevanceResult.isSuccess()) {
             if (!ObjectUtils.isEmpty(userRelevanceResult.getData())){
-                //TODO 根据用户id去org获取用户信息
+                //根据用户id去org获取用户信息
                 if(!ObjectUtils.isEmpty(userRelevanceResult.getData().getResult())){
                     String userResult = gson.toJson(userRelevanceResult.getData().getResult());
                     //查出的用户信息列表
@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
                         });
                         orgGetUserInfoByIds.setUserids(ids.toString());
 
-                        // 从org获取用户数据
+                        //TODO 从org获取用户数据
                         List<OrgUserInfoPO> orgUserInfoPOS = userServer.getUserListByOrg(orgGetUserInfoByIds);
                         if (!ObjectUtils.isEmpty(orgUserInfoPOS)) {
                             userRelevancePOList.stream().forEach(userRelevanceBO -> {
@@ -244,6 +244,7 @@ public class UserServiceImpl implements UserService {
                                         List<GetRoleTypePO> getRoleList=new ArrayList<>();
                                         List<String> roletypeList=new ArrayList<>();
                                         StringBuffer roleTypeName=new StringBuffer();
+                                        StringBuffer roleId=new StringBuffer();
                                         //获取角色类型名称
                                         String roletypes=userRelevanceBO.getRoleType();
                                         //分割出来的字符数组
@@ -263,6 +264,7 @@ public class UserServiceImpl implements UserService {
                                         if (!ObjectUtils.isEmpty(getRoleTypePOList)){
                                             getRoleTypePOList.stream().forEach(getRoleTypePO -> {
                                                 roleTypeName.append(getRoleTypePO.getRoleName()+",");
+                                                roleId.append(getRoleTypePO.getRoleId()+",");
                                             });
 //                                            for (GetRoleTypePO getRoleTypePO:getRoleList){
 //
@@ -272,10 +274,6 @@ public class UserServiceImpl implements UserService {
                                     }
                                 });
                             });
-
-
-
-
                             //返回数据
                             userRelevanceResult.getData().setResult(userRelevancePOList);
                             return MsgTemplate.successMsg(userRelevanceResult.getData());
@@ -362,9 +360,9 @@ public class UserServiceImpl implements UserService {
                 if(ObjectUtils.isEmpty(relevanceBO)){
                     UserRelevanceBO userRelevanceBO= new UserRelevanceBO();
                     userRelevanceBO.setUserId(orgsaveUserBO.getId());
-                    userRelevanceBO.setWarehouseId(StringUtils.isEmpty(saveUserBO.getWarehouseId())?null:saveUserBO.getWarehouseId());
-                    userRelevanceBO.setUserName(StringUtils.isEmpty(saveUserBO.getUname())?null:saveUserBO.getUname());
-                    userRelevanceBO.setRoleType(StringUtils.isEmpty(saveUserBO.getRoleids())?null:saveUserBO.getRoleids());
+                    userRelevanceBO.setWarehouseId(saveUserBO.getWarehouseId());
+                    userRelevanceBO.setUserName(saveUserBO.getUname());
+                    userRelevanceBO.setRoleType(saveUserBO.getRoleids());
                     userRelevanceBO.setPartnerId(wmssaveUserBO.getPartnerId());
                     userRelevanceBO.setWorkStatus(UserConstant.FREE);
                     // 新增用户关联信息
@@ -517,6 +515,7 @@ public class UserServiceImpl implements UserService {
      **/
     @Override
     public Map<String, Object> getDepartAndJob(OrgGetUserInfoById orgGetUserInfoById) {
+        orgGetUserInfoById.setId(orgGetUserInfoById.getUserId());
         OrgUserInfoPO orgUserInfoPO=userServer.getUserByOrg(orgGetUserInfoById);
         UserDepartAndJobBO userDepartAndJobBO=new UserDepartAndJobBO();
         if(!ObjectUtils.isEmpty(orgUserInfoPO)){

@@ -11,7 +11,7 @@ public class GetRoleTypePO {
     /**
      * 角色id
      */
-    private String rid;
+    private String roleId;
     /**
      * 合作方id
      */
@@ -25,12 +25,12 @@ public class GetRoleTypePO {
      */
     private String roleName;
 
-    public String getRid() {
-        return rid;
+    public String getRoleId() {
+        return roleId;
     }
 
-    public void setRid(String rid) {
-        this.rid = rid;
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 
     public String getPartnerId() {
@@ -60,7 +60,7 @@ public class GetRoleTypePO {
     @Override
     public String toString() {
         return "GetRoleTypePO{" +
-                "rid='" + rid + '\'' +
+                "roleId='" + roleId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", roleType='" + roleType + '\'' +
                 ", roleName='" + roleName + '\'' +

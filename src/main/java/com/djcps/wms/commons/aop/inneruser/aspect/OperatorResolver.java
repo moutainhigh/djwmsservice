@@ -1,6 +1,5 @@
 package com.djcps.wms.commons.aop.inneruser.aspect;
 
-import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.aop.inneruser.annotation.OperatorAnnotation;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.AppConstant;
@@ -50,7 +49,7 @@ public class OperatorResolver implements HandlerMethodArgumentResolver {
                         UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(cookie.getValue());
                         operatorInfoBO.setOperator(userInfoVO.getId());
                         operatorInfoBO.setIp(getRealIp(request));
-                        operatorInfoBO.setBussion(AppConstant.WMS);
+                        operatorInfoBO.setBusiness(AppConstant.WMS);
                         return operatorInfoBO;
                     }
                 }
