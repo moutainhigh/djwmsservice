@@ -159,4 +159,10 @@ public class AppConstant {
      * 角色msg枚举类型
      */
     public static final Integer WMS_ROLE_ENUM_PREFIX = 1600;
+
+    /**
+     * 问号
+     */
+    public static final String W = "?";
+
 }

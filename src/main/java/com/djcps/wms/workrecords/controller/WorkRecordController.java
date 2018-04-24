@@ -2,11 +2,11 @@ package com.djcps.wms.workrecords.controller;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.workrecords.model.WorkRecordsDetailBO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +20,10 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.record.controller.OperationRecordController;
-import com.djcps.wms.record.model.param.EntryRecordListBO;
 import com.djcps.wms.workrecords.model.WorkRecordsBO;
-import com.djcps.wms.workrecords.model.param.WorkRecordsParam;
 import com.djcps.wms.workrecords.service.WorkRecordService;
 import com.google.gson.Gson;
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @title 工作记录控制层
@@ -32,26 +31,23 @@ import com.google.gson.Gson;
  * @version 创建时间：2018年4月17日 下午3:23:29
  */
 @RestController
-@RequestMapping("/workrecord")
-
+@RequestMapping("/workrecords")
 public class WorkRecordController {
-	private static final Logger logger = LoggerFactory.getLogger(OperationRecordController.class);
+
+	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OperationRecordController.class);
 
 	@Autowired
 	private WorkRecordService workRecordService;
 
-	private Gson gson = new Gson();
-
 	/**
 	 * 入库和装车 通过操作类型获取工作记录相关信息
-	 * 
+	 * @param json
 	 * @author py
 	 */
-	@RequestMapping(name = "通过操作类型获取工作记录信息接口", value = "/getRecordListByOperationType", method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> getRecordListByOperationType(@RequestBody(required = false) String json,
-			HttpServletRequest request) {
+	@RequestMapping(name = "通过操作类型获取工作记录信息接口", value = "/listByOperationType", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> listByOperationType(@RequestBody(required = false) String json) {
 		try {
-			logger.debug("json : " + json);
+            LOGGER.debug("json : " + json);
 			WorkRecordsBO param = gson.fromJson(json, WorkRecordsBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
@@ -64,7 +60,7 @@ public class WorkRecordController {
 			return workRecordService.getAllRecordListByOperationType(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -73,15 +69,13 @@ public class WorkRecordController {
 	 * 获取提货工作记录信息
 	 * 
 	 * @param json
-	 * @param request
 	 * @return
 	 */
 
-	@RequestMapping(name = "提货工作记录信息接口", value = "/getDeliveryRecordList", method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> getDeliveryRecordList(@RequestBody(required = false) String json,
-			HttpServletRequest request) {
+	@RequestMapping(name = "提货工作记录信息接口", value = "/listDeliveryRecord", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> listDeliveryRecord(@RequestBody(required = false) String json) {
 		try {
-			logger.debug("json : " + json);
+            LOGGER.debug("json : " + json);
 			WorkRecordsBO param = gson.fromJson(json, WorkRecordsBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
@@ -91,10 +85,10 @@ public class WorkRecordController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return workRecordService.getDeliveryRecordList(param);
+			return workRecordService.listDeliveryRecord(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
@@ -103,17 +97,16 @@ public class WorkRecordController {
 	 * 获取入库装车工作记录详情
 	 * 
 	 * @param json
-	 * @param request
 	 * @return
 	 */
 
-	@RequestMapping(name = "获取工作记录详情列表", value = "/getWorkRecordsDetail", method = RequestMethod.POST)
-	public Map<String, Object> getWorkRecordsDetail(@RequestBody String json) {
+	@RequestMapping(name = "获取工作记录详情列表", value = "/getDetail", method = RequestMethod.POST)
+	public Map<String, Object> getDetail(@RequestBody String json) {
 		try {
-			WorkRecordsParam param = gson.fromJson(json, WorkRecordsParam.class);
+			WorkRecordsDetailBO param = gson.fromJson(json, WorkRecordsDetailBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<WorkRecordsParam>()
+							new HibernateSupportedValidator<WorkRecordsDetailBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -122,7 +115,7 @@ public class WorkRecordController {
 			return workRecordService.getWorkRecordsDetail(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 
@@ -131,17 +124,16 @@ public class WorkRecordController {
 	/**
 	 * 获取提货工作记录详情
 	 * @param json
-	 * @param request
 	 * @return
 	 */
 
-	@RequestMapping(name = "获取提货工作记录详情列表", value = "/getDeliveryWorkRecordsDetail", method = RequestMethod.POST)
-	public Map<String, Object> getDeliveryWorkRecordsDetail(@RequestBody String json) {
+	@RequestMapping(name = "获取提货工作记录详情列表", value = "/getDeliveryDetail", method = RequestMethod.POST)
+	public Map<String, Object> getDeliveryDetail(@RequestBody String json) {
 		try {
-			WorkRecordsParam param = gson.fromJson(json, WorkRecordsParam.class);
+			WorkRecordsDetailBO param = gson.fromJson(json, WorkRecordsDetailBO.class);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<WorkRecordsParam>()
+							new HibernateSupportedValidator<WorkRecordsDetailBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
@@ -150,7 +142,7 @@ public class WorkRecordController {
 			return workRecordService.getDeliveryWorkRecordsDetail(param);
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 

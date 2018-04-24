@@ -19,17 +19,19 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.inneruser.annotation.OperatorAnnotation;
+import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.OperatorInfoBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.permission.constants.ParamConstants;
+import com.djcps.wms.permission.constants.PermissionConstants;
 import com.djcps.wms.permission.model.bo.DeletePerParamBO;
 import com.djcps.wms.permission.model.bo.DeletePermissionBO;
 import com.djcps.wms.permission.model.bo.GetWmsPermissionBO;
 import com.djcps.wms.permission.model.bo.PermissionBO;
 import com.djcps.wms.permission.model.bo.PermissionChooseBO;
 import com.djcps.wms.permission.model.bo.UpdatePermissionBO;
+import com.djcps.wms.permission.model.bo.UserPermissionBO;
 import com.djcps.wms.permission.service.PermissionService;
 import com.google.gson.Gson;
 
@@ -88,7 +90,7 @@ public class PersmissionController {
 			GetWmsPermissionBO wmsPerBO=new GetWmsPermissionBO();
 			BeanUtils.copyProperties(operatorInfoBO, wmsPerBO);
 			//wms对应的id
-			wmsPerBO.setFirstnode(ParamConstants.BUSSION_ID);
+			wmsPerBO.setFirstnode(PermissionConstants.BUSINESS_ID);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(wmsPerBO,new HibernateSupportedValidator<GetWmsPermissionBO>()
 					.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
@@ -211,6 +213,37 @@ public class PersmissionController {
 		}catch(Exception e) {
 			e.printStackTrace();
 			LOGGER.error("修改权限异常:{}"+e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 获取用户权限数据项
+	 * @param json
+	 * @param operatorInfoBO
+	 * @return
+	 */
+	@RequestMapping(name = "获取用户权限数据项", value = "/userPermission", method = RequestMethod.POST)
+	public Map<String, Object> userPermissionForPda(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+		try {
+			LOGGER.debug("json:"+json);
+			UserPermissionBO userPermissionBO = gson.fromJson(json, UserPermissionBO.class);
+			userPermissionBO.setId(operatorInfoBO.getOperator());
+			userPermissionBO.setBusiness(AppConstant.WMS);
+			userPermissionBO.setpBusiness(PermissionConstants.BUSINESS_ID);
+			userPermissionBO.setIp(operatorInfoBO.getIp());
+			BeanUtils.copyProperties(operatorInfoBO, userPermissionBO);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(userPermissionBO,new HibernateSupportedValidator<UserPermissionBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return permissionService.getUserPermission(userPermissionBO);
+		}catch(Exception e) {
+			e.printStackTrace();
+			LOGGER.error("获取用户权限异常:{}"+e.getMessage());
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
