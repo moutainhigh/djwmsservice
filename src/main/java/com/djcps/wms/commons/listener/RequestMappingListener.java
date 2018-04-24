@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import com.djcps.wms.commons.constant.RedisPrefixContant;
+import com.djcps.wms.commons.constant.RedisPrefixConstant;
 import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.djcps.wms.sysurl.service.SysUrlService;
 import com.google.gson.Gson;
@@ -112,7 +112,7 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 			List<SysUrlPO> addAllSysUrl = sysUrlService.getALLSysUrl();
 			if(!ObjectUtils.isEmpty(addAllSysUrl)){
 				for (SysUrlPO sysUrlPo : addAllSysUrl) {
-					redisClient.set(RedisPrefixContant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
+					redisClient.set(RedisPrefixConstant.REDIS_SYSTEM_URL_PREFIX+sysUrlPo.getUrl(),gson.toJson(sysUrlPo));
 				}
 			}
 		} catch (Exception e) {
