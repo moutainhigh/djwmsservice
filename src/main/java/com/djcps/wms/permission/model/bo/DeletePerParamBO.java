@@ -1,16 +1,11 @@
 package com.djcps.wms.permission.model.bo;
 
-import java.io.Serializable;
-
 /**
  * @author zhq
- * 删除权限实体类
+ * 删除权限参数实体类
  * 2018年4月23日
  */
-public class DeletePermissionBO extends BaseOrgBO implements Serializable{
-
-	private static final long serialVersionUID = -1524947916009295759L;
-	
+public class DeletePerParamBO extends BaseOrgParamBO{
 	/**
 	 * 用户id
 	 */
@@ -39,8 +34,7 @@ public class DeletePermissionBO extends BaseOrgBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "DeletePermissionBO [userid=" + userid + ", id=" + id + "]";
+		return "DeletePerParamBO [userid=" + userid + ", id=" + id + "]";
 	}
-	
 	
 }

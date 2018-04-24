@@ -1,18 +1,13 @@
 package com.djcps.wms.permission.model.bo;
 
-import java.io.Serializable;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author zhq
- * ORG服务的基础类
- * 2018年4月12日
+ * 传递参数的基础类
+ * 2018年4月23日
  */
-public class BaseOrgBO implements Serializable{
-
-	private static final long serialVersionUID = 945515681218849379L;
-	
+public class BaseOrgParamBO {
 	/**
 	 * 操作人
 	 */
@@ -27,8 +22,7 @@ public class BaseOrgBO implements Serializable{
 	 * 业务模块
 	 */
 	@NotBlank
-	private String bussion;
-	
+	private String business;
 	public String getOperator() {
 		return operator;
 	}
@@ -41,15 +35,15 @@ public class BaseOrgBO implements Serializable{
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-	public String getBussion() {
-		return bussion;
+	public String getBusiness() {
+		return business;
 	}
-	public void setBussion(String bussion) {
-		this.bussion = bussion;
+	public void setBusiness(String business) {
+		this.business = business;
 	}
 	@Override
 	public String toString() {
-		return "OrgBaseBO [operator=" + operator + ", ip=" + ip + ", bussion=" + bussion + "]";
+		return "BaseOrgParamBO [operator=" + operator + ", ip=" + ip + ", business=" + business + "]";
 	}
 	
 }

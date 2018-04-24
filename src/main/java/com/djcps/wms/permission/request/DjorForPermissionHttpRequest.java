@@ -5,13 +5,11 @@ import java.util.Map;
 
 import com.djcps.wms.commons.config.ParamsConfig;
 
-import okhttp3.RequestBody;
-import retrofit2.http.Body;
-import retrofit2.http.Field;
+
+
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rpc.plugin.http.HTTPResponse;
@@ -29,7 +27,6 @@ public interface DjorForPermissionHttpRequest {
 	 * @param map
 	 * @return
 	 */
-	//@FormUrlEncoded
 	@GET("getPerManageList.org")
 	HTTPResponse getPermissionList(@QueryMap Map<String,Object> map);
 	
