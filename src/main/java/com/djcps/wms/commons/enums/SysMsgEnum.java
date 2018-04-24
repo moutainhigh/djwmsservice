@@ -66,7 +66,9 @@ public enum SysMsgEnum implements MsgInterface {
 
 	WAREHOUSE_ERROR(12, "该仓库有误请重新核实"),
 
-	OUTORDER_FAIL(13, "生成出库单失败");
+	OUTORDER_FAIL(13, "生成出库单失败"),
+
+	NOT_PERMISSION(14, "无访问权限，请联系管理员");
 	
     
 	private int code;

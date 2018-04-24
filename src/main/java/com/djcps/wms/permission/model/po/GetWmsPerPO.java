@@ -2,18 +2,49 @@ package com.djcps.wms.permission.model.po;
 
 import java.io.Serializable;
 
+/**
+ * @author zhq
+ * 从ORG得到WMS权限参数实体类
+ * 2018年4月23日
+ */
 public class GetWmsPerPO implements Serializable{
 
 	private static final long serialVersionUID = -5570401834676092111L;
-	
+	/**
+	 * id
+	 */
 	private String id;
+	/**
+	 * 标题
+	 */
 	private String ptitle;
+	/**
+	 * 层级
+	 */
 	private String polayer;
+	/**
+	 * 父节点
+	 */
 	private String pfather;
+	/**
+	 * 上层节点
+	 */
 	private String pfirst;
+	/**
+	 * 是否是父类
+	 */
 	private String isParent;
+	/**
+	 * 标记
+	 */
 	private String pmark;
+	/**
+	 * 图标
+	 */
 	private String icon;
+	/**
+	 * 接口
+	 */
 	private String pinterface;
 	public String getId() {
 		return id;

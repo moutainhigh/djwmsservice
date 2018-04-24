@@ -2,6 +2,8 @@ package com.djcps.wms.permission.model.bo;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * @author zhq
  * ORG服务的基础类
@@ -14,14 +16,17 @@ public class BaseOrgBO implements Serializable{
 	/**
 	 * 操作人
 	 */
+	@NotBlank
 	private String operator;
 	/**
 	 * ip
 	 */
+	@NotBlank
 	private String ip;
 	/**
 	 * 业务模块
 	 */
+	@NotBlank
 	private String bussion;
 	
 	public String getOperator() {

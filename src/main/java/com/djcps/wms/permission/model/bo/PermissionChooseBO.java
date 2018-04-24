@@ -1,5 +1,10 @@
 package com.djcps.wms.permission.model.bo;
 
+/**
+ * @author zhq
+ * 批量得到权限实体类
+ * 2018年4月23日
+ */
 public class PermissionChooseBO extends BaseOrgBO{
 	/**
 	 * id集合

@@ -1,7 +1,5 @@
 package com.djcps.wms.workrecords.service;
 
-import java.util.List;
-
 /**
 * @author panyang
 * @version 创建时间：2018年4月17日 下午3:48:42
@@ -11,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.djcps.wms.workrecords.model.WorkRecordsBO;
-import com.djcps.wms.workrecords.model.WorkRecordsPO;
-import com.djcps.wms.workrecords.model.param.WorkRecordsParam;
+import com.djcps.wms.workrecords.model.WorkRecordsDetailBO;
 
 /**
  * 工作记录业务层
@@ -41,7 +38,7 @@ public interface WorkRecordService {
 	 * @author:py
 	 * @date:2018年4月20日
 	 */
-	Map<String, Object> getWorkRecordsDetail(WorkRecordsParam param);
+	Map<String, Object> getWorkRecordsDetail(WorkRecordsDetailBO param);
 
 	/**
 	 *查询提货工作记录信息
@@ -51,7 +48,7 @@ public interface WorkRecordService {
 	 * @author:py
 	 * @date:2018年4月20日
 	 */
-	Map<String, Object> getDeliveryRecordList(WorkRecordsBO param);
+	Map<String, Object> listDeliveryRecord(WorkRecordsBO param);
 
 	/**
 	 *查询入库装车工作记录详情
@@ -61,6 +58,6 @@ public interface WorkRecordService {
 	 * @author:py
 	 * @date:2018年4月20日
 	 */
-	Map<String, Object> getDeliveryWorkRecordsDetail(WorkRecordsParam param);
+	Map<String, Object> getDeliveryWorkRecordsDetail(WorkRecordsDetailBO param);
 
 }

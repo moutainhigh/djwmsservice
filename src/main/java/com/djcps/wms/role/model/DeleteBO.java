@@ -25,6 +25,42 @@ public class DeleteBO extends BaseOrgBO {
      */
     @NotBlank
     private String partnerId;
+    /**
+     * 公司id
+     */
+    private String companyId;
+    /**
+     * 请求人
+     */
+    private String userId;
+    /**
+     * 角色类型编码
+     */
+    private String roleTypeCode;
+
+    public String getRoleTypeCode() {
+        return roleTypeCode;
+    }
+
+    public void setRoleTypeCode(String roleTypeCode) {
+        this.roleTypeCode = roleTypeCode;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getPartnerId() {
         return partnerId;
@@ -44,7 +80,8 @@ public class DeleteBO extends BaseOrgBO {
 
     @Override
     public String toString() {
-        return "DeleteBO [roleId=" + roleId + ", partnerId=" + partnerId + "]";
+        return "DeleteBO [roleId=" + roleId + ", partnerId=" + partnerId + ", companyId=" + companyId + ", userId="
+                + userId + ", roleTypeCode=" + roleTypeCode + "]";
     }
 
 }

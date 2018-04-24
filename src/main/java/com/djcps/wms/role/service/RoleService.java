@@ -25,11 +25,11 @@ public interface RoleService {
     Map<String,Object> roleList(RoleListBO roleListBO);
     /**
      * 更新角色信息
-     * @param UpdateRoleInfoBO
+     * @param updateRoleInfoBO
      * @return
      * @create  2018/4/12
      */
-    Map<String,Object> update(UpdateRoleInfoBO UpdateRoleInfoBO);
+    Map<String,Object> update(UpdateRoleInfoBO updateRoleInfoBO);
     /**
      * 删除角色信息
      * @param deleteBO
@@ -44,6 +44,7 @@ public interface RoleService {
     Map<String, Object> save(SaveBO saveBO);
     /**
      * 获取角色类型信息列表
+     * @param param
      * @return
      */
     Map<String, Object> getRoleType(BaseBO param);

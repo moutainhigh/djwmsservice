@@ -21,9 +21,11 @@ import com.djcps.wms.role.model.RoleListBO;
 import com.djcps.wms.role.model.SaveBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
 import com.djcps.wms.role.model.request.GetUserStatusPO;
+import com.djcps.wms.role.model.request.OrgPerssionsInfoPO;
 import com.djcps.wms.role.model.request.OrgRoleListPO;
 import com.djcps.wms.role.model.request.OrgSavePO;
 import com.djcps.wms.role.model.request.RoleInfoResultPO;
+import com.djcps.wms.role.model.request.WmsPessionInfoPO;
 import com.djcps.wms.role.model.request.WmsRoleInfoPO;
 import com.djcps.wms.role.server.OrgRoleHttpServer;
 import com.djcps.wms.role.server.RoleHttpServer;
@@ -56,27 +58,37 @@ public class RoleServiceImpl implements RoleService {
      **/
     @Override
     public Map<String, Object> roleList(RoleListBO roleListBO) {
-        roleListBO.setBussion("WMS");
-        roleListBO.setIp("192.168.10.71");
+        roleListBO.setCompanyID(roleListBO.getCompanyId());
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         // 从wms服务获取角色关联信息
         RoleInfoResultPO wmsRoleInfo = roleHttpServer.roleList(roleListBO);
         if (!ObjectUtils.isEmpty(wmsRoleInfo.getResult())) {
             BeanUtils.copyProperties(roleListBO, orgRoleInfoBO);
             for (WmsRoleInfoPO roleId : wmsRoleInfo.getResult()) {
-                orgRoleInfoBO.setRid(roleId.getRoleId());
+                orgRoleInfoBO.setId(roleId.getRoleId());
                 // 通过角色id从org获取角色信息
                 List<OrgRoleListPO> orgRoleInfo = orgRoleHttpServer.getRoleFromId(orgRoleInfoBO);
-                if (!ObjectUtils.isEmpty(orgRoleInfo)) {
-                    // 进行数据组合
-                    if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
-                        roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
-                        if (!ObjectUtils.isEmpty(orgRoleInfo.get(0).getPerssions())) {
-                            roleId.setPerssions(orgRoleInfo.get(0).getPerssions());
+                if (ObjectUtils.isEmpty(orgRoleInfo)) {
+
+                    return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+                }
+                List<WmsPessionInfoPO> list = new ArrayList<WmsPessionInfoPO>();
+
+                // 进行数据组合
+                if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
+                    roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
+                    if (!ObjectUtils.isEmpty(orgRoleInfo.get(0).getPerssions())) {
+                        List<OrgPerssionsInfoPO> info = orgRoleInfo.get(0).getPerssions();
+                        // 替换字段
+                        for (OrgPerssionsInfoPO perssions : info) {
+                            WmsPessionInfoPO wmsPessionInfoPO = new WmsPessionInfoPO();
+                            wmsPessionInfoPO.setId(perssions.getPid());
+                            wmsPessionInfoPO.setTitle(perssions.getPtitle());
+                            list.add(wmsPessionInfoPO);
                         }
+                        roleId.setPerssions(list);
                     }
                 }
-
             }
         }
 
@@ -86,14 +98,15 @@ public class RoleServiceImpl implements RoleService {
     /**
      * 更新角色信息
      * 
-     * @param UpdateRoleInfoBO
+     * @param updateRoleInfoBO
      * @return
      * @create 2018/4/12
      */
     @Override
     public Map<String, Object> update(UpdateRoleInfoBO updateRoleInfoBO) {
-        updateRoleInfoBO.setBussion("WMS");
-        updateRoleInfoBO.setIp("192.168.10.71");
+        updateRoleInfoBO.setOid(updateRoleInfoBO.getCompanyId());
+        updateRoleInfoBO.setCompanyID(updateRoleInfoBO.getCompanyId());
+        updateRoleInfoBO.setUserid(updateRoleInfoBO.getOperator());
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         // 更新wms角色关联信息
         HttpResult baseResult = roleHttpServer.update(updateRoleInfoBO);
@@ -101,8 +114,8 @@ public class RoleServiceImpl implements RoleService {
         if (baseResult.isSuccess()) {
             BeanUtils.copyProperties(updateRoleInfoBO, orgRoleInfoBO);
             // 实体类匹配字段数值请求org服务
-            if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleTypeCode())) {
-                orgRoleInfoBO.setRtype(updateRoleInfoBO.getRoleTypeCode());
+            if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleType())) {
+                orgRoleInfoBO.setRtype(updateRoleInfoBO.getRoleType());
             }
             if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleName())) {
                 orgRoleInfoBO.setRname(updateRoleInfoBO.getRoleName());
@@ -113,10 +126,11 @@ public class RoleServiceImpl implements RoleService {
             if (!ObjectUtils.isEmpty(updateRoleInfoBO.getPerId())) {
                 orgRoleInfoBO.setPid(updateRoleInfoBO.getPerId());
             }
-            orgRoleInfoBO.setRid(updateRoleInfoBO.getRoleId());
+            orgRoleInfoBO.setId(updateRoleInfoBO.getRoleId());
+            ;
 
             // 更新org角色关联信息
-            result = orgRoleHttpServer.updatePostRoleManage(updateRoleInfoBO);
+            result = orgRoleHttpServer.updatePostRoleManage(orgRoleInfoBO);
         } else {
             return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
         }
@@ -132,11 +146,17 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Map<String, Object> delete(DeleteBO deleteBO) {
-        deleteBO.setBussion("WMS");
-        deleteBO.setIp("192.168.10.71");
+        deleteBO.setCompanyID(deleteBO.getCompanyId());
+        deleteBO.setUserid(deleteBO.getOperator());
         List<DeleteBO> list = new ArrayList<DeleteBO>();
         HttpResult result = null;
         if (!ObjectUtils.isEmpty(deleteBO)) {
+            /*
+             * String[] roleTypeCode = deleteBO.getRoleTypeCode().split(","); for(String s :
+             * roleTypeCode) { DeleteBO roleType = new DeleteBO();
+             * roleType.setRoleTypeCode(s); roleType.setPartnerId(deleteBO.getPartnerId());
+             * list.add(roleType); }
+             */
             list.add(deleteBO);
             // 获取该角色类型的所有用户状态
             List<GetUserStatusPO> userStatusList = roleHttpServer.getUserStatusList(list);
@@ -152,10 +172,11 @@ public class RoleServiceImpl implements RoleService {
             HttpResult delWmsRoleInfo = roleHttpServer.delete(deleteBO);
             OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
             BeanUtils.copyProperties(deleteBO, orgRoleInfoBO);
-            orgRoleInfoBO.setRid(deleteBO.getRoleId());
+            orgRoleInfoBO.setId(deleteBO.getRoleId());
+            ;
             if (delWmsRoleInfo.isSuccess()) {
                 // 删除org角色信息
-                result = orgRoleHttpServer.delRoleManage(deleteBO);
+                result = orgRoleHttpServer.delRoleManage(orgRoleInfoBO);
             }
         }
         return MsgTemplate.customMsg(result);
@@ -170,14 +191,16 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Map<String, Object> save(SaveBO saveBO) {
-        saveBO.setBussion("WMS");
-        saveBO.setIp("192.168.10.71");
+        saveBO.setOid(saveBO.getCompanyId());
+        saveBO.setCompanyID(saveBO.getCompanyId());
+        saveBO.setUserid(saveBO.getOperator());
+        saveBO.setRoleType(RoleConstant.SYSTEM);
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         BeanUtils.copyProperties(saveBO, orgRoleInfoBO);
         orgRoleInfoBO.setPid(saveBO.getPerId());
         orgRoleInfoBO.setRdesc(saveBO.getRoleDesc());
         orgRoleInfoBO.setRname(saveBO.getRoleName());
-        orgRoleInfoBO.setRtype(saveBO.getRoleTypeCode());
+        orgRoleInfoBO.setRtype(saveBO.getRoleType());
         // 新增org角色关联信息
         OrgSavePO orgSavePO = orgRoleHttpServer.addPostRoleManage(orgRoleInfoBO);
         HttpResult save = null;
@@ -191,13 +214,13 @@ public class RoleServiceImpl implements RoleService {
     /**
      * 获取角色以及权限信息
      * 
+     * @param param
      * @return
      * @create 2018/4/12
      */
     @Override
     public Map<String, Object> getRoleType(BaseBO param) {
         HttpResult roleTypeList = roleHttpServer.getRoleType(param);
-        // @TODO权限包获取
         return MsgTemplate.customMsg(roleTypeList);
     }
 

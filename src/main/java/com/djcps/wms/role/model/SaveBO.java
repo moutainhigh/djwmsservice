@@ -46,6 +46,54 @@ public class SaveBO extends BaseOrgBO {
      */
     @NotBlank
     private String partnerId;
+    /**
+     * org角色类型
+     */
+    private String roleType;
+    /**
+     * 公司id
+     */
+    private String companyId;
+    /**
+     * 请求人
+     */
+    private String userId;
+    /**
+     * 组织id
+     */
+    private String organizationId;
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public String getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
 
     public String getRoleId() {
         return roleId;
@@ -107,7 +155,8 @@ public class SaveBO extends BaseOrgBO {
     public String toString() {
         return "SaveBO [roleId=" + roleId + ", roleTypeName=" + roleTypeName + ", roleTypeCode=" + roleTypeCode
                 + ", roleName=" + roleName + ", roleDesc=" + roleDesc + ", perId=" + perId + ", partnerId=" + partnerId
-                + "]";
+                + ", roleType=" + roleType + ", companyId=" + companyId + ", userId=" + userId + ", organizationId="
+                + organizationId + "]";
     }
 
 }

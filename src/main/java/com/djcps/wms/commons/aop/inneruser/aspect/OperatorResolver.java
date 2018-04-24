@@ -1,5 +1,6 @@
 package com.djcps.wms.commons.aop.inneruser.aspect;
 
+import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.aop.inneruser.annotation.OperatorAnnotation;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.AppConstant;

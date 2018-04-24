@@ -21,5 +21,22 @@ public class RoleConstant {
      *工作状态 休息中
      */
     public static final Integer TAKE_REST = 3;
+  //=====================ORG角色类型类型====================
+    /**
+     * 常规
+     */
+    public static final String CONVENTIONAL = "0";
+    /**
+     * 系统
+     */
+    public static final String SYSTEM = "1";
+    /**
+     * 价值观审核人
+     */
+    public static final String VALUER = "2";
+    /**
+     * 张力通知人
+     */
+    public static final String TENSION_NOTIFIER = "3";
     
 }

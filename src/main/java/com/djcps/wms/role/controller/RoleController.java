@@ -63,7 +63,7 @@ public class RoleController {
             RoleListBO param = gson.fromJson(json, RoleListBO.class);
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             BeanUtils.copyProperties(partnerInfoBo, param);
-            param.setOperator(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<RoleListBO>()
@@ -89,14 +89,14 @@ public class RoleController {
      * @return
      */
     @RequestMapping(name = "更新角色信息", value = "/update", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> update(@RequestBody(required = false) String json,
+    public Map<String, Object> update(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO,
             HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
             UpdateRoleInfoBO param = gson.fromJson(json, UpdateRoleInfoBO.class);
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             BeanUtils.copyProperties(partnerInfoBo, param);
-            param.setOperator(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<UpdateRoleInfoBO>()
@@ -113,7 +113,7 @@ public class RoleController {
         }
     }
     /**
-     * 获取角色及权限信息
+     * 获取角色
      * 
      * @autuor wyb
      * @since 2018/4/13
@@ -121,8 +121,8 @@ public class RoleController {
      * @param json
      * @return
      */
-    @RequestMapping(name = "获取角色及权限信息", value = "/getRoleInfo", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getRoleInfo(HttpServletRequest request) {
+    @RequestMapping(name = "获取角色", value = "/getRoleInfo", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> getRoleInfo(@OperatorAnnotation OperatorInfoBO operatorInfoBO,HttpServletRequest request) {
         try {
             // 解析参数
             BaseBO param = new BaseBO();
@@ -143,14 +143,14 @@ public class RoleController {
      * @return
      */
     @RequestMapping(name = "删除角色信息", value = "/delete", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> delete(@RequestBody(required = false) String json,
+    public Map<String, Object> delete(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO,
             HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
             DeleteBO param = gson.fromJson(json, DeleteBO.class);
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             BeanUtils.copyProperties(partnerInfoBo, param);
-            param.setOperator(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<DeleteBO>()
@@ -176,14 +176,14 @@ public class RoleController {
      * @return
      */
     @RequestMapping(name = "保存角色信息", value = "/save", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> save(@RequestBody(required = false) String json,
+    public Map<String, Object> save(@RequestBody(required = false) String json,@OperatorAnnotation OperatorInfoBO operatorInfoBO,
             HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
             SaveBO param = gson.fromJson(json, SaveBO.class);
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             BeanUtils.copyProperties(partnerInfoBo, param);
-            param.setOperator(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<SaveBO>()

@@ -2,30 +2,57 @@ package com.djcps.wms.permission.model.po;
 
 import java.io.Serializable;
 
+/**
+ * @author zhq
+ * 从ORG接受批量权限数据实体类
+ * 2018年4月23日
+ */
 public class GetOnePermissionPO implements Serializable {
 
 	private static final long serialVersionUID = 3216139664002767218L;
-
+	/**
+	 * 标题
+	 */
 	private String ptitle;
-
+	/**
+	 * 描述
+	 */
 	private String pdes;
-	
+	/**
+	 * 公司
+	 */
 	private String pcompany;
-	
+	/**
+	 * 用户id
+	 */
 	private String puserid;
-	
+	/**
+	 * 权限集合
+	 */
 	private String pperlist;
-	
+	/**
+	 * 业务
+	 */
 	private String pbussion;
-	
+	/**
+	 * id
+	 */
 	private String id;
-	
+	/**
+	 * 是否删除
+	 */
 	private String isdel;
-	
+	/**
+	 * 删除人
+	 */
 	private String isdel_per;
-	
+	/**
+	 * 创建时间
+	 */
 	private String create_time;
-	
+	/**
+	 * 更新时间
+	 */
 	private String update_time;
 
 	public String getPtitle() {

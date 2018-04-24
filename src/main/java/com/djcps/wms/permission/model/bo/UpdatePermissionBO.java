@@ -1,5 +1,10 @@
 package com.djcps.wms.permission.model.bo;
 
+/**
+ * @author zhq
+ * 修改权限参数实体类
+ * 2018年4月23日
+ */
 public class UpdatePermissionBO extends BaseOrgBO{
 	/**
 	 * id
