@@ -1,4 +1,4 @@
-package com.djcps.wms.permission.model.PO;
+package com.djcps.wms.permission.model.vo;
 
 import java.io.Serializable;
 
@@ -7,7 +7,7 @@ import java.io.Serializable;
  * 将得到详细的权限字段转化
  * 2018年4月19日
  */
-public class ChangeOnePerPO implements Serializable{
+public class ChangeOnePerVO implements Serializable{
 	
 	private String title;
 	

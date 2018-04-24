@@ -69,26 +69,26 @@ public class RoleServiceImpl implements RoleService {
                 // 通过角色id从org获取角色信息
                 List<OrgRoleListPO> orgRoleInfo = orgRoleHttpServer.getRoleFromId(orgRoleInfoBO);
                 if (ObjectUtils.isEmpty(orgRoleInfo)) {
-                    
+
                     return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
                 }
-                    List<WmsPessionInfoPO> list = new ArrayList<WmsPessionInfoPO>();
-                    
-                    // 进行数据组合
-                    if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
-                        roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
-                        if (!ObjectUtils.isEmpty(orgRoleInfo.get(0).getPerssions())) {
-                            List<OrgPerssionsInfoPO> info = orgRoleInfo.get(0).getPerssions();
-                            //替换字段
-                            for(OrgPerssionsInfoPO perssions : info) {
-                                WmsPessionInfoPO wmsPessionInfoPO = new WmsPessionInfoPO();
-                                wmsPessionInfoPO.setId(perssions.getPid());
-                                wmsPessionInfoPO.setTitle(perssions.getPtitle());
-                                list.add(wmsPessionInfoPO);
-                            }
-                            roleId.setPerssions(list);
+                List<WmsPessionInfoPO> list = new ArrayList<WmsPessionInfoPO>();
+
+                // 进行数据组合
+                if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
+                    roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
+                    if (!ObjectUtils.isEmpty(orgRoleInfo.get(0).getPerssions())) {
+                        List<OrgPerssionsInfoPO> info = orgRoleInfo.get(0).getPerssions();
+                        // 替换字段
+                        for (OrgPerssionsInfoPO perssions : info) {
+                            WmsPessionInfoPO wmsPessionInfoPO = new WmsPessionInfoPO();
+                            wmsPessionInfoPO.setId(perssions.getPid());
+                            wmsPessionInfoPO.setTitle(perssions.getPtitle());
+                            list.add(wmsPessionInfoPO);
                         }
+                        roleId.setPerssions(list);
                     }
+                }
             }
         }
 
@@ -126,7 +126,8 @@ public class RoleServiceImpl implements RoleService {
             if (!ObjectUtils.isEmpty(updateRoleInfoBO.getPerId())) {
                 orgRoleInfoBO.setPid(updateRoleInfoBO.getPerId());
             }
-            orgRoleInfoBO.setId(updateRoleInfoBO.getRoleId());;
+            orgRoleInfoBO.setId(updateRoleInfoBO.getRoleId());
+            ;
 
             // 更新org角色关联信息
             result = orgRoleHttpServer.updatePostRoleManage(orgRoleInfoBO);
@@ -150,13 +151,12 @@ public class RoleServiceImpl implements RoleService {
         List<DeleteBO> list = new ArrayList<DeleteBO>();
         HttpResult result = null;
         if (!ObjectUtils.isEmpty(deleteBO)) {
-          /*  String[] roleTypeCode = deleteBO.getRoleTypeCode().split(",");
-            for(String s : roleTypeCode) {
-                DeleteBO roleType = new DeleteBO();
-                roleType.setRoleTypeCode(s);
-                roleType.setPartnerId(deleteBO.getPartnerId());
-                list.add(roleType);
-            }*/
+            /*
+             * String[] roleTypeCode = deleteBO.getRoleTypeCode().split(","); for(String s :
+             * roleTypeCode) { DeleteBO roleType = new DeleteBO();
+             * roleType.setRoleTypeCode(s); roleType.setPartnerId(deleteBO.getPartnerId());
+             * list.add(roleType); }
+             */
             list.add(deleteBO);
             // 获取该角色类型的所有用户状态
             List<GetUserStatusPO> userStatusList = roleHttpServer.getUserStatusList(list);
@@ -172,7 +172,8 @@ public class RoleServiceImpl implements RoleService {
             HttpResult delWmsRoleInfo = roleHttpServer.delete(deleteBO);
             OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
             BeanUtils.copyProperties(deleteBO, orgRoleInfoBO);
-            orgRoleInfoBO.setId(deleteBO.getRoleId());;
+            orgRoleInfoBO.setId(deleteBO.getRoleId());
+            ;
             if (delWmsRoleInfo.isSuccess()) {
                 // 删除org角色信息
                 result = orgRoleHttpServer.delRoleManage(orgRoleInfoBO);
@@ -212,6 +213,7 @@ public class RoleServiceImpl implements RoleService {
 
     /**
      * 获取角色以及权限信息
+     * 
      * @param param
      * @return
      * @create 2018/4/12

@@ -8,6 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.djcps.wms.commons.base.BaseBO;
 
+/***
+ * @author py
+ *
+ */
 public class DeleteTaskRecordBO extends BaseBO implements Serializable{
     
 

@@ -9,5 +9,5 @@ public class ParamConstants {
 	/**
      * WMS业务对应的id
      */
-    public static final String BUSSION_ID = "26";
+    public static final String BUSSION_ID = "30";
 }
