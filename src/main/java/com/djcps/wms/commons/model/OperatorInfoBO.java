@@ -2,7 +2,6 @@ package com.djcps.wms.commons.model;
 
 /**
  * 操作人信息
- * 
  * @author Chengw
  * @create 2018/4/17 10:18.
  * @since 1.0.0
@@ -24,14 +23,6 @@ public class OperatorInfoBO {
      */
     private String business;
 
-    public String getBusiness() {
-        return business;
-    }
-
-    public void setBusiness(String business) {
-        this.business = business;
-    }
-
     public String getOperator() {
         return operator;
     }
@@ -48,9 +39,20 @@ public class OperatorInfoBO {
         this.ip = ip;
     }
 
-    @Override
-    public String toString() {
-        return "OperatorInfoBO [operator=" + operator + ", ip=" + ip + ", business=" + business + "]";
+    public String getBusiness() {
+        return business;
     }
 
+    public void setBusiness(String business) {
+        this.business = business;
+    }
+
+    @Override
+    public String toString() {
+        return "OperatorInfoBO{" +
+                "operator='" + operator + '\'' +
+                ", ip='" + ip + '\'' +
+                ", business='" + business + '\'' +
+                '}';
+    }
 }

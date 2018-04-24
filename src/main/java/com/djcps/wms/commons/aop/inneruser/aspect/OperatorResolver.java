@@ -50,7 +50,7 @@ public class OperatorResolver implements HandlerMethodArgumentResolver {
                         UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(cookie.getValue());
                         operatorInfoBO.setOperator(userInfoVO.getId());
                         operatorInfoBO.setIp(getRealIp(request));
-                        operatorInfoBO.setBusiness((AppConstant.WMS));
+                        operatorInfoBO.setBusiness(AppConstant.WMS);
                         return operatorInfoBO;
                     }
                 }

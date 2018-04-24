@@ -20,13 +20,35 @@ public class OrgGetUserInfoById {
      * 调用的业务系统WMS
      */
     @NotBlank
-    private String bussion;
+    private String business;
 
     /**
      * 用户id
      */
     @NotBlank
     private String userId;
+
+    private String id;
+
+    private String partnerId;
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
 
     public String getOperator() {
         return operator;
@@ -44,12 +66,12 @@ public class OrgGetUserInfoById {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getUserId() {
@@ -65,8 +87,10 @@ public class OrgGetUserInfoById {
         return "OrgGetUserInfoById{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", userId='" + userId + '\'' +
+                ", id='" + id + '\'' +
+                ", partnerId='" + partnerId + '\'' +
                 '}';
     }
 }

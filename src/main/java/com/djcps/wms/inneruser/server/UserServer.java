@@ -197,6 +197,20 @@ public class UserServer {
     }
 
     /**
+     * wms批量新增用户关联仓库信息
+     * @author  wzy
+     * @param addUserWarehouseBOList
+     * @return http
+     * @date  2018/4/16 11:40
+     **/
+    public HttpResult  insertUserWarehouseList(List<AddUserWarehouseBO> addUserWarehouseBOList){
+        String paramJson = gson.toJson(addUserWarehouseBOList);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForUserRequest.insertUserWarehouseList(requestBody);
+        return returnResult(httpResponse);
+    }
+
+    /**
      * WMS条件获取用户列表
      * @author  wzy
      * @param pageGetUserBO
@@ -309,23 +323,24 @@ public class UserServer {
      * @return saveUserBO
      * @date  2018/4/16 9:58
      **/
-    public SaveUserBO  addPostUserInfo(SaveUserBO saveUserBO){
+    public HttpResult  addPostUserInfo(SaveUserBO saveUserBO){
         String json = gson.toJson(saveUserBO);
         Map<String,Object> map=gson.fromJson(json,Map.class);
         HTTPResponse httpResponse = userRequest.addPostUserInfo(map);
-        HttpResult result = null;
-        SaveUserBO saveUserBO1=null;
-        List<SaveUserBO> list=null;
-        if (httpResponse.isSuccessful()){
-            result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
-            if(!ObjectUtils.isEmpty(result)){
-                String data = gson.toJson(result.getData());
-                saveUserBO1=new SaveUserBO();
-                list= JSONArray.parseArray(data,SaveUserBO.class);
-                saveUserBO1=list.get(0);
-            }
-        }
-        return saveUserBO1;
+        return returnResult(httpResponse);
+       // HttpResult result = null;
+//        SaveUserBO saveUserBO1=null;
+//        List<SaveUserBO> list=null;
+//        if (httpResponse.isSuccessful()){
+          //  result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
+//            if(!ObjectUtils.isEmpty(result)){
+//                String data = gson.toJson(result.getData());
+//                saveUserBO1=new SaveUserBO();
+//                list= JSONArray.parseArray(data,SaveUserBO.class);
+//                saveUserBO1=list.get(0);
+//            }
+//        }
+//        return saveUserBO1;
     }
 
     /**
@@ -376,6 +391,29 @@ public class UserServer {
             if(result.isSuccess()){
                 String json=gson.toJson(result.getData());
                 warehouseList= JSONArray.parseArray(json,String.class);
+            }
+        }
+        return warehouseList;
+    }
+
+    /**
+     * 批量获取用户关联仓库信息
+     * @author  wzy
+     * @param getWarehouseListBOS
+     * @return /
+     * @date  2018/4/17 11:08
+     **/
+    public  List<WarehouseListPO>  getUserWarehouseList(GetWarehouseListBO getWarehouseListBOS){
+        String paramJson = gson.toJson(getWarehouseListBOS);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForUserRequest.getUserWarehouseList(requestBody);
+        List<WarehouseListPO> warehouseList=null;
+        HttpResult result=null;
+        if (httpResponse.isSuccessful()){
+            result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
+            if(result.isSuccess()){
+                String json=gson.toJson(result.getData());
+                warehouseList= JSONArray.parseArray(json,WarehouseListPO.class);
             }
         }
         return warehouseList;

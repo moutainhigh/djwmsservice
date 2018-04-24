@@ -9,7 +9,7 @@ import com.djcps.wms.commons.msg.MsgInterface;
  */
 public enum LoadingTaskEnum implements MsgInterface {
     /**
-     * 装车任务返回信息
+     * 装车任务返回信息 
      */
     NOT_TASK(1, "当前没有任务"),
     

@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.model.userparam;
 
+import java.util.List;
+
 /**
  * 用户信息标准参数
  * @author:wzy
@@ -102,6 +104,19 @@ public class UserInfoPO {
      * 毕业学校
      */
     private String graduateSchool;
+
+    /**
+     * 仓库id列表
+     */
+    private List<String> warehouseIdList;
+
+    public List<String> getWarehouseIdList() {
+        return warehouseIdList;
+    }
+
+    public void setWarehouseIdList(List<String> warehouseIdList) {
+        this.warehouseIdList = warehouseIdList;
+    }
 
     public String getPhone() {
         return phone;
@@ -295,7 +310,7 @@ public class UserInfoPO {
                 ", politicalOutlook='" + politicalOutlook + '\'' +
                 ", homeAddress='" + homeAddress + '\'' +
                 ", graduateSchool='" + graduateSchool + '\'' +
-                ", graduateSchool='" + graduateSchool + '\'' +
+                ", warehouseIdList=" + warehouseIdList +
                 '}';
     }
 }

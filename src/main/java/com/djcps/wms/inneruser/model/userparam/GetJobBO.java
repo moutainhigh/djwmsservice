@@ -14,7 +14,7 @@ public class GetJobBO {
     private String ip;
 
 
-    private String bussion;
+    private String business;
 
     @NotBlank
     private String companyId;
@@ -35,12 +35,12 @@ public class GetJobBO {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getCompanyId() {
@@ -56,7 +56,7 @@ public class GetJobBO {
         return "GetJobBO{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", companyId='" + companyId + '\'' +
                 '}';
     }

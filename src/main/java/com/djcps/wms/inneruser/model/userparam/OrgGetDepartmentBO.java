@@ -14,7 +14,7 @@ public class OrgGetDepartmentBO {
     private String ip;
 
 
-    private String bussion;
+    private String business;
 
 
     private String companyID;
@@ -45,23 +45,12 @@ public class OrgGetDepartmentBO {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    @Override
-    public String toString() {
-        return "OrgGetDepartmentBO{" +
-                "operator='" + operator + '\'' +
-                ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
-                ", companyID='" + companyID + '\'' +
-                ", type='" + type + '\'' +
-                '}';
-    }
-
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getCompanyID() {
@@ -70,5 +59,16 @@ public class OrgGetDepartmentBO {
 
     public void setCompanyID(String companyID) {
         this.companyID = companyID;
+    }
+
+    @Override
+    public String toString() {
+        return "OrgGetDepartmentBO{" +
+                "operator='" + operator + '\'' +
+                ", ip='" + ip + '\'' +
+                ", business='" + business + '\'' +
+                ", companyID='" + companyID + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

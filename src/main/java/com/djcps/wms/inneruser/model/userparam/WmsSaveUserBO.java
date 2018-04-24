@@ -14,7 +14,7 @@ public class WmsSaveUserBO {
     /**
      * 调用的业务系统OA、CRM、BI、CRM、OMS、WMS、TMS
      */
-    private String bussion;
+    private String business;
 
     /**
      * 请求者的ip地址
@@ -29,6 +29,7 @@ public class WmsSaveUserBO {
     private String warehouseId;
 
     private String warehouseName;
+
     private String phone;
     /**
      * 角色类型
@@ -179,12 +180,12 @@ public class WmsSaveUserBO {
         this.operator = operator;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getIp() {
@@ -335,7 +336,7 @@ public class WmsSaveUserBO {
     public String toString() {
         return "WmsSaveUserBO{" +
                 "operator='" + operator + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", ip='" + ip + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", warehouseId='" + warehouseId + '\'' +

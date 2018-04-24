@@ -33,7 +33,7 @@ public class PageGetUserBO {
      * 调用的业务系统WMS
      */
     @NotBlank
-    private String bussion;
+    private String business;
 
     private String pageSize;
 
@@ -101,12 +101,12 @@ public class PageGetUserBO {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getPageSize() {
@@ -132,7 +132,7 @@ public class PageGetUserBO {
                 ", workStatus=" + workStatus +
                 ", operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", pageSize='" + pageSize + '\'' +
                 ", pageNo='" + pageNo + '\'' +
                 ", partnerId='" + partnerId + '\'' +

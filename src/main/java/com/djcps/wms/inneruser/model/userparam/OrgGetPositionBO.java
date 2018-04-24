@@ -14,7 +14,7 @@ public class OrgGetPositionBO {
      * 调用的业务系统OA、CRM、BI、CRM、OMS、WMS、TMS
      */
     @NotBlank
-    private String bussion;
+    private String business;
 
     /**
      * 部门id
@@ -38,12 +38,12 @@ public class OrgGetPositionBO {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getDepartmentId() {
@@ -59,7 +59,7 @@ public class OrgGetPositionBO {
         return "OrgGetPositionBO{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", departmentId='" + departmentId + '\'' +
                 '}';
     }

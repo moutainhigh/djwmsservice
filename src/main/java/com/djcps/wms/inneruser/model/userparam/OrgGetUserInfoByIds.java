@@ -20,7 +20,7 @@ public class OrgGetUserInfoByIds {
     /**
      * 调用的业务系统WMS
      */
-    private String bussion;
+    private String business;
 
     /**
      * 逗号隔开的用户id
@@ -43,12 +43,12 @@ public class OrgGetUserInfoByIds {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     public String getUserids() {
@@ -64,7 +64,7 @@ public class OrgGetUserInfoByIds {
         return "OrgGetUserInfoByIds{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", userids='" + userids + '\'' +
                 '}';
     }

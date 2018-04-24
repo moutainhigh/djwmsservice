@@ -26,7 +26,7 @@ public class OrgDeleteUserBO {
     private String ip;
 
     @NotBlank
-    private String bussion;
+    private String business;
 
     private String partnerId;
 
@@ -70,12 +70,12 @@ public class OrgDeleteUserBO {
         this.ip = ip;
     }
 
-    public String getBussion() {
-        return bussion;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setBussion(String bussion) {
-        this.bussion = bussion;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class OrgDeleteUserBO {
                 ", status=" + status +
                 ", operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
-                ", bussion='" + bussion + '\'' +
+                ", business='" + business + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 '}';
     }
