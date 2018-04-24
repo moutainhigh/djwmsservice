@@ -1,8 +1,8 @@
 package com.djcps.wms.permission.model.bo;
 
-import java.io.Serializable;
-
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.io.Serializable;
 
 /**
  * @author zhq
