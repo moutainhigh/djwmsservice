@@ -400,8 +400,6 @@ public class UserServiceImpl implements UserService {
                             }
                         });
                     }
-
-
                     UserRelevanceBO userRelevanceBO= new UserRelevanceBO();
                     userRelevanceBO.setUserId(orgsaveUserBO.getId());
                     userRelevanceBO.setWarehouseId(saveUserBO.getWarehouseId());
