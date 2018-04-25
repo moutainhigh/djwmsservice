@@ -33,8 +33,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import com.api.carchecksign.api.CarchecksignServer;
-import com.api.carchecksign.model.request.ReqVehicleQueuingListBiz;
+import com.api.TMS_APP_PartnerOperatingManage.carchecksign.api.CarchecksignServer;
+import com.api.TMS_APP_PartnerOperatingManage.carchecksign.model.request.ReqVehicleQueuingListBiz;
 import com.base.TmsJsonResult;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
