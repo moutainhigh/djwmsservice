@@ -56,6 +56,11 @@
             <url>file://${project.basedir}/lib</url>
         </repository>
         <repository>
+		    <id>mvnrepo</id>
+		    <name>mvn repository</name>
+		    <url>http://192.168.0.169/lk/djjar_public/raw/master/lib</url>
+		</repository>
+        <repository>
             <id>alimaven</id>
             <name>aliyun maven</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
@@ -93,6 +98,12 @@
     </properties>
 
     <dependencies>
+
+		<dependency>
+		    <groupId>com.djtms</groupId>
+		    <artifactId>djtms</artifactId>
+		    <version>djtmsjar-1.0</version>
+		</dependency>
 
         <!-- Test -->
         <dependency>
