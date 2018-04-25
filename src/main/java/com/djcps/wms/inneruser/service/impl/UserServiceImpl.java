@@ -268,11 +268,14 @@ public class UserServiceImpl implements UserService {
                                         getRoleTypeBO1.setPartnerId(pageGetUserBO.getPartnerId());
                                         getRoleList=userServer.roleList(getRoleTypeBO1);
                                         String getRoleListStr = gson.toJson(getRoleList);
+                                        List<String>  quchongList=new ArrayList<>();
                                         List<GetRoleTypePO> getRoleTypePOList = gson.fromJson(getRoleListStr, new TypeToken<ArrayList<GetRoleTypePO>>(){}.getType());
                                         if (!ObjectUtils.isEmpty(getRoleTypePOList)){
                                             getRoleTypePOList.stream().forEach(getRoleTypePO -> {
-                                                roleTypeName.append(getRoleTypePO.getRoleTypeName()+",");
-                                                //roleId.append(getRoleTypePO.getRoleId()+",");
+                                                if (!quchongList.contains(getRoleTypePO.getRoleTypeCode())){
+                                                    quchongList.add(getRoleTypePO.getRoleTypeCode());
+                                                    roleTypeName.append(getRoleTypePO.getRoleTypeName()+",");
+                                                }
                                             });
                                         }
                                         //去掉最后一个逗号
@@ -405,7 +408,7 @@ public class UserServiceImpl implements UserService {
                     userRelevanceBO.setWarehouseId(saveUserBO.getWarehouseId());
                     userRelevanceBO.setUserName(saveUserBO.getUname());
                    // userRelevanceBO.setRoleType(saveUserBO.getRoleids());
-                    userRelevanceBO.setRoleType(roleTypeCode.toString()+",");
+                    userRelevanceBO.setRoleType(roleTypeCode.toString());
                     userRelevanceBO.setPartnerId(wmssaveUserBO.getPartnerId());
                     userRelevanceBO.setWorkStatus(UserConstant.FREE);
                     // 新增用户关联信息
@@ -487,7 +490,6 @@ public class UserServiceImpl implements UserService {
                     quchongList.add(getRoleTypePO.getRoleTypeCode());
                     roleTypeCode.append(getRoleTypePO.getRoleTypeCode()+",");
                 }
-                //roleTypeCode.append(getRoleTypePO.getRoleTypeCode()+",");
             });
         }
         //TODO 修改WMS用户关联信息
@@ -496,7 +498,7 @@ public class UserServiceImpl implements UserService {
         updateUserStatusBO.setUserId(saveUserBO.getId());
         updateUserStatusBO.setWarehouseId(saveUserBO.getWarehouseId());
         updateUserStatusBO.setUserName(saveUserBO.getUname());
-        updateUserStatusBO.setRoleType(roleTypeCode.toString()+",");
+        updateUserStatusBO.setRoleType(roleTypeCode.toString());
         HttpResult updateResult=userServer.updateUserStatus(updateUserStatusBO);
         if(updateResult.isSuccess()){
            return true;
@@ -667,9 +669,8 @@ public class UserServiceImpl implements UserService {
         if(ObjectUtils.isEmpty(getRoleTypePOList)){
             return MsgTemplate.failureMsg(UserMsgEnum.ROLETYPE_NULL);
         }
-
         List<GetRoleTypePO> getRoleList=new ArrayList<>();
-
+        List<GetRoleTypePO> roleList=new ArrayList<>();
         //TODO 有用户id，获取某用户的角色信息
         if(!StringUtils.isEmpty(roleTypeBO.getUserId())){
             DeleteUserBO deleteUserBO=new DeleteUserBO();
@@ -690,8 +691,19 @@ public class UserServiceImpl implements UserService {
                 getRoleTypeBO1.setPageNo(0);
                 getRoleTypeBO1.setPageSize(10000000);
                 getRoleTypeBO1.setPartnerId(roleTypeBO.getPartnerId());
-                //TODO 获取当前角色列表
+                //获取当前角色列表
                 getRoleList=userServer.roleList(getRoleTypeBO1);
+//                List<String> quchongList=new ArrayList<>();
+//                //去重角色类型
+//                String getRoleListStr = gson.toJson(getRoleList);
+//                List<GetRoleTypePO> getRoleTypePO1 = gson.fromJson(getRoleListStr, new TypeToken<ArrayList<GetRoleTypePO>>(){}.getType());
+//
+//                getRoleTypePO1.stream().forEach(getRoleTypePO -> {
+//                    if (!quchongList.contains(getRoleTypePO.getRoleTypeCode())){
+//                        quchongList.add(getRoleTypePO.getRoleTypeCode());
+//                        roleList.add(getRoleTypePO);
+//                    }
+//                });
             }
         }
         //组织好的角色信息
