@@ -57,7 +57,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 public class PermissionServiceImpl implements PermissionService{
 	
     private DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(PermissionService.class);
-    
+     
 	@Autowired
 	private PermissionServer permissionServer;
 	
