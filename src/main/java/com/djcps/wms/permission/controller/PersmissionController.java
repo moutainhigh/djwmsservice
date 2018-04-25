@@ -119,6 +119,8 @@ public class PersmissionController {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             LOGGER.debug("json:" + json);
             UpdatePermissionBO updatePermissionBO = gson.fromJson(json, UpdatePermissionBO.class);
+            updatePermissionBO.setUserId(operatorInfoBO.getOperator());
+            updatePermissionBO.setBusinessId(PermissionConstants.BUSINESS_ID);
             BeanUtils.copyProperties(operatorInfoBO, updatePermissionBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(updatePermissionBO, new HibernateSupportedValidator<UpdatePermissionBO>()
@@ -127,7 +129,7 @@ public class PersmissionController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return permissionService.insertPermission(updatePermissionBO, partnerInfoBo);
+            return permissionService.insertPermission(updatePermissionBO);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("新增权限异常:{}" + e.getMessage());
@@ -206,7 +208,9 @@ public class PersmissionController {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             LOGGER.debug("json:" + json);
             UpdatePermissionBO updatePermissionBO = gson.fromJson(json, UpdatePermissionBO.class);
+            updatePermissionBO.setUserId(partnerInfoBo.getOperatorId());
             BeanUtils.copyProperties(operatorInfoBO, updatePermissionBO);
+            updatePermissionBO.setBusinessId(PermissionConstants.BUSINESS_ID);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(updatePermissionBO, new HibernateSupportedValidator<UpdatePermissionBO>()
                             .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
@@ -214,7 +218,7 @@ public class PersmissionController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return permissionService.updatePermission(updatePermissionBO, partnerInfoBo);
+            return permissionService.updatePermission(updatePermissionBO);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("修改权限异常:{}" + e.getMessage());

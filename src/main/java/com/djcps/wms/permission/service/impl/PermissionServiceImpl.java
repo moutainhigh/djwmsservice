@@ -142,7 +142,7 @@ public class PermissionServiceImpl implements PermissionService{
 	 * @author zhq
 	 */
 	@Override
-	public Map<String, Object> insertPermission(UpdatePermissionBO param,PartnerInfoBO partnerInfoBo) {
+	public Map<String, Object> insertPermission(UpdatePermissionBO param) {
 		if(ObjectUtils.isEmpty(param.getId())) {
 			param.setId("");
 		}
@@ -152,9 +152,8 @@ public class PermissionServiceImpl implements PermissionService{
 		insertOrUpdate.setCompanyID(param.getCompanyId());
 		insertOrUpdate.setPdes(param.getDescribe());
 		insertOrUpdate.setPtitle(param.getTitle());
-		//insertOrUpdate.setCompanyID("100");
-		insertOrUpdate.setUserid(partnerInfoBo.getOperatorId());
-		insertOrUpdate.setPbussion(PermissionConstants.BUSINESS_ID);
+		insertOrUpdate.setUserid(param.getUserId());
+		insertOrUpdate.setPbussion(param.getBusinessId());
 		HttpResult result =permissionServer.insertPermission(insertOrUpdate);
 		String data = JSONObject.toJSONString(result.getData());
 		return MsgTemplate.successMsg(data);
@@ -179,32 +178,6 @@ public class PermissionServiceImpl implements PermissionService{
 		String data = JSONObject.toJSONString(result.getData());
 		return MsgTemplate.successMsg(data);
 	}
-		/*//如果有用户关联该权限，则进行后续判断
-		if(!ObjectUtils.isEmpty(result_user.getData())){
-			//得到了关联权限的用户list
-			String data = JSONObject.toJSONString(result_user.getData());
-			ArrayList<UserInfoPO> list_user = gson.fromJson(data,new TypeToken<List<UserInfoPO>>() {}.getType());
-			//将用户id遍历查询出用户信息
-			HttpResult result=new HttpResult();
-			for (UserInfoPO user : list_user) {
-				//组织参数
-				UserIdBO uid=new UserIdBO() {{
-					setUserId(user.getId());
-					setPartnerId(partnerId);
-				}};
-				String data_userInfo = JSONObject.toJSONString(uid);
-				result =permissionServer.getUserInfo(data_userInfo);
-				if(!ObjectUtils.isEmpty(result.getData())) {
-					String user_data = JSONObject.toJSONString(result.getData());
-					UserRelevancePO userRelevance=gson.fromJson(user_data, UserRelevancePO.class);
-					//如果有任意一个关联用户不处于空闲状态，则不能删除
-					if(userRelevance.getWorkStatus()!=1) {
-						return MsgTemplate.failureMsg("删除失败，有关联用户不处于空闲状态");
-					}
-				}
-			}
-		}*/
-		
 
 	/**
 	 * @author zhq
@@ -242,16 +215,16 @@ public class PermissionServiceImpl implements PermissionService{
 	 * 修改权限包
 	 */
 	@Override
-	public Map<String, Object> updatePermission(UpdatePermissionBO param,PartnerInfoBO partnerInfoBO) {
+	public Map<String, Object> updatePermission(UpdatePermissionBO param) {
 		InsertOrUpdatePermissionBO insertOrUpdate = new InsertOrUpdatePermissionBO();
 		BeanUtils.copyProperties(param, insertOrUpdate);
 		insertOrUpdate.setCompanyID(param.getCompanyId());
 		insertOrUpdate.setBusiness(param.getBusiness());
 		insertOrUpdate.setPdes(param.getDescribe());
 		insertOrUpdate.setPtitle(param.getTitle());
-		insertOrUpdate.setUserid(partnerInfoBO.getOperatorId());
-		insertOrUpdate.setPbussion(PermissionConstants.BUSINESS_ID);
-		HttpResult result =permissionServer.updatePermission(insertOrUpdate);
+		insertOrUpdate.setUserid(param.getUserId());
+		insertOrUpdate.setPbussion(param.getBusinessId());
+		HttpResult result = permissionServer.updatePermission(insertOrUpdate);
 		String data = JSONObject.toJSONString(result.getData());
 		return MsgTemplate.successMsg(data);
 	}

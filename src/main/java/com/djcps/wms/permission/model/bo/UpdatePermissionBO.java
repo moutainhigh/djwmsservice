@@ -33,7 +33,8 @@ public class UpdatePermissionBO extends BaseOrgBO{
 	/**
 	 * 所属业务ID
 	 */
-	private String bussionId;
+	private String businessId;
+
 	public String getId() {
 		return id;
 	}
@@ -70,16 +71,26 @@ public class UpdatePermissionBO extends BaseOrgBO{
 	public void setDescribe(String describe) {
 		this.describe = describe;
 	}
-	
-	public String getBussionId() {
-		return bussionId;
+
+	public String getBusinessId() {
+		return businessId;
 	}
-	public void setBussionId(String bussionId) {
-		this.bussionId = bussionId;
+
+	public void setBusinessId(String businessId) {
+		this.businessId = businessId;
 	}
+
 	@Override
 	public String toString() {
-		return "UpdatePermissionBO [id=" + id + ", userId=" + userId + ", companyId=" + companyId + ", permissions="
-				+ permissions + ", title=" + title + ", describe=" + describe + ", bussionId=" + bussionId + "]";
+		return "UpdatePermissionBO{" +
+				"id='" + id + '\'' +
+				", userId='" + userId + '\'' +
+				", companyId='" + companyId + '\'' +
+				", permissions='" + permissions + '\'' +
+				", title='" + title + '\'' +
+				", describe='" + describe + '\'' +
+				", businessId='" + businessId + '\'' +
+				'}';
 	}
 }
+

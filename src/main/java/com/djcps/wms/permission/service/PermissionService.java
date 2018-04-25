@@ -40,7 +40,7 @@ public interface PermissionService {
 	 * @param param,@param partner
 	 * @return Map
 	 */
-	Map<String, Object> insertPermission(UpdatePermissionBO param,PartnerInfoBO partner);
+	Map<String, Object> insertPermission(UpdatePermissionBO param);
 	
 	/**
 	 * 删除组合权限
@@ -61,7 +61,7 @@ public interface PermissionService {
 	 * @param param,@param partnerInfoBO
 	 * @return Map
 	 */
-	Map<String, Object> updatePermission(UpdatePermissionBO param,PartnerInfoBO partnerInfoBO);
+	Map<String, Object> updatePermission(UpdatePermissionBO param);
 	
 	/**
 	 * 获取用户所有权限 
