@@ -30,6 +30,7 @@ public class WorkRecordsBO extends BaseListBO{
 	 * 楞型
 	 */
 	private Integer fluteType;
+
 	/**
 	 * 操作类型
 	 * 1 入库
@@ -78,11 +79,17 @@ public class WorkRecordsBO extends BaseListBO{
 	public void setOperationType(Integer operationType) {
 		this.operationType = operationType;
 	}
+
 	@Override
 	public String toString() {
-		return "WorkRecordsBO [startTime=" + startTime + ", endTime=" + endTime + ", operator=" + operator
-				+ ", fluteType=" + fluteType + ", operationType=" + operationType + "]";
+		return "WorkRecordsBO{" +
+				"startTime='" + startTime + '\'' +
+				", endTime='" + endTime + '\'' +
+				", operator='" + operator + '\'' +
+				", fluteType=" + fluteType +
+				", operationType=" + operationType +
+				'}';
 	}
-	
-	
+
+
 }

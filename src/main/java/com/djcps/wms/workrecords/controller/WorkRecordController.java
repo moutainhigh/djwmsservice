@@ -57,7 +57,7 @@ public class WorkRecordController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return workRecordService.getAllRecordListByOperationType(param);
+			return workRecordService.listByOperationType(param);
 		} catch (Exception e) {
 			e.printStackTrace();
             LOGGER.error(e.getMessage());
@@ -139,7 +139,7 @@ public class WorkRecordController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return workRecordService.getDeliveryWorkRecordsDetail(param);
+			return workRecordService.getDeliveryDetail(param);
 		} catch (Exception e) {
 			e.printStackTrace();
             LOGGER.error(e.getMessage());

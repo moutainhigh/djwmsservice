@@ -1,17 +1,24 @@
 package com.djcps.wms.workrecords.service.impl;
 
+import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.workrecords.model.WorkRecordsBO;
 import com.djcps.wms.workrecords.model.WorkRecordsDetailBO;
+import com.djcps.wms.workrecords.model.WorkRecordsInfoPO;
+import com.djcps.wms.workrecords.model.WorkRecordsPO;
 import com.djcps.wms.workrecords.server.WorkRecordServer;
 import com.djcps.wms.workrecords.service.WorkRecordService;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
 import java.util.Map;
+
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @author panyang
@@ -30,9 +37,20 @@ public class WorkRecordServiceImpl implements WorkRecordService {
      * @create :2018/4/18
      */
     @Override
-    public Map<String, Object> getAllRecordListByOperationType(WorkRecordsBO param) {
+    public Map<String, Object> listByOperationType(WorkRecordsBO param) {
         HttpResult result = workRecordServer.getAllRecordListByOperationType(param);
         if (!ObjectUtils.isEmpty(result)) {
+            if (result.isSuccess()) {
+                BaseVO baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
+                List<WorkRecordsPO> list = gson.fromJson(gson.toJson(baseVO.getResult()),
+                        new TypeToken<List<WorkRecordsPO>>() {
+                        }.getType());
+                list.stream().forEach(w -> {
+                    w.setFluteTypeName(w.getFluteType().toString());
+                });
+                baseVO.setResult(list);
+                return MsgTemplate.successMsg(baseVO);
+            }
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
@@ -48,6 +66,17 @@ public class WorkRecordServiceImpl implements WorkRecordService {
     public Map<String, Object> getWorkRecordsDetail(WorkRecordsDetailBO param) {
         HttpResult result = workRecordServer.getWorkRecordsDetail(param);
         if (!ObjectUtils.isEmpty(result)) {
+            if (result.isSuccess()) {
+                BaseVO baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
+                List<WorkRecordsInfoPO> list = gson.fromJson(gson.toJson(baseVO.getResult()),
+                        new TypeToken<List<WorkRecordsInfoPO>>() {
+                        }.getType());
+                list.stream().forEach(w -> {
+                    w.setFluteTypeName(w.getFluteType().toString());
+                });
+                baseVO.setResult(list);
+                return MsgTemplate.successMsg(baseVO);
+            }
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
@@ -68,6 +97,17 @@ public class WorkRecordServiceImpl implements WorkRecordService {
     public Map<String, Object> listDeliveryRecord(WorkRecordsBO param) {
         HttpResult result = workRecordServer.listDeliveryRecord(param);
         if (!ObjectUtils.isEmpty(result)) {
+            if (result.isSuccess()) {
+                BaseVO baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
+                List<WorkRecordsPO> list = gson.fromJson(gson.toJson(baseVO.getResult()),
+                        new TypeToken<List<WorkRecordsPO>>() {
+                        }.getType());
+                list.stream().forEach(w -> {
+                    w.setFluteTypeName(w.getFluteType().toString());
+                });
+                baseVO.setResult(list);
+                return MsgTemplate.successMsg(baseVO);
+            }
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
@@ -84,9 +124,20 @@ public class WorkRecordServiceImpl implements WorkRecordService {
      */
 
     @Override
-    public Map<String, Object> getDeliveryWorkRecordsDetail(WorkRecordsDetailBO param) {
+    public Map<String, Object> getDeliveryDetail(WorkRecordsDetailBO param) {
         HttpResult result = workRecordServer.getDeliveryWorkRecordsDetail(param);
         if (!ObjectUtils.isEmpty(result)) {
+            if (result.isSuccess()) {
+                BaseVO baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
+                List<WorkRecordsInfoPO> list = gson.fromJson(gson.toJson(baseVO.getResult()),
+                        new TypeToken<List<WorkRecordsInfoPO>>() {
+                        }.getType());
+                list.stream().forEach(w -> {
+                    w.setFluteTypeName(w.getFluteType().toString());
+                });
+                baseVO.setResult(list);
+                return MsgTemplate.successMsg(baseVO);
+            }
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);

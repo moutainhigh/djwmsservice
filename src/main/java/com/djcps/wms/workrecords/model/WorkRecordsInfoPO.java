@@ -1,6 +1,8 @@
 package com.djcps.wms.workrecords.model;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.commons.base.BasePO;
+
 /**
  * 
  * 
@@ -8,7 +10,7 @@ import com.djcps.wms.commons.base.BaseAddBO;
  *
  */
 
-public class WorkRecordsInfoPO extends BaseAddBO{
+public class WorkRecordsInfoPO extends BasePO {
 	/**
 	 * 操作记录唯一标识
 	 */
@@ -29,6 +31,10 @@ public class WorkRecordsInfoPO extends BaseAddBO{
 	 * 楞型
 	 */
 	private Integer fluteType;
+	/**
+	 * 楞型名称
+	 */
+	private String fluteTypeName;
 	/**
 	 * 仓库id
 	 */
@@ -84,6 +90,13 @@ public class WorkRecordsInfoPO extends BaseAddBO{
 	public void setFluteType(Integer fluteType) {
 		this.fluteType = fluteType;
 	}
+	public String getFluteTypeName() {
+		return fluteTypeName;
+	}
+	public void setFluteTypeName(String fluteTypeName) {
+		this.fluteTypeName = fluteTypeName;
+	}
+
 	public String getWarehouseId() {
 		return warehouseId;
 	}

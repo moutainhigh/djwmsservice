@@ -80,10 +80,6 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
                     responseMsg(SysMsgEnum.NOT_PERMISSION, response, appLogin);
                     return false;
                 }
-            } else {
-                //用户不存在也代表未登入
-                responseMsg(SysMsgEnum.NOT_LOGIN, response, appLogin);
-                return false;
             }
         }
         return true;

@@ -28,7 +28,7 @@ public interface WorkRecordService {
 	 * @author:py
 	 * @date:2018年4月20日
 	 */
-	Map<String, Object> getAllRecordListByOperationType(WorkRecordsBO param);
+	Map<String, Object> listByOperationType(WorkRecordsBO param);
 
 	/**
 	 *查询入库装车工作记录详情
@@ -58,6 +58,6 @@ public interface WorkRecordService {
 	 * @author:py
 	 * @date:2018年4月20日
 	 */
-	Map<String, Object> getDeliveryWorkRecordsDetail(WorkRecordsDetailBO param);
+	Map<String, Object> getDeliveryDetail(WorkRecordsDetailBO param);
 
 }

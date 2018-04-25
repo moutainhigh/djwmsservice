@@ -22,11 +22,16 @@ public enum OperationTypeEnum {
      * 11 异常处理
      * 12 拆单处理
      */
+    ENTRY(1),
     DELIVERY(6),
     CANCEL_STOCK(9)
     ;
 
     private Integer code;
+
+    public Integer getCode() {
+        return code;
+    }
 
     OperationTypeEnum(Integer code) {
         this.code = code;

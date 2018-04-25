@@ -1,20 +1,19 @@
 package com.djcps.wms.workrecords.server;
 
+import com.djcps.log.DjcpsLogger;
+import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.workrecords.model.WorkRecordsDetailBO;
 import okhttp3.RequestBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.record.server.OperationRecordServer;
 import com.djcps.wms.workrecords.model.WorkRecordsBO;
 import com.djcps.wms.workrecords.request.WorkRecordHttpRequest;
-import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @author panyang
@@ -24,8 +23,7 @@ import rpc.plugin.http.HTTPResponse;
 @Component
 public class WorkRecordServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(OperationRecordServer.class);
-    private Gson gson = new Gson();
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(WorkRecordServer.class);
 
     @Autowired
     private WorkRecordHttpRequest workRecordHttpRequest;
@@ -86,7 +84,7 @@ public class WorkRecordServer {
             result = gson.fromJson(http.getBodyString(), HttpResult.class);
         }
         if (ObjectUtils.isEmpty(result)) {
-            logger.error("Http请求出错,HttpResult结果为null");
+            LOGGER.error("Http请求出错,HttpResult结果为null");
         }
         return result;
     }
