@@ -45,6 +45,17 @@ public class PageGetUserBO {
 
     private String userName;
 
+    private String roleTypeCode;
+
+
+    public String getRoleTypeCode() {
+        return roleTypeCode;
+    }
+
+    public void setRoleTypeCode(String roleTypeCode) {
+        this.roleTypeCode = roleTypeCode;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -138,6 +149,7 @@ public class PageGetUserBO {
                 ", partnerId='" + partnerId + '\'' +
                 ", roleType='" + roleType + '\'' +
                 ", userName='" + userName + '\'' +
+                ", roleTypeCode='" + roleTypeCode + '\'' +
                 '}';
     }
 }

@@ -192,6 +192,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> pageGetUserRelevance(PageGetUserBO pageGetUserBO) {
         //获取WMS缓存的用户列表
+        pageGetUserBO.setRoleType(pageGetUserBO.getRoleTypeCode());
         OrderResult userRelevanceResult=userServer.pageGetUserRelevance(pageGetUserBO);
         if(userRelevanceResult.isSuccess()) {
             if (!ObjectUtils.isEmpty(userRelevanceResult.getData())){
@@ -388,11 +389,15 @@ public class UserServiceImpl implements UserService {
                     getRoleTypeBO1.setPartnerId(wmssaveUserBO.getPartnerId());
                     getRoleList=userServer.roleList(getRoleTypeBO1);
                     String getRoleListStr = gson.toJson(getRoleList);
+                    List<String> quchongList=new ArrayList<>();
                     List<GetRoleTypePO> getRoleTypePOList = gson.fromJson(getRoleListStr, new TypeToken<ArrayList<GetRoleTypePO>>(){}.getType());
                     if (!ObjectUtils.isEmpty(getRoleTypePOList)){
                         getRoleTypePOList.stream().forEach(getRoleTypePO -> {
-                           // roleTypeName.append(getRoleTypePO.getRoleTypeName()+",");
-                            roleTypeCode.append(getRoleTypePO.getRoleTypeCode()+",");
+                            //角色类型去重
+                            if (!quchongList.contains(getRoleTypePO.getRoleTypeCode())){
+                                quchongList.add(getRoleTypePO.getRoleTypeCode());
+                                roleTypeCode.append(getRoleTypePO.getRoleTypeCode()+",");
+                            }
                         });
                     }
 
@@ -477,10 +482,14 @@ public class UserServiceImpl implements UserService {
         getRoleList=userServer.roleList(getRoleTypeBO1);
         String getRoleListStr = gson.toJson(getRoleList);
         List<GetRoleTypePO> getRoleTypePOList = gson.fromJson(getRoleListStr, new TypeToken<ArrayList<GetRoleTypePO>>(){}.getType());
+        List<String> quchongList=new ArrayList<>();
         if (!ObjectUtils.isEmpty(getRoleTypePOList)){
             getRoleTypePOList.stream().forEach(getRoleTypePO -> {
-                // roleTypeName.append(getRoleTypePO.getRoleTypeName()+",");
-                roleTypeCode.append(getRoleTypePO.getRoleTypeCode()+",");
+                if (!quchongList.contains(getRoleTypePO.getRoleTypeCode())){
+                    quchongList.add(getRoleTypePO.getRoleTypeCode());
+                    roleTypeCode.append(getRoleTypePO.getRoleTypeCode()+",");
+                }
+                //roleTypeCode.append(getRoleTypePO.getRoleTypeCode()+",");
             });
         }
         //TODO 修改WMS用户关联信息
@@ -489,7 +498,6 @@ public class UserServiceImpl implements UserService {
         updateUserStatusBO.setUserId(saveUserBO.getId());
         updateUserStatusBO.setWarehouseId(saveUserBO.getWarehouseId());
         updateUserStatusBO.setUserName(saveUserBO.getUname());
-        //updateUserStatusBO.setRoleType(saveUserBO.getRoleType());
         updateUserStatusBO.setRoleType(roleTypeCode.toString()+",");
         HttpResult updateResult=userServer.updateUserStatus(updateUserStatusBO);
         if(updateResult.isSuccess()){
