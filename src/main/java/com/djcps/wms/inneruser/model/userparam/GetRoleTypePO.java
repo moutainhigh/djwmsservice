@@ -25,6 +25,11 @@ public class GetRoleTypePO {
      */
     private String roleTypeName;
 
+    /**
+     * 角色类型编码
+     */
+    private String roleTypeCode;
+
     public String getRoleId() {
         return roleId;
     }
@@ -57,14 +62,22 @@ public class GetRoleTypePO {
         this.roleTypeName = roleTypeName;
     }
 
+    public String getRoleTypeCode() {
+        return roleTypeCode;
+    }
+
+    public void setRoleTypeCode(String roleTypeCode) {
+        this.roleTypeCode = roleTypeCode;
+    }
+
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "GetRoleTypePO{" +
                 "roleId='" + roleId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", roleType='" + roleType + '\'' +
                 ", roleTypeName='" + roleTypeName + '\'' +
+                ", roleTypeCode='" + roleTypeCode + '\'' +
                 '}';
     }
 }
