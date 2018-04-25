@@ -94,6 +94,10 @@ public class UserInfoPO {
      */
     private String politicalOutlook;
 
+    /**
+     * 户籍地址
+     */
+    private String registeredResidence;
 
     /**
      * 家庭地址
@@ -286,6 +290,14 @@ public class UserInfoPO {
         this.graduateSchool = graduateSchool;
     }
 
+    public String getRegisteredResidence() {
+        return registeredResidence;
+    }
+
+    public void setRegisteredResidence(String registeredResidence) {
+        this.registeredResidence = registeredResidence;
+    }
+
     @Override
     public String toString() {
         return "UserInfoPO{" +
@@ -308,6 +320,7 @@ public class UserInfoPO {
                 ", nation='" + nation + '\'' +
                 ", placeOrigin='" + placeOrigin + '\'' +
                 ", politicalOutlook='" + politicalOutlook + '\'' +
+                ", registeredResidence='" + registeredResidence + '\'' +
                 ", homeAddress='" + homeAddress + '\'' +
                 ", graduateSchool='" + graduateSchool + '\'' +
                 ", warehouseIdList=" + warehouseIdList +

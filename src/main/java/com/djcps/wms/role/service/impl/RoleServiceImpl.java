@@ -114,9 +114,7 @@ public class RoleServiceImpl implements RoleService {
         if (baseResult.isSuccess()) {
             BeanUtils.copyProperties(updateRoleInfoBO, orgRoleInfoBO);
             // 实体类匹配字段数值请求org服务
-            if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleType())) {
-                orgRoleInfoBO.setRtype(updateRoleInfoBO.getRoleType());
-            }
+            orgRoleInfoBO.setRtype(RoleConstant.SYSTEM);
             if (!ObjectUtils.isEmpty(updateRoleInfoBO.getRoleName())) {
                 orgRoleInfoBO.setRname(updateRoleInfoBO.getRoleName());
             }
@@ -127,7 +125,6 @@ public class RoleServiceImpl implements RoleService {
                 orgRoleInfoBO.setPid(updateRoleInfoBO.getPerId());
             }
             orgRoleInfoBO.setId(updateRoleInfoBO.getRoleId());
-            ;
 
             // 更新org角色关联信息
             result = orgRoleHttpServer.updatePostRoleManage(orgRoleInfoBO);

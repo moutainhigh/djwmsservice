@@ -31,13 +31,27 @@ public class RoleTypeBO {
      */
     private String partnerId;
     /**
-     * 角色类型集合
+     * 角色id集合
      */
     private List<String> list;
+
+
+    /**
+     * 角色类型id集合
+     */
+    private List<String> typeCodeList;
 
     private Integer pageSize;
 
     private Integer pageNo;
+
+    public List<String> getTypeCodeList() {
+        return typeCodeList;
+    }
+
+    public void setTypeCodeList(List<String> typeCodeList) {
+        this.typeCodeList = typeCodeList;
+    }
 
     public String getUserId() {
         return userId;
@@ -112,6 +126,7 @@ public class RoleTypeBO {
                 ", roleName='" + roleName + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", list=" + list +
+                ", typeCodeList=" + typeCodeList +
                 ", pageSize=" + pageSize +
                 ", pageNo=" + pageNo +
                 '}';

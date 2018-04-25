@@ -57,7 +57,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 public class PermissionServiceImpl implements PermissionService{
 	
     private DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(PermissionService.class);
-    
+     
 	@Autowired
 	private PermissionServer permissionServer;
 	
@@ -79,8 +79,13 @@ public class PermissionServiceImpl implements PermissionService{
 			//得到请求的数据
 			OtherHttpResult result =permissionServer.getPermissionList(getPermissonBO);
 			String data = JSONObject.toJSONString(result.getData());
-			String countData = JSONObject.toJSONString(result.getTotal());
-			Integer	count =Integer.parseInt(countData);
+			Integer countData = result.getTotal();
+			/*Integer	count;
+			if(!ObjectUtils.isEmpty(countData)) {
+			    count=Integer.parseInt(countData);
+			}else {
+			    count=0;
+			}*/
 			ArrayList<GetPermissionPackagePO> listUser = gson.fromJson(data,new TypeToken<List<GetPermissionPackagePO>>() {}.getType());
 			//规范返回字段
 			if(!ObjectUtils.isEmpty(listUser)) {
@@ -94,7 +99,7 @@ public class PermissionServiceImpl implements PermissionService{
 				//组织返回数据
 				BaseListPO info=new BaseListPO() {{
 					setList(listUserChange);
-					setTotal(count);
+					setTotal(countData);
 				}};
 				return MsgTemplate.successMsg(info);
 			}else {
