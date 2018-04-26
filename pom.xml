@@ -99,11 +99,6 @@
 
     <dependencies>
 
-		<dependency>
-		    <groupId>com.djtms</groupId>
-		    <artifactId>djtms</artifactId>
-		    <version>djtmsjar-1.0</version>
-		</dependency>
 
         <!-- Test -->
         <dependency>
