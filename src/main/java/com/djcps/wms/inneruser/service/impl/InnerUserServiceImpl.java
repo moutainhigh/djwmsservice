@@ -1,5 +1,15 @@
 package com.djcps.wms.inneruser.service.impl;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.config.ParamsConfig;
@@ -8,24 +18,16 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordBO;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
+import com.djcps.wms.inneruser.model.userparam.UpdateUserStatusBO;
 import com.djcps.wms.inneruser.redis.InnerUserRedisDao;
 import com.djcps.wms.inneruser.server.InnerUserServer;
+import com.djcps.wms.inneruser.server.UserServer;
 import com.djcps.wms.inneruser.service.InnerUserService;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 /**
  * @author Chengw
@@ -41,7 +43,12 @@ public class InnerUserServiceImpl implements InnerUserService {
 
     @Autowired
     private InnerUserRedisDao innerUserRedisDao;
-
+    
+    @Autowired
+    private InnerUserService innerUserService;
+    
+    @Autowired
+    private UserServer userServer;
     /**
      * app方式登录
      * @autuor Chengw
@@ -52,6 +59,19 @@ public class InnerUserServiceImpl implements InnerUserService {
     @Override
     public Map<String, Object> loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
         HttpResult baseResult = innerUserServer.loginTokenWithApp(innerUserLoginBO);
+        String token = innerUserServer.getUserToken(baseResult);
+        UserInfoVO userInfoVO = null;
+        try {
+            userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
+        }catch (Exception e){
+            e.printStackTrace();
+            LOGGER.error("内部用户信息 {}",e.getMessage());
+        }
+       UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
+       updateUserStatusBO.setUserId(userInfoVO.getId());
+       updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
+       updateUserStatusBO.setLoginCount(" ");
+        HttpResult result = userServer.updateUserStatus(updateUserStatusBO);
         return MsgTemplate.customMsg(baseResult);
     }
 

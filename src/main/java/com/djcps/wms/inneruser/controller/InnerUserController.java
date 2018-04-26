@@ -11,6 +11,7 @@ import com.djcps.wms.commons.aop.log.AddLog;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.OperatorInfoBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.enums.InnerUserMsgEnum;
@@ -23,9 +24,11 @@ import com.djcps.wms.permission.service.PermissionService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse; 	
 import javax.validation.Validation;
 import java.util.Map;
@@ -62,6 +65,7 @@ public class InnerUserController {
     @RequestMapping(name = "APP登录页面",value = "/login", method = {RequestMethod.POST})
     public Map<String, Object> login(@RequestBody(required = false) String json) {
         try {
+          
             InnerUserLoginBO innerUserLoginBO = gson.fromJson(json,InnerUserLoginBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(innerUserLoginBO, new HibernateSupportedValidator<InnerUserLoginBO>()

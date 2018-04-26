@@ -1,25 +1,25 @@
 package com.djcps.wms.inneruser.server;
 
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
 import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
+import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
 import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
 import com.djcps.wms.inneruser.model.result.UserCodeVO;
 import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
+import com.djcps.wms.inneruser.model.result.UserTokenVO;
 import com.djcps.wms.inneruser.request.InnerUserRequest;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import rpc.plugin.http.HTTPResponse;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
+import rpc.plugin.http.HTTPResponse;
 
 /**
  * 内部用户 server
@@ -83,6 +83,7 @@ public class InnerUserServer {
                 String body = httpResponse.getBodyString();
                 if (StringUtils.isNotBlank(body)) {
                     HttpResult baseResult = gson.fromJson(body, HttpResult.class);
+                    
                     return baseResult;
                 }
             } catch (Exception e) {
@@ -93,7 +94,17 @@ public class InnerUserServer {
         // }
         return null;
     }
-
+    /**
+     * 获取用户token
+     * @param result
+     * @return
+     */
+    public String getUserToken(HttpResult result) {
+        String json = gson.toJson(result.getData());
+        UserTokenVO userTokenVO = gson.fromJson(json, UserTokenVO.class);
+        String token = userTokenVO.getToken();
+        return token;
+    }
     /**
      * 手机验证码登录
      *
