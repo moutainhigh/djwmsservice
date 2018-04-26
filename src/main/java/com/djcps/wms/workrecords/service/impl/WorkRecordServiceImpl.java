@@ -4,10 +4,12 @@ import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.workrecords.model.WorkRecordsBO;
-import com.djcps.wms.workrecords.model.WorkRecordsDetailBO;
-import com.djcps.wms.workrecords.model.WorkRecordsInfoPO;
-import com.djcps.wms.workrecords.model.WorkRecordsPO;
+import com.djcps.wms.commons.utils.DateUtils;
+import com.djcps.wms.commons.utils.StringUtils;
+import com.djcps.wms.order.model.ChildOrderBO;
+import com.djcps.wms.order.model.OrderIdsBO;
+import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.workrecords.model.*;
 import com.djcps.wms.workrecords.server.WorkRecordServer;
 import com.djcps.wms.workrecords.service.WorkRecordService;
 import com.google.gson.reflect.TypeToken;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +32,9 @@ public class WorkRecordServiceImpl implements WorkRecordService {
 
     @Autowired
     private WorkRecordServer workRecordServer;
+
+    @Autowired
+    private OrderServer orderServer;
 
     /**
      * 根据操作类类型获取相关工作记录信息
@@ -66,17 +72,6 @@ public class WorkRecordServiceImpl implements WorkRecordService {
     public Map<String, Object> getWorkRecordsDetail(WorkRecordsDetailBO param) {
         HttpResult result = workRecordServer.getWorkRecordsDetail(param);
         if (!ObjectUtils.isEmpty(result)) {
-            if (result.isSuccess()) {
-                BaseVO baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
-                List<WorkRecordsInfoPO> list = gson.fromJson(gson.toJson(baseVO.getResult()),
-                        new TypeToken<List<WorkRecordsInfoPO>>() {
-                        }.getType());
-                list.stream().forEach(w -> {
-                    w.setFluteTypeName(w.getFluteType().toString());
-                });
-                baseVO.setResult(list);
-                return MsgTemplate.successMsg(baseVO);
-            }
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
@@ -127,16 +122,128 @@ public class WorkRecordServiceImpl implements WorkRecordService {
     public Map<String, Object> getDeliveryDetail(WorkRecordsDetailBO param) {
         HttpResult result = workRecordServer.getDeliveryWorkRecordsDetail(param);
         if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> listPdaInfo(WorkRecordsListBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
+        HttpResult result = workRecordServer.listPdaInfo(param);
+        if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> listPdaLoadingTask(WorkRecordsListBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
+        HttpResult result = workRecordServer.listPdaLoadingTask(param);
+        if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> listPdaDelivery(WorkRecordsListBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
+        HttpResult result = workRecordServer.listPdaDelivery(param);
+        if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> listPdaStockTaking(WorkRecordsListBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
+        HttpResult result = workRecordServer.listPdaStockTaking(param);
+        if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> listPdaLoadingTaskInfo(WorkRecordsTaskBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
+        HttpResult result = workRecordServer.listPdaLoadingTaskInfo(param);
+        if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> listPdaDeliveryInfo(WorkRecordsTaskBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
+        HttpResult result = workRecordServer.listPdaDeliveryInfo(param);
+        if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> listPdaStockTakingInfo(WorkRecordsTaskBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
+        HttpResult result = workRecordServer.listPdaStockTakingInfo(param);
+        if (!ObjectUtils.isEmpty(result)) {
+            return MsgTemplate.customMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+    }
+
+    @Override
+    public Map<String, Object> getOrderDetail(WorkRecordsOrderBO param) {
+        HttpResult result = workRecordServer.getBasicDetail(param);
+        if (!ObjectUtils.isEmpty(result)) {
             if (result.isSuccess()) {
-                BaseVO baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
-                List<WorkRecordsInfoPO> list = gson.fromJson(gson.toJson(baseVO.getResult()),
-                        new TypeToken<List<WorkRecordsInfoPO>>() {
-                        }.getType());
-                list.stream().forEach(w -> {
-                    w.setFluteTypeName(w.getFluteType().toString());
-                });
-                baseVO.setResult(list);
-                return MsgTemplate.successMsg(baseVO);
+                WorkRecordsOrderPO workRecordsOrderPO = gson.fromJson(gson.toJson(result.getData()), WorkRecordsOrderPO.class);
+                OrderIdsBO orderIds = new OrderIdsBO();
+                orderIds.setChildOrderIds(Arrays.asList(workRecordsOrderPO.getOrderId()));
+//                List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
+//                if (!childOrderList.isEmpty()) {
+//                    ChildOrderBO childOrderBO = childOrderList.stream()
+//                            .filter(b -> b.getFchildorderid().equals(workRecordsOrderPO.getOrderId())).findFirst()
+//                            .orElse(null);
+//                    if (!ObjectUtils.isEmpty(childOrderBO)) {
+//                        workRecordsOrderPO.setMaterialName(childOrderBO.getFmaterialname());
+//                        workRecordsOrderPO.setMaterialLength(StringUtils.toString(childOrderBO.getFmateriallength()));
+//                        workRecordsOrderPO.setMaterialWidth(StringUtils.toString(childOrderBO.getFmaterialwidth()));
+//                        workRecordsOrderPO.setBoxHeight(StringUtils.toString(childOrderBO.getFboxheight()));
+//                        workRecordsOrderPO.setBoxWidth(StringUtils.toString(childOrderBO.getFboxwidth()));
+//                        workRecordsOrderPO.setBoxLength(StringUtils.toString(childOrderBO.getFboxlength()));
+//                        workRecordsOrderPO.setFluteType(childOrderBO.getFflutetype());
+//                        workRecordsOrderPO.setOrderAmount(childOrderBO.getFamount());
+//                        workRecordsOrderPO.setUnit("片");
+//                    }
+//                }
+                return MsgTemplate.successMsg(workRecordsOrderPO);
             }
             return MsgTemplate.customMsg(result);
         }

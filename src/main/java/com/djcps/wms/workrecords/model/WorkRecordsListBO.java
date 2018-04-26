@@ -1,6 +1,8 @@
 package com.djcps.wms.workrecords.model;
 
 
+import com.djcps.wms.commons.base.BaseListBO;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -9,16 +11,18 @@ import javax.validation.constraints.NotNull;
  * @create 2018/4/24 11:33.
  * @since 1.0.0
  */
-public class AchievementsBO {
+public class WorkRecordsListBO extends BaseListBO {
 
     /**
      * 操作类型
      */
+    @NotNull
     private Integer operationType;
 
     /**
      * 操作人id
      */
+    @NotNull
     private String operatorId;
 
     /**

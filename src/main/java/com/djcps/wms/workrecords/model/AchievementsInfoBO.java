@@ -1,7 +1,8 @@
 package com.djcps.wms.workrecords.model;
 
 import com.djcps.wms.commons.base.BaseListBO;
-import com.google.gson.annotations.SerializedName;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Chengw
@@ -34,6 +35,18 @@ public class AchievementsInfoBO extends BaseListBO {
      * 结束时间
      */
     private String endTime;
+
+    /**
+     * 年份
+     */
+    @NotNull
+    private Integer year;
+
+    /**
+     * 月份
+     */
+    @NotNull
+    private Integer month;
 
     public Integer getOperationType() {
         return operationType;
@@ -75,14 +88,32 @@ public class AchievementsInfoBO extends BaseListBO {
         this.endTime = endTime;
     }
 
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public Integer getMonth() {
+        return month;
+    }
+
+    public void setMonth(Integer month) {
+        this.month = month;
+    }
+
     @Override
     public String toString() {
         return "AchievementsInfoBO{" +
-                "operationType='" + operationType + '\'' +
+                "operationType=" + operationType +
                 ", operatorId='" + operatorId + '\'' +
                 ", fluteType=" + fluteType +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
+                ", year=" + year +
+                ", month=" + month +
                 '}';
     }
 }

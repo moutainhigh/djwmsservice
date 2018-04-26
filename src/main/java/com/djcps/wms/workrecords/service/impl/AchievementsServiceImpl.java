@@ -3,6 +3,7 @@ package com.djcps.wms.workrecords.service.impl;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.DateUtils;
 import com.djcps.wms.record.enums.OperationTypeEnum;
 import com.djcps.wms.workrecords.model.AchievementsBO;
 import com.djcps.wms.workrecords.model.AchievementsInfoBO;
@@ -33,6 +34,10 @@ public class AchievementsServiceImpl implements AchievementsService {
 
     @Override
     public Map<String, Object> statistics(AchievementsBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
         HttpResult result = achievementsServer.listAllAchievements(param);
         if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
@@ -42,6 +47,10 @@ public class AchievementsServiceImpl implements AchievementsService {
 
     @Override
     public Map<String, Object> deliveryInfo(AchievementsInfoBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
         HttpResult result = achievementsServer.listPdaDeliveryAchievementsInfo(param);
         if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
@@ -51,10 +60,15 @@ public class AchievementsServiceImpl implements AchievementsService {
 
     @Override
     public Map<String, Object> entryInfo(AchievementsInfoBO param) {
+        if(!ObjectUtils.isEmpty(param.getYear()) && !ObjectUtils.isEmpty(param.getYear())){
+            param.setStartTime(DateUtils.getStartMonth(param.getYear(),param.getMonth()));
+            param.setEndTime(DateUtils.getEndMonth(param.getYear(),param.getMonth()));
+        }
         HttpResult result = achievementsServer.listPdaAchievementsInfo(param);
         if (!ObjectUtils.isEmpty(result)) {
             return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
+
 }

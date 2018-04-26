@@ -87,7 +87,6 @@ public class PersmissionController {
     public Map<String, Object> getWmsPermission(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
         try {
             LOGGER.debug("json:" + json);
-            //BaseOrgBO baseOrgBO=gson.fromJson(json, BaseOrgBO.class);
             GetWmsPermissionBO wmsPerBO = new GetWmsPermissionBO();
             BeanUtils.copyProperties(operatorInfoBO, wmsPerBO);
             //wms对应的id

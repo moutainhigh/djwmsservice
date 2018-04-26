@@ -53,8 +53,7 @@ public class PermissionServer {
 	public HttpResult getWmsPermission(WmsPermissionBO param) {
 		String json = gson.toJson(param);
 		LOGGER.debug("---http请求参数转化成json---:"+json);
-		Map<String,Object> map=gson.fromJson(json,Map.class);		
-		//okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+		Map<String,Object> map = gson.fromJson(json,Map.class);
 		HTTPResponse http = djorForPermissionHttpRequest.getWmsPermission(map);
 		return verifyHttpResult(http);
 	}

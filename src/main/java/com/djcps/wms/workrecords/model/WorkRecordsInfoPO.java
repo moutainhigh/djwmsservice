@@ -1,11 +1,10 @@
 package com.djcps.wms.workrecords.model;
 
-import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BasePO;
 
 /**
  * 
- * 
+ * 工作详细信息
  * @author py
  *
  */

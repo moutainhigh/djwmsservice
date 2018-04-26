@@ -8,8 +8,7 @@ package com.djcps.wms.workrecords.service;
 
 import java.util.Map;
 
-import com.djcps.wms.workrecords.model.WorkRecordsBO;
-import com.djcps.wms.workrecords.model.WorkRecordsDetailBO;
+import com.djcps.wms.workrecords.model.*;
 
 /**
  * 工作记录业务层
@@ -59,5 +58,63 @@ public interface WorkRecordService {
 	 * @date:2018年4月20日
 	 */
 	Map<String, Object> getDeliveryDetail(WorkRecordsDetailBO param);
+
+	/**
+	 * 获取pda工作记录
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> listPdaInfo(WorkRecordsListBO param);
+
+	/**
+	 * 获取pda装车的工作记录
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> listPdaLoadingTask(WorkRecordsListBO param);
+
+	/**
+	 * 获取pda提货的工作记录
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> listPdaDelivery(WorkRecordsListBO param);
+
+	/**
+	 * 获取pda盘点的工作记录
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> listPdaStockTaking(WorkRecordsListBO param);
+
+	/**
+	 * 获取pda运单明细
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> listPdaLoadingTaskInfo(WorkRecordsTaskBO param);
+
+
+	/**
+	 * 获取pda 提货单明细
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> listPdaDeliveryInfo(WorkRecordsTaskBO param);
+
+	/**
+	 * 获取pda盘点单明细
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> listPdaStockTakingInfo(WorkRecordsTaskBO param);
+
+	/**
+	 * 获取操作订单信息
+	 * @param param
+	 * @return
+	 */
+	Map<String, Object> getOrderDetail(WorkRecordsOrderBO param);
+
 
 }

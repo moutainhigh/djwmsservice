@@ -84,6 +84,81 @@ public interface WorkRecordHttpRequest {
      * @return
      */
     @Headers("content-type:application/json")
-    @POST("workRecords/listPdaAchievementsInfoPOs.do")
+    @POST("workRecords/listPdaEntryAchievementsInfo.do")
     HTTPResponse listPdaAchievementsInfo(@Body RequestBody json);
+
+    /**
+     * 获取pda端装车工作记录任务列表
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listPdaLoadingTaskWorkRecords.do")
+    HTTPResponse listPdaLoadingTaskWorkRecords(@Body RequestBody json);
+
+    /**
+     * 获取pda端提货工作记录任务列表
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listPdaDeliveryWorkRecords.do")
+    HTTPResponse listPdaDeliveryWorkRecords(@Body RequestBody json);
+
+
+    /**
+     * 获取pda端盘点工作记录任务列表
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listPdaStockTakingWorkRecords.do")
+    HTTPResponse listPdaStockTakingWorkRecords(@Body RequestBody json);
+
+    /**
+     * 获取pda端装车工作记录详细列表
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listPdaLoadingTaskWorkRecordsInfo.do")
+    HTTPResponse listPdaLoadingTaskWorkRecordsInfo(@Body RequestBody json);
+
+    /**
+     * 获取pda端提货工作记录详细列表
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listPdaDeliveryWorkRecordsInfo.do")
+    HTTPResponse listPdaDeliveryWorkRecordsInfo(@Body RequestBody json);
+
+    /**
+     * 获取pda端盘点工作记录详细信息列表
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listPdaStockTakingWorkRecordsInfo.do")
+    HTTPResponse listPdaStockTakingWorkRecordsInfo(@Body RequestBody json);
+
+    /**
+     * 获取pda端工作记录(入库、退库、移库)
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/listPdaWorkRecordsInfo.do")
+    HTTPResponse listPdaWorkRecordsInfo(@Body RequestBody json);
+
+    /**
+     * 根据操作记录id获取仓库id、仓库名称、操作记录
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("workRecords/getWorkRecordsDetail.do")
+    HTTPResponse getBasicDetail(@Body RequestBody json);
+
+
 }

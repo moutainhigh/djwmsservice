@@ -1,6 +1,8 @@
 package com.djcps.wms.workrecords.model;
 
 
+import com.djcps.wms.commons.base.BaseListBO;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -9,12 +11,13 @@ import javax.validation.constraints.NotNull;
  * @create 2018/4/24 11:33.
  * @since 1.0.0
  */
-public class AchievementsBO {
+public class WorkRecordsTaskBO extends BaseListBO {
 
     /**
-     * 操作类型
+     * 关联单号
      */
-    private Integer operationType;
+    @NotNull
+    private String relativeId;
 
     /**
      * 操作人id
@@ -43,12 +46,12 @@ public class AchievementsBO {
     @NotNull
     private Integer month;
 
-    public Integer getOperationType() {
-        return operationType;
+    public String getRelativeId() {
+        return relativeId;
     }
 
-    public void setOperationType(Integer operationType) {
-        this.operationType = operationType;
+    public void setRelativeId(String relativeId) {
+        this.relativeId = relativeId;
     }
 
     public String getOperatorId() {
@@ -93,11 +96,13 @@ public class AchievementsBO {
 
     @Override
     public String toString() {
-        return "AchievementsBO{" +
-                "operationType='" + operationType + '\'' +
+        return "WorkRecordsTaskBO{" +
+                "relativeId=" + relativeId +
                 ", operatorId='" + operatorId + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
+                ", year=" + year +
+                ", month=" + month +
                 '}';
     }
 }
