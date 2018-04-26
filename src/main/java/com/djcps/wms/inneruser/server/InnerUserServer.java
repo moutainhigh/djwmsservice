@@ -32,7 +32,6 @@ public class InnerUserServer {
 
     private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(InnerUserServer.class);
 
-
     @Autowired
     private InnerUserRequest innerUserRequest;
 
@@ -42,7 +41,7 @@ public class InnerUserServer {
      * @param userName
      * @return
      * @autuor Chengw
-     * @since 2017/12/4  14:46
+     * @since 2017/12/4 14:46
      */
     public String getUserCode(String userName) {
         HTTPResponse httpResponse = innerUserRequest.getCode(userName);
@@ -70,26 +69,28 @@ public class InnerUserServer {
      * @param innerUserLoginBO
      * @return
      * @autuor Chengw
-     * @since 2017/12/4  15:11
+     * @since 2017/12/4 15:11
      */
     public HttpResult loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
-        String userCode = getUserCode(innerUserLoginBO.getUserName());
-        if (StringUtils.isNotBlank(userCode)) {
-            String password = DigestUtils.md5Hex(innerUserLoginBO.getPassword() + userCode);
-            HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginBO.getUserName(), password, AppConstant.LOGIN_TYPE);
-            if (httpResponse.isSuccessful()) {
-                try {
-                    String body = httpResponse.getBodyString();
-                    if (StringUtils.isNotBlank(body)) {
-                        HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                        return baseResult;
-                    }
-                } catch (Exception e) {
-                    LOGGER.error(e.getMessage());
-                    e.printStackTrace();
+        // String userCode = getUserCode(innerUserLoginBO.getUserName());
+        // if (StringUtils.isNotBlank(userCode)) {
+        // String password = DigestUtils.md5Hex(innerUserLoginBO.getPassword() +
+        // userCode);
+        HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginBO.getUserName(),
+                innerUserLoginBO.getPassword(), AppConstant.LOGIN_TYPE);
+        if (httpResponse.isSuccessful()) {
+            try {
+                String body = httpResponse.getBodyString();
+                if (StringUtils.isNotBlank(body)) {
+                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
+                    return baseResult;
                 }
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage());
+                e.printStackTrace();
             }
         }
+        // }
         return null;
     }
 
@@ -99,7 +100,7 @@ public class InnerUserServer {
      * @param innerUserLoginPhoneBO
      * @return
      * @autuor Chengw
-     * @since 2017/12/20  09:12
+     * @since 2017/12/20 09:12
      */
     public HttpResult loginTokenWithPhone(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
         HTTPResponse httpResponse = innerUserRequest.appLoginByPhone(innerUserLoginPhoneBO.getPhone(),
@@ -126,10 +127,11 @@ public class InnerUserServer {
      * @param userSwitchSysBO
      * @return
      * @autuor Chengw
-     * @since 2017/12/4  15:10
+     * @since 2017/12/4 15:10
      */
     public UserLogoutVO swap(UserSwitchSysBO userSwitchSysBO) {
-        HTTPResponse httpResponse = innerUserRequest.getTokenLogin(userSwitchSysBO.getOldToken(), userSwitchSysBO.getSys());
+        HTTPResponse httpResponse = innerUserRequest.getTokenLogin(userSwitchSysBO.getOldToken(),
+                userSwitchSysBO.getSys());
         if (httpResponse.isSuccessful()) {
             try {
                 String body = httpResponse.getBodyString();
@@ -155,7 +157,7 @@ public class InnerUserServer {
      * @param token
      * @return
      * @autuor Chengw
-     * @since 2017/12/4  15:24
+     * @since 2017/12/4 15:24
      */
     public Boolean logout(String token) {
         HTTPResponse httpResponse = innerUserRequest.getLogout(token);
@@ -234,7 +236,7 @@ public class InnerUserServer {
      * @param phone
      * @return
      * @autuor Chengw
-     * @since 2017/12/20  09:16
+     * @since 2017/12/20 09:16
      */
     public Boolean sendLoginCode(String phone) {
         try {
