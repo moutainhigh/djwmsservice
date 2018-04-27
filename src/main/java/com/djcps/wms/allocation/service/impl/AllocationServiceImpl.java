@@ -33,8 +33,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import com.api.TMS_APP_PartnerOperatingManage.carchecksign.api.CarchecksignServer;
-import com.api.TMS_APP_PartnerOperatingManage.carchecksign.model.request.ReqVehicleQueuingListBiz;
+import com.api.partneroperatingmanage.carchecksign.api.TmsCarchecksignServer;
+import com.api.partneroperatingmanage.carchecksign.model.request.ReqVehicleQueuingListBiz;
 import com.base.TmsJsonResult;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
@@ -133,7 +133,7 @@ public class AllocationServiceImpl implements AllocationService {
     @Resource
     private AppProducer appProducer;
 	@Autowired
-	private CarchecksignServer carchecksignServer;
+	private TmsCarchecksignServer carchecksignServer;
 	
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
