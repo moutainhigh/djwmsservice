@@ -7,10 +7,11 @@ import java.io.Serializable;
 
 /**
  * 内部用户登录 参数类
+ * 
  * @author Chengw
  * @since 2017/12/4 16:56.
  */
-public class InnerUserLoginBO extends BaseBO implements Serializable{
+public class InnerUserLoginBO extends BaseBO implements Serializable {
 
     /***
      * 用户名称
@@ -23,6 +24,18 @@ public class InnerUserLoginBO extends BaseBO implements Serializable{
      */
     @NotBlank
     private String password;
+    /**
+     * 对应用户id
+     */
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getUserName() {
         return userName;
@@ -42,9 +55,7 @@ public class InnerUserLoginBO extends BaseBO implements Serializable{
 
     @Override
     public String toString() {
-        return "InnerUserLoginBO{" +
-                "userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return "InnerUserLoginBO [userName=" + userName + ", password=" + password + ", userId=" + userId + "]";
     }
+
 }
