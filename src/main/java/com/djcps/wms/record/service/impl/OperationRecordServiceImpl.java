@@ -9,9 +9,9 @@ import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.record.model.EntryRecordListBO;
-import com.djcps.wms.record.model.SaveOperationRecordBO;
-import com.djcps.wms.record.model.StocktakingRecordListBO;
+import com.djcps.wms.record.model.param.EntryRecordListBO;
+import com.djcps.wms.record.model.param.SaveOperationRecordBO;
+import com.djcps.wms.record.model.param.StocktakingRecordListBO;
 import com.djcps.wms.record.model.result.OperationRecordResult;
 import com.djcps.wms.record.server.OperationRecordServer;
 import com.djcps.wms.record.service.OperationRecordService;
@@ -34,6 +34,7 @@ public class OperationRecordServiceImpl implements OperationRecordService{
      * @return 
      * @create  2018/3/6
      **/
+    
     @Override
     public Map<String, Object> stocktakingRecordList(StocktakingRecordListBO stocktakingRecordListBO) {
         OperationRecordResult operationRecordResult=operationRecordServer.stocktakingRecordList(stocktakingRecordListBO);

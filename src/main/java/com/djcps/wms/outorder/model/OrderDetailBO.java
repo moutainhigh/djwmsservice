@@ -41,6 +41,19 @@ public class OrderDetailBO {
 	 */
 	private String unit;
 	
+	/**
+	 * 片数
+	 */
+	private Integer amountPiece;
+	
+	public Integer getAmountPiece() {
+		return amountPiece;
+	}
+
+	public void setAmountPiece(Integer amountPiece) {
+		this.amountPiece = amountPiece;
+	}
+
 	public OrderDetailBO(){
 		this.unit = "片";
 	}
@@ -113,7 +126,7 @@ public class OrderDetailBO {
 	public String toString() {
 		return "OrderDetailBO [childOrderId=" + childOrderId + ", productName=" + productName + ", materialSize="
 				+ materialSize + ", productSize=" + productSize + ", orderAmount=" + orderAmount + ", unitPrice="
-				+ unitPrice + ", amountPrice=" + amountPrice + ", unit=" + unit + "]";
+				+ unitPrice + ", amountPrice=" + amountPrice + ", unit=" + unit + ", amountPiece=" + amountPiece + "]";
 	}
 	
 }

@@ -143,5 +143,26 @@ public class AppConstant {
     /**
      * 出库msg枚举类型
      */
-    public static final Integer WMS_MODULE_OUTORDER_ENUM_PREFIX = 1100;
+    public static final Integer WMS_OUTORDER_ENUM_PREFIX = 1100;
+    
+    
+    /**
+     * 工作记录msg枚举类型
+     */
+    public static final Integer WMS_WORKRECORDS_ENUM_PREFIX = 1200;
+    
+    /**
+     * 用户管理msg枚举类型
+     */
+    public static final Integer WMS_USER_ENUM_PREFIX = 1500;
+    /**
+     * 角色msg枚举类型
+     */
+    public static final Integer WMS_ROLE_ENUM_PREFIX = 1600;
+
+    /**
+     * 问号
+     */
+    public static final String W = "?";
+
 }

@@ -11,9 +11,9 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
+import com.djcps.wms.permission.service.PermissionService;
 import com.djcps.wms.sysurl.model.SysUrlPO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.ObjectUtils;
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 
 /**
@@ -49,7 +50,8 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	@Autowired
 	private InnerUserService innerUserService;
 
-	private Gson gson = new Gson();
+	@Autowired
+    private PermissionService permissionService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -61,7 +63,7 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		//路径的用户类型,0:未知(默认,代表都可以访问),1:本部才可以使用的路径,2:合作方使用的路径
 		int userType = 0;
 		String url = request.getRequestURI();
-		System.err.println("---访问URL:"+url+",请求方式:"+request.getMethod());
+        LOGGER.info("---访问URL:"+url+",请求方式:"+request.getMethod());
 		String contextPath = request.getContextPath();
 		String appLogin = request.getHeader("loginType");
 		//删除下文根路径获取RequestMappingUrl

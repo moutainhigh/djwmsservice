@@ -17,4 +17,9 @@ public class RedisPrefixConstant {
 	 * 配货和配货管理的前缀
 	 */
 	public static final String REDIS_ALLOCATION_ORDER_PREFIX = "djwms:allocation:order:";
+	
+	/**
+	 * 用户权限模块的前缀
+	 */
+	public static final String PERMISSION_REDIS_CACHE = "djwms:cache:user:permission:";
 }

@@ -88,23 +88,23 @@ public class OrderInfoBO {
 	/**
 	 * 纸箱规格长
 	 */
-	private BigDecimal boxLength;
+	private String boxLength;
 	/**
 	 * 纸箱规格宽
 	 */
-	private BigDecimal boxWidth;
+	private String boxWidth;
 	/**
 	 * 纸箱规格高
 	 */
-	private BigDecimal boxHeight;
+	private String boxHeight;
 	/**
 	 * 落料长
 	 */
-	private BigDecimal materialLength;
+	private String materialLength;
 	/**
 	 * 落料宽
 	 */
-	private BigDecimal materialWidth;
+	private String materialWidth;
 	/**
 	 * 压线方式
 	 */
@@ -372,43 +372,43 @@ public class OrderInfoBO {
 		this.boxModel = boxModel;
 	}
 
-	public BigDecimal getBoxLength() {
+	public String getBoxLength() {
 		return boxLength;
 	}
 
-	public void setBoxLength(BigDecimal boxLength) {
+	public void setBoxLength(String boxLength) {
 		this.boxLength = boxLength;
 	}
 
-	public BigDecimal getBoxWidth() {
+	public String getBoxWidth() {
 		return boxWidth;
 	}
 
-	public void setBoxWidth(BigDecimal boxWidth) {
+	public void setBoxWidth(String boxWidth) {
 		this.boxWidth = boxWidth;
 	}
 
-	public BigDecimal getBoxHeight() {
+	public String getBoxHeight() {
 		return boxHeight;
 	}
 
-	public void setBoxHeight(BigDecimal boxHeight) {
+	public void setBoxHeight(String boxHeight) {
 		this.boxHeight = boxHeight;
 	}
 
-	public BigDecimal getMaterialLength() {
+	public String getMaterialLength() {
 		return materialLength;
 	}
 
-	public void setMaterialLength(BigDecimal materialLength) {
+	public void setMaterialLength(String materialLength) {
 		this.materialLength = materialLength;
 	}
 
-	public BigDecimal getMaterialWidth() {
+	public String getMaterialWidth() {
 		return materialWidth;
 	}
 
-	public void setMaterialWidth(BigDecimal materialWidth) {
+	public void setMaterialWidth(String materialWidth) {
 		this.materialWidth = materialWidth;
 	}
 

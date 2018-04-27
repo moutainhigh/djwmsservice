@@ -18,8 +18,8 @@ import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.record.constant.StockTakingOperationConstant;
-import com.djcps.wms.record.model.SaveOperationRecordBO;
-import com.djcps.wms.record.model.StocktakingRecordListBO;
+import com.djcps.wms.record.model.param.SaveOperationRecordBO;
+import com.djcps.wms.record.model.param.StocktakingRecordListBO;
 import com.djcps.wms.record.server.OperationRecordServer;
 import com.djcps.wms.record.util.StockTakingOperationRecordUtil;
 import com.djcps.wms.stocktaking.constant.StocktakingTaskConstant;
@@ -53,9 +53,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
 
     @Autowired
     private StocktakingTaskServer stocktakingTaskServer;
-
-    @Autowired
-    private StocktakingOrderServer stocktakingOrderServer;
 
     @Autowired
     private OrderServer orderServer;
@@ -124,9 +121,9 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         String partnerId=addStocktakingBO.getPartnerId();
         String warehouseAreaId="";
         String warehouseLocId="";
-        for (WarehouseAreaBO warehouseAreaBO:addStocktakingBO.getWarehouseAreaInfoList()){
+        for (WarehouseAreaBO warehouseAreaBO:addStocktakingBO.getAreaList()){
             warehouseAreaId=warehouseAreaBO.getWarehouseAreaId();
-            for (WarehouseLocationBO warehouseLocationBO:warehouseAreaBO.getWarehouseLocInfo()){
+            for (WarehouseLocationBO warehouseLocationBO:warehouseAreaBO.getLocationList()){
                 addTaskByPartBO=new AddTaskByPartBO();
                 warehouseLocId=warehouseLocationBO.getWarehouseLocId();
                 addTaskByPartBO.setPartnerId(partnerId);
@@ -460,6 +457,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             list.get(i).setOperatorId(saveStocktakingTaskBO.getCreatorId());
             list.get(i).setOperator(saveStocktakingTaskBO.getCreator());
             list.get(i).setIsInventoryProfit(2);
+            list.get(i).setFluteType(StringUtils.switchFluteTypeToNumber(list.get(i).getFluteType()));
             GetAmountBO getAmountBO=new GetAmountBO();
             getAmountBO.setOrderId(list.get(i).getOrderId());
             getAmountBO.setWarehouseAreaId(list.get(i).getWarehouseAreaId());
@@ -535,9 +533,14 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
 				saveStock.setMaterialSize(new StringBuffer().append(saveStock.getMaterialLength()).append("*")
 						.append(saveStock.getMaterialWidth()).toString());
 			}
+			saveStock.setFluteType(StringUtils.switchFluteTypeToString(saveStock.getFluteType()));
             list.add(saveStock);
         }
         orderInfoListResult.getTaskOrderInfo().setResult(list);
+        
+        
+        
+        
         return  MsgTemplate.successMsg(orderInfoListResult);
     }
 
@@ -1145,7 +1148,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> savePdaStocktakingResult(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO) {
-    	saveStocktakingOrderInfoBO.setFluteType(StringUtils.switchFluteType(saveStocktakingOrderInfoBO.getFluteType()));
+    	saveStocktakingOrderInfoBO.setFluteType(StringUtils.switchFluteTypeToNumber(saveStocktakingOrderInfoBO.getFluteType()));
     	List<String> orderidlist=new ArrayList<String>();
         //获取所有订单列表
         orderidlist.add(saveStocktakingOrderInfoBO.getOrderId());

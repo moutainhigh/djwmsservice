@@ -19,9 +19,22 @@ public class WaybillDeliveryOrderPO implements Serializable{
 	private String waybillId;
 	
 	/**
+	 *  智能配货id
+	 */
+	private String allocationId;
+	
+	/**
 	 * 提货单对象
 	 */
 	private List<DeliveryOrderPO> deliveryOrder;
+
+	public String getAllocationId() {
+		return allocationId;
+	}
+
+	public void setAllocationId(String allocationId) {
+		this.allocationId = allocationId;
+	}
 
 	public String getWaybillId() {
 		return waybillId;
@@ -41,7 +54,8 @@ public class WaybillDeliveryOrderPO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "WaybillDeliveryOrderPO [waybillId=" + waybillId + ", deliveryOrder=" + deliveryOrder + "]";
+		return "WaybillDeliveryOrderPO [waybillId=" + waybillId + ", allocationId=" + allocationId + ", deliveryOrder="
+				+ deliveryOrder + "]";
 	}
 
 }

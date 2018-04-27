@@ -26,7 +26,7 @@ public class WarehouseAreaBO implements Serializable{
 	/**
 	 * 库区list
 	 */
-	private List<WarehouseLocationBO> warehouseLocInfo;
+	private List<WarehouseLocationBO> locationList;
 
 
 	public String getWarehouseAreaId() {
@@ -45,18 +45,18 @@ public class WarehouseAreaBO implements Serializable{
 		this.warehouseAreaName = warehouseAreaName;
 	}
 
-	public List<WarehouseLocationBO> getWarehouseLocInfo() {
-		return warehouseLocInfo;
+	public List<WarehouseLocationBO> getLocationList() {
+		return locationList;
 	}
 
-	public void setWarehouseLocInfo(List<WarehouseLocationBO> warehouseLocInfo) {
-		this.warehouseLocInfo = warehouseLocInfo;
+	public void setLocationList(List<WarehouseLocationBO> locationList) {
+		this.locationList = locationList;
 	}
 
 	@Override
 	public String toString() {
-		return "WarehouseAreaBO [warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
-				+ ", warehouseLocInfo=" + warehouseLocInfo + "]";
+		return "WarehouseAreaHaveLocationListBO [warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName="
+				+ warehouseAreaName + ", locationList=" + locationList + "]";
 	}
 	
 }

@@ -57,7 +57,7 @@ public class AddAbnormal extends BaseAddBO implements Serializable{
     /**
      *是否拆分 0:正常订单(默认)  1:被拆分订单 2:拆后订单
      */
-    @NotBlank
+    @NotNull
     private Integer isSplit;
 
     /**

@@ -39,7 +39,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 /**
  * 提货实现类
  *
- * @author Chengw
+ * @author  Chengw
  * @since 2018/1/31 08:37.
  */
 @Service
@@ -139,6 +139,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             result = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
             if(!result.isSuccess()){
             	LOGGER.error("完成单条提货订单的提货,修改订单状态失败!!!");
+            	return MsgTemplate.customMsg(result);
             }
             List<String> orderId = new ArrayList<>();
 			orderId.add(param.getOrderId());
@@ -146,7 +147,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 			if(compareOrderStatus==false){
 				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 			}
-            return MsgTemplate.customMsg(result);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
@@ -171,7 +171,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (!childOrderList.isEmpty()) {
             orderList.stream().forEach(order -> {
                 ChildOrderBO childOrderBO =  childOrderList.stream().filter(
-                        b -> b.getChildOrderId().equals(order.getOrderId())).findFirst().orElse(null);
+                        b -> b.getOrderId().equals(order.getOrderId())).findFirst().orElse(null);
                 if(!ObjectUtils.isEmpty(childOrderBO)) {
                     //设置账户名称  母账户名称或者子账户名称
                     BeanUtils.copyProperties(childOrderBO, order);
@@ -295,7 +295,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 			BeanUtils.copyProperties(joinOrderParamInfo.get(0), child);
 			childOrderBOList.add(child);
         	ChildOrderBO childOrderBO = childOrderBOList.stream()
-                    .filter(b -> b.getChildOrderId().equals(deliveryOrderDetailPO.getOrderId()))
+                    .filter(b -> b.getOrderId().equals(deliveryOrderDetailPO.getOrderId()))
                     .findFirst().orElse(null);
             if(!ObjectUtils.isEmpty(childOrderBO)) {
                 BeanUtils.copyProperties(childOrderBO, deliveryOrderDetailPO);
@@ -308,7 +308,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         	BeanUtils.copyProperties(joinOrderParamInfo.get(0), child);
         	childOrderBOList.add(child);
         	ChildOrderBO childOrderBO = childOrderBOList.stream()
-        			.filter(b -> b.getChildOrderId().equals(deliveryOrderDetailPO.getOrderId()))
+        			.filter(b -> b.getOrderId().equals(deliveryOrderDetailPO.getOrderId()))
         			.findFirst().orElse(null);
         	if(!ObjectUtils.isEmpty(childOrderBO)) {
             	BeanUtils.copyProperties(childOrderBO, deliveryOrderDetailPO);
@@ -362,14 +362,13 @@ public class DeliveryServiceImpl implements DeliveryService {
             result = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
             if(!result.isSuccess()){
             	LOGGER.error("完成单条提货订单的提货,修改订单状态失败!!!");
+            	return MsgTemplate.customMsg(result);
             }
 			Boolean compareOrderStatus = orderServer.compareOrderStatus(param.getOrderIds(),param.getPartnerArea());
 			if(compareOrderStatus==false){
 				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 			}
-            return MsgTemplate.customMsg(result);
         }
-        
         return MsgTemplate.customMsg(result);
     }
 }

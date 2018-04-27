@@ -2,6 +2,8 @@ package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseBO;
@@ -89,7 +91,7 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	/**
 	 * 订单数量
 	 */
-	@NotBlank
+	@NotNull
 	private Integer orderAmount;
 	
 	/**
@@ -107,6 +109,16 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	@NotBlank
 	private String unit;
 	
+	private Integer deliveryIdEffect;
+	
+	private String deliveryId;
+	
+	public Integer getDeliveryIdEffect() {
+		return deliveryIdEffect;
+	}
+	public void setDeliveryIdEffect(Integer deliveryIdEffect) {
+		this.deliveryIdEffect = deliveryIdEffect;
+	}
 	public Integer getDeliveryAmount() {
 		return deliveryAmount;
 	}
@@ -215,6 +227,13 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
+	
+	public String getDeliveryId() {
+		return deliveryId;
+	}
+	public void setDeliveryId(String deliveryId) {
+		this.deliveryId = deliveryId;
+	}
 	@Override
 	public String toString() {
 		return "AddAllocationOrderBO [orderId=" + orderId + ", allocationId=" + allocationId + ", warehouseId="
@@ -223,7 +242,8 @@ public class AddAllocationOrderBO extends BaseBO implements Serializable{
 				+ ", warehouseLocName=" + warehouseLocName + ", productName=" + productName + ", materialName="
 				+ materialName + ", customerName=" + customerName + ", contacts=" + contacts + ", deliveryTime="
 				+ deliveryTime + ", sequence=" + sequence + ", orderAmount=" + orderAmount + ", deliveryAmount="
-				+ deliveryAmount + ", address=" + address + ", unit=" + unit + "]";
+				+ deliveryAmount + ", address=" + address + ", unit=" + unit + ", deliveryIdEffect=" + deliveryIdEffect
+				+ ", deliveryId=" + deliveryId + "]";
 	}
 	
 }

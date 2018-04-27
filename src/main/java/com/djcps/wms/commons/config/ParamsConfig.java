@@ -66,6 +66,11 @@ public class ParamsConfig {
 	 * OMS服务
 	 */
 	public static String ONLINE_PAPERBOARD_SERVER = "";
+	
+	/**
+	 * ORG服务
+	 */
+	public static String ORG_SERVER = "";
 
 	public static void setOnlinePaperboardServer(String onlinePaperboardServer) {
 		ONLINE_PAPERBOARD_SERVER = onlinePaperboardServer;
@@ -113,5 +118,9 @@ public class ParamsConfig {
 
 	public static void setNumberServer(String numberServer) {
 		NUMBER_SERVER = numberServer;
+	}
+	
+	public static void setOrgServer(String orgServer) {
+		ORG_SERVER = orgServer;
 	}
 }

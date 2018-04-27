@@ -10,6 +10,7 @@ import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 
@@ -21,33 +22,6 @@ import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
  */
 public interface OrderService {
 
-	
-	/**
-	 * 获取所有订单列表
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2018年1月3日
-	 */
-	Map<String, Object> getAllOrderList(OrderParamBO param);
-
-	/**
-	 * 根据订单号获取订单信息
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2017年12月22日
-	 */
-	Map<String, Object> getOrderByOrderId(OrderIdBO param);
-	
-	/**
-	 * 根据id去获取在库信息
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2018年1月2日
-	 */
-	List<WarehouseOrderDetailPO> getStockInfo(SelectAreaByOrderIdBO param);
 	
 	/**
 	 * 获取线上纸板订单
@@ -66,5 +40,14 @@ public interface OrderService {
 	 * @date:2018年4月23日
 	 */
 	Map<String, Object> getOnlinePaperboardByOrderId(BatchOrderIdListBO param);
+
+	/**
+	 * 拆分订单
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年4月25日
+	 */
+	Map<String, Object> splitOrder(UpdateSplitOrderBO param);
 
 }

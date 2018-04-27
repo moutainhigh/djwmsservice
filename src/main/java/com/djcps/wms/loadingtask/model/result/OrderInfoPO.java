@@ -21,32 +21,32 @@ public class OrderInfoPO {
     /**
      * 楞型
      */
-    private String luteType;
+    private String fluteType;
 
     /**
      * 产品规格长
      */
-    private Double boxLength;
+    private String boxLength;
 
     /**
      * 产品规格宽
      */
-    private Double boxWidth;
+    private String boxWidth;
 
     /**
      * 产品规格高
      */
-    private Double boxHeight;
+    private String boxHeight;
 
     /**
      * 下料规格长
      */
-    private BigDecimal materialLength;
+    private String materialLength;
 
     /**
      * 下料规格宽
      */
-    private BigDecimal materialWidth;
+    private String materialWidth;
 
     /**
      * 材料名称
@@ -89,40 +89,40 @@ public class OrderInfoPO {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	public String getLuteType() {
-		return luteType;
+	public String getFluteType() {
+		return fluteType;
 	}
-	public void setLuteType(String luteType) {
-		this.luteType = luteType;
+	public void setFluteType(String fluteType) {
+		this.fluteType = fluteType;
 	}
-	public Double getBoxLength() {
+	public String getBoxLength() {
 		return boxLength;
 	}
-	public void setBoxLength(Double boxLength) {
+	public void setBoxLength(String boxLength) {
 		this.boxLength = boxLength;
 	}
-	public Double getBoxWidth() {
+	public String getBoxWidth() {
 		return boxWidth;
 	}
-	public void setBoxWidth(Double boxWidth) {
+	public void setBoxWidth(String boxWidth) {
 		this.boxWidth = boxWidth;
 	}
-	public Double getBoxHeight() {
+	public String getBoxHeight() {
 		return boxHeight;
 	}
-	public void setBoxHeight(Double boxHeight) {
+	public void setBoxHeight(String boxHeight) {
 		this.boxHeight = boxHeight;
 	}
-	public BigDecimal getMaterialLength() {
+	public String getMaterialLength() {
 		return materialLength;
 	}
-	public void setMaterialLength(BigDecimal materialLength) {
+	public void setMaterialLength(String materialLength) {
 		this.materialLength = materialLength;
 	}
-	public BigDecimal getMaterialWidth() {
+	public String getMaterialWidth() {
 		return materialWidth;
 	}
-	public void setMaterialWidth(BigDecimal materialWidth) {
+	public void setMaterialWidth(String materialWidth) {
 		this.materialWidth = materialWidth;
 	}
 	public String getMaterialName() {
@@ -169,7 +169,7 @@ public class OrderInfoPO {
 	}
 	@Override
 	public String toString() {
-		return "OrderInfoPO [productName=" + productName + ", orderId=" + orderId + ", luteType=" + luteType
+		return "OrderInfoPO [productName=" + productName + ", orderId=" + orderId + ", fluteType=" + fluteType
 				+ ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
 				+ ", materialLength=" + materialLength + ", materialWidth=" + materialWidth + ", materialName="
 				+ materialName + ", orderAmount=" + orderAmount + ", materialSize=" + materialSize + ", productSize="

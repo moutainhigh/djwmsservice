@@ -11,7 +11,10 @@ import com.djcps.wms.commons.msg.MsgInterface;
  * @date:2017年11月28日
  */
 public enum CancelStockMsgEnum implements MsgInterface {
-	
+    /**
+     * 错误代码枚举
+     */
+
 	ORDER_IS_NULL(1, "查无此订单")
 	;
 

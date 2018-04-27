@@ -30,7 +30,7 @@ public interface OnlinePaperboardRequest {
 	public HTTPResponse getOnlinePaperboardList(@Body RequestBody rb);
 	
 	/**
-	 * 可批量修改订单状态,新增拆单数据
+	 * 批量修改子单状态
 	 * @param rb
 	 * @return
 	 * @author:zdx
@@ -52,7 +52,7 @@ public interface OnlinePaperboardRequest {
 	public HTTPResponse updateSplitOrderInfo(@Body RequestBody rb);
 
 	/**
-	 * 批量获取订单详情
+	 * 根据订单号获取订单详情（支持批量/包含拆单）
 	 * @param rb
 	 * @return
 	 * @author:zdx
@@ -72,5 +72,16 @@ public interface OnlinePaperboardRequest {
 	@Headers("content-type:application/json")
 	@POST("oms/loadSplitOrderByOrderIds.do")
 	public HTTPResponse getSplitOrderDeatilByI(@Body RequestBody rb);
+	
+	/**
+	 * 拆分订单接口
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年4月25日
+	 */
+	@Headers("content-type:application/json")
+	@POST("oms/updateSplitOrderStatus.do")
+	public HTTPResponse splitOrder(@Body RequestBody rb);
 	
 }

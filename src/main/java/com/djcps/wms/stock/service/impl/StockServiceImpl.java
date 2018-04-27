@@ -179,6 +179,10 @@ public class StockServiceImpl implements StockService{
 		Integer orderAmount = param.getAmount();
 		SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 		BeanUtils.copyProperties(param, selectAreaByOrderId);
+		
+		List<String> orderIdList = new ArrayList<>();
+		orderIdList.add(orderId);
+		
 		OrderIdBO orderIdBO = new OrderIdBO();
 		orderIdBO.setOrderId(orderId);
 		list.add(orderIdBO);
@@ -208,14 +212,21 @@ public class StockServiceImpl implements StockService{
 				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
 			}
 		}
-		HttpResult result  = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),list);
-        if(!result.isSuccess()){
-        	LOGGER.error("入库修改订单状态失败!!!");
-        	return MsgTemplate.failureMsg("入库修改订单状态失败!!!");
-        }
+		//入库
+		HttpResult result = stockServer.addStock(param);
 		if(result.isSuccess()){
-			//入库
-			result = stockServer.addStock(param);
+			
+			//修改订单状态
+			result  = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),list);
+	        if(!result.isSuccess()){
+	        	LOGGER.error("入库修改订单状态失败!!!");
+	        	return MsgTemplate.failureMsg("入库修改订单状态失败!!!");
+	        }
+	        Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
+	        if(compareOrderStatus==false){
+	          return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+	        }
+			
 			if(result.isSuccess()){
 				//插入冗余表数据
 				BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();

@@ -78,12 +78,13 @@ public class CancelStockServiceImpl implements CancelStockService {
 			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 			if(!ObjectUtils.isEmpty(orderList)){
 				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
-				return MsgTemplate.successMsg(joinOrderParamInfo.get(0));
+				BeanUtils.copyProperties(joinOrderParamInfo.get(0), orderAttribute,"warehouseId","warehouseName");
 			}else{
 				List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
 				List<WarehouseOrderDetailPO> joinSplitOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
-				return MsgTemplate.successMsg(joinSplitOrderParamInfo.get(0));
+				BeanUtils.copyProperties(joinSplitOrderParamInfo.get(0), orderAttribute,"warehouseId","warehouseName");
 			}
+			return MsgTemplate.successMsg(orderAttribute);
 		}
 	}
 
@@ -110,11 +111,13 @@ public class CancelStockServiceImpl implements CancelStockService {
 			orderIdBOList.add(orderIdBO);
 			
 			result = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
-			List<String> orderId = new ArrayList<>();
-			orderId.add(param.getOrderId());
-			Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea());
-			if(compareOrderStatus==false){
-				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+			if(result.isSuccess()){
+				List<String> orderId = new ArrayList<>();
+				orderId.add(param.getOrderId());
+				Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea());
+				if(compareOrderStatus==false){
+					return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+				}
 			}
 		}
 		return MsgTemplate.customMsg(result);

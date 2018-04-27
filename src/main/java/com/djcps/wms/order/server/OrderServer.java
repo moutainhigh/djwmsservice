@@ -73,29 +73,6 @@ public class OrderServer {
 	@Autowired
 	private UpdateOrderHttpRequest  updateOrderHttpRequest;
 	
-	public OrderHttpResult getAllOrderList(OrderParamBO param) {
-		//将请求参数转化为requestbody格式
-        String json = gson.toJson(param);
-        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        //调用借口获取信息
-        HTTPResponse http = orderHttpRequest.getAllOrderList(rb);
-        //校验请求是否成功
-        OrderHttpResult result = null;
-		if(http.isSuccessful()){
-			result = gson.fromJson(http.getBodyString(), OrderHttpResult.class);
-		}else{
-			result = new OrderHttpResult();
-			result.setTotalCount(0);
-			result.setSuccess(true);
-			result.setCode(100000);
-			result.setMsg("");
-		}
-		if(result == null){
-			LOGGER.error("Http请求出错,HttpResult结果为null");
-		}
-		return result;
-	}
-	
 	public HttpResult getOrderByOrderId(OrderIdBO param){
         //将请求参数转化为requestbody格式
         String json = gson.toJson(param);
@@ -318,31 +295,6 @@ public class OrderServer {
         //校验请求是否成功
         return verifyHttpResult(http);
 	}
-	
-	/**
-	 * 该接口只是用于组织参数,oms需要这个参数,对于wms没有影响
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2018年4月19日
-	 */
-//	public List<UpdateSplitOrderBO> addErrorParamToOMS(UpdateSplitSonOrderBO param) {
-//		List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
-//		UpdateSplitOrderBO update = new UpdateSplitOrderBO();
-//		update.setSubOrderId(new StringBuffer().append(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_3).toString());
-//		update.setOrderId(param.getOrderId());
-//		update.setSubNumber(1);
-//		update.setSubStatus(0);
-//		update.setSubAddress("这是oms需要的由wms传递的数据");
-//		update.setOutStock(1);
-//		update.setInStock(1);
-//		update.setIsException(0);
-//		update.setIsStored(0);
-//		update.setIsProduce(0);
-//		update.setKeyArea(param.getKeyArea());
-//		splitOrders.add(update);
-//		return splitOrders;
-//	}
 	
 	/**
 	 * 拼接订单中的参数,拼接了楞型,产品规格和材料规格,地址

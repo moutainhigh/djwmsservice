@@ -20,7 +20,7 @@ import java.math.BigDecimal;
  * @author:zdx
  * @date:2018年4月12日
  */
-public class OnlinePaperboardBO extends BaseBO implements Serializable{
+public class OnlinePaperboardBO implements Serializable{
    
 	private static final long serialVersionUID = 778949046213494674L;
 	
@@ -97,11 +97,11 @@ public class OnlinePaperboardBO extends BaseBO implements Serializable{
      */
     private BigDecimal materialWidth;
     /**
-     * 下单开始时间
+     * 下单开始时间(也是支付时间字段)
      */
     private String orderStartTime;
     /**
-     * 下单结束时间
+     * 下单结束时间(也是支付时间字段)
      */
     private String orderEndTime;
     /**

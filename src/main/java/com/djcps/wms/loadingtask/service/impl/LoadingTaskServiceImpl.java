@@ -65,7 +65,7 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 /**
  * 装车实现类
  *
- * @author wyb
+ * @author  wyb
  * @since 2018/3/19
  */
 @Service
@@ -150,24 +150,13 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             if (!ObjectUtils.isEmpty(orderPOList)) {
                 String orderId = null;
                 for (OrderIdAndLoadingAmountPO orderInfo : orderPOList) {
-
                     if (!ObjectUtils.isEmpty(orderInfo.getOrderId())) {
-                        if (orderInfo.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER) > 0) {
-                            // 截取差分订单编号后面的-1或-2
-                            orderId = orderInfo.getOrderId().substring(0,
-                                    orderInfo.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
-                            // 将截取后的订单号放进map
-                            map.put(orderInfo.getOrderId(), orderId);
-                            childOrderIds.add(orderId);
-                        } else {
-                            map.put(orderInfo.getOrderId(), orderInfo.getOrderId());
-                            childOrderIds.add(orderInfo.getOrderId());
-                        }
+	                    map.put(orderInfo.getOrderId(), orderInfo.getOrderId());
+	                    childOrderIds.add(orderInfo.getOrderId());
                     }
                     orderIdsBO.setChildOrderIds(childOrderIds);
                     orderIdsBO.setPartnerArea(param.getPartnerArea());
                 }
-
             }
             // 获取异常订单异常数目
             List<AbnormalOrderPO> abnormalInfo = abnormalOrderInfo(childOrderIds, param);
@@ -194,10 +183,16 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             		BeanUtils.copyProperties(warehouseOrderDetailPO, orderInfoPO);
             		otherOrderInfo.add(orderInfoPO);
 				}
-            	orderInfo.addAll(otherOrderInfo);
+            }
+            List<OrderInfoPO> newOrderInfo = new ArrayList<>();
+            if(!ObjectUtils.isEmpty(orderInfo)){
+            	newOrderInfo.addAll(orderInfo);
             }
             
-            if (!ObjectUtils.isEmpty(orderInfo)) {
+            if(!ObjectUtils.isEmpty(otherOrderInfo)){
+            	newOrderInfo.addAll(otherOrderInfo);
+            }
+            if (!ObjectUtils.isEmpty(newOrderInfo)) {
                 // 组合数据将对应订单的异常数量set进入对应订单信息里
                 for (OrderInfoPO orderInformation : orderInfo) {
                     for (AbnormalOrderPO abnormalOrderPO : abnormalInfo) {
@@ -315,16 +310,15 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                         	HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
                         	if(!updateResult.isSuccess()){
                                 LOGGER.error("装车,全部退库环节,修改订单状态失败!!!");
+                                return MsgTemplate.customMsg(updateResult);
                             }
                             Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
                             if(compareOrderStatus==false){
                               return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
                             }
-                        	return MsgTemplate.customMsg(updateResult);
                         } else {
                             return MsgTemplate.customMsg(result);
                         }
-
                     } else {
                         // 部分退库
                         param.setCancelStockAmount(orderAmount - loadingAmount);
@@ -349,12 +343,12 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                         	HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
                         	if(!updateResult.isSuccess()){
                                 LOGGER.error("装车,部分退库,修改订单状态失败!!!");
+                                return MsgTemplate.customMsg(updateResult);
                             }
                         	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
                             if(compareOrderStatus==false){
                               return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
                             }
-                            return MsgTemplate.customMsg(updateResult);
                         } else {
                             return MsgTemplate.customMsg(result);
                         }
@@ -374,12 +368,12 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
         	if(!updateResult.isSuccess()){
                 LOGGER.error("装车,部分退库,修改订单状态失败!!!");
+                return MsgTemplate.customMsg(updateResult);
             }
         	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,param.getPartnerArea());
             if(compareOrderStatus==false){
               return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
             }
-            return MsgTemplate.customMsg(updateResult);
         }
         return MsgTemplate.customMsg(result);
     }
@@ -496,15 +490,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             }
             // 获取订单id
             List<String> orders = getOrderById.getOrderId();
-//            List<String> orderList = new ArrayList<>();
-//            for (String order : orders) {
-//                if (order.contains("-")) {
-//                    order = order.substring(0, order.lastIndexOf("-"));
-//                    orderList.add(order);
-//                } else {
-//                    orderList.add(order);
-//                }
-//            }
             OrderIdsBO orderParam = new OrderIdsBO();
             orderParam.setChildOrderIds(orders);
             orderParam.setPartnerArea(param.getPartnerArea());
@@ -530,16 +515,31 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             		BeanUtils.copyProperties(warehouseOrderDetailPO, chlid);
             		otherChildOrderList.add(chlid);
 				}
-            	childOrderList.addAll(otherChildOrderList);
             }
-            // 获取客户信息
-            List<CustomerBO> customers = getCustomers(childOrderList);
-            // 获取出库单信息
-            List<OutOrderInfoBO> outOrderInfos = getOutOrderInfos(customers, param, getOrderById);
-            HttpResult insertResult = loadingTaskServer.insertOutOrder(outOrderInfos);
-            if (!insertResult.isSuccess()) {
-                return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
+            
+            List<ChildOrderBO> newChildOrderList = new ArrayList<>();
+            if(!ObjectUtils.isEmpty(childOrderList)){
+            	newChildOrderList.addAll(childOrderList);
             }
+            
+            if(!ObjectUtils.isEmpty(otherChildOrderList)){
+            	newChildOrderList.addAll(otherChildOrderList);
+            }
+            
+            if(!ObjectUtils.isEmpty(newChildOrderList)){
+            	 // 获取客户信息
+                List<CustomerBO> customers = getCustomers(childOrderList);
+                // 获取出库单信息
+                List<OutOrderInfoBO> outOrderInfos = getOutOrderInfos(customers, param, getOrderById);
+                HttpResult insertResult = loadingTaskServer.insertOutOrder(outOrderInfos);
+                if (!insertResult.isSuccess()) {
+                    return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
+                }
+                return MsgTemplate.customMsg(insertResult);
+            }else{
+            	return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
+            }
+            
         }
         return MsgTemplate.customMsg(updateResult);
     }
@@ -575,7 +575,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                     CustomerBO customerJ = customers.get(j);
                     boolean b1 = customerBO.getCustomerName().equals(customerJ.getCustomerName());
                     boolean b2 = customerBO.getContacts().equals(customerJ.getContacts());
-                    boolean b3 = customerBO.getContactway().equals(customerJ.getContactway());
+                    boolean b3 = customerBO.getContactWay().equals(customerJ.getContactWay());
                     boolean b4 = customerBO.getAddress().equals(customerJ.getAddress());
                     if (b1 && b2 && b3 && b4) {
                         orderIds.add(customerJ.getOrderIds());

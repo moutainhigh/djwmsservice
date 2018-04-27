@@ -73,9 +73,9 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String fluteType;
 	/**
-	 * 只数
+	 * 只数(库存信息中会订单数量用的是amount字段,统一都用orderAmount表示订单数量)
 	 */
-	private Integer amount;
+//	private Integer amount;
 	/**
 	 * 片数
 	 */
@@ -197,7 +197,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 	/**
 	 * 拆单状态
 	 */
-	private int splitOrder;
+	private Integer splitOrder;
 	/**
 	 * 母账号名称
 	 */
@@ -288,11 +288,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 	/**
 	 * 订单数量
 	 */
-//	private Integer amount;
-	
-	/**
-	 * 订单数量
-	 */
 	private Integer orderAmount;
 	
 	/**
@@ -308,7 +303,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 	/**
 	 * 库区list
 	 */
-	private List<WarehouseAreaBO> warehouseAreaInfo;
+	private List<WarehouseAreaBO> areaList;
 	
 	/**
 	 * =====================================================================
@@ -483,12 +478,12 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.instockAmount = instockAmount;
 	}
 
-	public List<WarehouseAreaBO> getWarehouseAreaInfo() {
-		return warehouseAreaInfo;
+	public List<WarehouseAreaBO> getAreaList() {
+		return areaList;
 	}
 
-	public void setWarehouseAreaInfo(List<WarehouseAreaBO> warehouseAreaInfo) {
-		this.warehouseAreaInfo = warehouseAreaInfo;
+	public void setAreaList(List<WarehouseAreaBO> areaList) {
+		this.areaList = areaList;
 	}
 
 	public String getWaybillId() {
@@ -715,13 +710,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.fluteType = fluteType;
 	}
 
-	public Integer getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Integer amount) {
-		this.amount = amount;
-	}
 
 	public Integer getAmountPiece() {
 		return amountPiece;
@@ -955,11 +943,11 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.productionNo = productionNo;
 	}
 
-	public int getSplitOrder() {
+	public Integer getSplitOrder() {
 		return splitOrder;
 	}
 
-	public void setSplitOrder(int splitOrder) {
+	public void setSplitOrder(Integer splitOrder) {
 		this.splitOrder = splitOrder;
 	}
 
@@ -1081,30 +1069,30 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ ", partnerId=" + partnerId + ", childOrderId=" + childOrderId + ", orderStatus=" + orderStatus
 				+ ", orderTime=" + orderTime + ", payTime=" + payTime + ", deliveryTime=" + deliveryTime
 				+ ", productName=" + productName + ", materiaFid=" + materiaFid + ", materialName=" + materialName
-				+ ", fluteType=" + fluteType + ", amount=" + amount + ", amountPiece=" + amountPiece + ", series="
-				+ series + ", boxModel=" + boxModel + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth
-				+ ", boxHeight=" + boxHeight + ", materialLength=" + materialLength + ", materialWidth=" + materialWidth
-				+ ", staveType=" + staveType + ", hline=" + hline + ", vline=" + vline + ", newVline=" + newVline
-				+ ", hlineFormula=" + hlineFormula + ", vlineFormula=" + vlineFormula + ", productArea=" + productArea
-				+ ", unitPrice=" + unitPrice + ", amountPrice=" + amountPrice + ", codeProvince=" + codeProvince
-				+ ", partnerName=" + partnerName + ", customerName=" + customerName + ", consignee=" + consignee
-				+ ", contactWay=" + contactWay + ", addressDetail=" + addressDetail + ", urgencyOrder=" + urgencyOrder
-				+ ", excpStatus=" + excpStatus + ", goKeyArea=" + goKeyArea + ", marktingplanId=" + marktingplanId
-				+ ", userId=" + userId + ", productionNo=" + productionNo + ", splitOrder=" + splitOrder
-				+ ", puserName=" + puserName + ", cuserName=" + cuserName + ", lnglat=" + lnglat + ", materialSize="
-				+ materialSize + ", productSize=" + productSize + ", addressDetailProvince=" + addressDetailProvince
-				+ ", subOrderId=" + subOrderId + ", subNumber=" + subNumber + ", subStatus=" + subStatus
-				+ ", subAddress=" + subAddress + ", outStock=" + outStock + ", inStock=" + inStock + ", isException="
-				+ isException + ", isStored=" + isStored + ", isProduce=" + isProduce + ", orderId=" + orderId
-				+ ", amountSaved=" + amountSaved + ", orderAmount=" + orderAmount + ", remark=" + remark
-				+ ", instockAmount=" + instockAmount + ", warehouseAreaInfo=" + warehouseAreaInfo + ", waybillId="
-				+ waybillId + ", deliveryId=" + deliveryId + ", plateNumber=" + plateNumber + ", remind=" + remind
-				+ ", deliveryIdStatus=" + deliveryIdStatus + ", sequence=" + sequence + ", pickerId=" + pickerId
-				+ ", pickerName=" + pickerName + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName="
-				+ loadingPersonName + ", deliveryAmount=" + deliveryAmount + ", warehouseId=" + warehouseId
-				+ ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName="
-				+ warehouseAreaName + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName
-				+ ", allocationId=" + allocationId + "]";
+				+ ", fluteType=" + fluteType + ", amountPiece=" + amountPiece + ", series=" + series + ", boxModel="
+				+ boxModel + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
+				+ ", materialLength=" + materialLength + ", materialWidth=" + materialWidth + ", staveType=" + staveType
+				+ ", hline=" + hline + ", vline=" + vline + ", newVline=" + newVline + ", hlineFormula=" + hlineFormula
+				+ ", vlineFormula=" + vlineFormula + ", productArea=" + productArea + ", unitPrice=" + unitPrice
+				+ ", amountPrice=" + amountPrice + ", codeProvince=" + codeProvince + ", partnerName=" + partnerName
+				+ ", customerName=" + customerName + ", consignee=" + consignee + ", contactWay=" + contactWay
+				+ ", addressDetail=" + addressDetail + ", urgencyOrder=" + urgencyOrder + ", excpStatus=" + excpStatus
+				+ ", goKeyArea=" + goKeyArea + ", marktingplanId=" + marktingplanId + ", userId=" + userId
+				+ ", productionNo=" + productionNo + ", splitOrder=" + splitOrder + ", puserName=" + puserName
+				+ ", cuserName=" + cuserName + ", lnglat=" + lnglat + ", materialSize=" + materialSize
+				+ ", productSize=" + productSize + ", addressDetailProvince=" + addressDetailProvince + ", subOrderId="
+				+ subOrderId + ", subNumber=" + subNumber + ", subStatus=" + subStatus + ", subAddress=" + subAddress
+				+ ", outStock=" + outStock + ", inStock=" + inStock + ", isException=" + isException + ", isStored="
+				+ isStored + ", isProduce=" + isProduce + ", orderId=" + orderId + ", amountSaved=" + amountSaved
+				+ ", orderAmount=" + orderAmount + ", remark=" + remark + ", instockAmount=" + instockAmount
+				+ ", areaList=" + areaList + ", waybillId=" + waybillId + ", deliveryId=" + deliveryId
+				+ ", plateNumber=" + plateNumber + ", remind=" + remind + ", deliveryIdStatus=" + deliveryIdStatus
+				+ ", sequence=" + sequence + ", pickerId=" + pickerId + ", pickerName=" + pickerName
+				+ ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
+				+ ", deliveryAmount=" + deliveryAmount + ", warehouseId=" + warehouseId + ", warehouseName="
+				+ warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+				+ ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", allocationId="
+				+ allocationId + "]";
 	}
 	
 }

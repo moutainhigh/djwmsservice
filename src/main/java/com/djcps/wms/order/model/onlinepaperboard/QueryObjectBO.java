@@ -4,13 +4,15 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import com.djcps.wms.commons.model.PartnerInfoBO;
+
 /**
  * 线上纸板订单查询对象
  * @company:djwms
  * @author:zdx
  * @date:2018年4月12日
  */
-public class QueryObjectBO implements Serializable{
+public class QueryObjectBO extends PartnerInfoBO implements Serializable{
 
 	private static final long serialVersionUID = 5390316313423146496L;
 	

@@ -29,32 +29,10 @@ public class UpdateDeliveryEffectBO extends PartnerInfoBO implements Serializabl
      */
     private List<String> orderIds;
     /**
-     * 合作方编号
-     */
-    private String partnerId;
-    /**
      * 运单编号
      */
     private String wayBillId;
     
-    private String partnerArea;
-
-    public String getPartnerArea() {
-		return partnerArea;
-	}
-
-	public void setPartnerArea(String partnerArea) {
-		this.partnerArea = partnerArea;
-	}
-
-	public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
-    }
-
     public String getWayBillId() {
         return wayBillId;
     }
@@ -81,8 +59,8 @@ public class UpdateDeliveryEffectBO extends PartnerInfoBO implements Serializabl
 
 	@Override
 	public String toString() {
-		return "UpdateDeliveryEffectBO [deliveryId=" + deliveryId + ", orderIds=" + orderIds + ", partnerId="
-				+ partnerId + ", wayBillId=" + wayBillId + ", partnerArea=" + partnerArea + "]";
+		return "UpdateDeliveryEffectBO [deliveryId=" + deliveryId + ", orderIds=" + orderIds + ", wayBillId="
+				+ wayBillId + "]";
 	}
 
 }

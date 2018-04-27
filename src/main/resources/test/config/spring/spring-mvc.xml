@@ -14,6 +14,7 @@
         <mvc:argument-resolvers>
             <bean class="com.djcps.wms.commons.aop.inneruser.aspect.InnerUserResolver"/>
             <bean class="com.djcps.wms.commons.aop.inneruser.aspect.InnerUserTokenResolver"/>
+            <bean class="com.djcps.wms.commons.aop.inneruser.aspect.OperatorResolver" />
         </mvc:argument-resolvers>
     </mvc:annotation-driven>
 
@@ -65,5 +66,10 @@
 			<mvc:mapping path="/**"/>
 			<bean class="com.djcps.wms.commons.interceptor.WmsInterceptor"></bean>
 		</mvc:interceptor>
+        <mvc:interceptor>
+            <!-- 权限拦截器 对所有的Controller进行权限控制-->
+            <mvc:mapping path="/**"/>
+            <bean class="com.djcps.wms.commons.interceptor.WmsPermissionInterceptor" />
+        </mvc:interceptor>
 	</mvc:interceptors>
 </beans>

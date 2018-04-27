@@ -53,7 +53,7 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
      * @return
      * @create  2018/1/11 9:55
      **/
-    private List<WarehouseAreaBO> warehouseAreaInfoList;
+    private List<WarehouseAreaBO> areaList;
 
     public String getWarehouseName() {
         return warehouseName;
@@ -95,23 +95,30 @@ public class AddStocktakingBO extends BaseAddBO implements Serializable{
         this.jobId = jobId;
     }
 
-    public List<WarehouseAreaBO> getWarehouseAreaInfoList() {
-        return warehouseAreaInfoList;
-    }
+	public String getWarehouseId() {
+		return warehouseId;
+	}
 
-    public void setWarehouseAreaInfoList(List<WarehouseAreaBO> warehouseAreaInfoList) {
-        this.warehouseAreaInfoList = warehouseAreaInfoList;
-    }
+	public void setWarehouseId(String warehouseId) {
+		this.warehouseId = warehouseId;
+	}
 
-    @Override
-    public String toString() {
-        return "AddStocktakingBO{" +
-                "ftype=" + ftype +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", ftakestockamount=" + ftakestockamount +
-                ", jobId='" + jobId + '\'' +
-                ", warehouseAreaInfoList=" + warehouseAreaInfoList +
-                '}';
-    }
+	public List<WarehouseAreaBO> getAreaList() {
+		return areaList;
+	}
+
+	public void setAreaList(List<WarehouseAreaBO> areaList) {
+		this.areaList = areaList;
+	}
+
+	public void setFtakestockamount(Integer ftakestockamount) {
+		this.ftakestockamount = ftakestockamount;
+	}
+
+	@Override
+	public String toString() {
+		return "AddStocktakingBO [ftype=" + ftype + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName
+				+ ", ftakestockamount=" + ftakestockamount + ", jobId=" + jobId + ", areaList=" + areaList + "]";
+	}
+    
 }

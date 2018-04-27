@@ -1,7 +1,6 @@
 package com.djcps.wms.outorder.service.impl;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
@@ -70,7 +67,6 @@ public class OutOrderServiceImpl implements OutOrderService{
 				}
 			}
 			
-			
 			List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
 			if(!ObjectUtils.isEmpty(splitOrderList)){
 				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
@@ -85,29 +81,30 @@ public class OutOrderServiceImpl implements OutOrderService{
 		}
 		
 		List<OrderDetailBO> orderDetailList = new ArrayList<OrderDetailBO>();
+		
 		if(!ObjectUtils.isEmpty(childOrderList)){
 			orderDetailList.addAll(childOrderList);
-		}else{
-			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDERDETAIL_FAIL);
 		}
 		
 		if(!ObjectUtils.isEmpty(splitChildOrderList)){
 			orderDetailList.addAll(splitChildOrderList);
-		}else{
-			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDERDETAIL_FAIL);
 		}
 		
 		BigDecimal totalPrice = new BigDecimal(0.00);
 		Integer totalAmount = 0;
-		for(OrderDetailBO orderDetail:orderDetailList){
-			totalPrice.add(orderDetail.getAmountPrice());
-			totalAmount += orderDetail.getOrderAmount();
+		if(!ObjectUtils.isEmpty(orderDetailList)){
+			for(OrderDetailBO orderDetail:orderDetailList){
+				totalPrice = totalPrice.add(orderDetail.getAmountPrice());
+				totalAmount += orderDetail.getAmountPiece();
+			}
+			OrderDetailInfoVO orderDetailVO = new OrderDetailInfoVO();
+			orderDetailVO.setOrderDetails(orderDetailList);
+			orderDetailVO.setTotalAmount(totalAmount);
+			orderDetailVO.setTotalPrice(totalPrice.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+			return MsgTemplate.successMsg(orderDetailVO);
+		}else{
+			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDERDETAIL_FAIL);
 		}
-		OrderDetailInfoVO orderDetailVO = new OrderDetailInfoVO();
-		orderDetailVO.setOrderDetails(orderDetailList);
-		orderDetailVO.setTotalAmount(totalAmount);
-		orderDetailVO.setTotalPrice(totalPrice.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-		return MsgTemplate.successMsg(orderDetailVO);
 	}
 	
 	@Override
