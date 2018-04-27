@@ -1,6 +1,8 @@
 package com.djcps.wms.workrecords.model;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.commons.base.BasePO;
+
 /**
  * 
  * 
@@ -8,7 +10,7 @@ import com.djcps.wms.commons.base.BaseAddBO;
  *
  */
 
-public class WorkRecordsPO extends BaseAddBO{
+public class WorkRecordsPO extends BasePO {
 	/**
 	 * 
 	 */
@@ -18,6 +20,12 @@ public class WorkRecordsPO extends BaseAddBO{
 	 * 楞型
 	 */
 	private Integer fluteType;
+
+	/**
+	 * 楞型名称
+	 */
+	private String fluteTypeName;
+
 	/**
 	 * 总面积
 	 */
@@ -36,11 +44,23 @@ public class WorkRecordsPO extends BaseAddBO{
 	public void setTotalArea(Double totalArea) {
 		this.totalArea = totalArea;
 	}
-	@Override
-	public String toString() {
-		return "WorkRecordsPO [fluteType=" + fluteType + ", totalArea=" + totalArea + "]";
-	}
-	
-	
-	
+
+    public String getFluteTypeName() {
+        return fluteTypeName;
+    }
+
+    public void setFluteTypeName(String fluteTypeName) {
+        this.fluteTypeName = fluteTypeName;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkRecordsPO{" +
+                "fluteType=" + fluteType +
+                ", fluteTypeName='" + fluteTypeName + '\'' +
+                ", totalArea=" + totalArea +
+                '}';
+    }
+
+
 }

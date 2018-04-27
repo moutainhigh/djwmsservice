@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -243,7 +244,9 @@ public class InnerUserController {
         if(isSuccess) {
             CookiesUtil.setCookie(response,ParamsConfig.INNER_USER_COOKIE_NAME,"",0);
             UserLogoutVO userLogoutVO = new UserLogoutVO(ParamsConfig.INNER_USER_LOGIN_URL);
-            permissionService.delUserRedisPermission(userInfoVO.getId());
+            if(!ObjectUtils.isEmpty(userInfoVO)){
+                permissionService.delUserRedisPermission(userInfoVO.getId());
+            }
             return MsgTemplate.successMsg(userLogoutVO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
