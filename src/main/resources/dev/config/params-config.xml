@@ -28,7 +28,8 @@
         <!-- 地址服务 --> 
         <property name="addressServer"  value="http://192.168.10.200/djaddressserver/"/>
         <!-- 内部用户服务 -->
-        <property name="innerUserServer" value="http://192.168.10.200/djauth/" />
+        <property name="innerUserServer" value="http://192.168.23.6/djauth/new/" />
+  <!--       <property name="innerUserServer" value="http://192.168.10.200/djauth/" /> -->
         <!-- 高德地图Web服务 -->
         <property name="mapServer" value="http://restapi.amap.com/v3/" />
         <!-- 订单服务 -->

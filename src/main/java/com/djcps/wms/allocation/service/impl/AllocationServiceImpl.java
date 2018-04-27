@@ -801,7 +801,10 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 			return MsgTemplate.successMsg(vo);
 		}else{
-			return MsgTemplate.successMsg();
+			BaseVO vo = new BaseVO();
+			vo.setTotal(0);
+			vo.setResult(null);
+			return MsgTemplate.successMsg(vo);
 		}
 	}
 

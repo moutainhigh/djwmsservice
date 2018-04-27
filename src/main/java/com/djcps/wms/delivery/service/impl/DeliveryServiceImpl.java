@@ -148,7 +148,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 			}
         }
-        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+        return MsgTemplate.customMsg(result);
     }
 
     /**
