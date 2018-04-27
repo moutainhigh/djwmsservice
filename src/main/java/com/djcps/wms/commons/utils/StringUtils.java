@@ -4,7 +4,7 @@ import com.djcps.wms.commons.enums.FluteTypeEnum;
 
 /**
  * 字符串操作类
- * @author Chengw
+ * @author  Chengw
  * @since 2018/2/1 16:05.
  */
 public class StringUtils {

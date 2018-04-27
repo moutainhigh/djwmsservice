@@ -15,6 +15,8 @@ public class OrgDeleteUserBO {
     @NotBlank
     private String userId;
 
+    private String id;
+
     /**
      * org用户状态 0启用，1禁用
      */
@@ -29,6 +31,14 @@ public class OrgDeleteUserBO {
     private String business;
 
     private String partnerId;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getPartnerId() {
         return partnerId;
@@ -82,6 +92,7 @@ public class OrgDeleteUserBO {
     public String toString() {
         return "OrgDeleteUserBO{" +
                 "userId='" + userId + '\'' +
+                ", id='" + id + '\'' +
                 ", status=" + status +
                 ", operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +

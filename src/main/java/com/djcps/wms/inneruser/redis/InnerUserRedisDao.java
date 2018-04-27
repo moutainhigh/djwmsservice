@@ -1,5 +1,6 @@
 package com.djcps.wms.inneruser.redis;
 
+import com.djcps.wms.commons.constant.RedisPrefixConstant;
 import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import org.apache.commons.lang3.StringUtils;
@@ -32,13 +33,12 @@ public class InnerUserRedisDao {
 	 */
 	public UserInfoVO getInnerUserInfo(String token) throws Exception {
 		if (StringUtils.isNotBlank(token)) {
-			String userInfoStr = redisClient.get(token);
-			UserInfoVO userInfoVO = gson.fromJson(userInfoStr, UserInfoVO.class);
-			if (ObjectUtils.isEmpty(userInfoVO)) {
+			String userId = redisClient.get(RedisPrefixConstant.DJCPS_DJAUTH_TOKEN + token);
+			if (ObjectUtils.isEmpty(userId)) {
 				return null;
 			}
-			userInfoStr = redisClient.get("userInfo" + userInfoVO.getId());
-			userInfoVO = gson.fromJson(userInfoStr, UserInfoVO.class);
+			String userInfoStr = redisClient.get("userInfo" + userId);
+			UserInfoVO userInfoVO = gson.fromJson(userInfoStr, UserInfoVO.class);
 			return userInfoVO;
 		}
 		return null;
