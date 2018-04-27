@@ -1066,7 +1066,7 @@ public class AllocationServiceImpl implements AllocationService {
 		
 		//统一根据订单号获取订单状态,不管上面代码是否已经获取订单状态,这里统一从订单服务获取
 		//key是订单号,value是订单状态
-		Map<String,Integer> orderStatusMap = new HashMap<>();
+		Map<String,WarehouseOrderDetailPO> orderStatusMap = new HashMap<>();
 		List<String> orderIdsList = new ArrayList<>();
 		List<DeliveryOrderPO> newDeliveryList = waybillDeliveryOrder.getDeliveryOrder();
 		//这个值为空表示所有的订单都被移除了
@@ -1081,7 +1081,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 		}
 		
-		//根据订单号批量查询订单详情信息
+		//根据订单号批量查询订单详情信息,把订单状态和产品规格和材料规格赋值上去
 		BatchOrderIdListBO batchOrder = new BatchOrderIdListBO();
 		batchOrder.setKeyArea(param.getPartnerArea());
 		batchOrder.setOrderIds(orderIdsList);
@@ -1090,13 +1090,14 @@ public class AllocationServiceImpl implements AllocationService {
 		List<WarehouseOrderDetailPO> detailList = batchOrderDetailListPO.getOrderList();
 		List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(detailList);
 		for (WarehouseOrderDetailPO orderDeatil : joinOrderParamInfo) {
-			orderStatusMap.put(orderDeatil.getOrderId(), orderDeatil.getOrderStatus());
+			orderStatusMap.put(orderDeatil.getOrderId(), orderDeatil);
 		}
 		//再次遍历原数据,将订单状态赋值上去
 		for (DeliveryOrderPO deliveryOrderPO : newDeliveryList) {
 			List<OrderPO> newOrderList = deliveryOrderPO.getOrders();
 			for (OrderPO orderPO : newOrderList) {
-				orderPO.setOrderStatus(orderStatusMap.get(orderPO.getOrderId()));
+				orderPO.setOrderStatus(orderStatusMap.get(orderPO.getOrderId()).getOrderStatus());
+				orderPO.setProductSize(orderStatusMap.get(orderPO.getOrderId()).getProductSize());
 			}
 		}
 		
@@ -1190,7 +1191,7 @@ public class AllocationServiceImpl implements AllocationService {
 			BeanUtils.copyProperties(value, warehouse);
 			orderPO.setWarehouse(warehouse);
 			if(!StringUtils.isEmpty(value.getDeliveryTime())){
-				orderPO.setDeliveryTime(new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(value.getDeliveryTime()));
+				orderPO.setDeliveryTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(value.getDeliveryTime()));
 			}
 			orderPO.setAddress(value.getAddressDetailProvince());
 			orderPO.setSequence(sequence);
@@ -1744,7 +1745,7 @@ public class AllocationServiceImpl implements AllocationService {
 							order.setAllocationId(allocationId);
 							order.setContacts(detail.getConsignee());
 							if(!StringUtils.isEmpty(detail.getDeliveryTime())){
-								order.setDeliveryTime(new SimpleDateFormat("yy-MM-dd HH:mm:ss").format(detail.getDeliveryTime()));
+								order.setDeliveryTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(detail.getDeliveryTime()));
 							}
 							SequenceBO sequenceBO = map.get(detail.getOrderId());
 							order.setSequence(String.valueOf(sequenceBO.getSequence()));
