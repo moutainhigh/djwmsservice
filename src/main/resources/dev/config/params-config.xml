@@ -44,7 +44,7 @@
       	<!-- 姬明博线上纸板订单服务 -->
       	<property name="onlinePaperboardServer" value="http://172.16.0.33:8081/" />
     	<!-- org服务 -->  
-      	<property name="orgServer" value="http://192.168.2.24:8081/DJOR/" />
+      	<property name="orgServer" value="http://192.168.23.4/DJOR/" />
     </bean>
  
 </beans>
