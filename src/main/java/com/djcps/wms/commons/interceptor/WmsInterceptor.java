@@ -96,12 +96,12 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 		}
 		UserInfoVO userInfo = innerUserService.getInnerUserInfoFromRedis(token);
 		if(userInfo!=null){
-			//toke是否过期,过期重新设置过期时间
+			//token是否过期,未过期重新设置过期时间
 			if(userRedisClient.ttl(token)>=0){
-				userRedisClient.expire(token,ParamsConfig.COOKIE_TIMEOUT);
+				userRedisClient.expire(RedisPrefixConstant.DJCPS_DJAUTH_TOKEN + token, ParamsConfig.COOKIE_TIMEOUT);
 			}
 			//设置cook时间
-			CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME,token,ParamsConfig.COOKIE_TIMEOUT);
+			CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME, token, ParamsConfig.COOKIE_TIMEOUT);
 			//给合作方属性赋值
 			PartnerInfoBO partner = new PartnerInfoBO();
 			partner.setOperator(userInfo.getUname());
