@@ -43,28 +43,36 @@ public class InnerUserServiceImpl implements InnerUserService {
 
     @Autowired
     private InnerUserRedisDao innerUserRedisDao;
-    
+
+    @Autowired
+    private InnerUserService innerUserService;
+
     @Autowired
     private UserServer userServer;
+
     /**
      * app方式登录
-     * @autuor Chengw
-     * @since 2017/12/4  16:40
+     *
      * @param innerUserLoginBO
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  16:40
      */
     @Override
     public Map<String, Object> loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
         HttpResult baseResult = innerUserServer.loginTokenWithApp(innerUserLoginBO);
         if (baseResult.isSuccess()) {
+            //获取该用户token
             String token = innerUserServer.getUserToken(baseResult);
             UserInfoVO userInfoVO = null;
             try {
+                //获取用户信息
                 userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
             } catch (Exception e) {
                 e.printStackTrace();
                 LOGGER.error("内部用户信息 {}", e.getMessage());
             }
+            //更新登陆次数以及时间
             UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
             updateUserStatusBO.setUserId(userInfoVO.getId());
             updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
@@ -76,10 +84,11 @@ public class InnerUserServiceImpl implements InnerUserService {
 
     /**
      * 手机验证码登录
-     * @autuor Chengw
-     * @since 2017/12/20  09:15
+     *
      * @param innerUserLoginPhoneBO
      * @return
+     * @autuor Chengw
+     * @since 2017/12/20  09:15
      */
     @Override
     public Map<String, Object> loginTokenWithPhone(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
@@ -88,16 +97,17 @@ public class InnerUserServiceImpl implements InnerUserService {
     }
 
     /**
-     * 发送手机验证码 
-     * @autuor Chengw
-     * @since 2017/12/20  09:19
+     * 发送手机验证码
+     *
      * @param innerUserLoginPhoneBO
      * @return
+     * @autuor Chengw
+     * @since 2017/12/20  09:19
      */
     @Override
     public Map<String, Object> sendLoginCode(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
         Boolean result = innerUserServer.sendLoginCode(innerUserLoginPhoneBO.getPhone());
-        if(result){
+        if (result) {
             return MsgTemplate.successMsg();
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
@@ -105,26 +115,28 @@ public class InnerUserServiceImpl implements InnerUserService {
 
     /**
      * 不同系统之间交换token
-     * @autuor Chengw
-     * @since 2017/12/4  16:42
+     *
      * @param userSwitchSysBO
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  16:42
      */
     @Override
-    public Map<String, Object> swap(UserSwitchSysBO userSwitchSysBO){
+    public Map<String, Object> swap(UserSwitchSysBO userSwitchSysBO) {
         UserLogoutVO userLogoutVO = innerUserServer.swap(userSwitchSysBO);
-        if(StringUtils.isNotBlank(userLogoutVO.getUrl())){
-           return MsgTemplate.successMsg(userLogoutVO);
+        if (StringUtils.isNotBlank(userLogoutVO.getUrl())) {
+            return MsgTemplate.successMsg(userLogoutVO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
     }
 
     /**
      * 用户登出系统
-     * @autuor Chengw
-     * @since 2017/12/4  16:42
+     *
      * @param token
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  16:42
      */
     @Override
     public Boolean logout(String token) {
@@ -132,16 +144,17 @@ public class InnerUserServiceImpl implements InnerUserService {
     }
 
     /**
-     *  置换token,将临时的转换固定token
-     * @autuor Chengw
-     * @since 2017/12/4  16:42
+     * 置换token,将临时的转换固定token
+     *
      * @param onceToken
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  16:42
      */
     @Override
     public String exchangeToken(String onceToken) {
         String token = innerUserServer.exchangeToken(onceToken);
-        if(StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             return onceToken;
         }
         return token;
@@ -149,25 +162,26 @@ public class InnerUserServiceImpl implements InnerUserService {
 
     /**
      * 更改用户密码
-     * @autuor Chengw
-     * @since 2017/12/4  16:42
+     *
      * @param innerUserChangePasswordBO
      * @return
+     * @autuor Chengw
+     * @since 2017/12/4  16:42
      */
     @Override
     public Map<String, Object> changeInnerUserPassword(InnerUserChangePasswordBO innerUserChangePasswordBO) {
-        try{
+        try {
             UserInfoVO userInfoVO = innerUserRedisDao.getInnerUserInfo(innerUserChangePasswordBO.getToken());
             String userCode = innerUserServer.getUserCode(userInfoVO.getId());
-            if(!ObjectUtils.isEmpty(userInfoVO) && StringUtils.isNotBlank(userCode)){
-                String oldPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getOldPassword()+userCode);
-                String newPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getNewPassword()+userCode);
-                Boolean status = innerUserServer.changeUserPassword(String.valueOf(userInfoVO.getId()),oldPassword,newPassword);
-                if(status){
-                    return  MsgTemplate.successMsg();
+            if (!ObjectUtils.isEmpty(userInfoVO) && StringUtils.isNotBlank(userCode)) {
+                String oldPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getOldPassword() + userCode);
+                String newPassword = DigestUtils.md5Hex(innerUserChangePasswordBO.getNewPassword() + userCode);
+                Boolean status = innerUserServer.changeUserPassword(String.valueOf(userInfoVO.getId()), oldPassword, newPassword);
+                if (status) {
+                    return MsgTemplate.successMsg();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(e.getMessage());
             e.printStackTrace();
         }
@@ -179,23 +193,24 @@ public class InnerUserServiceImpl implements InnerUserService {
         UserInfoVO userInfoVO = null;
         try {
             userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            LOGGER.error("内部用户信息 {}",e.getMessage());
+            LOGGER.error("内部用户信息 {}", e.getMessage());
         }
         return userInfoVO;
     }
 
     /**
      * 设置用户信息到Cookie
+     *
      * @param value
      * @param response
      * @return
      */
     @Override
-    public Boolean setUserCookie(String value, HttpServletResponse response){
-        if(StringUtils.isNotBlank(value)){
-            CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME,value, ParamsConfig.COOKIE_TIMEOUT);
+    public Boolean setUserCookie(String value, HttpServletResponse response) {
+        if (StringUtils.isNotBlank(value)) {
+            CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME, value, ParamsConfig.COOKIE_TIMEOUT);
             return true;
         }
         return false;
