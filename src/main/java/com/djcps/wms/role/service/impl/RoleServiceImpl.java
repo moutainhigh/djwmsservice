@@ -148,7 +148,7 @@ public class RoleServiceImpl implements RoleService {
         List<DeleteBO> list = new ArrayList<DeleteBO>();
         HttpResult result = null;
         if (!ObjectUtils.isEmpty(deleteBO)) {
-            /*
+            /*4]
              * String[] roleTypeCode = deleteBO.getRoleTypeCode().split(","); for(String s :
              * roleTypeCode) { DeleteBO roleType = new DeleteBO();
              * roleType.setRoleTypeCode(s); roleType.setPartnerId(deleteBO.getPartnerId());
