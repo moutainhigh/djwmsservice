@@ -11,7 +11,7 @@ import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 
 /**
@@ -48,6 +48,6 @@ public interface OrderService {
 	 * @author:zdx
 	 * @date:2018年4月25日
 	 */
-	Map<String, Object> splitOrder(UpdateSplitOrderBO param);
+	Map<String, Object> splitOrder(UpdateOrderBO param);
 
 }

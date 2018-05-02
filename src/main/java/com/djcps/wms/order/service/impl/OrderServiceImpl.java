@@ -30,7 +30,7 @@ import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
 import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardResultDataPO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
@@ -141,7 +141,8 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public Map<String, Object> splitOrder(UpdateSplitOrderBO param) {
-		return null;
+	public Map<String, Object> splitOrder(UpdateOrderBO param) {
+		HttpResult splitOrder = orderServer.splitOrder(param);
+		return MsgTemplate.customMsg(splitOrder);
 	}
 }

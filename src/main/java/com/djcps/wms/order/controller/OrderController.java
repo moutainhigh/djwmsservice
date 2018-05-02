@@ -33,7 +33,7 @@ import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.service.OrderService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -125,13 +125,13 @@ public class OrderController {
 	public Map<String, Object> splitOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			LOGGER.debug("json : " + json);
-			UpdateSplitOrderBO param = gson.fromJson(json, UpdateSplitOrderBO.class);
+			UpdateOrderBO param = gson.fromJson(json, UpdateOrderBO.class);
 			//组织查询需要的参数
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<UpdateSplitOrderBO>()
+							new HibernateSupportedValidator<UpdateOrderBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {

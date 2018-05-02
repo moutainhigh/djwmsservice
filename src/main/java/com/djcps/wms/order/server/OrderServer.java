@@ -25,7 +25,7 @@ import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.request.OnlinePaperboardRequest;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
@@ -109,7 +109,7 @@ public class OrderServer {
 	 * @author:zdx
 	 * @date:2018年4月19日
 	 */
-	public HttpResult updateOrderInfo(List<UpdateSplitSonOrderBO> param) {
+	public HttpResult updateOrderInfo(List<UpdateOrderBO> param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
@@ -146,7 +146,7 @@ public class OrderServer {
 	 * @date:2018年4月19日
 	 */
 	public HttpResult updateOrderOrSplitOrder(String partnerArea,List<OrderIdBO> orderIdList) {
-		List<UpdateSplitSonOrderBO> orderUpdateList = new ArrayList<>();
+		List<UpdateOrderBO> orderUpdateList = new ArrayList<>();
 		List<UpdateSplitOrderBO> splitOrderUpdateList = new ArrayList<>();
 		for (OrderIdBO orderIdBO : orderIdList) {
 			String string = orderIdBO.getOrderId();
@@ -155,7 +155,7 @@ public class OrderServer {
 			 int indexOf = string.indexOf("-");
 			 if(indexOf==-1){
 				//等于-1表示没有携带-是子订单号
-			 	UpdateSplitSonOrderBO update = new UpdateSplitSonOrderBO();
+			 	UpdateOrderBO update = new UpdateOrderBO();
 	        	update.setOrderId(string);
 	        	update.setOrderStatus(orderStatus);
 	        	update.setKeyArea(partnerArea);
@@ -240,10 +240,10 @@ public class OrderServer {
 	        		}
 	        	}
 	        }
-	        List<UpdateSplitSonOrderBO> updateList = new ArrayList<>();
+	        List<UpdateOrderBO> updateList = new ArrayList<>();
 	        for(Map.Entry<String,WarehouseOrderDetailPO> entry : orderDetailMap.entrySet()){
 	        	WarehouseOrderDetailPO orderDetailValue = entry.getValue();
-	        	UpdateSplitSonOrderBO update = new UpdateSplitSonOrderBO();
+	        	UpdateOrderBO update = new UpdateOrderBO();
  	        	update.setOrderId(orderDetailValue.getOrderId());
  	        	update.setOrderStatus(String.valueOf(orderDetailValue.getOrderStatus()));
  	        	update.setKeyArea(partnerArea);
@@ -281,6 +281,16 @@ public class OrderServer {
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = onlinePaperboardRequest.getSplitOrderDeatilByI(rb);
+        //校验请求是否成功
+        return updateOMSCode(http);
+	}
+	
+	public HttpResult splitOrder(UpdateOrderBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = onlinePaperboardRequest.splitOrder(rb);
         //校验请求是否成功
         return updateOMSCode(http);
 	}

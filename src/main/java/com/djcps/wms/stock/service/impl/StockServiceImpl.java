@@ -33,6 +33,8 @@ import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.stock.enums.StockMsgEnum;
 import com.djcps.wms.stock.model.AddOrderRedundantBO;
@@ -170,7 +172,7 @@ public class StockServiceImpl implements StockService{
 			}
 		}
 		
-		ArrayList<OrderIdBO> list = new ArrayList<OrderIdBO>();
+		List<OrderIdBO> list = new ArrayList<OrderIdBO>();
 		//订单号
 		String orderId = param.getOrderId();
 		//入库数量
@@ -215,8 +217,25 @@ public class StockServiceImpl implements StockService{
 		//入库
 		HttpResult result = stockServer.addStock(param);
 		if(result.isSuccess()){
+			//OMS服务要求我们正常的订单也在他们的拆单表中生成假数据,并且修改订单状态
+			List<UpdateOrderBO> updateOrderList = new ArrayList<>();
+			UpdateOrderBO updateOrder = new UpdateOrderBO();
+			updateOrder.setKeyArea(param.getPartnerArea());
+			updateOrder.setOrderId(list.get(0).getOrderId());
+			updateOrder.setOrderStatus(list.get(0).getStatus());
 			
-			//修改订单状态
+			List<UpdateSplitOrderBO> addSplitOrderList = new ArrayList<>();
+			UpdateSplitOrderBO splitOrder = new UpdateSplitOrderBO();
+			splitOrder.setOrderId(list.get(0).getOrderId());
+			splitOrder.setSubOrderId(list.get(0).getOrderId());
+			splitOrder.setKeyArea(param.getPartnerArea());
+			splitOrder.setSubStatus(Integer.valueOf(list.get(0).getStatus()));
+			addSplitOrderList.add(splitOrder);
+			updateOrder.setSplitOrders(addSplitOrderList);
+			updateOrderList.add(updateOrder);
+			//OMS服务要求我们正常的订单也在他们的拆单表中生成假数据,并且修改订单状态
+//			result = orderServer.splitOrder(updateOrderList);
+			
 			result  = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),list);
 	        if(!result.isSuccess()){
 	        	LOGGER.error("入库修改订单状态失败!!!");
@@ -227,6 +246,13 @@ public class StockServiceImpl implements StockService{
 	          return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 	        }
 			
+			
+			
+			
+	        
+	        
+	        
+	        
 			if(result.isSuccess()){
 				//插入冗余表数据
 				BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
@@ -261,7 +287,7 @@ public class StockServiceImpl implements StockService{
 							return MsgTemplate.failureMsg(StockMsgEnum.REDUNDANT_FAIL);
 						}
 					}
-					
+					//判断该订单是否是已入库状态,是的话修改冗余表修改为已入库
 					if(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(orderIdBO.getStatus())){
 						//修改冗余表订单状态为已入库
 						List<UpdateOrderRedundantBO> updateList = new ArrayList<>();

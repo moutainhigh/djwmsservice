@@ -13,7 +13,7 @@ import java.util.List;
  * @author:zdx
  * @date:2018年4月12日
  */
-public class UpdateSplitSonOrderBO implements Serializable{
+public class UpdateOrderBO implements Serializable{
 	private static final long serialVersionUID = -6967814470639816450L;
 	/**
      * 区域拆分键
