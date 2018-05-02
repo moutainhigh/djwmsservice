@@ -389,7 +389,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     @Override
     public Map<String, Object> additionalOrder(AdditionalOrderBO param) {
         // 传字符串帮助服务端判别更新申请时间为当前时间
-        param.setApplicationTime("NOW()");
+        param.setApplicationTime(" ");
         param.setProposer(param.getOperator());
         param.setOperatorId(param.getOperatorId());
         HttpResult result = loadingTaskServer.additionalOrder(param);

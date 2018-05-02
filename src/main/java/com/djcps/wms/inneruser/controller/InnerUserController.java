@@ -238,12 +238,14 @@ public class InnerUserController {
                     if (StringUtils.isNotBlank(userExchangeTokenVO.getToken())) {
                         if (innerUserService.setUserCookie(userExchangeTokenVO.getToken(), response)) {
                             UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVO.getToken());
+                            if(!ObjectUtils.isEmpty(userInfoVO)) {
                             // 更新登陆次数以及时间
                             UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
                             updateUserStatusBO.setUserId(userInfoVO.getId());
                             updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
                             updateUserStatusBO.setLoginCount(" ");
                             Map<String, Object> result = userService.updateUserStatus(updateUserStatusBO);
+                            }
                             return MsgTemplate.successMsg(userInfoVO);
                         }
                     }
