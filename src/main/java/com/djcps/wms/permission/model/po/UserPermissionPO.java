@@ -54,6 +54,11 @@ public class UserPermissionPO implements Serializable {
      */
     private String phtmlid;
 
+    /**
+     * 权限项类型
+     */
+    private Integer ptype;
+
     public String getId() {
         return id;
     }
@@ -126,6 +131,14 @@ public class UserPermissionPO implements Serializable {
         this.phtmlid = phtmlid;
     }
 
+    public Integer getPtype() {
+        return ptype;
+    }
+
+    public void setPtype(Integer ptype) {
+        this.ptype = ptype;
+    }
+
     @Override
     public String toString() {
         return "UserPermissionPO{" +
@@ -138,6 +151,7 @@ public class UserPermissionPO implements Serializable {
                 ", pico='" + pico + '\'' +
                 ", pbusiness='" + pbusiness + '\'' +
                 ", phtmlid='" + phtmlid + '\'' +
+                ", ptype=" + ptype +
                 '}';
     }
 }

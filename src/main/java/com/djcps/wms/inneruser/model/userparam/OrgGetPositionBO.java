@@ -2,6 +2,10 @@ package com.djcps.wms.inneruser.model.userparam;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+/**
+ * 获取部门信息
+ * @author
+ */
 public class OrgGetPositionBO {
 
     @NotBlank

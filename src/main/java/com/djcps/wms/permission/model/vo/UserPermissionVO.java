@@ -56,6 +56,12 @@ public class UserPermissionVO  implements Serializable {
     private String htmlId;
 
     /**
+     * 权限类型
+     * 0-按钮 1-菜单 2-数据权限
+     */
+    private Integer type;
+
+    /**
      * 子节点
      */
     private List<UserPermissionVO> children;
@@ -140,6 +146,14 @@ public class UserPermissionVO  implements Serializable {
         this.htmlId = htmlId;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "UserPermissionVO{" +
@@ -152,6 +166,7 @@ public class UserPermissionVO  implements Serializable {
                 ", ico='" + ico + '\'' +
                 ", business='" + business + '\'' +
                 ", htmlId='" + htmlId + '\'' +
+                ", type=" + type +
                 ", children=" + children +
                 '}';
     }
