@@ -321,10 +321,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 * 车牌号
 	 */
 	private String plateNumber;
-	/**
-	 * 订单提醒
-	 */
-	private String remind;
 	
 	/**
 	 * 提货单状态
@@ -508,14 +504,6 @@ public class WarehouseOrderDetailPO implements Serializable{
 
 	public void setPlateNumber(String plateNumber) {
 		this.plateNumber = plateNumber;
-	}
-
-	public String getRemind() {
-		return remind;
-	}
-
-	public void setRemind(String remind) {
-		this.remind = remind;
 	}
 
 	public String getDeliveryIdStatus() {
@@ -1086,13 +1074,12 @@ public class WarehouseOrderDetailPO implements Serializable{
 				+ isStored + ", isProduce=" + isProduce + ", orderId=" + orderId + ", amountSaved=" + amountSaved
 				+ ", orderAmount=" + orderAmount + ", remark=" + remark + ", instockAmount=" + instockAmount
 				+ ", areaList=" + areaList + ", waybillId=" + waybillId + ", deliveryId=" + deliveryId
-				+ ", plateNumber=" + plateNumber + ", remind=" + remind + ", deliveryIdStatus=" + deliveryIdStatus
-				+ ", sequence=" + sequence + ", pickerId=" + pickerId + ", pickerName=" + pickerName
-				+ ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
-				+ ", deliveryAmount=" + deliveryAmount + ", warehouseId=" + warehouseId + ", warehouseName="
-				+ warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
-				+ ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", allocationId="
-				+ allocationId + "]";
+				+ ", plateNumber=" + plateNumber + ", deliveryIdStatus=" + deliveryIdStatus + ", sequence=" + sequence
+				+ ", pickerId=" + pickerId + ", pickerName=" + pickerName + ", loadingPersonId=" + loadingPersonId
+				+ ", loadingPersonName=" + loadingPersonName + ", deliveryAmount=" + deliveryAmount + ", warehouseId="
+				+ warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId
+				+ ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
+				+ ", warehouseLocName=" + warehouseLocName + ", allocationId=" + allocationId + "]";
 	}
 	
 }

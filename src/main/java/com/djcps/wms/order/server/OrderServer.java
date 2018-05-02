@@ -7,12 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.enterprise.inject.spi.Bean;
 
-import com.alibaba.fastjson.JSONArray;
 import com.djcps.wms.order.model.ChildOrderBO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,25 +17,18 @@ import org.springframework.util.StringUtils;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.allocation.model.AddAllocationOrderBO;
-import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.httpclient.OrderHttpResult;
-import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
-import com.djcps.wms.order.model.OrderParamBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
-import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
 import com.djcps.wms.order.request.OnlinePaperboardRequest;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
-import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.server.StockServer;
 import com.google.gson.Gson;
@@ -110,7 +99,7 @@ public class OrderServer {
         //调用借口获取信息
         HTTPResponse http = onlinePaperboardRequest.getOnlinePaperboardList(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return updateOMSCode(http);
 	}
 	
 	/**
@@ -127,7 +116,7 @@ public class OrderServer {
         //调用借口获取信息
         HTTPResponse http = onlinePaperboardRequest.updateOrderInfo(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return updateOMSCode(http);
 	}
 	
 	/**
@@ -144,7 +133,7 @@ public class OrderServer {
         //调用借口获取信息
         HTTPResponse http = onlinePaperboardRequest.updateSplitOrderInfo(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return updateOMSCode(http);
 	}
 	
 	/**
@@ -276,7 +265,7 @@ public class OrderServer {
         //调用借口获取信息
         HTTPResponse http = onlinePaperboardRequest.getOrderDeatilByIdList(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return updateOMSCode(http);
 	}
 	
 	/**
@@ -293,7 +282,7 @@ public class OrderServer {
         //调用借口获取信息
         HTTPResponse http = onlinePaperboardRequest.getSplitOrderDeatilByI(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return updateOMSCode(http);
 	}
 	
 	/**
@@ -354,6 +343,28 @@ public class OrderServer {
 		//校验请求是否成功
 		if(http.isSuccessful()){
 			result = gson.fromJson(http.getBodyString(), HttpResult.class);
+		}
+		if(result == null){
+			LOGGER.error("Http请求出错,HttpResult结果为null");
+		}
+		return result;
+	}
+	
+	/**
+	 * 涉及到oms订单服务的内容,那边code码和我们这边不一致,一律全部修改成100000
+	 * @param http
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月2日
+	 */
+	private HttpResult updateOMSCode(HTTPResponse http){
+		HttpResult result = null;
+		//校验请求是否成功
+		if(http.isSuccessful()){
+			result = gson.fromJson(http.getBodyString(), HttpResult.class);
+			if(result.isSuccess()){
+				result.setCode(100000);
+			}
 		}
 		if(result == null){
 			LOGGER.error("Http请求出错,HttpResult结果为null");

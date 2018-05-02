@@ -17,7 +17,7 @@ public class AppConstant {
     /**
      * 内部用户登录标识码
      */
-    public static final String LOGIN_TYPE = "DJOA";
+    public static final String LOGIN_TYPE = "DJERP";
     
     /**
      * 高德地图Web服务key,目前用的是个人的

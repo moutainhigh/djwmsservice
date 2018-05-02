@@ -1820,68 +1820,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//配货管理移除订单===================
 		HttpResult result = allocationServer.againVerifyAllocation(param);
 		if(result.isSuccess()){
-			//根据订单号批量查询订单详情信息
-			if(batchOrder!=null){
-				HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-		        BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
-		        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
-		        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
-				for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
-					//判断该订单只有为已配货的情况下,才允许移除订单
-					if(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue().equals(String.valueOf(warehouseOrderDetailPO.getOrderStatus()))){
-						List<String> updateList = new ArrayList<>();
-						List<OrderIdBO> updateOrderIdBOList = new ArrayList<>();
-						for (String order : orderIdsList) {
-							//通知订单服务修改,需要批量执行
-							updateList.add(order);
-							
-							OrderIdBO orderIdBO = new OrderIdBO();
-							orderIdBO.setOrderId(order);
-							orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
-							updateOrderIdBOList.add(orderIdBO);
-							
-						}
-						//移除订单,通知订单服务修改,需要批量执行
-						HttpResult updateSplitOrderResult =  orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),updateOrderIdBOList);
-						if(!updateSplitOrderResult.isSuccess()){
-							LOGGER.error("装车优化中的移除订单,该订单已配货允许移除,但是修改订单状态失败!!!");
-							return MsgTemplate.failureMsg("装车优化中的移除订单,该订单已配货允许移除,但是修改订单状态失败!!!");
-						}
-						Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea());
-						if(flag==false){
-							return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
-						}
-					}else{
-						String error = warehouseOrderDetailPO.getOrderId();
-						String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
-						//释放同时确认配货,确认优化公共锁
-						redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
-						//删除同时确认优化锁
-					    redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+waybillId);
-						return MsgTemplate.failureMsg(msg);
-					}
-				}
-			}
-			
-			//追加订单,修改订单服务订单状态修改为已配货
-			if(!ObjectUtils.isEmpty(orderIdList)){
-				HttpResult updateSplitOrderResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
-				if(!updateSplitOrderResult.isSuccess()){
-					LOGGER.error("装车优化中的追加订单,追加已配货订单,修改订单状态失败!!!");
-					return MsgTemplate.failureMsg("装车优化中的追加订单,追加已配货订单,修改订单状态失败!!!");
-				}
-				Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea());
-				if(flag==false){
-					return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
-				}
-			}
-			
-			
-			//清楚缓存
-			redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId);
-			redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
-			redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
-			redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
+			//出库,中的追加订单处理界面,修改追加订单平方数订单的相关信息
 			if(AllocationConstant.FLAG_ADD_ORDER_HANDLE.equals(param.getFlag())){
 			    RejectRequestBO rejectRequest = new RejectRequestBO();
 			    BeanUtils.copyProperties(param, rejectRequest);
@@ -1889,7 +1828,72 @@ public class AllocationServiceImpl implements AllocationService {
 			    rejectRequest.setWayBillId(param.getWaybillId());
 			    rejectRequest.setHandler(param.getOperator());
 			    rejectRequest.setHandlerId(param.getOperatorId());
+			    rejectRequest.setHandlerTime(new Date());
 			    result = loadingTaskServer.rejectRequest(rejectRequest);
+			}
+			
+			if(result.isSuccess()){
+				//根据订单号批量查询订单详情信息
+				if(batchOrder!=null){
+					HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
+			        BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
+			        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
+			        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+					for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+						//判断该订单只有为已配货的情况下,才允许移除订单
+						if(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION.getValue().equals(String.valueOf(warehouseOrderDetailPO.getOrderStatus()))){
+							List<String> updateList = new ArrayList<>();
+							List<OrderIdBO> updateOrderIdBOList = new ArrayList<>();
+							for (String order : orderIdsList) {
+								//通知订单服务修改,需要批量执行
+								updateList.add(order);
+								
+								OrderIdBO orderIdBO = new OrderIdBO();
+								orderIdBO.setOrderId(order);
+								orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+								updateOrderIdBOList.add(orderIdBO);
+								
+							}
+							//移除订单,通知订单服务修改,需要批量执行
+							HttpResult updateSplitOrderResult =  orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),updateOrderIdBOList);
+							if(!updateSplitOrderResult.isSuccess()){
+								LOGGER.error("装车优化中的移除订单,该订单已配货允许移除,但是修改订单状态失败!!!");
+								return MsgTemplate.failureMsg("装车优化中的移除订单,该订单已配货允许移除,但是修改订单状态失败!!!");
+							}
+							Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea());
+							if(flag==false){
+								return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+							}
+						}else{
+							String error = warehouseOrderDetailPO.getOrderId();
+							String msg = new StringBuffer().append(error).append(":").append(AllocationMsgEnum.AGAIN_CHOOSE_ORDER.getMsg()).toString();
+							//释放同时确认配货,确认优化公共锁
+							redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
+							//删除同时确认优化锁
+						    redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ALLOCATION+waybillId);
+							return MsgTemplate.failureMsg(msg);
+						}
+					}
+				}
+				
+				//追加订单,修改订单服务订单状态修改为已配货
+				if(!ObjectUtils.isEmpty(orderIdList)){
+					HttpResult updateSplitOrderResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
+					if(!updateSplitOrderResult.isSuccess()){
+						LOGGER.error("装车优化中的追加订单,追加已配货订单,修改订单状态失败!!!");
+						return MsgTemplate.failureMsg("装车优化中的追加订单,追加已配货订单,修改订单状态失败!!!");
+					}
+					Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea());
+					if(flag==false){
+						return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+					}
+				}
+				
+				//清楚缓存
+				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId);
+				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
+				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.CACHE_AGAIN_VERIFY_ADDORDER+waybillId);
+				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.DELIVERYID+waybillId);
 			}
 		}
 		//删除确认配货,确认优化公共锁
