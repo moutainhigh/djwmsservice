@@ -163,6 +163,6 @@ public class AppConstant {
     /**
      * 问号
      */
-    public static final String W = "?";
+    public static final String W = "\\?";
 
 }

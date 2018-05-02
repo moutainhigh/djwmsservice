@@ -39,7 +39,7 @@ public class WorkRecordsBO extends BaseListBO{
 	 * 4 配货
 	 * 5 取消配货
 	 * 6 提货
-	 * 7 退款
+	 * 7 退库
 	 * 8 装车
 	 * 9 盘点
 	 * 10 发起异常

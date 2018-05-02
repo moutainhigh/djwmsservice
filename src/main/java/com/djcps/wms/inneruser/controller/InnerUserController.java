@@ -10,6 +10,7 @@ import javax.validation.Validation;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -237,12 +238,14 @@ public class InnerUserController {
                     if (StringUtils.isNotBlank(userExchangeTokenVO.getToken())) {
                         if (innerUserService.setUserCookie(userExchangeTokenVO.getToken(), response)) {
                             UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVO.getToken());
+                            if(!ObjectUtils.isEmpty(userInfoVO)) {
                             // 更新登陆次数以及时间
                             UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
                             updateUserStatusBO.setUserId(userInfoVO.getId());
                             updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
                             updateUserStatusBO.setLoginCount(" ");
                             Map<String, Object> result = userService.updateUserStatus(updateUserStatusBO);
+                            }
                             return MsgTemplate.successMsg(userInfoVO);
                         }
                     }
@@ -271,7 +274,9 @@ public class InnerUserController {
         if (isSuccess) {
             CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME, "", 0);
             UserLogoutVO userLogoutVO = new UserLogoutVO(ParamsConfig.INNER_USER_LOGIN_URL);
-            permissionService.delUserRedisPermission(userInfoVO.getId());
+            if(!ObjectUtils.isEmpty(userInfoVO)){
+                permissionService.delUserRedisPermission(userInfoVO.getId());
+            }
             return MsgTemplate.successMsg(userLogoutVO);
         }
         return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);

@@ -2,6 +2,10 @@ package com.djcps.wms.inneruser.model.userparam;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+/**
+ * ORG 获取用户信息
+ * @author
+ */
 public class OrgGetUserInfoById {
 
     /**
