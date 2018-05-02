@@ -21,6 +21,8 @@ public class StocktakingTaskfBO {
      * 合作方id
      */
     private String partnerId;
+    
+    private String partnerArea;
 
     /**
      * 产品名称
@@ -179,22 +181,22 @@ public class StocktakingTaskfBO {
         this.orderDetail = orderDetail;
     }
 
-    @Override
-    public String toString() {
-        return "StocktakingTaskfBO{" +
-                "relativeId='" + relativeId + '\'' +
-                ", jobId='" + jobId + '\'' +
-                ", partnerId='" + partnerId + '\'' +
-                ", productName='" + productName + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", warehouseAreaId='" + warehouseAreaId + '\'' +
-                ", warehouseAreaName='" + warehouseAreaName + '\'' +
-                ", warehouseLocId='" + warehouseLocId + '\'' +
-                ", warehouseLocName='" + warehouseLocName + '\'' +
-                ", trueAmount=" + trueAmount +
-                ", orderDetail=" + orderDetail +
-                '}';
-    }
+    public String getPartnerArea() {
+		return partnerArea;
+	}
+
+	public void setPartnerArea(String partnerArea) {
+		this.partnerArea = partnerArea;
+	}
+
+	@Override
+	public String toString() {
+		return "StocktakingTaskfBO [relativeId=" + relativeId + ", jobId=" + jobId + ", partnerId=" + partnerId
+				+ ", partnerArea=" + partnerArea + ", productName=" + productName + ", orderId=" + orderId
+				+ ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId="
+				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
+				+ ", warehouseLocName=" + warehouseLocName + ", trueAmount=" + trueAmount + ", orderDetail="
+				+ orderDetail + "]";
+	}
+
 }

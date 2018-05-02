@@ -2,8 +2,10 @@ package com.djcps.wms.outorder.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.outorder.model.OutOrderBO;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
@@ -38,10 +41,12 @@ public class OutOrderController {
 	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OutOrderController.class);
 	
 	@RequestMapping(name="获取订单明细列表",value="/gerOrderDetail",method = RequestMethod.POST)
-	public Map<String,Object> getOrderDetailByOrderId(@RequestBody String json){
+	public Map<String,Object> getOrderDetailByOrderId(@RequestBody String json,HttpServletRequest request){
 		try{
 			LOGGER.debug("json:"+json);
 			OutOrderBO out = gson.fromJson(json, OutOrderBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,out);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(out,new HibernateSupportedValidator<OutOrderBO>()
 					.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))

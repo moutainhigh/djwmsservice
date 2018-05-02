@@ -55,8 +55,8 @@ public class WarehouseAreaBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "WarehouseAreaBO [warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
-				+ ", locationList=" + locationList + "]";
+		return "WarehouseAreaHaveLocationListBO [warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName="
+				+ warehouseAreaName + ", locationList=" + locationList + "]";
 	}
 	
 }

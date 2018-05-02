@@ -30,6 +30,7 @@ import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.ZhiNengHttpResult;
 import com.djcps.wms.allocation.request.NumberServerHttpRequest;
 import com.djcps.wms.allocation.request.WmsForAllocationHttpRequest;
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -115,15 +116,6 @@ public class AllocationServer {
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/x-www-form-urlencoded; charset=utf-8"),param);
 		//调用借口获取信息
 		HTTPResponse http = numberServerHttpRequest.getNumber(rb);
-		return verifyHttpResult(http);
-	}
-	public HttpResult zhinengpeihuo() {
-		//将请求参数转化为requestbody格式
-		String json =  "{\"id\":11,\"name\":\"zhagnsan\"}";
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-		//调用借口获取信息
-		HTTPResponse http = allocationHttpRequest.zhinengpeihuo(rb);
-		//调用借口获取信息
 		return verifyHttpResult(http);
 	}
 	
@@ -312,9 +304,10 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult addzhinengpeihuo() {
+	public HttpResult addzhinengpeihuo(BaseAddBO base) {
+		String json = gson.toJson(base);
 		//将请求参数转化为requestbody格式
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),"1");
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.addzhinengpeihuo(rb);
 		return verifyHttpResult(http);

@@ -1,4 +1,7 @@
 package com.djcps.wms.outorder.model;
+
+import java.math.BigDecimal;
+
 /**
  * 返回页面的参数
  * @author xzzx
@@ -12,32 +15,45 @@ public class OrderDetailBO {
 	/**
 	 * 产品名称
 	 */
-	private String groupGoodName;
+	private String productName;
 	/**
 	 * 下料规格
 	 */
-	private String material;
+	private String materialSize;
 	/**
 	 * 纸箱规格
 	 */
-	private String box;
+	private String productSize;
 	/**
 	 * 数量
 	 */
-	private Integer amount;
+	private Integer orderAmount;
 	/**
 	 * 单价
 	 */
-	private Double unitPrice;
+	private BigDecimal unitPrice;
 	/**
 	 * 金额
 	 */
-	private Double amountPrice; 
+	private BigDecimal amountPrice; 
 	/**
 	 * 单位
 	 */
 	private String unit;
 	
+	/**
+	 * 片数
+	 */
+	private Integer amountPiece;
+	
+	public Integer getAmountPiece() {
+		return amountPiece;
+	}
+
+	public void setAmountPiece(Integer amountPiece) {
+		this.amountPiece = amountPiece;
+	}
+
 	public OrderDetailBO(){
 		this.unit = "片";
 	}
@@ -50,51 +66,51 @@ public class OrderDetailBO {
 		this.childOrderId = childOrderId;
 	}
 
-	public String getGroupGoodName() {
-		return groupGoodName;
+	public String getProductName() {
+		return productName;
 	}
 
-	public void setGroupGoodName(String groupGoodName) {
-		this.groupGoodName = groupGoodName;
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 
-	public String getMaterial() {
-		return material;
+	public String getMaterialSize() {
+		return materialSize;
 	}
 
-	public void setMaterial(String material) {
-		this.material = material;
+	public void setMaterialSize(String materialSize) {
+		this.materialSize = materialSize;
 	}
 
-	public String getBox() {
-		return box;
+	public String getProductSize() {
+		return productSize;
 	}
 
-	public void setBox(String box) {
-		this.box = box;
+	public void setProductSize(String productSize) {
+		this.productSize = productSize;
 	}
 
-	public Integer getAmount() {
-		return amount;
+	public Integer getOrderAmount() {
+		return orderAmount;
 	}
 
-	public void setAmount(Integer amount) {
-		this.amount = amount;
+	public void setOrderAmount(Integer orderAmount) {
+		this.orderAmount = orderAmount;
 	}
 
-	public Double getUnitPrice() {
+	public BigDecimal getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Double unitPrice) {
+	public void setUnitPrice(BigDecimal unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Double getAmountPrice() {
+	public BigDecimal getAmountPrice() {
 		return amountPrice;
 	}
 
-	public void setAmountPrice(Double amountPrice) {
+	public void setAmountPrice(BigDecimal amountPrice) {
 		this.amountPrice = amountPrice;
 	}
 
@@ -108,10 +124,9 @@ public class OrderDetailBO {
 
 	@Override
 	public String toString() {
-		return "OrderDetailInfoBO [childOrderId=" + childOrderId + ", groupGoodName=" + groupGoodName + ", material="
-				+ material + ", box=" + box + ", amount=" + amount + ", unitPrice=" + unitPrice + ", amountPrice="
-				+ amountPrice + ", unit=" + unit + "]";
+		return "OrderDetailBO [childOrderId=" + childOrderId + ", productName=" + productName + ", materialSize="
+				+ materialSize + ", productSize=" + productSize + ", orderAmount=" + orderAmount + ", unitPrice="
+				+ unitPrice + ", amountPrice=" + amountPrice + ", unit=" + unit + ", amountPiece=" + amountPiece + "]";
 	}
-	
 	
 }

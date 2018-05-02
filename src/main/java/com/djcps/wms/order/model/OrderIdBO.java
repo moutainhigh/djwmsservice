@@ -19,20 +19,18 @@ public class OrderIdBO extends BaseListPartnerIdBO implements Serializable{
 	private static final long serialVersionUID = -5616396253072660052L;
 
 	/**
-	 * 订单号
+	 * 订单服务用的订单号
 	 */
 	private String childOrderId;
 	
+	/**
+	 * 我们自己用的订单号
+	 */
 	private String orderId;
 	
 	private String status;
 	
-	@NotBlank
-	private String fkeyarea;
-
-	public OrderIdBO() {
-		this.fkeyarea = "3303";
-	}
+	private String keyArea;
 
 	public String getChildOrderId() {
 		return childOrderId;
@@ -42,12 +40,12 @@ public class OrderIdBO extends BaseListPartnerIdBO implements Serializable{
 		this.childOrderId = childOrderId;
 	}
 
-	public String getFkeyarea() {
-		return fkeyarea;
+	public String getKeyArea() {
+		return keyArea;
 	}
 
-	public void setFkeyarea(String fkeyarea) {
-		this.fkeyarea = fkeyarea;
+	public void setKeyArea(String keyArea) {
+		this.keyArea = keyArea;
 	}
 
 	public String getOrderId() {
@@ -68,9 +66,8 @@ public class OrderIdBO extends BaseListPartnerIdBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "OrderIdBO [childOrderId=" + childOrderId + ", orderId=" + orderId + ", status=" + status + ", fkeyarea="
-				+ fkeyarea + "]";
+		return "OrderIdBO [childOrderId=" + childOrderId + ", orderId=" + orderId + ", status=" + status + ", keyArea="
+				+ keyArea + "]";
 	}
-
 
 }

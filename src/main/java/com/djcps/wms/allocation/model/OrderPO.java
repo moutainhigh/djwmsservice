@@ -79,7 +79,7 @@ public class OrderPO implements Serializable{
 	/**
 	 * 交期时间
 	 */
-	private Long deliveryTime;
+	private String deliveryTime;
 	/**
 	 * 装车顺序
 	 */
@@ -358,11 +358,11 @@ public class OrderPO implements Serializable{
 		this.contacts = contacts;
 	}
 
-	public Long getDeliveryTime() {
+	public String getDeliveryTime() {
 		return deliveryTime;
 	}
 
-	public void setDeliveryTime(Long deliveryTime) {
+	public void setDeliveryTime(String deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
 

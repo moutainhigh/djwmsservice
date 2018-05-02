@@ -11,7 +11,7 @@ public class BaseVO implements Serializable {
 	
 	private Integer total;
 	
-	private List result;
+	private Object result;
 
 	public Integer getTotal() {
 		return total;
@@ -21,11 +21,11 @@ public class BaseVO implements Serializable {
 		this.total = total;
 	}
 
-	public List getResult() {
+	public Object getResult() {
 		return result;
 	}
 
-	public void setResult(List result) {
+	public void setResult(Object result) {
 		this.result = result;
 	}
 

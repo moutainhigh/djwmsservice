@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 
 /**
  * 删除订单信息 参数类
@@ -12,7 +14,7 @@ import com.djcps.wms.commons.base.BaseBO;
  * @since 2018/3/13
  *
  */
-public class UpdateDeliveryEffectBO extends BaseBO implements Serializable {
+public class UpdateDeliveryEffectBO extends PartnerInfoBO implements Serializable {
 
     /**
      * 
@@ -27,22 +29,10 @@ public class UpdateDeliveryEffectBO extends BaseBO implements Serializable {
      */
     private List<String> orderIds;
     /**
-     * 合作方编号
-     */
-    private String partnerId;
-    /**
      * 运单编号
      */
     private String wayBillId;
-
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
-    }
-
+    
     public String getWayBillId() {
         return wayBillId;
     }
@@ -67,10 +57,10 @@ public class UpdateDeliveryEffectBO extends BaseBO implements Serializable {
         this.deliveryId = deliveryId;
     }
 
-    @Override
-    public String toString() {
-        return "DeleteOrderInfoBO [deliveryId=" + deliveryId + ", orderIds=" + orderIds + ", partnerId=" + partnerId
-                + ", wayBillId=" + wayBillId + "]";
-    }
+	@Override
+	public String toString() {
+		return "UpdateDeliveryEffectBO [deliveryId=" + deliveryId + ", orderIds=" + orderIds + ", wayBillId="
+				+ wayBillId + "]";
+	}
 
 }

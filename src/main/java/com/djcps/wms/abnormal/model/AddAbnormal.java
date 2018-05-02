@@ -57,8 +57,8 @@ public class AddAbnormal extends BaseAddBO implements Serializable{
     /**
      *是否拆分 0:正常订单(默认)  1:被拆分订单 2:拆后订单
      */
-    @NotBlank
-    private String isSplit;
+    @NotNull
+    private Integer isSplit;
 
     /**
      *异常环节 1：入库 2：盘点 3：提货
@@ -155,12 +155,11 @@ public class AddAbnormal extends BaseAddBO implements Serializable{
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-
-	public String getIsSplit() {
+	public Integer getIsSplit() {
 		return isSplit;
 	}
 
-	public void setIsSplit(String isSplit) {
+	public void setIsSplit(Integer isSplit) {
 		this.isSplit = isSplit;
 	}
 
@@ -209,7 +208,8 @@ public class AddAbnormal extends BaseAddBO implements Serializable{
 		return "AddAbnormal [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", orderId=" + orderId
 				+ ", productName=" + productName + ", amount=" + amount + ", customerName=" + customerName
 				+ ", isSplit=" + isSplit + ", link=" + link + ", reason=" + reason + ", abnomalAmount=" + abnomalAmount
-				+ ", result=" + result + ", remark=" + remark + "]";
+				+ ", result=" + result + ", remark=" + remark + ", loadingTableId=" + loadingTableId
+				+ ", loadingTableName=" + loadingTableName + "]";
 	}
     
 }

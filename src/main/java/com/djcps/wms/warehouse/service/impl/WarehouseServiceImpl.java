@@ -207,8 +207,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 	}
 
 	@Override
-	public Map<String, Object> getWarehouseType(String partnerId) {
-		HttpResult result = warehouseServer.getWarehouseType(partnerId);
+	public Map<String, Object> getWarehouseType(PartnerInfoBO partnerInfoBean) {
+		HttpResult result = warehouseServer.getWarehouseType(partnerInfoBean);
 		return MsgTemplate.customMsg(result);
 	}
 

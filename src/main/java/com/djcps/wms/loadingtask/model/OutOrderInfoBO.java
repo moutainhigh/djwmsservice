@@ -26,7 +26,7 @@ public class OutOrderInfoBO extends BaseAddBO{
 	/**
 	 * 联系方式
 	 */
-	private String contactway;
+	private String contactWay;
 	/**
 	 * 联系人
 	 */
@@ -64,11 +64,11 @@ public class OutOrderInfoBO extends BaseAddBO{
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
-	public String getContactway() {
-		return contactway;
+	public String getContactWay() {
+		return contactWay;
 	}
-	public void setContactway(String contactway) {
-		this.contactway = contactway;
+	public void setContactWay(String contactWay) {
+		this.contactWay = contactWay;
 	}
 	public String getContacts() {
 		return contacts;
@@ -116,11 +116,9 @@ public class OutOrderInfoBO extends BaseAddBO{
 	@Override
 	public String toString() {
 		return "OutOrderInfoBO [id=" + id + ", orderIds=" + orderIds + ", customerName=" + customerName
-				+ ", contactway=" + contactway + ", contacts=" + contacts + ", address=" + address + ", driverId="
+				+ ", contactWay=" + contactWay + ", contacts=" + contacts + ", address=" + address + ", driverId="
 				+ driverId + ", driverName=" + driverName + ", plateNumber=" + plateNumber + ", allocationTime="
 				+ allocationTime + "]";
 	}
-	
-	
 	
 }

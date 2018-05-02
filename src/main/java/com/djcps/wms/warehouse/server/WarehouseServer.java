@@ -122,9 +122,10 @@ public class WarehouseServer {
 		return verifyHttpResult(http);
 	}
 	
-	public HttpResult getWarehouseType(String partnerId) {
+	public HttpResult getWarehouseType(PartnerInfoBO partnerInfoBean) {
 		//将请求参数转化为requestbody格式
-		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),partnerId);
+		String json = gson.toJson(partnerInfoBean);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = warehouseHttpRequest.getWarehouseType(rb);
 		return verifyHttpResult(http);

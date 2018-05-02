@@ -17,6 +17,7 @@ import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.RelativeIdBO;
+import com.djcps.wms.allocation.model.SplitOrderBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
@@ -286,6 +287,16 @@ public interface AllocationService {
 	 * @return
 	 */
 	Map<String, Object> getRecordByRrelativeId(RelativeIdBO param);
+
+
+	/**
+	 * 拆分订单
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年4月18日
+	 */
+	Map<String, Object> splitOrder(SplitOrderBO param);
 
 
 }

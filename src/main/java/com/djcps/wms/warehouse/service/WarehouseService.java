@@ -104,7 +104,7 @@ public interface WarehouseService {
 	 * @author:zdx
 	 * @date:2017年12月8日
 	 */
-	Map<String, Object> getWarehouseType(String partnerId);
+	Map<String, Object> getWarehouseType(PartnerInfoBO partnerInfoBean);
 
 	/**
 	 * 获取所有的仓库名称

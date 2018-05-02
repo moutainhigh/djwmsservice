@@ -38,8 +38,8 @@ public class PdaOderInfoBO {
     private String operatorTime;
     private String createTime;
     private String updateTime;
-    private String productRule;
-    private String materialRule;
+    private String productSize;
+    private String materialSize;
     private String units;
 
     /**
@@ -55,24 +55,23 @@ public class PdaOderInfoBO {
     public void setUnits(String units) {
         units = units;
     }
+    public String getProductSize() {
+		return productSize;
+	}
 
-    public String getProductRule() {
-        return productRule;
-    }
+	public void setProductSize(String productSize) {
+		this.productSize = productSize;
+	}
 
-    public void setProductRule(String productRule) {
-        this.productRule = productRule;
-    }
+	public String getMaterialSize() {
+		return materialSize;
+	}
 
-    public String getMaterialRule() {
-        return materialRule;
-    }
+	public void setMaterialSize(String materialSize) {
+		this.materialSize = materialSize;
+	}
 
-    public void setMaterialRule(String materialRule) {
-        this.materialRule = materialRule;
-    }
-
-    public String getRelativeId() {
+	public String getRelativeId() {
         return relativeId;
     }
 
@@ -297,40 +296,18 @@ public class PdaOderInfoBO {
         this.orderAreaAndLocList = orderAreaAndLocList;
     }
 
-    @Override
-    public String toString() {
-        return "PdaOderInfoBO{" +
-                "relativeId='" + relativeId + '\'' +
-                ", partnerId='" + partnerId + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", warehouseAreaId='" + warehouseAreaId + '\'' +
-                ", warehouseAreaName='" + warehouseAreaName + '\'' +
-                ", warehouseLocId='" + warehouseLocId + '\'' +
-                ", warehouseLocName='" + warehouseLocName + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", productName='" + productName + '\'' +
-                ", fluteType='" + fluteType + '\'' +
-                ", materialId='" + materialId + '\'' +
-                ", materialName='" + materialName + '\'' +
-                ", materialLength='" + materialLength + '\'' +
-                ", materialWidth='" + materialWidth + '\'' +
-                ", boxLength='" + boxLength + '\'' +
-                ", boxHeight='" + boxHeight + '\'' +
-                ", boxWidth='" + boxWidth + '\'' +
-                ", instockAmount='" + instockAmount + '\'' +
-                ", differenceValue='" + differenceValue + '\'' +
-                ", isInventoryProfit='" + isInventoryProfit + '\'' +
-                ", remark='" + remark + '\'' +
-                ", operator='" + operator + '\'' +
-                ", operatorId='" + operatorId + '\'' +
-                ", operatorTime='" + operatorTime + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", productRule='" + productRule + '\'' +
-                ", materialRule='" + materialRule + '\'' +
-                ", Units='" + units + '\'' +
-                ", orderAreaAndLocList=" + orderAreaAndLocList +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "PdaOderInfoBO [relativeId=" + relativeId + ", partnerId=" + partnerId + ", warehouseId=" + warehouseId
+				+ ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName="
+				+ warehouseAreaName + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName
+				+ ", orderId=" + orderId + ", productName=" + productName + ", fluteType=" + fluteType + ", materialId="
+				+ materialId + ", materialName=" + materialName + ", materialLength=" + materialLength
+				+ ", materialWidth=" + materialWidth + ", boxLength=" + boxLength + ", boxHeight=" + boxHeight
+				+ ", boxWidth=" + boxWidth + ", instockAmount=" + instockAmount + ", differenceValue=" + differenceValue
+				+ ", isInventoryProfit=" + isInventoryProfit + ", remark=" + remark + ", operator=" + operator
+				+ ", operatorId=" + operatorId + ", operatorTime=" + operatorTime + ", createTime=" + createTime
+				+ ", updateTime=" + updateTime + ", productSize=" + productSize + ", materialSize=" + materialSize
+				+ ", units=" + units + ", orderAreaAndLocList=" + orderAreaAndLocList + "]";
+	}
 }

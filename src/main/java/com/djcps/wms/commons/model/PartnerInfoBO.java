@@ -25,7 +25,7 @@ public class PartnerInfoBO  extends BaseBO implements Serializable{
 	private String partnerName;
 	
 	/**
-	 * 合作方区域
+	 * 合作方区域,就是区域拆分键
 	 */
 	private String partnerArea;
 	
@@ -38,7 +38,7 @@ public class PartnerInfoBO  extends BaseBO implements Serializable{
 	 * 操作人名称
 	 */
 	private String operator;
-	
+
 	public PartnerInfoBO(){
 //		this.partnerId = "100"; 
 //		this.partnerName = "东经科技";
@@ -89,7 +89,8 @@ public class PartnerInfoBO  extends BaseBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "PartnerInfoBean [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea="
-				+ partnerArea + ", operatorId=" + operatorId + ", operator=" + operator + "]";
+		return "PartnerInfoBO [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea=" + partnerArea
+				+ ", operatorId=" + operatorId + ", operator=" + operator + "]";
 	}
+
 }

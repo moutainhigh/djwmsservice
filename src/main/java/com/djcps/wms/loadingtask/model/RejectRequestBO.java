@@ -1,9 +1,10 @@
 package com.djcps.wms.loadingtask.model;
 
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 
 import com.djcps.wms.commons.base.BaseBO;
-import com.djcps.wms.push.model.PushMsgBO;
 
 /**
  * 驳回申请
@@ -32,6 +33,12 @@ public class RejectRequestBO extends BaseBO {
      * 处理人
      */
     private String handler;
+    
+    /**
+     * 处理时间
+     */
+    private Date handlerTime;
+    
     /**
      * 处理状态
      */
@@ -232,13 +239,21 @@ public class RejectRequestBO extends BaseBO {
         this.handlerId = handlerId;
     }
 
-    @Override
-    public String toString() {
-        return "RejectRequestBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId
-                + ", handler=" + handler + ", disposeStatus=" + disposeStatus + ", operatorId=" + operatorId
-                + ", operator=" + operator + ", userid=" + userid + ", ticker=" + ticker + ", title=" + title
-                + ", text=" + text + ", custom=" + custom + ", type=" + type + ", extraField=" + extraField + ", mid="
-                + mid + ", msg=" + msg + ", appSystem=" + appSystem + "]";
-    }
+    public Date getHandlerTime() {
+		return handlerTime;
+	}
+
+	public void setHandlerTime(Date handlerTime) {
+		this.handlerTime = handlerTime;
+	}
+
+	@Override
+	public String toString() {
+		return "RejectRequestBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handlerId=" + handlerId
+				+ ", handler=" + handler + ", handlerTime=" + handlerTime + ", disposeStatus=" + disposeStatus
+				+ ", operatorId=" + operatorId + ", operator=" + operator + ", userid=" + userid + ", ticker=" + ticker
+				+ ", title=" + title + ", text=" + text + ", custom=" + custom + ", type=" + type + ", extraField="
+				+ extraField + ", mid=" + mid + ", msg=" + msg + ", appSystem=" + appSystem + "]";
+	}
 
 }

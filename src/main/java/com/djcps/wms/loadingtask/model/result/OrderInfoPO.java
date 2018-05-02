@@ -1,5 +1,7 @@
 package com.djcps.wms.loadingtask.model.result;
 
+import java.math.BigDecimal;
+
 /**
  * 订单服务 子订单 返回实体类
  * 
@@ -11,58 +13,58 @@ public class OrderInfoPO {
     /**
      * 产品名称
      */
-    private String fgroupgoodname;
+    private String productName;
     /**
      * 订单号
      */
-    private String fchildorderid;
+    private String orderId;
     /**
      * 楞型
      */
-    private String fflutetype;
+    private String fluteType;
 
     /**
      * 产品规格长
      */
-    private Double fboxlength;
+    private String boxLength;
 
     /**
      * 产品规格宽
      */
-    private Double fboxwidth;
+    private String boxWidth;
 
     /**
      * 产品规格高
      */
-    private Double fboxheight;
+    private String boxHeight;
 
     /**
      * 下料规格长
      */
-    private Double fmateriallength;
+    private String materialLength;
 
     /**
      * 下料规格宽
      */
-    private Double fmaterialwidth;
+    private String materialWidth;
 
     /**
      * 材料名称
      */
-    private String fmaterialname;
+    private String materialName;
     /**
      * 订单数量
      */
-    private Integer famount;
+    private Integer orderAmount;
     /**
      * 下料规格
      */
-    private String fmaterialRule;
+    private String materialSize;
 
     /**
      * 产品规格
      */
-    private String fproductRule;
+    private String productSize;
     /**
      * 装车台数量
      */
@@ -75,157 +77,104 @@ public class OrderInfoPO {
      * 异常数量
      */
     private Integer abnomalAmount;
-
-    private String fdblflag;
-    /**
-     * 订单状态
-     */
-    private Integer fstatus;
-
-    public Integer getFstatus() {
-        return fstatus;
-    }
-
-    public void setFstatus(Integer fstatus) {
-        this.fstatus = fstatus;
-    }
-
-    public String getFdblflag() {
-        return fdblflag;
-    }
-
-    public void setFdblflag(String fdblflag) {
-        this.fdblflag = fdblflag;
-    }
-
-    public Integer getAbnomalAmount() {
-        return abnomalAmount;
-    }
-
-    public void setAbnomalAmount(Integer abnomalAmount) {
-        this.abnomalAmount = abnomalAmount;
-    }
-
-    public Integer getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(Integer orderStatus) {
-        this.orderStatus = orderStatus;
-    }
-
-    public Integer getLoadingAmount() {
-        return loadingAmount;
-    }
-
-    public void setLoadingAmount(Integer loadingAmount) {
-        this.loadingAmount = loadingAmount;
-    }
-
-    public String getFgroupgoodname() {
-        return fgroupgoodname;
-    }
-
-    public void setFgroupgoodname(String fgroupgoodname) {
-        this.fgroupgoodname = fgroupgoodname;
-    }
-
-    public String getFchildorderid() {
-        return fchildorderid;
-    }
-
-    public void setFchildorderid(String fchildorderid) {
-        this.fchildorderid = fchildorderid;
-    }
-
-    public String getFflutetype() {
-        return fflutetype;
-    }
-
-    public void setFflutetype(String fflutetype) {
-        this.fflutetype = fflutetype;
-    }
-
-    public Double getFboxlength() {
-        return fboxlength;
-    }
-
-    public void setFboxlength(Double fboxlength) {
-        this.fboxlength = fboxlength;
-    }
-
-    public Double getFboxwidth() {
-        return fboxwidth;
-    }
-
-    public void setFboxwidth(Double fboxwidth) {
-        this.fboxwidth = fboxwidth;
-    }
-
-    public Double getFboxheight() {
-        return fboxheight;
-    }
-
-    public void setFboxheight(Double fboxheight) {
-        this.fboxheight = fboxheight;
-    }
-
-    public Double getFmateriallength() {
-        return fmateriallength;
-    }
-
-    public void setFmateriallength(Double fmateriallength) {
-        this.fmateriallength = fmateriallength;
-    }
-
-    public Double getFmaterialwidth() {
-        return fmaterialwidth;
-    }
-
-    public void setFmaterialwidth(Double fmaterialwidth) {
-        this.fmaterialwidth = fmaterialwidth;
-    }
-
-    public String getFmaterialname() {
-        return fmaterialname;
-    }
-
-    public void setFmaterialname(String fmaterialname) {
-        this.fmaterialname = fmaterialname;
-    }
-
-    public Integer getFamount() {
-        return famount;
-    }
-
-    public void setFamount(Integer famount) {
-        this.famount = famount;
-    }
-
-    public String getFmaterialRule() {
-        return fmaterialRule;
-    }
-
-    public void setFmaterialRule(String fmaterialRule) {
-        this.fmaterialRule = fmaterialRule;
-    }
-
-    public String getFproductRule() {
-        return fproductRule;
-    }
-
-    public void setFproductRule(String fproductRule) {
-        this.fproductRule = fproductRule;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderInfoPO [fgroupgoodname=" + fgroupgoodname + ", fchildorderid=" + fchildorderid + ", fflutetype="
-                + fflutetype + ", fboxlength=" + fboxlength + ", fboxwidth=" + fboxwidth + ", fboxheight=" + fboxheight
-                + ", fmateriallength=" + fmateriallength + ", fmaterialwidth=" + fmaterialwidth + ", fmaterialname="
-                + fmaterialname + ", famount=" + famount + ", fmaterialRule=" + fmaterialRule + ", fproductRule="
-                + fproductRule + ", loadingAmount=" + loadingAmount + ", orderStatus=" + orderStatus
-                + ", abnomalAmount=" + abnomalAmount + ", fdblflag=" + fdblflag + ", fstatus=" + fstatus + "]";
-    }
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public String getFluteType() {
+		return fluteType;
+	}
+	public void setFluteType(String fluteType) {
+		this.fluteType = fluteType;
+	}
+	public String getBoxLength() {
+		return boxLength;
+	}
+	public void setBoxLength(String boxLength) {
+		this.boxLength = boxLength;
+	}
+	public String getBoxWidth() {
+		return boxWidth;
+	}
+	public void setBoxWidth(String boxWidth) {
+		this.boxWidth = boxWidth;
+	}
+	public String getBoxHeight() {
+		return boxHeight;
+	}
+	public void setBoxHeight(String boxHeight) {
+		this.boxHeight = boxHeight;
+	}
+	public String getMaterialLength() {
+		return materialLength;
+	}
+	public void setMaterialLength(String materialLength) {
+		this.materialLength = materialLength;
+	}
+	public String getMaterialWidth() {
+		return materialWidth;
+	}
+	public void setMaterialWidth(String materialWidth) {
+		this.materialWidth = materialWidth;
+	}
+	public String getMaterialName() {
+		return materialName;
+	}
+	public void setMaterialName(String materialName) {
+		this.materialName = materialName;
+	}
+	public Integer getOrderAmount() {
+		return orderAmount;
+	}
+	public void setOrderAmount(Integer orderAmount) {
+		this.orderAmount = orderAmount;
+	}
+	public String getMaterialSize() {
+		return materialSize;
+	}
+	public void setMaterialSize(String materialSize) {
+		this.materialSize = materialSize;
+	}
+	public String getProductSize() {
+		return productSize;
+	}
+	public void setProductSize(String productSize) {
+		this.productSize = productSize;
+	}
+	public Integer getLoadingAmount() {
+		return loadingAmount;
+	}
+	public void setLoadingAmount(Integer loadingAmount) {
+		this.loadingAmount = loadingAmount;
+	}
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	public Integer getAbnomalAmount() {
+		return abnomalAmount;
+	}
+	public void setAbnomalAmount(Integer abnomalAmount) {
+		this.abnomalAmount = abnomalAmount;
+	}
+	@Override
+	public String toString() {
+		return "OrderInfoPO [productName=" + productName + ", orderId=" + orderId + ", fluteType=" + fluteType
+				+ ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
+				+ ", materialLength=" + materialLength + ", materialWidth=" + materialWidth + ", materialName="
+				+ materialName + ", orderAmount=" + orderAmount + ", materialSize=" + materialSize + ", productSize="
+				+ productSize + ", loadingAmount=" + loadingAmount + ", orderStatus=" + orderStatus + ", abnomalAmount="
+				+ abnomalAmount + "]";
+	}
 
 }

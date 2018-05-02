@@ -16,6 +16,11 @@ public class SaveDeliveryBO implements Serializable {
      */
     @NotNull
     private String partnerId;
+    
+    /**
+     * 合作方区域,就是区域拆分键
+     */
+    private String partnerArea;
 
     /**
      * 提货单号
@@ -67,7 +72,16 @@ public class SaveDeliveryBO implements Serializable {
     @NotNull
     private String wayBillId;
 
-    public String getWayBillId() {
+
+	public String getPartnerArea() {
+		return partnerArea;
+	}
+
+	public void setPartnerArea(String partnerArea) {
+		this.partnerArea = partnerArea;
+	}
+
+	public String getWayBillId() {
         return wayBillId;
     }
 
@@ -147,12 +161,12 @@ public class SaveDeliveryBO implements Serializable {
         this.operatorId = operatorId;
     }
 
-    @Override
-    public String toString() {
-        return "SaveDeliveryBO [partnerId=" + partnerId + ", deliveryId=" + deliveryId + ", orderId=" + orderId
-                + ", warehouseId=" + warehouseId + ", warehouseAreaId=" + warehouseAreaId + ", warehouseLocId="
-                + warehouseLocId + ", realDeliveryAmount=" + realDeliveryAmount + ", operator=" + operator
-                + ", operatorId=" + operatorId + ", wayBillId=" + wayBillId + "]";
-    }
+	@Override
+	public String toString() {
+		return "SaveDeliveryBO [partnerId=" + partnerId + ", partnerName=" + partnerArea + ", deliveryId=" + deliveryId
+				+ ", orderId=" + orderId + ", warehouseId=" + warehouseId + ", warehouseAreaId=" + warehouseAreaId
+				+ ", warehouseLocId=" + warehouseLocId + ", realDeliveryAmount=" + realDeliveryAmount + ", operator="
+				+ operator + ", operatorId=" + operatorId + ", wayBillId=" + wayBillId + "]";
+	}
 
 }

@@ -38,6 +38,7 @@ import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.MergeModelBO;
 import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.RelativeIdBO;
+import com.djcps.wms.allocation.model.SplitOrderBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -812,6 +813,38 @@ public class AllocationController {
 				return MsgTemplate.failureMsg(ret);
 			}
 			return allocationService.getRecordByRrelativeId(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 拆分订单
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2018年4月18日
+	 */
+	@RequestMapping(name="订单拆分接口",value = "/splitOrder", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> splitOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			LOGGER.debug("json : " + json);
+			SplitOrderBO param = gson.fromJson(json, SplitOrderBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			//数据校验
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<SplitOrderBO>()
+							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return allocationService.splitOrder(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

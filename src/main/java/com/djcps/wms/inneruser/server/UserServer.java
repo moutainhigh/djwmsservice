@@ -364,7 +364,7 @@ public class UserServer {
                 if(!ObjectUtils.isEmpty(data)){
                     baseVO=gson.fromJson(data,BaseVO.class);
                     if(!ObjectUtils.isEmpty(baseVO)){
-                         roleTypePOList=baseVO.getResult();
+                         roleTypePOList=(List<GetRoleTypePO>) baseVO.getResult();
                         return roleTypePOList;
                     }
                 }

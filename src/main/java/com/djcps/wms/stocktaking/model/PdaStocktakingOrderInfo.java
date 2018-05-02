@@ -2,6 +2,8 @@ package com.djcps.wms.stocktaking.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.djcps.wms.commons.model.PartnerInfoBO;
+
 /**
  * @title:PDA盘点订单详情
  * @description:
@@ -9,7 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @company:djwms
  * @create:2018/1/13
  **/
-public class PdaStocktakingOrderInfo {
+public class PdaStocktakingOrderInfo extends PartnerInfoBO{
     /**
      * 作业单号
      */
@@ -21,11 +23,6 @@ public class PdaStocktakingOrderInfo {
      */
     @NotBlank
     private String orderId;
-
-    /**
-     * 合作方编号
-     */
-    private String partnerId;
 
     /**
      * 仓库编号
@@ -49,14 +46,6 @@ public class PdaStocktakingOrderInfo {
         this.orderId = orderId;
     }
 
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
-    }
-
     public String getWarehouseId() {
         return warehouseId;
     }
@@ -65,13 +54,10 @@ public class PdaStocktakingOrderInfo {
         this.warehouseId = warehouseId;
     }
 
-    @Override
-    public String toString() {
-        return "PdaStocktakingOrderInfo{" +
-                "jobId='" + jobId + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", partnerId='" + partnerId + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "PdaStocktakingOrderInfo [jobId=" + jobId + ", orderId=" + orderId + ", warehouseId=" + warehouseId
+				+ "]";
+	}
+
 }

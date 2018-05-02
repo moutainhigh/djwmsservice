@@ -8,16 +8,20 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.service.DeliveryService;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
 
@@ -47,10 +51,12 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(name = "提货单列表", value = "/list", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> list(@RequestBody(required = false) String json) {
+    public Map<String, Object> list(@RequestBody(required = false) String json,HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
             ListDeliveryBO param = gson.fromJson(json, ListDeliveryBO.class);
+            PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<ListDeliveryBO>()
@@ -76,10 +82,12 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(name = "提货单订单列表", value = "/listOrder", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> listOrder(@RequestBody(required = false) String json) {
+    public Map<String, Object> listOrder(@RequestBody(required = false) String json,@InnerUser UserInfoVO userInfoVO) {
         try {
             LOGGER.debug("json : " + json);
             ListDeliveryOrderBO param = gson.fromJson(json, ListDeliveryOrderBO.class);
+            param.setPartnerArea(userInfoVO.getOcode());
+            param.setPartnerId(userInfoVO.getUcompany());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<ListDeliveryOrderBO>()
@@ -105,10 +113,11 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(name = "打印", value = "/print", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> print(@RequestBody(required = false) String json) {
+    public Map<String, Object> print(@RequestBody(required = false) String json,@InnerUser UserInfoVO userInfoVO) {
         try {
             LOGGER.debug("json : " + json);
             PrintDeliveryBO param = gson.fromJson(json, PrintDeliveryBO.class);
+            param.setPartnerId(userInfoVO.getUcompany());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<PrintDeliveryBO>()
@@ -141,6 +150,7 @@ public class DeliveryController {
             LOGGER.debug("json : " + json);
             SaveDeliveryBO param = gson.fromJson(json, SaveDeliveryBO.class);
             param.setPartnerId(userInfoVO.getUcompany());
+            param.setPartnerArea(userInfoVO.getOcode());
             param.setOperator(userInfoVO.getUname());
             param.setOperatorId(String.valueOf(userInfoVO.getId()));
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -174,6 +184,7 @@ public class DeliveryController {
             LOGGER.debug("json : " + json);
             DeliveryOrderBO param = gson.fromJson(json, DeliveryOrderBO.class);
             param.setPartnerId(userInfoVO.getUcompany());
+            param.setPartnerArea(userInfoVO.getOcode());
             param.setPickerId(String.valueOf(userInfoVO.getId()));
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
@@ -237,6 +248,7 @@ public class DeliveryController {
             LOGGER.debug("json : " + json);
             DeliveryOrderDetailBO param = gson.fromJson(json, DeliveryOrderDetailBO.class);
             param.setPartnerId(userInfoVO.getUcompany());
+            param.setPartnerArea(userInfoVO.getOcode());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<DeliveryOrderDetailBO>()
@@ -266,6 +278,7 @@ public class DeliveryController {
             LOGGER.debug("json : " + json);
             UpdateDeliveryEffectBO param = gson.fromJson(json, UpdateDeliveryEffectBO.class);
             param.setPartnerId(userInfoVO.getUcompany());
+            param.setPartnerArea(userInfoVO.getOcode());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<UpdateDeliveryEffectBO>()

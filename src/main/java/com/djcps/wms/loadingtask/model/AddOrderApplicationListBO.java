@@ -38,6 +38,9 @@ public class AddOrderApplicationListBO extends BaseListBO {
      * 装车台编号
      */
     private String loadingTableId;
+    
+    private String loadingTableName;
+    
     /**
      * 申请人
      */
@@ -146,14 +149,22 @@ public class AddOrderApplicationListBO extends BaseListBO {
     public void setDisposeStatus(Integer disposeStatus) {
         this.disposeStatus = disposeStatus;
     }
+    
+    public String getLoadingTableName() {
+		return loadingTableName;
+	}
 
-    @Override
-    public String toString() {
-        return "AddOrderApplicationListBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handler=" + handler
-                + ", disposeStatus=" + disposeStatus + ", plateNumber=" + plateNumber + ", loadingTableId="
-                + loadingTableId + ", proposer=" + proposer + ", applicationBeginTime=" + applicationBeginTime
-                + ", applicationEndTime=" + applicationEndTime + ", handlerBeginTime=" + handlerBeginTime
-                + ", handlerEndTime=" + handlerEndTime + "]";
-    }
+	public void setLoadingTableName(String loadingTableName) {
+		this.loadingTableName = loadingTableName;
+	}
+
+	@Override
+	public String toString() {
+		return "AddOrderApplicationListBO [partnerId=" + partnerId + ", wayBillId=" + wayBillId + ", handler=" + handler
+				+ ", disposeStatus=" + disposeStatus + ", plateNumber=" + plateNumber + ", loadingTableId="
+				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", proposer=" + proposer
+				+ ", applicationBeginTime=" + applicationBeginTime + ", applicationEndTime=" + applicationEndTime
+				+ ", handlerBeginTime=" + handlerBeginTime + ", handlerEndTime=" + handlerEndTime + "]";
+	}
 
 }

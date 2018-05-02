@@ -36,7 +36,7 @@ public class PdaStocktakingOrderBO {
     /**
      * 下料规格
      */
-    private String materialRule;
+    private String materialSize;
 
     /**
      * 是否盘盈 1盘盈，2正常
@@ -110,16 +110,15 @@ public class PdaStocktakingOrderBO {
     public void setMaterialWidth(String materialWidth) {
         this.materialWidth = materialWidth;
     }
+    public String getMaterialSize() {
+		return materialSize;
+	}
 
-    public String getMaterialRule() {
-        return materialRule;
-    }
+	public void setMaterialSize(String materialSize) {
+		this.materialSize = materialSize;
+	}
 
-    public void setMaterialRule(String materialRule) {
-        this.materialRule = materialRule;
-    }
-
-    public Integer getIsInventoryProfit() {
+	public Integer getIsInventoryProfit() {
         return isInventoryProfit;
     }
 
@@ -135,19 +134,12 @@ public class PdaStocktakingOrderBO {
         this.totalNum = totalNum;
     }
 
-    @Override
-    public String toString() {
-        return "PdaStocktakingOrderBO{" +
-                "orderId='" + orderId + '\'' +
-                ", productName='" + productName + '\'' +
-                ", materialName='" + materialName + '\'' +
-                ", materialLength='" + materialLength + '\'' +
-                ", materialWidth='" + materialWidth + '\'' +
-                ", materialRule='" + materialRule + '\'' +
-                ", isInventoryProfit='" + isInventoryProfit + '\'' +
-                ", takeStockAmount=" + takeStockAmount +
-                ", totalNum=" + totalNum +
-                ", status=" + status +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "PdaStocktakingOrderBO [orderId=" + orderId + ", productName=" + productName + ", materialName="
+				+ materialName + ", materialLength=" + materialLength + ", materialWidth=" + materialWidth
+				+ ", materialSize=" + materialSize + ", isInventoryProfit=" + isInventoryProfit + ", takeStockAmount="
+				+ takeStockAmount + ", totalNum=" + totalNum + ", status=" + status + "]";
+	}
+
 }

@@ -18,7 +18,7 @@ public class CustomerBO {
 	/**
 	 * 联系方式
 	 */
-	private String contactway;
+	private String contactWay;
 	/**
 	 * 联系人
 	 */
@@ -33,12 +33,6 @@ public class CustomerBO {
 	}
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
-	}
-	public String getContactway() {
-		return contactway;
-	}
-	public void setContactway(String contactway) {
-		this.contactway = contactway;
 	}
 	public String getContacts() {
 		return contacts;
@@ -58,11 +52,15 @@ public class CustomerBO {
 	public void setOrderIds(String orderIds) {
 		this.orderIds = orderIds;
 	}
+	public String getContactWay() {
+		return contactWay;
+	}
+	public void setContactWay(String contactWay) {
+		this.contactWay = contactWay;
+	}
 	@Override
 	public String toString() {
-		return "CustomerBO [orderIds=" + orderIds + ", customerName=" + customerName + ", contactway=" + contactway
+		return "CustomerBO [orderIds=" + orderIds + ", customerName=" + customerName + ", contactWay=" + contactWay
 				+ ", contacts=" + contacts + ", address=" + address + "]";
 	}
-	
-	
 }
