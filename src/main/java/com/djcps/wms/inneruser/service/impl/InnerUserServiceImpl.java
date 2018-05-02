@@ -45,9 +45,6 @@ public class InnerUserServiceImpl implements InnerUserService {
     private InnerUserRedisDao innerUserRedisDao;
     
     @Autowired
-    private InnerUserService innerUserService;
-    
-    @Autowired
     private UserServer userServer;
     /**
      * app方式登录
@@ -59,19 +56,21 @@ public class InnerUserServiceImpl implements InnerUserService {
     @Override
     public Map<String, Object> loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
         HttpResult baseResult = innerUserServer.loginTokenWithApp(innerUserLoginBO);
-        String token = innerUserServer.getUserToken(baseResult);
-        UserInfoVO userInfoVO = null;
-        try {
-            userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
-        }catch (Exception e){
-            e.printStackTrace();
-            LOGGER.error("内部用户信息 {}",e.getMessage());
+        if (baseResult.isSuccess()) {
+            String token = innerUserServer.getUserToken(baseResult);
+            UserInfoVO userInfoVO = null;
+            try {
+                userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
+            } catch (Exception e) {
+                e.printStackTrace();
+                LOGGER.error("内部用户信息 {}", e.getMessage());
+            }
+            UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
+            updateUserStatusBO.setUserId(userInfoVO.getId());
+            updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
+            updateUserStatusBO.setLoginCount(" ");
+            HttpResult result = userServer.updateUserStatus(updateUserStatusBO);
         }
-       UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
-       updateUserStatusBO.setUserId(userInfoVO.getId());
-       updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
-       updateUserStatusBO.setLoginCount(" ");
-        HttpResult result = userServer.updateUserStatus(updateUserStatusBO);
         return MsgTemplate.customMsg(baseResult);
     }
 

@@ -188,6 +188,7 @@ public class PermissionServer {
 			setInterfaceName(u.getPinterface());
 			setLayer(u.getPolayer());
 			setHtmlId(u.getPhtmlid());
+			setType(u.getPtype());
 		}}).collect(Collectors.toList());
 		return userPermissionVOList;
 	}

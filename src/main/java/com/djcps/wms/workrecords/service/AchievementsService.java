@@ -14,18 +14,21 @@ public interface AchievementsService {
 
     /**
      * 统计
+     *
      * @return
      */
     Map<String,Object> statistics(AchievementsBO param);
 
     /**
      * 提货信息
+     * @param param
      * @return
      */
     Map<String,Object> deliveryInfo(AchievementsInfoBO param);
 
     /**
-     * 信息
+     * 入库信息
+     * @param param
      * @return
      */
     Map<String,Object> entryInfo(AchievementsInfoBO param);
