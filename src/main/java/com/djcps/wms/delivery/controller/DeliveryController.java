@@ -42,7 +42,7 @@ public class DeliveryController {
     @Autowired
     private DeliveryService deliveryService;
 
-    /**none
+    /**
      * 获取提货单列表
      * 
      * @autuor Chengw
