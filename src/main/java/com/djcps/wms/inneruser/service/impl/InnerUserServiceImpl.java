@@ -59,19 +59,24 @@ public class InnerUserServiceImpl implements InnerUserService {
     @Override
     public Map<String, Object> loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
         HttpResult baseResult = innerUserServer.loginTokenWithApp(innerUserLoginBO);
+        if(baseResult.isSuccess()) {
+        //获取该用户token
         String token = innerUserServer.getUserToken(baseResult);
         UserInfoVO userInfoVO = null;
         try {
+            //获取用户信息
             userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
         }catch (Exception e){
             e.printStackTrace();
             LOGGER.error("内部用户信息 {}",e.getMessage());
         }
+        //更新登陆次数以及时间
        UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
        updateUserStatusBO.setUserId(userInfoVO.getId());
        updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
        updateUserStatusBO.setLoginCount(" ");
         HttpResult result = userServer.updateUserStatus(updateUserStatusBO);
+        }
         return MsgTemplate.customMsg(baseResult);
     }
 
