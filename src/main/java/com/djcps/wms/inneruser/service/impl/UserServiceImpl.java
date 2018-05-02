@@ -520,14 +520,11 @@ public class UserServiceImpl implements UserService {
         orgGetDepartmentBO.setCompanyID(getDepartmentBO.getCompanyId());
         List<OrgDepartmentPO> orgDepartmentBOList=userServer.getDepartment(orgGetDepartmentBO);
         List<DepartmentPO> departmentPOList=new ArrayList<>();
-        DepartmentPO departmentPO=null;
         if(!ObjectUtils.isEmpty(orgDepartmentBOList)){
-            for (OrgDepartmentPO orgDepartmentPO:orgDepartmentBOList){
-                departmentPO=new DepartmentPO();
-                departmentPO.setDepartmentId(orgDepartmentPO.getId());
-                departmentPO.setDepartmentName(orgDepartmentPO.getOname());
-                departmentPOList.add(departmentPO);
-            }
+            departmentPOList = orgDepartmentBOList.stream().map( x-> new DepartmentPO(){{
+                setDepartmentId(x.getId());
+                setDepartmentName(x.getOname());
+            }}).collect(Collectors.toList());
         }
         return MsgTemplate.successMsg(departmentPOList);
     }
@@ -544,16 +541,13 @@ public class UserServiceImpl implements UserService {
         OrgGetDepartmentBO orgGetDepartmentBO=new OrgGetDepartmentBO();
         BeanUtils.copyProperties(getJobBO,orgGetDepartmentBO);
         orgGetDepartmentBO.setCompanyID(getJobBO.getCompanyId());
-        List<OrgUjobPO> orgUjobPOList=userServer.getUjob(orgGetDepartmentBO);
+        List<OrgUjobPO> orgJobPOList = userServer.getUjob(orgGetDepartmentBO);
         List<JobPO> jobPOList=new ArrayList<>();
-        JobPO jobPO=null;
-        if(!ObjectUtils.isEmpty(orgUjobPOList)){
-            for (OrgUjobPO jobPO1:orgUjobPOList){
-                jobPO=new JobPO();
-                jobPO.setJobId(jobPO1.getId());
-                jobPO.setJobName(jobPO1.getUjob_name());
-                jobPOList.add(jobPO);
-            }
+        if(!ObjectUtils.isEmpty(orgJobPOList)){
+            jobPOList = orgJobPOList.stream().map(x -> new JobPO(){{
+                setJobId(x.getId());
+                setJobName(x.getUjob_name());
+            }}).collect(Collectors.toList());
         }
         return MsgTemplate.successMsg(jobPOList);
     }
@@ -569,14 +563,11 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> getPosition(OrgGetPositionBO orgGetPositionBO) {
         List<OrgPositionPO> orgPositionPOList=userServer.getPosition(orgGetPositionBO);
         List<PositionPO> positionPOList=new ArrayList<>();
-        PositionPO positionPO=null;
         if(!ObjectUtils.isEmpty(orgPositionPOList)){
-            for (OrgPositionPO orgPositionPO:orgPositionPOList){
-                positionPO=new PositionPO();
-                positionPO.setPositionId(orgPositionPO.getId());
-                positionPO.setPositionName(orgPositionPO.getUposition_name());
-                positionPOList.add(positionPO);
-            }
+            positionPOList= orgPositionPOList.stream().map(x -> new PositionPO(){{
+                setPositionId(x.getId());
+                setPositionName(x.getUposition_name());
+            }}).collect(Collectors.toList());
         }
         return MsgTemplate.successMsg(positionPOList);
     }

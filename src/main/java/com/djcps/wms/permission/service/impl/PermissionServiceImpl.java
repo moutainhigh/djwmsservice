@@ -69,20 +69,14 @@ public class PermissionServiceImpl implements PermissionService {
         if (ObjectUtils.isEmpty(param.getKeyWord())) {
             param.setKeyWord("");
         }
-        GetPermissionBO getPermissonBO = new GetPermissionBO();
-        BeanUtils.copyProperties(param, getPermissonBO);
-        getPermissonBO.setCompanyID(param.getCompanyId());
-        getPermissonBO.setBusiness((param.getBusiness()));
+        GetPermissionBO getPermissionBO = new GetPermissionBO();
+        BeanUtils.copyProperties(param, getPermissionBO);
+        getPermissionBO.setCompanyID(param.getCompanyId());
+        getPermissionBO.setBusiness((param.getBusiness()));
         //得到请求的数据
-        OtherHttpResult result = permissionServer.getPermissionList(getPermissonBO);
+        OtherHttpResult result = permissionServer.getPermissionList(getPermissionBO);
         String data = JSONObject.toJSONString(result.getData());
         Integer countData = result.getTotal();
-			/*Integer	count;
-			if(!ObjectUtils.isEmpty(countData)) {
-			    count=Integer.parseInt(countData);
-			}else {
-			    count=0;
-			}*/
         ArrayList<GetPermissionPackagePO> listUser = gson.fromJson(data, new TypeToken<List<GetPermissionPackagePO>>() {
         }.getType());
         //规范返回字段
@@ -251,7 +245,7 @@ public class PermissionServiceImpl implements PermissionService {
             if (ObjectUtils.isEmpty(userPermissionVOList)) {
                 userPermissionVOList = permissionServer.getUserPermission(param);
                 // 设置权限缓存
-//				permissionRedisDao.setPermission(userPermissionVOList,param.getId());
+				permissionRedisDao.setPermission(param.getId(),userPermissionVOList);
             }
             return MsgTemplate.successMsg(userPermissionVOList);
         } catch (Exception e) {
