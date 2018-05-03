@@ -28,6 +28,23 @@
         <property name="prefix" value="com.djcps.wms"/>
     </bean>
 
+    <!-- HTTP请求配置-->
+    <bean class="httprequest.plugin.spring.HTTPBeanProcessor">
+	   <property name="prefix">
+		  <array value-type="java.lang.String">
+		      <value>com</value>
+		  </array>
+		</property>
+		<property name="httpConversion">
+		      <bean class="com.conversion.HttpReturnConversion" />
+		</property>
+		<property name="locations">
+		  <list>
+			  <value>classpath*:*/*/httpurl.properties</value>
+		  </list>
+		</property>
+	</bean>
+
     <!-- JSON Converter 保证 JSON能正常转换 -->
     <bean id="mappingJackson2HttpMessageConverter"
           class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
