@@ -1,6 +1,7 @@
 package com.djcps.wms.permission.model.bo;
 
 import com.djcps.wms.commons.model.OperatorInfoBO;
+import com.djcps.wms.permission.constants.PermissionConstants;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -20,7 +21,7 @@ public class UserPermissionBO extends OperatorInfoBO {
     /**
      * 业务 目前固定 30
      */
-    private String pbusiness;
+    private String pbusiness = PermissionConstants.BUSINESS_ID;
 
     public String getId() {
         return id;
