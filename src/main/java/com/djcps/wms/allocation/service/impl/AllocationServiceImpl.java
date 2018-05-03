@@ -33,6 +33,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import com.api.partneroperatingmanage.carchecksign.api.TmsCarchecksignServer;
+import com.api.partneroperatingmanage.carchecksign.model.request.ReqVehicleQueuingListBiz;
+import com.base.TmsJsonResult;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.allocation.constant.AllocationConstant;
@@ -102,6 +105,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
+import httprequest.plugin.http.HTTPResponse;
+import httprequest.plugin.http.HeadCookies;
+
 /**
  * 混合配货业务层实现类
  * @description:
@@ -129,7 +135,8 @@ public class AllocationServiceImpl implements AllocationService {
     private LoadingTaskServer loadingTaskServer;
     @Resource
     private AppProducer appProducer;
-	
+	@Autowired
+	private TmsCarchecksignServer carchecksignServer;
 	
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
@@ -2124,4 +2131,18 @@ public class AllocationServiceImpl implements AllocationService {
 			return MsgTemplate.failureMsg(AllocationMsgEnum.ORDER_IS_NULL);
 		}
 	}
+	
+	@Override
+    public Map<String, Object> TmsVehicleQueuingList() {
+        HeadCookies headCookies = new HeadCookies((x) -> {
+            x.put("devTokenId", "123456");
+            x.put("token", "123456");
+        });
+        ReqVehicleQueuingListBiz reqVehicleQueuingListBiz = new ReqVehicleQueuingListBiz()
+                .setFactoryid("FactoryId");
+        HTTPResponse<TmsJsonResult> response = carchecksignServer.TmsVehicleQueuingList(reqVehicleQueuingListBiz, headCookies, "123456", "123456");
+        System.out.println(response.getBodyString());
+        return MsgTemplate.successMsg();
+    }
+	
 }

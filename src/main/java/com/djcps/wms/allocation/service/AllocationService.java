@@ -309,5 +309,6 @@ public interface AllocationService {
 	 * @date:2018年5月3日
 	 */
 	Map<String, Object> getSplitOrderByOrderId(OrderIdBO param);
-
+	
+	Map<String, Object> TmsVehicleQueuingList();
 }
