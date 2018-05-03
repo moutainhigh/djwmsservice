@@ -1,15 +1,5 @@
 package com.djcps.wms.inneruser.service.impl;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.config.ParamsConfig;
@@ -28,6 +18,14 @@ import com.djcps.wms.inneruser.redis.InnerUserRedisDao;
 import com.djcps.wms.inneruser.server.InnerUserServer;
 import com.djcps.wms.inneruser.server.UserServer;
 import com.djcps.wms.inneruser.service.InnerUserService;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author Chengw

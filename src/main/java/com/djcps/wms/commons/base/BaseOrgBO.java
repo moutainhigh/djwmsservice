@@ -2,8 +2,6 @@ package com.djcps.wms.commons.base;
 
 import java.io.Serializable;
 
-import org.springframework.util.ObjectUtils;
-
 /**
  * ORG请求参数基础类
  * 

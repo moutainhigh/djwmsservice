@@ -1,11 +1,9 @@
 package com.djcps.wms.commons.utils;
 
-import com.alibaba.fastjson.JSONObject;
 import com.djcps.wms.commons.enums.FluteTypeEnum;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

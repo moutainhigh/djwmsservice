@@ -2,16 +2,15 @@ package com.djcps.wms.workrecords.server;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.workrecords.model.*;
+import com.djcps.wms.workrecords.request.WorkRecordHttpRequest;
 import okhttp3.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-
-import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.workrecords.request.WorkRecordHttpRequest;
-
 import rpc.plugin.http.HTTPResponse;
+
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**

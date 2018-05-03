@@ -1,10 +1,9 @@
 package com.djcps.wms.delivery.model;
 
 import com.djcps.wms.commons.base.BaseBO;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * @author Chengw

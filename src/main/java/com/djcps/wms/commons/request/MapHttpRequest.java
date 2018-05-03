@@ -1,9 +1,7 @@
 package com.djcps.wms.commons.request;
 
 import com.djcps.wms.commons.config.ParamsConfig;
-
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rpc.plugin.http.HTTPResponse;
 import rpc.plugin.http.RPCClientFields;

@@ -1,35 +1,24 @@
 package com.djcps.wms.role.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.role.constant.RoleConstant;
 import com.djcps.wms.role.enums.RoleEnum;
-import com.djcps.wms.role.model.DeleteBO;
-import com.djcps.wms.role.model.OrgRoleInfoBO;
-import com.djcps.wms.role.model.RoleListBO;
-import com.djcps.wms.role.model.SaveBO;
-import com.djcps.wms.role.model.UpdateRoleInfoBO;
-import com.djcps.wms.role.model.request.GetUserStatusPO;
-import com.djcps.wms.role.model.request.OrgPerssionsInfoPO;
-import com.djcps.wms.role.model.request.OrgRoleListPO;
-import com.djcps.wms.role.model.request.OrgSavePO;
-import com.djcps.wms.role.model.request.RoleInfoResultPO;
-import com.djcps.wms.role.model.request.WmsPessionInfoPO;
-import com.djcps.wms.role.model.request.WmsRoleInfoPO;
+import com.djcps.wms.role.model.*;
+import com.djcps.wms.role.model.request.*;
 import com.djcps.wms.role.server.OrgRoleHttpServer;
 import com.djcps.wms.role.server.RoleHttpServer;
 import com.djcps.wms.role.service.RoleService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 角色实现类

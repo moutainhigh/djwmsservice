@@ -2,12 +2,12 @@ package com.djcps.wms.commons.interceptor;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.constant.RedisPrefixConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 

@@ -4,21 +4,15 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.DateUtils;
-import com.djcps.wms.record.enums.OperationTypeEnum;
 import com.djcps.wms.workrecords.model.AchievementsBO;
 import com.djcps.wms.workrecords.model.AchievementsInfoBO;
-import com.djcps.wms.workrecords.model.AchievementsPO;
 import com.djcps.wms.workrecords.server.AchievementsServer;
 import com.djcps.wms.workrecords.service.AchievementsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 绩效

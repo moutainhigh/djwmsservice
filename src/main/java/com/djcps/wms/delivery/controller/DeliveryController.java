@@ -13,7 +13,6 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.service.DeliveryService;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,11 +1,5 @@
 package com.djcps.wms.inneruser.server;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.constant.AppConstant;
@@ -18,8 +12,12 @@ import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
 import com.djcps.wms.inneruser.model.result.UserTokenVO;
 import com.djcps.wms.inneruser.request.InnerUserRequest;
-
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import rpc.plugin.http.HTTPResponse;
+
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 内部用户 server

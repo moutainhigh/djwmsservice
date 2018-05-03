@@ -8,7 +8,6 @@ import com.djcps.wms.commons.base.BaseListPO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.delivery.constant.DeliveryConstant;
 import com.djcps.wms.delivery.enums.DeliveryMsgEnum;
 import com.djcps.wms.delivery.enums.DeliveryStatusEnum;
@@ -21,17 +20,16 @@ import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
 import com.djcps.wms.order.server.OrderServer;
-import com.mysql.fabric.xmlrpc.base.Array;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;

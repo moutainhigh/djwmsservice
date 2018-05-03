@@ -1,17 +1,5 @@
 package com.djcps.wms.permission.controller;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
@@ -25,14 +13,18 @@ import com.djcps.wms.commons.model.OperatorInfoBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.permission.constants.PermissionConstants;
-import com.djcps.wms.permission.model.bo.DeletePerParamBO;
-import com.djcps.wms.permission.model.bo.DeletePermissionBO;
-import com.djcps.wms.permission.model.bo.GetWmsPermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionChooseBO;
-import com.djcps.wms.permission.model.bo.UpdatePermissionBO;
-import com.djcps.wms.permission.model.bo.UserPermissionBO;
+import com.djcps.wms.permission.model.bo.*;
 import com.djcps.wms.permission.service.PermissionService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.Map;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 

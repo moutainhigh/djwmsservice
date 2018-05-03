@@ -1,6 +1,5 @@
 package com.djcps.wms.workrecords.model;
 
-import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BasePO;
 
 /**

@@ -1,7 +1,7 @@
 package com.djcps.wms.commons.model;
 
-import org.hibernate.validator.constraints.NotBlank;
 import com.djcps.wms.commons.base.BaseAddBO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
 
