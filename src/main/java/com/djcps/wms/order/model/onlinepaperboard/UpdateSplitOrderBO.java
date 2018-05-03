@@ -33,7 +33,7 @@ public class UpdateSplitOrderBO {
      */
     private Integer outStock;
     /**
-     * 是入库数量
+     * 入库数量
      */
     private Integer inStock;
     /**

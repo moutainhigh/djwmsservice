@@ -44,7 +44,9 @@ import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -828,18 +830,18 @@ public class AllocationController {
 	 * @author:zdx
 	 * @date:2018年4月18日
 	 */
-	@RequestMapping(name="订单拆分接口",value = "/splitOrder", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="拆分订单接口",value = "/splitOrder", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> splitOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			LOGGER.debug("json : " + json);
-			SplitOrderBO param = gson.fromJson(json, SplitOrderBO.class);
+			UpdateOrderBO param = gson.fromJson(json, UpdateOrderBO.class);
+			//组织查询需要的参数
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-			//数据校验
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<SplitOrderBO>()
-							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+							new HibernateSupportedValidator<UpdateOrderBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
@@ -852,4 +854,27 @@ public class AllocationController {
 		}
 	}
 	
+	@RequestMapping(name="根据订单号获取拆单信息",value = "/getSplitOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getSplitOrderByOrderId(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			LOGGER.debug("json : " + json);
+			OrderIdBO param = gson.fromJson(json, OrderIdBO.class);
+			//组织查询需要的参数
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<OrderIdBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return allocationService.getSplitOrderByOrderId(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
 }

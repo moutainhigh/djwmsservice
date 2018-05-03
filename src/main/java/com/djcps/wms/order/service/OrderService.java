@@ -41,13 +41,4 @@ public interface OrderService {
 	 */
 	Map<String, Object> getOnlinePaperboardByOrderId(BatchOrderIdListBO param);
 
-	/**
-	 * 拆分订单
-	 * @param param
-	 * @return
-	 * @author:zdx
-	 * @date:2018年4月25日
-	 */
-	Map<String, Object> splitOrder(UpdateOrderBO param);
-
 }

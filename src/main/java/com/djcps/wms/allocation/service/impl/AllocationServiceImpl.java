@@ -4,6 +4,7 @@ package com.djcps.wms.allocation.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,6 +46,7 @@ import com.djcps.wms.allocation.model.CancelAllocationBO;
 import com.djcps.wms.allocation.model.CarInfo;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.DeliveryOrderPO;
+import com.djcps.wms.allocation.model.DeliveryPO;
 import com.djcps.wms.allocation.model.GetAllocationManageListPO;
 import com.djcps.wms.allocation.model.IntelligentAllocationPO;
 import com.djcps.wms.allocation.model.LoadingPersonPO;
@@ -61,6 +63,7 @@ import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.WarehousePO;
 import com.djcps.wms.allocation.model.WaybillDeliveryOrderPO;
+import com.djcps.wms.allocation.model.WaybillPO;
 import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
 import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
@@ -86,6 +89,8 @@ import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.push.model.PushMsgBO;
 import com.djcps.wms.push.mq.producer.AppProducer;
@@ -294,20 +299,16 @@ public class AllocationServiceImpl implements AllocationService {
 			//根据订单号获取提货单信息
 			HttpResult deliveryResult = allocationServer.getDeliveryByOrderIds(redundantOrderList);
 			if(!ObjectUtils.isEmpty(deliveryResult.getData())){
-				JsonArray deliveryArray = jsonParser.parse(gson.toJson(deliveryResult.getData())).getAsJsonArray();
-				for (JsonElement jsonElement : deliveryArray) {
-					JsonObject deliveryJsonObject = jsonElement.getAsJsonObject();
-					String deliveryIdEffect = deliveryJsonObject.get("deliveryIdEffect").getAsString();
-					String orderId = deliveryJsonObject.get("orderId").getAsString();
+				List<DeliveryPO> deliveryPOList = gson.fromJson(gson.toJson(deliveryResult.getData()), new TypeToken<ArrayList<DeliveryPO>>(){}.getType());
+				for (DeliveryPO delivery : deliveryPOList) {
+					String orderId = delivery.getOrderId();
 					//判断提货单确认有效
-					if(AllocationConstant.DELIVERY_EFFEFT.equals(deliveryIdEffect)){
-						WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
-						if(warehouseOrderDetailPO!=null){
-							//提货单赋值
-							String deliveryId = deliveryJsonObject.get("deliveryId").getAsString();
-							warehouseOrderDetailPO.setDeliveryId(deliveryId);
-							deliveryIdList.add(deliveryId);
-						}
+					WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
+					if(warehouseOrderDetailPO!=null){
+						//提货单赋值
+						String deliveryId = delivery.getDeliveryId();
+						warehouseOrderDetailPO.setDeliveryId(deliveryId);
+						deliveryIdList.add(deliveryId);
 					}
 				}
 			}
@@ -316,12 +317,11 @@ public class AllocationServiceImpl implements AllocationService {
 			//根据提货单号获取运单信息
 			HttpResult waybillResult = allocationServer.getWaybillByDeliveryIds(deliveryIdList);
 			if(!ObjectUtils.isEmpty(waybillResult.getData())){
-				JsonArray waybillJsonArray = jsonParser.parse(gson.toJson(waybillResult.getData())).getAsJsonArray();
-				for (JsonElement jsonElement : waybillJsonArray) {
-					JsonObject waybillObject = jsonElement.getAsJsonObject();
-					String orderId = waybillObject.get("orderId").getAsString();
-					String waybillId = waybillObject.get("waybillId").getAsString();
-					String plateNumber = waybillObject.get("plateNumber").getAsString();
+				List<WaybillPO> waybillPOList = gson.fromJson(gson.toJson(waybillResult.getData()), new TypeToken<ArrayList<WaybillPO>>(){}.getType());
+				for (WaybillPO waybillPO : waybillPOList) {
+					String orderId = waybillPO.getOrderId();
+					String plateNumber = waybillPO.getPlateNumber();
+					String waybillId = waybillPO.getWaybillId();
 					WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
 					if(warehouseOrderDetailPO!=null){
 						warehouseOrderDetailPO.setWaybillId(waybillId);
@@ -1983,39 +1983,145 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 
 	@Override
-	public Map<String, Object> splitOrder(SplitOrderBO param) {
-//		List<String> orderIds = new ArrayList<>();
-//		orderIds.add(param.getOrderId());
-//		BatchOrderIdListBO batchOrder = new BatchOrderIdListBO();
-//        batchOrder.setKeyArea(param.getPartnerArea());
-//        batchOrder.setOrderIds(orderIds);
-//        //根据订单号批量查询订单详情信息
-//        HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-//        BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
-//        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
-//        WarehouseOrderDetailPO joinOrderDetail = orderServer.joinOrderParamInfo(orderList).get(0);
-//        Integer orderStatus = joinOrderDetail.getOrderStatus();
-//        if((OrderStatusTypeEnum.LESS_ADD_STOCK.equals(orderStatus))&&(OrderStatusTypeEnum.ALL_ADD_STOCK.equals(orderStatus))){
-//        	SplitOrderFirstBO splitOrderFirst = param.getSplitOrderFirst();
-//        	splitOrderFirst.setFirstOrder(new StringBuffer().append(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_1).toString());
-//        	splitOrderFirst.setFirstIsSplit(2);
-//        	splitOrderFirst.setFirstOrderStatus(firstOrderStatus);
-//        	
-//        	SplitOrderSecondBO splitOrderSecond = param.getSplitOrderSecond();
-//        	splitOrderSecond.setSecondOrder(new StringBuffer().append(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_2).toString());;
-//        	
-//        	allocationServer.splitOrder();
-//        	
-//        	
-//        	
-//        	List<UpdateSplitSonOrderBO> splitOrderList = new ArrayList<>();
-//        	UpdateSplitSonOrderBO update = new UpdateSplitSonOrderBO();
-//        	return null;
-//        }else{
-//        	return MsgTemplate.failureMsg(AllocationMsgEnum.SPLIT_ORDER_ERROR);
-//        }
-        
-        return null;
-		
+	public Map<String, Object> splitOrder(UpdateOrderBO param) {
+		String orderId = param.getOrderId();
+		BatchOrderIdListBO batch = new BatchOrderIdListBO();
+		List<String> orderIdList = Arrays.asList(orderId);
+		batch.setKeyArea(param.getPartnerArea());
+		batch.setOrderIds(orderIdList);
+		//根据订单号获取订单详情
+		HttpResult result = orderServer.getOrderDeatilByIdList(batch);
+		if(!ObjectUtils.isEmpty(result.getData())){
+			UpdateSplitOrderBO firstSpiltOrder = param.getFirstSpiltOrder();
+			UpdateSplitOrderBO secondSpiltOrder = param.getSecondSpiltOrder();
+			
+			BatchOrderDetailListPO batchOrder = gson.fromJson(gson.toJson(result.getData()),BatchOrderDetailListPO.class);
+			List<WarehouseOrderDetailPO> orderList = batchOrder.getOrderList();
+			WarehouseOrderDetailPO warehouseOrder = null;
+			Integer orderStatus = null;
+			Integer orderAmount = null;
+			if(!ObjectUtils.isEmpty(orderList)){
+				warehouseOrder = orderServer.joinOrderParamInfo(orderList).get(0);
+				orderStatus = warehouseOrder.getOrderStatus();
+				orderAmount = warehouseOrder.getOrderAmount();
+			}else{
+				//拆单数据
+				orderList = batchOrder.getSplitOrderList();
+				warehouseOrder = orderServer.joinOrderParamInfo(orderList).get(0);
+				orderStatus = warehouseOrder.getSubStatus();
+				orderAmount = warehouseOrder.getSubNumber();
+			}
+			//获取库存信息
+			SelectAreaByOrderIdBO select  = new SelectAreaByOrderIdBO();
+			BeanUtils.copyProperties(param, select);
+			OrderIdBO order = new OrderIdBO();
+			order.setOrderId(param.getOrderId());
+			select.setOrderIds(Arrays.asList(order));
+			List<WarehouseOrderDetailPO> orderStockInfo = orderServer.getOrderStockInfo(select);
+			WarehouseOrderDetailPO orderDetail = orderStockInfo.get(0);
+			
+			//只有部分入库和已入库订单才允许拆分
+			if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
+				//判断库存数量和前端传来的库存数量相等
+				if(!orderDetail.getAmountSaved().equals(firstSpiltOrder.getSubNumber())){
+					return MsgTemplate.failureMsg(AllocationMsgEnum.LESS_STOK_FIRST_ORDER_AMOUNT_ERROR);
+				}
+				//另外订单的拆分数据
+				Integer lessAmount = orderAmount-orderDetail.getAmountSaved();
+				if(!lessAmount.equals(secondSpiltOrder.getSubNumber())){
+					return MsgTemplate.failureMsg(AllocationMsgEnum.LESS_STOK_SECOND_ORDER_AMOUNT_ERROR);
+				}
+				param.setOrderStatus(OrderStatusTypeEnum.NO_STOCK.getValue());
+				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
+				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
+			}else if(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
+				//已入库订单只需要判断,两个拆单的拆单数量之后等于订单数量
+				if(!orderAmount.equals(firstSpiltOrder.getSubNumber()+secondSpiltOrder.getSubNumber())){
+					return MsgTemplate.failureMsg(AllocationMsgEnum.ALL_STOCK_ORDER_SUBNUMBER_ERROR);
+				}
+				param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
+				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
+			}else{
+				return MsgTemplate.failureMsg(AllocationMsgEnum.NOT_ALLOW_SPLIT_ORDER);
+			}
+			
+			//组织oms需要的拆单数据
+			param.setKeyArea(param.getPartnerArea());
+			param.setSplitStatus(1);
+			List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
+			firstSpiltOrder.setKeyArea(param.getPartnerArea());
+			firstSpiltOrder.setInStock(firstSpiltOrder.getSubNumber());
+			firstSpiltOrder.setIsException(0);
+			firstSpiltOrder.setIsProduce(0);
+			firstSpiltOrder.setIsStored(0);
+			
+			secondSpiltOrder.setKeyArea(param.getPartnerArea());
+			secondSpiltOrder.setInStock(secondSpiltOrder.getSubNumber());
+			secondSpiltOrder.setIsException(0);
+			secondSpiltOrder.setIsProduce(0);
+			secondSpiltOrder.setIsStored(0);
+			
+			splitOrders.add(firstSpiltOrder);
+			splitOrders.add(secondSpiltOrder);
+			param.setSplitOrders(splitOrders);
+			
+			//假如是部分入库则删除secondSplit
+			if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
+				param.setSecondSpiltOrder(null);
+			}
+			result = allocationServer.splitOrder(param);
+			if(result.isSuccess()){
+				result = orderServer.splitOrder(param);
+			}
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(AllocationMsgEnum.SPLIT_ORDER_ERROR);
+		}
+	}
+
+	@Override
+	public Map<String, Object> getSplitOrderByOrderId(OrderIdBO param) {
+		param.setKeyArea(param.getPartnerArea());
+		List<OrderIdBO> list = new ArrayList<>();
+		list.add(param);
+		HttpResult result = orderServer.getSplitOrderDeatilByIdList(list);
+		List<WarehouseOrderDetailPO> orderDetail = null;
+		List<String> orderIdStrList = new ArrayList<>();
+		if(!ObjectUtils.isEmpty(result.getData())){
+			Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+				orderDetail = orderServer.joinOrderParamInfo(entry.getValue());
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+					String subOrderId = warehouseOrderDetailPO.getSubOrderId();
+					orderIdStrList.add(subOrderId);
+				}
+			}
+			
+			if(!ObjectUtils.isEmpty(orderIdStrList)){
+				//根据订单号获取提货单信息
+				HttpResult deliveryResult = allocationServer.getDeliveryByOrderIds(orderIdStrList);
+				if(!ObjectUtils.isEmpty(deliveryResult.getData())){
+					List<DeliveryPO> deliveryPOList = gson.fromJson(gson.toJson(deliveryResult.getData()), new TypeToken<ArrayList<DeliveryPO>>(){}.getType());
+					DeliveryPO deliveryPO = deliveryPOList.get(0);
+					String deliveryId = deliveryPO.getDeliveryId();
+					List<String> deliveryIdStr = Arrays.asList(deliveryId);
+					//根据提货单号获取运单信息
+					HttpResult waybillResult = allocationServer.getWaybillByDeliveryIds(deliveryIdStr);
+					List<WaybillPO> waybillPOList = gson.fromJson(gson.toJson(waybillResult.getData()), new TypeToken<ArrayList<WaybillPO>>(){}.getType());
+					String plateNumber = waybillPOList.get(0).getPlateNumber();
+					String waybillId = waybillPOList.get(0).getWaybillId();
+					
+					for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+						warehouseOrderDetailPO.setPlateNumber(plateNumber);
+						warehouseOrderDetailPO.setDeliveryId(deliveryId);
+						warehouseOrderDetailPO.setWaybillId(waybillId);
+					}
+				}
+			}
+			return MsgTemplate.successMsg(orderDetail);
+		}else{
+			return MsgTemplate.failureMsg(AllocationMsgEnum.ORDER_IS_NULL);
+		}
 	}
 }

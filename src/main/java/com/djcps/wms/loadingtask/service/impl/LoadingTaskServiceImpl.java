@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -56,6 +57,8 @@ import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.push.mq.producer.AppProducer;
 import com.google.gson.JsonParser;
@@ -325,30 +328,63 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
                         HttpResult result = loadingTaskServer.loading(param);
                         if (result.isSuccess()) {
-                        	List<String> orderIdList = new ArrayList<>();
-                        	orderIdList.add(param.getOnceOrderid());
-                        	orderIdList.add(param.getTwiceOrderid());
-                        	
-                        	List<OrderIdBO> orderIdBOList = new ArrayList<>();
-                        	//-1更新订单状态
-                        	OrderIdBO firstOrder = new OrderIdBO();
-                        	firstOrder.setOrderId(param.getOnceOrderid());
-                        	firstOrder.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_25);
-            				orderIdBOList.add(firstOrder);
-                        	//-2更新订单状态
-                        	OrderIdBO secondOrder = new OrderIdBO();
-                        	secondOrder.setOrderId(param.getTwiceOrderid());
-                        	secondOrder.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
-            				orderIdBOList.add(secondOrder);
-                        	HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
+//                        	List<String> orderIdList = new ArrayList<>();
+//                        	orderIdList.add(param.getOnceOrderid());
+//                        	orderIdList.add(param.getTwiceOrderid());
+//                        	
+//                        	List<OrderIdBO> orderIdBOList = new ArrayList<>();
+//                        	//-1更新订单状态
+//                        	OrderIdBO firstOrder = new OrderIdBO();
+//                        	firstOrder.setOrderId(param.getOnceOrderid());
+//                        	firstOrder.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_25);
+//            				orderIdBOList.add(firstOrder);
+//                        	//-2更新订单状态
+//                        	OrderIdBO secondOrder = new OrderIdBO();
+//                        	secondOrder.setOrderId(param.getTwiceOrderid());
+//                        	secondOrder.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+//            				orderIdBOList.add(secondOrder);
+            				
+            				//OMS订单拆分组织参数
+            				UpdateOrderBO updateOrderBO = new UpdateOrderBO();
+            				BeanUtils.copyProperties(param, updateOrderBO);
+            				updateOrderBO.setKeyArea(updateOrderBO.getPartnerArea());
+            				updateOrderBO.setOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+            				
+            				UpdateSplitOrderBO firstSpiltOrder = new UpdateSplitOrderBO();
+            				UpdateSplitOrderBO secondSpiltOrder = new UpdateSplitOrderBO();
+            				List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
+            				firstSpiltOrder.setOrderId(param.getOrderId());
+            				firstSpiltOrder.setSubOrderId(param.getOnceOrderid());
+            				firstSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_25));
+            				firstSpiltOrder.setSubNumber(loadingAmount);
+            				firstSpiltOrder.setKeyArea(param.getPartnerArea());
+            				firstSpiltOrder.setInStock(loadingAmount);
+            				firstSpiltOrder.setIsException(0);
+            				firstSpiltOrder.setIsProduce(0);
+            				firstSpiltOrder.setIsStored(0);
+            				
+            				secondSpiltOrder.setOrderId(param.getOrderId());
+            				secondSpiltOrder.setSubOrderId(param.getTwiceOrderid());
+            				secondSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_24));
+            				secondSpiltOrder.setSubNumber(param.getCancelStockAmount());
+            				secondSpiltOrder.setKeyArea(param.getPartnerArea());
+            				secondSpiltOrder.setInStock(param.getCancelStockAmount());
+            				secondSpiltOrder.setIsException(0);
+            				secondSpiltOrder.setIsProduce(0);
+            				secondSpiltOrder.setIsStored(0);
+            				splitOrders.add(firstSpiltOrder);
+            				splitOrders.add(secondSpiltOrder);
+            				updateOrderBO.setSplitOrders(splitOrders);
+            				HttpResult updateResult  = orderServer.splitOrder(updateOrderBO);
+//                        	HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
                         	if(!updateResult.isSuccess()){
                                 LOGGER.error("装车,部分退库,修改订单状态失败!!!");
                                 return MsgTemplate.customMsg(updateResult);
                             }
-                        	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
-                            if(compareOrderStatus==false){
-                              return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
-                            }
+//                        	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
+//                            if(compareOrderStatus==false){
+//                              return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+//                            }
                         } else {
                             return MsgTemplate.customMsg(result);
                         }

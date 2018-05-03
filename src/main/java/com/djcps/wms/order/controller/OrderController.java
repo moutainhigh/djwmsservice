@@ -120,28 +120,5 @@ public class OrderController {
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
-	
-	@RequestMapping(name="拆分订单接口",value = "/splitOrder", method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> splitOrder(@RequestBody(required = false) String json, HttpServletRequest request) {
-		try {
-			LOGGER.debug("json : " + json);
-			UpdateOrderBO param = gson.fromJson(json, UpdateOrderBO.class);
-			//组织查询需要的参数
-			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			BeanUtils.copyProperties(partnerInfoBean,param);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(param,
-							new HibernateSupportedValidator<UpdateOrderBO>()
-									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.doValidate().result(ResultCollectors.toComplex());
-			if (!ret.isSuccess()) {
-				return MsgTemplate.failureMsg(ret);
-			}
-			return orderService.splitOrder(param);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(e.getMessage());
-			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
-		}
-	}
+
 }

@@ -29,6 +29,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
@@ -72,9 +73,6 @@ public class StockServiceImpl implements StockService{
 	
 	@Autowired
 	private AllocationServer allocationServer;
-	
-	@Autowired
-	private StockService stockService;
 
 	@Autowired
 	private AbnormalServer abnormalServer;
@@ -218,7 +216,6 @@ public class StockServiceImpl implements StockService{
 		HttpResult result = stockServer.addStock(param);
 		if(result.isSuccess()){
 			//OMS服务要求我们正常的订单也在他们的拆单表中生成假数据,并且修改订单状态
-			List<UpdateOrderBO> updateOrderList = new ArrayList<>();
 			UpdateOrderBO updateOrder = new UpdateOrderBO();
 			updateOrder.setKeyArea(param.getPartnerArea());
 			updateOrder.setOrderId(list.get(0).getOrderId());
@@ -232,11 +229,7 @@ public class StockServiceImpl implements StockService{
 			splitOrder.setSubStatus(Integer.valueOf(list.get(0).getStatus()));
 			addSplitOrderList.add(splitOrder);
 			updateOrder.setSplitOrders(addSplitOrderList);
-			updateOrderList.add(updateOrder);
-			//OMS服务要求我们正常的订单也在他们的拆单表中生成假数据,并且修改订单状态
-//			result = orderServer.splitOrder(updateOrderList);
-			
-			result  = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),list);
+			result = orderServer.splitOrder(updateOrder);
 	        if(!result.isSuccess()){
 	        	LOGGER.error("入库修改订单状态失败!!!");
 	        	return MsgTemplate.failureMsg("入库修改订单状态失败!!!");
@@ -245,13 +238,6 @@ public class StockServiceImpl implements StockService{
 	        if(compareOrderStatus==false){
 	          return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 	        }
-			
-			
-			
-			
-	        
-	        
-	        
 	        
 			if(result.isSuccess()){
 				//插入冗余表数据
