@@ -299,4 +299,7 @@ public interface AllocationService {
 	Map<String, Object> splitOrder(SplitOrderBO param);
 
 
+	Map<String, Object> TmsVehicleQueuingList();
+
+
 }
