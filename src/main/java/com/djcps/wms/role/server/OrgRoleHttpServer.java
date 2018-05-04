@@ -55,7 +55,6 @@ public class OrgRoleHttpServer {
         if(http.isSuccessful()){
             result = gson.fromJson(http.getBodyString(), HttpResult.class);
             String data = gson.toJson(result.getData());
-            list = new ArrayList<>();
             list  = JSONArray.parseArray(data, OrgRoleListPO.class);
         }
         if(ObjectUtils.isEmpty(list)){

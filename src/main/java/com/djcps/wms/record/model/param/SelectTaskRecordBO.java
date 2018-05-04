@@ -12,16 +12,16 @@ import com.djcps.wms.record.model.TaskOperationRecordPO;
  * @author py
  *
  */
-public class SelectTaskRecordBO extends BaseListBO implements Serializable{
-    
+public class SelectTaskRecordBO extends BaseListBO implements Serializable {
+
     /**
      * 
      */
     private static final long serialVersionUID = 8915612973199348741L;
 
     String batchBy;
-    
-    TaskOperationRecordPO[] record;
+
+    TaskOperationRecordPO record;
 
     public String getBatchBy() {
         return batchBy;
@@ -31,17 +31,17 @@ public class SelectTaskRecordBO extends BaseListBO implements Serializable{
         this.batchBy = batchBy;
     }
 
-    public TaskOperationRecordPO[] getRecord() {
+    public TaskOperationRecordPO getRecord() {
         return record;
     }
 
-    public void setRecord(TaskOperationRecordPO[] record) {
+    public void setRecord(TaskOperationRecordPO record) {
         this.record = record;
     }
 
     @Override
     public String toString() {
-        return "selectTaskRecordBO [batchBy=" + batchBy + ", record=" + Arrays.toString(record) + "]";
+        return "SelectTaskRecordBO [batchBy=" + batchBy + ", record=" + record + "]";
     }
-    
+
 }

@@ -21,6 +21,11 @@ public class DeleteOrderRecordBO extends BaseBO implements Serializable{
     
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -2125967219566733301L;
+
+    /**
      * 唯一标识
      */
     private String id;

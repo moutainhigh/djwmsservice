@@ -2,6 +2,9 @@ package com.djcps.wms.stocktaking.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import com.djcps.wms.record.model.OrderOperationRecordPO;
 
 /**
  * @title:保存盘点结果参数类
@@ -16,7 +19,6 @@ public class SaveStocktakingOrderInfoBO {
      * 是否正常新增 0正常，1新增，2盘盈
      */
     private Integer isAdd;
-
 
     /**
      * 关联编号
@@ -78,26 +80,26 @@ public class SaveStocktakingOrderInfoBO {
      * 材料编号
      */
     private String materiaFid;
-	/**
-	 * 落料长
-	 */
-	private String materialLength;
-	/**
-	 * 落料宽
-	 */
-	private String materialWidth;
-	/**
-	 * 纸箱规格长
-	 */
-	private String boxLength;
-	/**
-	 * 纸箱规格宽
-	 */
-	private String boxWidth;
-	/**
-	 * 纸箱规格高
-	 */
-	private String boxHeight;
+    /**
+     * 落料长
+     */
+    private String materialLength;
+    /**
+     * 落料宽
+     */
+    private String materialWidth;
+    /**
+     * 纸箱规格长
+     */
+    private String boxLength;
+    /**
+     * 纸箱规格宽
+     */
+    private String boxWidth;
+    /**
+     * 纸箱规格高
+     */
+    private String boxHeight;
 
     /**
      * 产品规格
@@ -124,7 +126,7 @@ public class SaveStocktakingOrderInfoBO {
     /**
      * 是否盘盈1 是，2不是盘盈
      */
-    private Integer  isInventoryProfit;
+    private Integer isInventoryProfit;
 
     /**
      * 操作人
@@ -165,9 +167,8 @@ public class SaveStocktakingOrderInfoBO {
      */
     private String inventoryClerkId;
 
-
     /**
-     *盘点作业状态 1未完成，3已完成
+     * 盘点作业状态 1未完成，3已完成
      */
     private Integer status;
 
@@ -196,7 +197,6 @@ public class SaveStocktakingOrderInfoBO {
      */
     private String codeProvince;
 
-
     /**
      * 联系人
      */
@@ -208,13 +208,13 @@ public class SaveStocktakingOrderInfoBO {
     private String contactWay;
 
     /**
-	 * 母账号名称
-	 */
-	private String puserName;
-	/**
-	 * 子账号名称
-	 */
-	private String cuserName;
+     * 母账号名称
+     */
+    private String puserName;
+    /**
+     * 子账号名称
+     */
+    private String cuserName;
 
     /**
      * 订单号
@@ -235,415 +235,430 @@ public class SaveStocktakingOrderInfoBO {
      * 客户名称
      */
     private String customerName;
-    
+    /**
+     * pda盘点订单操作记录信息
+     */
+    private List<OrderOperationRecordPO> list;
+
+    public List<OrderOperationRecordPO> getList() {
+        return list;
+    }
+
+    public void setList(List<OrderOperationRecordPO> list) {
+        this.list = list;
+    }
+
     public SaveStocktakingOrderInfoBO(String units) {
-		super();
-		this.units = "片";
-	}	
+        super();
+        this.units = "片";
+    }
 
     public SaveStocktakingOrderInfoBO() {
-	}
-	public Integer getIsAdd() {
-		return isAdd;
-	}
-
-	public void setIsAdd(Integer isAdd) {
-		this.isAdd = isAdd;
-	}
-
-	public String getRelativeId() {
-		return relativeId;
-	}
-
-	public void setRelativeId(String relativeId) {
-		this.relativeId = relativeId;
-	}
-
-	public String getJobId() {
-		return jobId;
-	}
-
-	public void setJobId(String jobId) {
-		this.jobId = jobId;
-	}
-
-	public String getPartnerId() {
-		return partnerId;
-	}
-
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
-
-	public String getPartnerArea() {
-		return partnerArea;
-	}
-
-	public void setPartnerArea(String partnerArea) {
-		this.partnerArea = partnerArea;
-	}
-
-	public String getPartnerName() {
-		return partnerName;
-	}
-
-	public void setPartnerName(String partnerName) {
-		this.partnerName = partnerName;
-	}
-
-	public String getWarehouseId() {
-		return warehouseId;
-	}
-
-	public void setWarehouseId(String warehouseId) {
-		this.warehouseId = warehouseId;
-	}
-
-	public String getWarehouseName() {
-		return warehouseName;
-	}
-
-	public void setWarehouseName(String warehouseName) {
-		this.warehouseName = warehouseName;
-	}
-
-	public String getWarehouseAreaId() {
-		return warehouseAreaId;
-	}
-
-	public void setWarehouseAreaId(String warehouseAreaId) {
-		this.warehouseAreaId = warehouseAreaId;
-	}
-
-	public String getWarehouseAreaName() {
-		return warehouseAreaName;
-	}
-
-	public void setWarehouseAreaName(String warehouseAreaName) {
-		this.warehouseAreaName = warehouseAreaName;
-	}
-
-	public String getWarehouseLocId() {
-		return warehouseLocId;
-	}
-
-	public void setWarehouseLocId(String warehouseLocId) {
-		this.warehouseLocId = warehouseLocId;
-	}
-
-	public String getWarehouseLocName() {
-		return warehouseLocName;
-	}
-
-	public void setWarehouseLocName(String warehouseLocName) {
-		this.warehouseLocName = warehouseLocName;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
+    }
+
+    public Integer getIsAdd() {
+        return isAdd;
+    }
+
+    public void setIsAdd(Integer isAdd) {
+        this.isAdd = isAdd;
+    }
+
+    public String getRelativeId() {
+        return relativeId;
+    }
+
+    public void setRelativeId(String relativeId) {
+        this.relativeId = relativeId;
+    }
+
+    public String getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public String getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public String getPartnerArea() {
+        return partnerArea;
+    }
+
+    public void setPartnerArea(String partnerArea) {
+        this.partnerArea = partnerArea;
+    }
+
+    public String getPartnerName() {
+        return partnerName;
+    }
+
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
+    }
+
+    public String getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public String getWarehouseAreaId() {
+        return warehouseAreaId;
+    }
+
+    public void setWarehouseAreaId(String warehouseAreaId) {
+        this.warehouseAreaId = warehouseAreaId;
+    }
+
+    public String getWarehouseAreaName() {
+        return warehouseAreaName;
+    }
+
+    public void setWarehouseAreaName(String warehouseAreaName) {
+        this.warehouseAreaName = warehouseAreaName;
+    }
+
+    public String getWarehouseLocId() {
+        return warehouseLocId;
+    }
+
+    public void setWarehouseLocId(String warehouseLocId) {
+        this.warehouseLocId = warehouseLocId;
+    }
+
+    public String getWarehouseLocName() {
+        return warehouseLocName;
+    }
+
+    public void setWarehouseLocName(String warehouseLocName) {
+        this.warehouseLocName = warehouseLocName;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getFluteType() {
+        return fluteType;
+    }
+
+    public void setFluteType(String fluteType) {
+        this.fluteType = fluteType;
+    }
+
+    public String getMateriaFid() {
+        return materiaFid;
+    }
+
+    public void setMateriaFid(String materiaFid) {
+        this.materiaFid = materiaFid;
+    }
+
+    public String getMaterialLength() {
+        return materialLength;
+    }
+
+    public void setMaterialLength(String materialLength) {
+        this.materialLength = materialLength;
+    }
+
+    public String getMaterialWidth() {
+        return materialWidth;
+    }
+
+    public void setMaterialWidth(String materialWidth) {
+        this.materialWidth = materialWidth;
+    }
+
+    public String getBoxLength() {
+        return boxLength;
+    }
+
+    public void setBoxLength(String boxLength) {
+        this.boxLength = boxLength;
+    }
+
+    public String getBoxWidth() {
+        return boxWidth;
+    }
+
+    public void setBoxWidth(String boxWidth) {
+        this.boxWidth = boxWidth;
+    }
+
+    public String getBoxHeight() {
+        return boxHeight;
+    }
+
+    public void setBoxHeight(String boxHeight) {
+        this.boxHeight = boxHeight;
+    }
+
+    public String getProductSize() {
+        return productSize;
+    }
+
+    public void setProductSize(String productSize) {
+        this.productSize = productSize;
+    }
+
+    public String getMaterialSize() {
+        return materialSize;
+    }
+
+    public void setMaterialSize(String materialSize) {
+        this.materialSize = materialSize;
+    }
+
+    public Integer getInstockAmount() {
+        return instockAmount;
+    }
+
+    public void setInstockAmount(Integer instockAmount) {
+        this.instockAmount = instockAmount;
+    }
+
+    public Integer getTakeStockAmount() {
+        return takeStockAmount;
+    }
+
+    public void setTakeStockAmount(Integer takeStockAmount) {
+        this.takeStockAmount = takeStockAmount;
+    }
+
+    public Integer getDifferenceValue() {
+        return differenceValue;
+    }
+
+    public void setDifferenceValue(Integer differenceValue) {
+        this.differenceValue = differenceValue;
+    }
+
+    public Integer getIsInventoryProfit() {
+        return isInventoryProfit;
+    }
+
+    public void setIsInventoryProfit(Integer isInventoryProfit) {
+        this.isInventoryProfit = isInventoryProfit;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public String getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public Date getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public Date getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(Date deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
+    }
+
+    public String getInventoryClerk() {
+        return inventoryClerk;
+    }
+
+    public void setInventoryClerk(String inventoryClerk) {
+        this.inventoryClerk = inventoryClerk;
+    }
+
+    public String getInventoryClerkId() {
+        return inventoryClerkId;
+    }
+
+    public void setInventoryClerkId(String inventoryClerkId) {
+        this.inventoryClerkId = inventoryClerkId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
+
+    public String getLnglat() {
+        return lnglat;
+    }
+
+    public void setLnglat(String lnglat) {
+        this.lnglat = lnglat;
+    }
+
+    public Date getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
+    }
+
+    public String getAddressDetail() {
+        return addressDetail;
+    }
+
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
+    }
+
+    public String getCodeProvince() {
+        return codeProvince;
+    }
+
+    public void setCodeProvince(String codeProvince) {
+        this.codeProvince = codeProvince;
+    }
+
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
+    }
+
+    public String getContactWay() {
+        return contactWay;
+    }
+
+    public void setContactWay(String contactWay) {
+        this.contactWay = contactWay;
+    }
+
+    public String getPuserName() {
+        return puserName;
+    }
+
+    public void setPuserName(String puserName) {
+        this.puserName = puserName;
+    }
+
+    public String getCuserName() {
+        return cuserName;
+    }
+
+    public void setCuserName(String cuserName) {
+        this.cuserName = cuserName;
+    }
+
+    public String getChildOrderId() {
+        return childOrderId;
+    }
+
+    public void setChildOrderId(String childOrderId) {
+        this.childOrderId = childOrderId;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Integer getOrderAmount() {
+        return orderAmount;
+    }
+
+    public void setOrderAmount(Integer orderAmount) {
+        this.orderAmount = orderAmount;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    @Override
+    public String toString() {
+        return "SaveStocktakingOrderInfoBO [isAdd=" + isAdd + ", relativeId=" + relativeId + ", jobId=" + jobId
+                + ", partnerId=" + partnerId + ", partnerArea=" + partnerArea + ", partnerName=" + partnerName
+                + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId="
+                + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
+                + ", warehouseLocName=" + warehouseLocName + ", orderId=" + orderId + ", fluteType=" + fluteType
+                + ", materiaFid=" + materiaFid + ", materialLength=" + materialLength + ", materialWidth="
+                + materialWidth + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
+                + ", productSize=" + productSize + ", materialSize=" + materialSize + ", instockAmount=" + instockAmount
+                + ", takeStockAmount=" + takeStockAmount + ", differenceValue=" + differenceValue
+                + ", isInventoryProfit=" + isInventoryProfit + ", operator=" + operator + ", operatorId=" + operatorId
+                + ", orderTime=" + orderTime + ", deliveryTime=" + deliveryTime + ", productName=" + productName
+                + ", units=" + units + ", inventoryClerk=" + inventoryClerk + ", inventoryClerkId=" + inventoryClerkId
+                + ", status=" + status + ", materialName=" + materialName + ", lnglat=" + lnglat + ", payTime="
+                + payTime + ", addressDetail=" + addressDetail + ", codeProvince=" + codeProvince + ", consignee="
+                + consignee + ", contactWay=" + contactWay + ", puserName=" + puserName + ", cuserName=" + cuserName
+                + ", childOrderId=" + childOrderId + ", remark=" + remark + ", orderAmount=" + orderAmount
+                + ", customerName=" + customerName + ", list=" + list + "]";
+    }
 
-	public String getFluteType() {
-		return fluteType;
-	}
-
-	public void setFluteType(String fluteType) {
-		this.fluteType = fluteType;
-	}
-
-	public String getMateriaFid() {
-		return materiaFid;
-	}
-
-	public void setMateriaFid(String materiaFid) {
-		this.materiaFid = materiaFid;
-	}
-
-	public String getMaterialLength() {
-		return materialLength;
-	}
-
-	public void setMaterialLength(String materialLength) {
-		this.materialLength = materialLength;
-	}
-
-	public String getMaterialWidth() {
-		return materialWidth;
-	}
-
-	public void setMaterialWidth(String materialWidth) {
-		this.materialWidth = materialWidth;
-	}
-
-	public String getBoxLength() {
-		return boxLength;
-	}
-
-	public void setBoxLength(String boxLength) {
-		this.boxLength = boxLength;
-	}
-
-	public String getBoxWidth() {
-		return boxWidth;
-	}
-
-	public void setBoxWidth(String boxWidth) {
-		this.boxWidth = boxWidth;
-	}
-
-	public String getBoxHeight() {
-		return boxHeight;
-	}
-
-	public void setBoxHeight(String boxHeight) {
-		this.boxHeight = boxHeight;
-	}
-
-	public String getProductSize() {
-		return productSize;
-	}
-
-	public void setProductSize(String productSize) {
-		this.productSize = productSize;
-	}
-
-	public String getMaterialSize() {
-		return materialSize;
-	}
-
-	public void setMaterialSize(String materialSize) {
-		this.materialSize = materialSize;
-	}
-
-	public Integer getInstockAmount() {
-		return instockAmount;
-	}
-
-	public void setInstockAmount(Integer instockAmount) {
-		this.instockAmount = instockAmount;
-	}
-
-	public Integer getTakeStockAmount() {
-		return takeStockAmount;
-	}
-
-	public void setTakeStockAmount(Integer takeStockAmount) {
-		this.takeStockAmount = takeStockAmount;
-	}
-
-	public Integer getDifferenceValue() {
-		return differenceValue;
-	}
-
-	public void setDifferenceValue(Integer differenceValue) {
-		this.differenceValue = differenceValue;
-	}
-
-	public Integer getIsInventoryProfit() {
-		return isInventoryProfit;
-	}
-
-	public void setIsInventoryProfit(Integer isInventoryProfit) {
-		this.isInventoryProfit = isInventoryProfit;
-	}
-
-	public String getOperator() {
-		return operator;
-	}
-
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
-
-	public String getOperatorId() {
-		return operatorId;
-	}
-
-	public void setOperatorId(String operatorId) {
-		this.operatorId = operatorId;
-	}
-
-	public Date getOrderTime() {
-		return orderTime;
-	}
-
-	public void setOrderTime(Date orderTime) {
-		this.orderTime = orderTime;
-	}
-
-	public Date getDeliveryTime() {
-		return deliveryTime;
-	}
-
-	public void setDeliveryTime(Date deliveryTime) {
-		this.deliveryTime = deliveryTime;
-	}
-
-	public String getProductName() {
-		return productName;
-	}
-
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-
-	public String getUnits() {
-		return units;
-	}
-
-	public void setUnits(String units) {
-		this.units = units;
-	}
-
-	public String getInventoryClerk() {
-		return inventoryClerk;
-	}
-
-	public void setInventoryClerk(String inventoryClerk) {
-		this.inventoryClerk = inventoryClerk;
-	}
-
-	public String getInventoryClerkId() {
-		return inventoryClerkId;
-	}
-
-	public void setInventoryClerkId(String inventoryClerkId) {
-		this.inventoryClerkId = inventoryClerkId;
-	}
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public String getMaterialName() {
-		return materialName;
-	}
-
-	public void setMaterialName(String materialName) {
-		this.materialName = materialName;
-	}
-
-	public String getLnglat() {
-		return lnglat;
-	}
-
-	public void setLnglat(String lnglat) {
-		this.lnglat = lnglat;
-	}
-
-	public Date getPayTime() {
-		return payTime;
-	}
-
-	public void setPayTime(Date payTime) {
-		this.payTime = payTime;
-	}
-
-	public String getAddressDetail() {
-		return addressDetail;
-	}
-
-	public void setAddressDetail(String addressDetail) {
-		this.addressDetail = addressDetail;
-	}
-
-	public String getCodeProvince() {
-		return codeProvince;
-	}
-
-	public void setCodeProvince(String codeProvince) {
-		this.codeProvince = codeProvince;
-	}
-
-	public String getConsignee() {
-		return consignee;
-	}
-
-	public void setConsignee(String consignee) {
-		this.consignee = consignee;
-	}
-
-	public String getContactWay() {
-		return contactWay;
-	}
-
-	public void setContactWay(String contactWay) {
-		this.contactWay = contactWay;
-	}
-
-	public String getPuserName() {
-		return puserName;
-	}
-
-	public void setPuserName(String puserName) {
-		this.puserName = puserName;
-	}
-
-	public String getCuserName() {
-		return cuserName;
-	}
-
-	public void setCuserName(String cuserName) {
-		this.cuserName = cuserName;
-	}
-	public String getChildOrderId() {
-		return childOrderId;
-	}
-
-	public void setChildOrderId(String childOrderId) {
-		this.childOrderId = childOrderId;
-	}
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public Integer getOrderAmount() {
-		return orderAmount;
-	}
-
-	public void setOrderAmount(Integer orderAmount) {
-		this.orderAmount = orderAmount;
-	}
-
-	public String getCustomerName() {
-		return customerName;
-	}
-
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-
-	@Override
-	public String toString() {
-		return "SaveStocktakingOrderInfoBO [isAdd=" + isAdd + ", relativeId=" + relativeId + ", jobId=" + jobId
-				+ ", partnerId=" + partnerId + ", partnerArea=" + partnerArea + ", partnerName=" + partnerName
-				+ ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId="
-				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
-				+ ", warehouseLocName=" + warehouseLocName + ", orderId=" + orderId + ", fluteType=" + fluteType
-				+ ", materiaFid=" + materiaFid + ", materialLength=" + materialLength + ", materialWidth="
-				+ materialWidth + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
-				+ ", productSize=" + productSize + ", materialSize=" + materialSize + ", instockAmount=" + instockAmount
-				+ ", takeStockAmount=" + takeStockAmount + ", differenceValue=" + differenceValue
-				+ ", isInventoryProfit=" + isInventoryProfit + ", operator=" + operator + ", operatorId=" + operatorId
-				+ ", orderTime=" + orderTime + ", deliveryTime=" + deliveryTime + ", productName=" + productName
-				+ ", units=" + units + ", inventoryClerk=" + inventoryClerk + ", inventoryClerkId=" + inventoryClerkId
-				+ ", orderStatus=" + status + ", materialName=" + materialName + ", lnglat=" + lnglat
-				+ ", payTime=" + payTime + ", addressDetail=" + addressDetail + ", codeProvince=" + codeProvince
-				+ ", consignee=" + consignee + ", contactWay=" + contactWay + ", puserName=" + puserName
-				+ ", cuserName=" + cuserName + ", childOrderId=" + childOrderId + ", remark=" + remark
-				+ ", orderAmount=" + orderAmount + ", customerName=" + customerName + "]";
-	}
-	
 }

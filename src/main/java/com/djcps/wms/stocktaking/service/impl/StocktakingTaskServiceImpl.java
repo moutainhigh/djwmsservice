@@ -13,11 +13,14 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.StringUtils;
+import com.djcps.wms.delivery.model.SaveDeliveryBO;
 import com.djcps.wms.order.model.*;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.record.constant.StockTakingOperationConstant;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
+import com.djcps.wms.record.model.TaskOperationRecordPO;
 import com.djcps.wms.record.model.param.SaveOperationRecordBO;
 import com.djcps.wms.record.model.param.StocktakingRecordListBO;
 import com.djcps.wms.record.server.OperationRecordServer;
@@ -762,7 +765,50 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         }
         return MsgTemplate.customMsg(saveResult);
     }
+    /**
+     * 计算盘点完成后盘点任务对应盘点订单的总面积
+     * @param saveStocktakingOrderInfoBOList
+     * @return
+     */
+  public double area(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList) {
+      double areaSum = 0;
+    if(!ObjectUtils.isEmpty(saveStocktakingOrderInfoBOList.getSaveStocktaking())) {
+        for(SaveStocktakingOrderInfoBO info : saveStocktakingOrderInfoBOList.getSaveStocktaking()) {
+          //计算操作面积
+            double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getTakeStockAmount());
+            areaSum = areaSum +area;
+        }
+    }
+      return areaSum;
+    
+  }
 
+  /**
+   * 订单盘点操作记录数据
+   * @param param
+   */
+  public List<OrderOperationRecordPO> orderStocktakingOperationInfo(SaveStocktakingOrderInfoList param,PartnerInfoBO partnerInfoBO) {
+      List<OrderOperationRecordPO> list = new ArrayList<>();
+      OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+      orderOperationRecordPO.setPartnerId(partnerInfoBO.getPartnerId());
+      orderOperationRecordPO.setPartnerArea(partnerInfoBO.getPartnerArea());
+      orderOperationRecordPO.setOperator(partnerInfoBO.getOperator());
+      orderOperationRecordPO.setOperatorId(partnerInfoBO.getOperatorId());
+      OrderIdsBO orderIdsBO = new OrderIdsBO();
+      List<String> orderIds = new ArrayList<>();
+      for(SaveStocktakingOrderInfoBO info : param.getSaveStocktaking()) {
+          //处理数据
+          orderOperationRecordPO.setRelativeName(info.getProductName());
+          orderOperationRecordPO.setRelativeId(info.getOrderId());
+          orderOperationRecordPO.setAmount(info.getTakeStockAmount().toString());
+          orderOperationRecordPO.setFluteType(info.getFluteType());
+          //计算操作面积
+          double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getTakeStockAmount());
+          orderOperationRecordPO.setArea(String.valueOf(area));
+          list.add(orderOperationRecordPO);
+      }
+      return list;
+}
     /**
      * 完成盘点
      * @author  wzy
@@ -772,6 +818,14 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> completeStocktakingTask(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList,PartnerInfoBO partnerInfoBO) {
+        //盘点订单操作记录数据组合
+        List<OrderOperationRecordPO> orderOperationInfo = orderStocktakingOperationInfo(saveStocktakingOrderInfoBOList,partnerInfoBO);
+        saveStocktakingOrderInfoBOList.setOrderOperationInfo(orderOperationInfo);
+        //盘点任务操作记录数据组合
+        TaskOperationRecordPO taskOperationRecordPO = new TaskOperationRecordPO();
+        double area = area(saveStocktakingOrderInfoBOList);
+        taskOperationRecordPO.setArea(String.valueOf(area));
+        saveStocktakingOrderInfoBOList.setTaskOperationRecordPO(taskOperationRecordPO);
         List<String> orderidlist=new ArrayList<String>();
         SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO=null;
         String jobId=saveStocktakingOrderInfoBOList.getJobId();
@@ -991,7 +1045,6 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         HttpResult saveresult= stocktakingTaskServer.completeStocktakingTask(saveStocktakingOrderInfoBOList);
         return MsgTemplate.customMsg(saveresult);
     }
-
     /**
      * 获取全部盘点任务列表
      * @author  wzy
@@ -1138,7 +1191,28 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 .append(pdaOderInfoBO.getMaterialWidth()).toString());
         return MsgTemplate.successMsg(pdaOderInfoBO);
     }
-
+    /**
+     * 订单盘点操作记录数据
+     * @param param
+     */
+    public List<OrderOperationRecordPO> pdaOrderStocktakingOperationInfo(SaveStocktakingOrderInfoBO param) {
+        List<OrderOperationRecordPO> list = new ArrayList<>();
+        OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+        orderOperationRecordPO.setPartnerId(param.getPartnerId());
+        orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
+        orderOperationRecordPO.setOperator(param.getOperator());
+        orderOperationRecordPO.setOperatorId(param.getOperatorId());
+        //处理数据
+        orderOperationRecordPO.setRelativeName(param.getProductName());
+        orderOperationRecordPO.setRelativeId(param.getOrderId());
+        orderOperationRecordPO.setAmount(param.getTakeStockAmount().toString());
+        orderOperationRecordPO.setFluteType(param.getFluteType());
+        //计算操作面积
+        double area = operationRecordServer.getVolume(Double.parseDouble(param.getMaterialLength()), Double.parseDouble(param.getMaterialWidth()), param.getTakeStockAmount());
+        orderOperationRecordPO.setArea(String.valueOf(area));
+        list.add(orderOperationRecordPO);
+        return list;
+  }
     /**
      * PDA保存盘点结果
      * @author  wzy
@@ -1148,6 +1222,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      **/
     @Override
     public Map<String, Object> savePdaStocktakingResult(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO) {
+        List<OrderOperationRecordPO> info = pdaOrderStocktakingOperationInfo(saveStocktakingOrderInfoBO);
+        saveStocktakingOrderInfoBO.setList(info);
     	saveStocktakingOrderInfoBO.setFluteType(StringUtils.switchFluteTypeToNumber(saveStocktakingOrderInfoBO.getFluteType()));
     	List<String> orderidlist=new ArrayList<String>();
         //获取所有订单列表

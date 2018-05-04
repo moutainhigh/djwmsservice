@@ -11,55 +11,68 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author:zdx
  * @date:2017年11月30日
  */
-public class BaseUpdateAndDeleteBO extends BaseBO implements Serializable{
-	
-	private static final long serialVersionUID = 4726558779577505996L;
+public class BaseUpdateAndDeleteBO extends BaseBO implements Serializable {
 
-	/**
-	 *合作方id
-	 */
-	@NotBlank
-	private String partnerId;
-	
-	/**
-	 * 操作人id
-	 */
-	@NotBlank
-	private String operatorId;
-	
-	/**
-	 * 操作人名称
-	 */
-	@NotBlank
-	private String operator;
+    private static final long serialVersionUID = 4726558779577505996L;
 
-	public String getPartnerId() {
-		return partnerId;
-	}
+    /**
+     * 合作方id
+     */
+    @NotBlank
+    private String partnerId;
 
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
+    /**
+     * 操作人id
+     */
+    @NotBlank
+    private String operatorId;
 
-	public String getOperatorId() {
-		return operatorId;
-	}
+    /**
+     * 操作人名称
+     */
+    @NotBlank
+    private String operator;
+    /**
+     * 合作方所在区域
+     */
+    private String partnerArea;
 
-	public void setOperatorId(String operatorId) {
-		this.operatorId = operatorId;
-	}
+    public String getPartnerArea() {
+        return partnerArea;
+    }
 
-	public String getOperator() {
-		return operator;
-	}
+    public void setPartnerArea(String partnerArea) {
+        this.partnerArea = partnerArea;
+    }
 
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
+    public String getPartnerId() {
+        return partnerId;
+    }
 
-	@Override
-	public String toString() {
-		return "BaseDeleteBo [partnerId=" + partnerId + ", operatorId=" + operatorId + ", operator=" + operator + "]";
-	}
-	
+    public void setPartnerId(String partnerId) {
+        this.partnerId = partnerId;
+    }
+
+    public String getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseUpdateAndDeleteBO [partnerId=" + partnerId + ", operatorId=" + operatorId + ", operator=" + operator
+                + ", partnerArea=" + partnerArea + "]";
+    }
+
 }

@@ -1,23 +1,26 @@
 package com.djcps.wms.abnormal.model;
 
-
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 修改异常订单
+ * 
  * @company:djwms
  * @author:zdx
  * @date:2018年3月7日
  */
-public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializable{
+public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializable {
 
-	private static final long serialVersionUID = -1306428961188134546L;
+    private static final long serialVersionUID = -1306428961188134546L;
 
-	/**
-     *异常处理结果
+    /**
+     * 异常处理结果
      */
     private String result;
 
@@ -26,19 +29,19 @@ public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializa
      */
     @NotBlank
     private String orderId;
-    
+
     /**
      * 装车台id
      */
     private String loadingTableId;
-    
+
     /**
      * 装车台name
      */
     private String loadingTableName;
 
     /**
-     *备注
+     * 备注
      */
     private String remark;
     /**
@@ -49,83 +52,83 @@ public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializa
      * 处理状态
      */
     private String status;
-    
+
     /**
      * 异常原因
      */
     private String reason;
-    
+
     /**
      * 提报人
      */
     private String submiter;
 
-	/**
-	 * 提报时间
-	 */
-	private String submitTime;
+    /**
+     * 提报时间
+     */
+    private String submitTime;
 
-	public static long getSerialVersionUID() {
-		return serialVersionUID;
-	}
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
-	public String getSubmitTime() {
-		return submitTime;
-	}
+    public String getSubmitTime() {
+        return submitTime;
+    }
 
-	public void setSubmitTime(String submitTime) {
-		this.submitTime = submitTime;
-	}
+    public void setSubmitTime(String submitTime) {
+        this.submitTime = submitTime;
+    }
 
-	public String getSubmiter() {
-		return submiter;
-	}
+    public String getSubmiter() {
+        return submiter;
+    }
 
-	public void setSubmiter(String submiter) {
-		this.submiter = submiter;
-	}
+    public void setSubmiter(String submiter) {
+        this.submiter = submiter;
+    }
 
-	public String getReason() {
-		return reason;
-	}
+    public String getReason() {
+        return reason;
+    }
 
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
-	public String getAbnomalAmount() {
-		return abnomalAmount;
-	}
+    public String getAbnomalAmount() {
+        return abnomalAmount;
+    }
 
-	public void setAbnomalAmount(String abnomalAmount) {
-		this.abnomalAmount = abnomalAmount;
-	}
+    public void setAbnomalAmount(String abnomalAmount) {
+        this.abnomalAmount = abnomalAmount;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public String getLoadingTableId() {
-		return loadingTableId;
-	}
+    public String getLoadingTableId() {
+        return loadingTableId;
+    }
 
-	public void setLoadingTableId(String loadingTableId) {
-		this.loadingTableId = loadingTableId;
-	}
+    public void setLoadingTableId(String loadingTableId) {
+        this.loadingTableId = loadingTableId;
+    }
 
-	public String getLoadingTableName() {
-		return loadingTableName;
-	}
+    public String getLoadingTableName() {
+        return loadingTableName;
+    }
 
-	public void setLoadingTableName(String loadingTableName) {
-		this.loadingTableName = loadingTableName;
-	}
+    public void setLoadingTableName(String loadingTableName) {
+        this.loadingTableName = loadingTableName;
+    }
 
-	public String getResult() {
+    public String getResult() {
         return result;
     }
 
@@ -149,19 +152,12 @@ public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializa
         this.orderId = orderId;
     }
 
-	@Override
-	public String toString() {
-		return "UpdateAbnormalBO{" +
-				"result='" + result + '\'' +
-				", orderId='" + orderId + '\'' +
-				", loadingTableId='" + loadingTableId + '\'' +
-				", loadingTableName='" + loadingTableName + '\'' +
-				", remark='" + remark + '\'' +
-				", abnomalAmount='" + abnomalAmount + '\'' +
-				", status='" + status + '\'' +
-				", reason='" + reason + '\'' +
-				", submiter='" + submiter + '\'' +
-				", submitTime='" + submitTime + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "UpdateAbnormalBO [result=" + result + ", orderId=" + orderId + ", loadingTableId=" + loadingTableId
+                + ", loadingTableName=" + loadingTableName + ", remark=" + remark + ", abnomalAmount=" + abnomalAmount
+                + ", status=" + status + ", reason=" + reason + ", submiter=" + submiter + ", submitTime=" + submitTime
+                + "]";
+    }
+
 }

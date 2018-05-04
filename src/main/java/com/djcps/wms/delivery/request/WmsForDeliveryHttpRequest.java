@@ -102,5 +102,4 @@ public interface WmsForDeliveryHttpRequest {
     @Headers("content-type:application/json")
     @POST("delivery/updateDeliveryEffect.do")
     HTTPResponse updateDeliveryEffect(@Body RequestBody json);
-
 }

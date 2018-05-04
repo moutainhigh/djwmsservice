@@ -66,7 +66,7 @@ public class RoleServiceImpl implements RoleService {
             BeanUtils.copyProperties(roleListBO, orgRoleInfoBO);
             for (WmsRoleInfoPO roleId : wmsRoleInfo.getResult()) {
                 orgRoleInfoBO.setId(roleId.getRoleId());
-                // 通过角色id从org获取角色信息
+                //通过角色id从org获取角色信息
                 List<OrgRoleListPO> orgRoleInfo = orgRoleHttpServer.getRoleFromId(orgRoleInfoBO);
                 List<WmsPessionInfoPO> list = new ArrayList<WmsPessionInfoPO>();
                 if(!ObjectUtils.isEmpty(orgRoleInfo)) {

@@ -19,21 +19,24 @@ import com.djcps.wms.abnormal.model.AddAbnormal;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
-import com.djcps.wms.allocation.constant.AllocationConstant;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
-import com.djcps.wms.cancelstock.enums.CancelStockMsgEnum;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.delivery.model.SaveDeliveryBO;
+import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
+import com.djcps.wms.record.server.OperationRecordServer;
 import com.djcps.wms.stock.enums.StockMsgEnum;
 import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.djcps.wms.stock.model.AddStockBO;
@@ -79,7 +82,8 @@ public class StockServiceImpl implements StockService{
 	
 	@Autowired
 	private WarehouseServer warehouseServer;
-	
+	@Autowired
+    private OperationRecordServer operationRecordServer;
 	private JsonParser jsonParser = new JsonParser();
 	
 	private Gson gson = new Gson();
@@ -141,9 +145,31 @@ public class StockServiceImpl implements StockService{
 		HttpResult result = stockServer.getOperationRecord(fromJson);
 		return MsgTemplate.customMsg(result);
 	}
-
+	
 	@Override
 	public Map<String, Object> addStock(AddStockBO param) {
+	    OrderIdsBO orderIdsBO = new OrderIdsBO();
+	    List<String> orderIds = new ArrayList<>();
+	    orderIds.add(param.getOrderId());
+	    orderIdsBO.setChildOrderIds(orderIds);
+	    orderIdsBO.setPartnerArea(param.getPartnerArea());
+	    //根据订单编号获取订单信息
+	    BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+	    if(!orderInfo.getSplitOrderList().isEmpty()) {
+	    orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+	    }
+	    if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+	        for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+	            //处理数据
+	            param.setFluteType(info.getFluteType());
+	            param.setRelativeName(info.getPartnerName());
+	            //计算操作面积
+	            double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmountSave());
+	             param.setArea(String.valueOf(area));
+	        }
+	       
+	       
+	    }
 		//先判断入库的仓库是否被启用,禁用直接驳回
 		PartnerInfoBO partnerInfoBean = new PartnerInfoBO();
 		BeanUtils.copyProperties(param, partnerInfoBean);
@@ -282,6 +308,7 @@ public class StockServiceImpl implements StockService{
 						if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(orderIdBO.getStatus())){
 							//剩余的异常订单数量
 							Integer surplusOrderAmount= orderAmount-saveAmount;
+							param.setAbnomalAmount(surplusOrderAmount);
 							//直接插入异常订单数据
 							List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
 							List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
@@ -296,6 +323,8 @@ public class StockServiceImpl implements StockService{
 							addAbnormal.setProductName(orderDeatil.getProductName());
 							addAbnormal.setIsSplit(orderDeatil.getSplitOrder());
 							HttpResult addResult = abnormalServer.addAbnormal(addAbnormal);
+							
+							
 							return  MsgTemplate.customMsg(addResult);
 						}
 					}else{
@@ -328,9 +357,29 @@ public class StockServiceImpl implements StockService{
 		}
 		return  MsgTemplate.customMsg(result);
 	}
-
+    
 	@Override
 	public Map<String, Object> moveStock(MoveStockBO param) {
+	    OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!orderInfo.getSplitOrderList().isEmpty()) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                param.setFluteType(info.getFluteType());
+                param.setRelativeName(info.getPartnerName());
+                //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), Integer.parseInt(param.getAmountSave()));
+                param.setArea(String.valueOf(area));
+            }
+        }
 		HttpResult result = stockServer.moveStock(param);
 		return MsgTemplate.customMsg(result);
 	}

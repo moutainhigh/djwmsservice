@@ -17,10 +17,12 @@ import com.djcps.wms.commons.base.BaseBO;
  * @since 2018-4-14
  */
 public class TaskOperationRecordPO extends BaseBO implements Serializable {
+    
     /**
      * 
      */
-    private static final long serialVersionUID = 8510151872447609673L;
+    private static final long serialVersionUID = -5031455988898039587L;
+
     /**
      * 唯一标识
      */
@@ -58,10 +60,15 @@ public class TaskOperationRecordPO extends BaseBO implements Serializable {
      */
     @NotBlank
     private String operationType;
+    
+    /**
+     * 操作面积
+     */
+    private String area;
+    
     /**
      * 仓库ID
      */
-    @NotBlank
     private String warehouseId;
     /**
      * 事件
@@ -99,6 +106,7 @@ public class TaskOperationRecordPO extends BaseBO implements Serializable {
      */
     private String updateTimeEnd;
     
+    
     public TaskOperationRecordPO() {
         super();
     }
@@ -113,6 +121,14 @@ public class TaskOperationRecordPO extends BaseBO implements Serializable {
         this.operationType = operationType;
         this.warehouseId = warehouseId;
         this.event = event;
+    }
+    
+    
+    public String getArea() {
+        return area;
+    }
+    public void setArea(String area) {
+        this.area = area;
     }
     public String getId() {
         return id;
@@ -211,8 +227,9 @@ public class TaskOperationRecordPO extends BaseBO implements Serializable {
     public String toString() {
         return "TaskOperationRecordPO [id=" + id + ", partnerId=" + partnerId + ", partnerArea=" + partnerArea
                 + ", relativeId=" + relativeId + ", operatorId=" + operatorId + ", operator=" + operator
-                + ", operationType=" + operationType + ", warehouseId=" + warehouseId + ", event=" + event
-                + ", createTime=" + createTime + ", updateTime=" + updateTime + "]";
+                + ", operationType=" + operationType + ", area=" + area + ", warehouseId=" + warehouseId + ", event="
+                + event + ", createTime=" + createTime + ", createTimeStart=" + createTimeStart + ", createTimeEnd="
+                + createTimeEnd + ", updateTime=" + updateTime + ", updateTimeStart=" + updateTimeStart
+                + ", updateTimeEnd=" + updateTimeEnd + "]";
     }
-
 }

@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.record.model.OrderOperationRecordPO;
+
 /**
  * 
  * 
@@ -13,16 +14,16 @@ import com.djcps.wms.record.model.OrderOperationRecordPO;
  *
  */
 
-public class SelectOrderRecordBO extends BaseListBO implements Serializable{
-    
+public class SelectOrderRecordBO extends BaseListBO implements Serializable {
+
     /**
      * 
      */
     private static final long serialVersionUID = 8915612973199348741L;
 
     String batchBy;
-    
-    OrderOperationRecordPO[] record;
+
+    OrderOperationRecordPO record;
 
     public String getBatchBy() {
         return batchBy;
@@ -32,17 +33,17 @@ public class SelectOrderRecordBO extends BaseListBO implements Serializable{
         this.batchBy = batchBy;
     }
 
-    public OrderOperationRecordPO[] getRecord() {
+    public OrderOperationRecordPO getRecord() {
         return record;
     }
 
-    public void setRecord(OrderOperationRecordPO[] record) {
+    public void setRecord(OrderOperationRecordPO record) {
         this.record = record;
     }
 
     @Override
     public String toString() {
-        return "selectOrderRecordBO [batchBy=" + batchBy + ", record=" + Arrays.toString(record) + "]";
+        return "SelectOrderRecordBO [batchBy=" + batchBy + ", record=" + record + "]";
     }
-    
+
 }

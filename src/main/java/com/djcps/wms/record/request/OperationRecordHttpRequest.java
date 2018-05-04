@@ -48,5 +48,74 @@ public interface OperationRecordHttpRequest {
     @Headers("content-type:application/json")
     @POST("operationRecord/saveOperationRecord.do")
     HTTPResponse saveOperationRecord(@Body RequestBody json);
-    
+    /**
+     * 根据关联id获取操作记录信息
+     * @param json
+     * @return
+     * @author:wyb
+     * @date:2018/5/3
+     */
+    @Headers("content-type:application/json")
+    @POST("operationRecord/getRecordByRrelativeId.do")
+    HTTPResponse getRecordByRrelativeId(@Body RequestBody json);
+    /**
+     * 查询任务 操作记录
+     * @param json
+     * @return
+     * @author:wyb
+     * @date:2018/5/3
+     */
+    @Headers("content-type:application/json")
+    @POST("operationRecord/selectTaskRecord.do")
+    HTTPResponse selectTaskRecord(@Body RequestBody json);
+    /**
+     * 保存任务 操作记录
+     * @param json
+     * @return
+     * @author:wyb
+     * @date:2018/5/3
+     */
+    @Headers("content-type:application/json")
+    @POST("operationRecord/saveTaskRecord.do")
+    HTTPResponse saveTaskRecord(@Body RequestBody json);
+    /**
+     * 删除任务 操作记录
+     * @param json
+     * @return
+     * @author:wyb
+     * @date:2018/5/3
+     */
+    @Headers("content-type:application/json")
+    @POST("operationRecord/deleteTaskRecord.do")
+    HTTPResponse deleteTaskRecord(@Body RequestBody json);
+    /**
+     * 查询任务 操作记录
+     * @param json
+     * @return
+     * @author:wyb
+     * @date:2018/5/3
+     */
+    @Headers("content-type:application/json")
+    @POST("operationRecord/selectOrderRecord.do")
+    HTTPResponse selectOrderRecord(@Body RequestBody json);
+    /**
+     * 保存任务 操作记录
+     * @param json
+     * @return
+     * @author:wyb
+     * @date:2018/5/3
+     */
+    @Headers("content-type:application/json")
+    @POST("operationRecord/saveOrderRecord.do")
+    HTTPResponse saveOrderRecord(@Body RequestBody json);
+    /**
+     * 删除任务 操作记录
+     * @param json
+     * @return
+     * @author:wyb
+     * @date:2018/5/3
+     */
+    @Headers("content-type:application/json")
+    @POST("operationRecord/deleteOrderRecord.do")
+    HTTPResponse deleteOrderRecord(@Body RequestBody json);
 }
