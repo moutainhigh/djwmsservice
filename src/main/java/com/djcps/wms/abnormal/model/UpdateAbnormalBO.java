@@ -1,6 +1,7 @@
 package com.djcps.wms.abnormal.model;
 
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
  * @author:zdx
  * @date:2018年3月7日
  */
-public class UpdateAbnormalBO extends BaseUpdateAndDeleteBO implements Serializable{
+public class UpdateAbnormalBO extends BaseAddBO implements Serializable{
 
 	private static final long serialVersionUID = -1306428961188134546L;
 

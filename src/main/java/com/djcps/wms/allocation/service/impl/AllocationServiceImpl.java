@@ -737,6 +737,10 @@ public class AllocationServiceImpl implements AllocationService {
 					List<OrderPO> allocationOrderList = gson.fromJson(allocationOrder, new TypeToken<ArrayList<OrderPO>>(){}.getType());
 					for (OrderPO orderPO : allocationOrderList) {
 						String orderId = orderPO.getOrderId();
+						//判断本次参与智能配货的订单号中是否含有拆单
+//						if(orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
+//							orderId = orderId.substring(0, orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+//						}
 						WarehouseOrderDetailPO orderDetail = map.get(orderId);
 						if(orderDetail!=null){
 							map.remove(orderId);
@@ -843,7 +847,10 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		for (AddAllocationOrderBO addAllocationOrderBO : param) {
 			addAllocationOrderBO.setDeliveryAmount(addAllocationOrderBO.getOrderAmount());
-			addAllocationOrderBO.setDeliveryIdEffect(Integer.valueOf(AllocationConstant.DELIVERY_EFFEFT));
+			addAllocationOrderBO.setDeliveryIdEffect(Integer.valueOf(AllocationConstant.DELIVERY_UNEFFEFT));
+			//=====================这里前端不需要传提货单号和提货单确认状态=====
+			addAllocationOrderBO.setDeliveryId(null);
+			//=====================这里前端不需要传提货单号和提货单确认状态=====
 		}
 		HttpResult result = allocationServer.verifyAddOrder(param);
 		return MsgTemplate.customMsg(result);
@@ -1095,7 +1102,19 @@ public class AllocationServiceImpl implements AllocationService {
 		HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
 		BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 		List<WarehouseOrderDetailPO> detailList = batchOrderDetailListPO.getOrderList();
-		List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(detailList);
+		List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+		if(!ObjectUtils.isEmpty(detailList)){
+			joinOrderParamInfo = orderServer.joinOrderParamInfo(detailList);
+		}
+		
+		List<WarehouseOrderDetailPO> splitOrderList =  batchOrderDetailListPO.getSplitOrderList();
+		if(!ObjectUtils.isEmpty(splitOrderList)){
+			if(!ObjectUtils.isEmpty(joinOrderParamInfo)){
+				joinOrderParamInfo.addAll(orderServer.joinOrderParamInfo(splitOrderList));
+			}else{
+				joinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
+			}
+		}
 		for (WarehouseOrderDetailPO orderDeatil : joinOrderParamInfo) {
 			orderStatusMap.put(orderDeatil.getOrderId(), orderDeatil);
 		}
@@ -1336,18 +1355,18 @@ public class AllocationServiceImpl implements AllocationService {
 		batch.setKeyArea(base.getPartnerArea());
 		HttpResult orderResult = orderServer.getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
-		List<WarehouseOrderDetailPO> orderList = new ArrayList<>();
-        orderList = batchOrderDetailListPO.getOrderList();
-        if(!ObjectUtils.isEmpty(orderList)){
-        	orderList = orderServer.joinOrderParamInfo(orderList);
-        }
-        List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
-        if(!ObjectUtils.isEmpty(splitOrderList)){
-        	splitOrderList = orderServer.joinOrderParamInfo(splitOrderList);
-        	orderList.addAll(splitOrderList);
-        }
-        
 		
+		List<WarehouseOrderDetailPO> orderList =null;
+		if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())){
+			orderList = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
+		}
+		if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getSplitOrderList())){
+			if(!ObjectUtils.isEmpty(orderList)){
+				orderList.addAll(orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList()));
+			}else{
+				orderList = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList());
+			}
+		}
 		String uuid = UUID.randomUUID().toString();
 		AddExcellentAllocationBO allocationBO = null;
 		if(!ObjectUtils.isEmpty(orderList)){
@@ -1991,7 +2010,7 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> splitOrder(UpdateOrderBO param) {
-		String orderId = param.getOrderId();
+		String orderId = param.getDeleteOrdeIdList().get(0);
 		BatchOrderIdListBO batch = new BatchOrderIdListBO();
 		List<String> orderIdList = Arrays.asList(orderId);
 		batch.setKeyArea(param.getPartnerArea());
@@ -2078,7 +2097,20 @@ public class AllocationServiceImpl implements AllocationService {
 				param.setSecondSpiltOrder(null);
 			}
 			result = allocationServer.splitOrder(param);
+			
+			//并且假如是部分入库的情况下,修改冗余表的订单状态,改成待入库
+			String deleteOrder = param.getDeleteOrdeIdList().get(0);
+			if(deleteOrder.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
+				List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
+				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
+				update.setStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
+				update.setOrderId(deleteOrder);
+				update.setPartnerId(param.getPartnerId());
+				updateList.add(update);
+				result = allocationServer.batchUpdateOrderRedun(updateList);
+			}
 			if(result.isSuccess()){
+				//调用oms的拆单接口
 				result = orderServer.splitOrder(param);
 			}
 			return MsgTemplate.customMsg(result);
@@ -2098,8 +2130,12 @@ public class AllocationServiceImpl implements AllocationService {
 		if(!ObjectUtils.isEmpty(result.getData())){
 			Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
 			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+				String orderId = entry.getKey();
 				orderDetail = orderServer.joinOrderParamInfo(entry.getValue());
 				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+					warehouseOrderDetailPO.setOrderId(warehouseOrderDetailPO.getSubOrderId());
+					warehouseOrderDetailPO.setChildOrderId(orderId);
+					warehouseOrderDetailPO.setOrderAmount(warehouseOrderDetailPO.getSubNumber());
 					String subOrderId = warehouseOrderDetailPO.getSubOrderId();
 					orderIdStrList.add(subOrderId);
 				}

@@ -5,7 +5,13 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.*;
 import com.djcps.wms.abnormal.request.AbnormalServerHttpRequest;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
+import com.djcps.wms.order.server.OrderServer;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
@@ -26,6 +32,9 @@ public class AbnormalServer {
 	
 	@Autowired
 	private AbnormalServerHttpRequest abnormalServerHttpRequest;
+	
+	@Autowired
+	private OrderServer orderServer;
 
 	public HttpResult getOrderByOrderIdList(OrderIdListBO param) {
 		//将请求参数转化为requestbody格式
@@ -70,6 +79,25 @@ public class AbnormalServer {
 		//调用借口获取信息
 		HTTPResponse http = abnormalServerHttpRequest.getSplitOrderByOrderId(rb);
 		return verifyHttpResult(http);
+	}
+	
+	/**
+	 * 修改异常订单标记逻辑
+	 * @param flag
+	 * @param subOrderId
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月4日
+	 */
+	public HttpResult updateExecptionFlag(Integer flag,String subOrderId,String partnerArea) {
+		List<UpdateSplitOrderBO> updateSplitList = new ArrayList<>();
+		UpdateSplitOrderBO updateSplit = new UpdateSplitOrderBO();
+		//oms修改异常标记逻辑
+		updateSplit.setSubOrderId(subOrderId);
+		updateSplit.setIsException(flag);
+		updateSplit.setKeyArea(partnerArea);
+		updateSplitList.add(updateSplit);
+		return orderServer.updateSplitOrderInfo(updateSplitList);
 	}
 	
 	/**

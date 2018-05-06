@@ -167,7 +167,26 @@ public class DeliveryServiceImpl implements DeliveryService {
         OrderIdsBO orderIds = new OrderIdsBO();
         orderIds.setChildOrderIds(orderIdList);
         orderIds.setPartnerArea(partnerArea);
-        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
+        List<ChildOrderBO> childOrderList = new ArrayList<>();
+        BatchOrderDetailListPO batchOrderDetailListPO = orderServer.getOrderOrSplitOrder(orderIds);
+        List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
+        List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+        if(!ObjectUtils.isEmpty(sonOrderList)){
+        	sonOrderList = orderServer.joinOrderParamInfo(sonOrderList);
+        	for (WarehouseOrderDetailPO warehouseOrderDetailPO : sonOrderList) {
+        		ChildOrderBO child = new ChildOrderBO();
+        		BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+        		childOrderList.add(child);
+			}
+        }
+        if(!ObjectUtils.isEmpty(splitOrderList)){
+        	splitOrderList = orderServer.joinOrderParamInfo(splitOrderList);
+        	for (WarehouseOrderDetailPO warehouseOrderDetailPO : splitOrderList) {
+        		ChildOrderBO child = new ChildOrderBO();
+        		BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+        		childOrderList.add(child);
+			}
+        }
         if (!childOrderList.isEmpty()) {
             orderList.stream().forEach(order -> {
                 ChildOrderBO childOrderBO =  childOrderList.stream().filter(

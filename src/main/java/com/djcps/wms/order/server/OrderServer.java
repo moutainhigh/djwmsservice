@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
@@ -165,6 +166,7 @@ public class OrderServer {
 				UpdateSplitOrderBO update = new UpdateSplitOrderBO();
 	    		update.setSubOrderId(string);
 	    		update.setSubStatus(Integer.valueOf(orderStatus));
+	    		update.setKeyArea(partnerArea);
 	    		splitOrderUpdateList.add(update);
 			 }
 		}
@@ -314,11 +316,21 @@ public class OrderServer {
 				onlinePaperboardPO.setMaterialSize(new StringBuffer().append(onlinePaperboardPO.getMaterialLength()).append("*")
 						.append(onlinePaperboardPO.getMaterialWidth()).toString());
 			}
+			onlinePaperboardPO.setAddressDetailProvince(new StringBuffer().append(onlinePaperboardPO.getCodeProvince()).append(onlinePaperboardPO.getAddressDetail()).toString());
 			String customerName = !StringUtils.isEmpty(onlinePaperboardPO.getCuserName())?onlinePaperboardPO.getCuserName():onlinePaperboardPO.getPuserName();
 			onlinePaperboardPO.setCustomerName(customerName);
-			onlinePaperboardPO.setOrderAmount(onlinePaperboardPO.getAmountPiece());
-			onlinePaperboardPO.setAddressDetailProvince(new StringBuffer().append(onlinePaperboardPO.getCodeProvince()).append(onlinePaperboardPO.getAddressDetail()).toString());
-			onlinePaperboardPO.setOrderId(onlinePaperboardPO.getChildOrderId());
+			String subOrderId = onlinePaperboardPO.getSubOrderId();
+			if(StringUtils.isEmpty(subOrderId)){
+				//为空则表示子单,否则就是拆单	
+				onlinePaperboardPO.setOrderAmount(onlinePaperboardPO.getAmountPiece());
+				if(!StringUtils.isEmpty(onlinePaperboardPO.getChildOrderId())){
+					onlinePaperboardPO.setOrderId(onlinePaperboardPO.getChildOrderId());
+				}
+			}else{
+				onlinePaperboardPO.setOrderAmount(onlinePaperboardPO.getSubNumber());
+				onlinePaperboardPO.setOrderId(subOrderId);
+				onlinePaperboardPO.setOrderStatus(onlinePaperboardPO.getSubStatus());
+			}
 		}
 		return param;
 	}
