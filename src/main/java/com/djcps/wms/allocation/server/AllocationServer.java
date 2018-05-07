@@ -38,6 +38,7 @@ import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.order.model.OrderParamBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
 import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.google.gson.Gson;
@@ -128,23 +129,43 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
-	public OtherHttpResult getAddOrderList(GetRedundantByAttributeBO param) {
+//	public OtherHttpResult getAddOrderList(GetRedundantByAttributeBO param) {
+//		//将请求参数转化为requestbody格式
+//		String json = gson.toJson(param);
+//		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+//		//调用借口获取信息
+//		HTTPResponse http = allocationHttpRequest.getAddOrderList(rb);
+//		OtherHttpResult result = null;
+//		//校验请求是否成功
+//		if(http.isSuccessful()){
+//			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
+//		}
+//		if(result == null){
+//			LOGGER.error("Http请求出错,HttpResult结果为null");
+//		}
+//		return result;
+//		
+//	}
+	
+	public HttpResult getAddOrderList(GetRedundantByAttributeBO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.getAddOrderList(rb);
-		OtherHttpResult result = null;
-		//校验请求是否成功
-		if(http.isSuccessful()){
-			result = gson.fromJson(http.getBodyString(), OtherHttpResult.class);
-		}
-		if(result == null){
-			LOGGER.error("Http请求出错,HttpResult结果为null");
-		}
-		return result;
+		return verifyHttpResult(http);
 		
 	}
+	
+	public HttpResult getErrorAddOrderList(GetRedundantByAttributeBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.getErrorAddOrderList(rb);
+		return verifyHttpResult(http);
+	}
+	
 	
 	public HttpResult verifyAddOrder(List<AddAllocationOrderBO> param) {
 		//将请求参数转化为requestbody格式
@@ -438,6 +459,15 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult splitOrder(UpdateOrderBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.splitOrder(rb);
+		return verifyHttpResult(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -457,6 +487,5 @@ public class AllocationServer {
 		}
 		return result;
 	}
-
 	
 }

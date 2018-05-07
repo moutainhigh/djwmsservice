@@ -2,6 +2,7 @@ package com.djcps.wms.stocktaking.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.djcps.wms.abnormal.constant.AbnormalConstant;
+import com.djcps.wms.abnormal.enums.AbnormalMsgEnum;
 import com.djcps.wms.abnormal.model.AbnormalOrderPO;
 import com.djcps.wms.abnormal.model.AddAbnormal;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
@@ -32,6 +33,8 @@ import com.djcps.wms.stocktaking.server.StocktakingOrderServer;
 import com.djcps.wms.stocktaking.server.StocktakingTaskServer;
 import com.djcps.wms.stocktaking.service.StocktakingTaskService;
 import com.google.gson.*;
+import com.mysql.fabric.xmlrpc.base.Array;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -895,6 +898,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                     });
                 });
             //存在异常订单
+        	List<String> orderIdList = new ArrayList();
             if (!ObjectUtils.isEmpty(collectList)){
                 OrderIdListBO orderIdListBO = new OrderIdListBO();
                 BeanUtils.copyProperties(saveStocktakingOrderInfoBOList, orderIdListBO);
@@ -933,7 +937,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                                updateOrderBO.setResult(null);
                                updateOrderBO.setRemark(null);
                                updateOrderBO.setSubmitTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                               updateOrderBO.setStatus("0");
+                               updateOrderBO.setStatus(0);
                                HttpResult abnormalResult = abnormalServer.updateAbnormal(updateOrderBO);
                            }
                            //插入异常订单
@@ -958,6 +962,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                                addAbnormal.setIsSplit(0);
                                addAbnormal.setAmount(allAbnormalOrder.getOrderAmount());
                                HttpResult addResult = abnormalServer.addAbnormal(addAbnormal);
+                               //将异常的订单号存入list
+                               orderIdList.add(addAbnormal.getOrderId());
                            }
                         });
                     });
@@ -985,10 +991,21 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                         addAbnormal.setIsSplit(0);
                         addAbnormal.setAmount(s.getOrderAmount());
                         HttpResult addResult = abnormalServer.addAbnormal(addAbnormal);
+                        //将异常的订单号存入list
+                        orderIdList.add(addAbnormal.getOrderId());
                     });
                 }
             }
         HttpResult saveresult= stocktakingTaskServer.completeStocktakingTask(saveStocktakingOrderInfoBOList);
+        if(saveresult.isSuccess()){
+        	//修改oms异常订单的标记
+        	HttpResult addAbnormalResult = abnormalServer.updateExecptionFlag(1,orderIdList,partnerInfoBO.getPartnerArea());
+            if(!addAbnormalResult.isSuccess()){
+         	   return MsgTemplate.failureMsg(AbnormalMsgEnum.STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR);
+            }else{
+            	 return MsgTemplate.customMsg(addAbnormalResult);
+            }
+        }
         return MsgTemplate.customMsg(saveresult);
     }
 

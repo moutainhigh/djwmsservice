@@ -22,7 +22,7 @@ import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.mysql.fabric.xmlrpc.base.Array;
 
@@ -143,7 +143,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             List<String> orderId = new ArrayList<>();
 			orderId.add(param.getOrderId());
-			Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea());
+			Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea(),param.getPartnerId());
 			if(compareOrderStatus==false){
 				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 			}
@@ -167,7 +167,26 @@ public class DeliveryServiceImpl implements DeliveryService {
         OrderIdsBO orderIds = new OrderIdsBO();
         orderIds.setChildOrderIds(orderIdList);
         orderIds.setPartnerArea(partnerArea);
-        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
+        List<ChildOrderBO> childOrderList = new ArrayList<>();
+        BatchOrderDetailListPO batchOrderDetailListPO = orderServer.getOrderOrSplitOrder(orderIds);
+        List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
+        List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+        if(!ObjectUtils.isEmpty(sonOrderList)){
+        	sonOrderList = orderServer.joinOrderParamInfo(sonOrderList);
+        	for (WarehouseOrderDetailPO warehouseOrderDetailPO : sonOrderList) {
+        		ChildOrderBO child = new ChildOrderBO();
+        		BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+        		childOrderList.add(child);
+			}
+        }
+        if(!ObjectUtils.isEmpty(splitOrderList)){
+        	splitOrderList = orderServer.joinOrderParamInfo(splitOrderList);
+        	for (WarehouseOrderDetailPO warehouseOrderDetailPO : splitOrderList) {
+        		ChildOrderBO child = new ChildOrderBO();
+        		BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+        		childOrderList.add(child);
+			}
+        }
         if (!childOrderList.isEmpty()) {
             orderList.stream().forEach(order -> {
                 ChildOrderBO childOrderBO =  childOrderList.stream().filter(
@@ -364,7 +383,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             	LOGGER.error("完成单条提货订单的提货,修改订单状态失败!!!");
             	return MsgTemplate.customMsg(result);
             }
-			Boolean compareOrderStatus = orderServer.compareOrderStatus(param.getOrderIds(),param.getPartnerArea());
+			Boolean compareOrderStatus = orderServer.compareOrderStatus(param.getOrderIds(),param.getPartnerArea(),param.getPartnerId());
 			if(compareOrderStatus==false){
 				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 			}

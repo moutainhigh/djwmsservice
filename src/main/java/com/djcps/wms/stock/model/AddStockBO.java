@@ -18,6 +18,8 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	
 	private static final long serialVersionUID = 5650542988348663815L;
 	
+	private String id;
+	
 	/**
 	 * 订单编号
 	 */
@@ -84,6 +86,12 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	 */
 	private OperationRecordBO operationRecord;
 	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String getOrderId() {
 		return orderId;
 	}
@@ -164,11 +172,12 @@ public class AddStockBO extends BaseAddBO implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "AddStockBO [orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave + ", warehouseId="
-				+ warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", warehouseAreaId="
-				+ warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
-				+ ", warehouseLocName=" + warehouseLocName + ", recommendAreaId=" + recommendAreaId
-				+ ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord + "]";
+		return "AddStockBO [id=" + id + ", orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave
+				+ ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark
+				+ ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+				+ ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", recommendAreaId="
+				+ recommendAreaId + ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord
+				+ "]";
 	}
 	
 }

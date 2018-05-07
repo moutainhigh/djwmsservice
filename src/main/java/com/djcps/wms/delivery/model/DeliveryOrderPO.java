@@ -12,6 +12,11 @@ public class DeliveryOrderPO {
      * 订单号
      */
     private String orderId;
+    
+    /**
+     * 拆单号
+     */
+    private String subOrderId;
 
     /**
      * 运单号
@@ -76,7 +81,7 @@ public class DeliveryOrderPO {
     /**
      * 订单状态
      */
-    private Integer status;
+    private Integer orderStatus;
     /**
      * 提货状态
      */
@@ -92,7 +97,7 @@ public class DeliveryOrderPO {
     /**
      * 收货地址
      */
-    private String address;
+    private String addressDetailProvince;
     /**
      * 单位
      */
@@ -281,15 +286,23 @@ public class DeliveryOrderPO {
         this.sequence = sequence;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
+    public String getSubOrderId() {
+		return subOrderId;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public void setSubOrderId(String subOrderId) {
+		this.subOrderId = subOrderId;
+	}
 
-    public Integer getOrderAmount() {
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public Integer getOrderAmount() {
         return orderAmount;
     }
 
@@ -305,15 +318,15 @@ public class DeliveryOrderPO {
         this.deliveryAmount = deliveryAmount;
     }
 
-    public String getAddress() {
-        return address;
-    }
+    public String getAddressDetailProvince() {
+		return addressDetailProvince;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public void setAddressDetailProvince(String addressDetailProvince) {
+		this.addressDetailProvince = addressDetailProvince;
+	}
 
-    public String getUnit() {
+	public String getUnit() {
         return unit;
     }
 
@@ -410,40 +423,21 @@ public class DeliveryOrderPO {
         this.deliveryStatus = deliveryStatus;
     }
 
-    @Override
-    public String toString() {
-        return "DeliveryOrderPO{" +
-                "orderId='" + orderId + '\'' +
-                ", allocationId='" + allocationId + '\'' +
-                ", deliveryId='" + deliveryId + '\'' +
-                ", deliveryIdEffect=" + deliveryIdEffect +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", warehouseAreaId='" + warehouseAreaId + '\'' +
-                ", warehouseAreaName='" + warehouseAreaName + '\'' +
-                ", warehouseLocId='" + warehouseLocId + '\'' +
-                ", warehouseLocName='" + warehouseLocName + '\'' +
-                ", productName='" + productName + '\'' +
-                ", materialName='" + materialName + '\'' +
-                ", customerName='" + customerName + '\'' +
-                ", contacts='" + contacts + '\'' +
-                ", finishTime='" + finishTime + '\'' +
-                ", sequence=" + sequence +
-                ", status=" + status +
-                ", orderAmount=" + orderAmount +
-                ", deliveryAmount=" + deliveryAmount +
-                ", address='" + address + '\'' +
-                ", unit='" + unit + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", boxHeight='" + boxHeight + '\'' +
-                ", boxLength='" + boxLength + '\'' +
-                ", boxWidth='" + boxWidth + '\'' +
-                ", materialLength='" + materialLength + '\'' +
-                ", materialWidth='" + materialWidth + '\'' +
-                ", deliveryTime='" + deliveryTime + '\'' +
-                ", fluteType='" + fluteType + '\'' +
-                ", warehouseLocs=" + warehouseLocs +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "DeliveryOrderPO [orderId=" + orderId + ", subOrderId=" + subOrderId + ", allocationId=" + allocationId
+				+ ", deliveryId=" + deliveryId + ", deliveryIdEffect=" + deliveryIdEffect + ", warehouseId="
+				+ warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId
+				+ ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
+				+ ", warehouseLocName=" + warehouseLocName + ", productName=" + productName + ", materialName="
+				+ materialName + ", customerName=" + customerName + ", contacts=" + contacts + ", finishTime="
+				+ finishTime + ", sequence=" + sequence + ", orderStatus=" + orderStatus + ", deliveryStatus="
+				+ deliveryStatus + ", orderAmount=" + orderAmount + ", deliveryAmount=" + deliveryAmount
+				+ ", addressDetailProvince=" + addressDetailProvince + ", unit=" + unit + ", createTime=" + createTime
+				+ ", updateTime=" + updateTime + ", boxHeight=" + boxHeight + ", boxLength=" + boxLength + ", boxWidth="
+				+ boxWidth + ", materialLength=" + materialLength + ", materialWidth=" + materialWidth
+				+ ", deliveryTime=" + deliveryTime + ", fluteType=" + fluteType + ", warehouseLocs=" + warehouseLocs
+				+ "]";
+	}
+    
 }

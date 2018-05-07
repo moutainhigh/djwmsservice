@@ -20,7 +20,9 @@ public enum StockMsgEnum implements MsgInterface {
 	/**
 	 * 入库数量有误请重新核对
 	 */
-	SAVE_AMOUNT_ERROE(10, "入库数量有误请重新核对")
+	SAVE_AMOUNT_ERROE(2, "入库数量有误请重新核对"),
+	
+	SPLIT_ORDER_NOT_STOC(3, "已拆分的子单不允许进行入库操作")
 	;
 
     private int code;
@@ -28,7 +30,7 @@ public enum StockMsgEnum implements MsgInterface {
     private String msg;
 
    StockMsgEnum(Integer code, String msg) {
-        this.code = AppConstant.WMS_MSG_ENUM_PREFIX+AppConstant.WMS_MODULE_ALLOCATION_ENUM_PREFIX+code;
+        this.code = AppConstant.WMS_MSG_ENUM_PREFIX+AppConstant.WMS_ENTRY_ENUM_PREFIX+code;
         this.msg = msg;
     }
     @Override

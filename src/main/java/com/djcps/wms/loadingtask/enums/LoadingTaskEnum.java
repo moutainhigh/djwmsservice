@@ -38,7 +38,7 @@ public enum LoadingTaskEnum implements MsgInterface {
     private String msg;
 
     LoadingTaskEnum(int code,String msg){
-        this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_LOADINGTASK_ENUM_PREFIX + code;
+        this.code = AppConstant.WMS_MSG_ENUM_PREFIX + AppConstant.WMS_WORKRECORDS_ENUM_PREFIX + code;
         this.msg = msg;
     }
     

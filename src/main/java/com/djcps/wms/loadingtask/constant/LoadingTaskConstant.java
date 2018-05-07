@@ -112,11 +112,4 @@ public class LoadingTaskConstant {
      */
     public static final String BREAK_UP_ORDER_2 = "-2";
     
-    /**
-     * 拆分订单-3是无用的,这个是oms服务需要的对于我们这来说没有用
-     */
-    public static final String BREAK_UP_ORDER_3 = "-3";
-    
-    
-    
 }

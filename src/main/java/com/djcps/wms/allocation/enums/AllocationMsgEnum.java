@@ -38,7 +38,7 @@ public enum AllocationMsgEnum implements MsgInterface {
 	
 	ORDER_STATUS_ERROR(7,"订单状态有误"),
 	
-	AGAIN_CHOOSE_ORDER(8,"该订单有误,请重新选择"),
+	AGAIN_CHOOSE_ORDER(8,"该订单有误,请选择已配货订单"),
 	
 	VERIFY_ALLOCATION_ERROR(9,"请勿同时进行确认配货"),
 	
@@ -46,9 +46,17 @@ public enum AllocationMsgEnum implements MsgInterface {
 	
 	ALREADY_INTELLIGENT_ALLOCATION(11,"此次配货已被确认,请重新获取"),
 	
-	SPLIT_ORDER_ERROR(12,"拆单失败,只有已入库和部分入库的订单才能拆单")
-
-	;
+	SPLIT_ORDER_ERROR(12,"拆分订单有误,子单号查询不到订单详情!!!"),
+	
+    NOT_ALLOW_SPLIT_ORDER(13,"只有已配货和部分配货的订单才能进行拆分!!!"),
+    
+    LESS_STOK_FIRST_ORDER_AMOUNT_ERROR(14,"部分入库拆后订单,已入库的拆单数量有误!!!"),
+    
+    LESS_STOK_SECOND_ORDER_AMOUNT_ERROR(15,"部分入库拆后订单,待入库的拆单数量有误!!!"),
+    
+    ALL_STOCK_ORDER_SUBNUMBER_ERROR(16,"已入库订单,拆分订单的总拆分数量有误!!!"),
+    
+    NO_HAVING_ORDER_ALLOCATION(17,"当前无订单参与配货!!!");
 
     private int code;
     
