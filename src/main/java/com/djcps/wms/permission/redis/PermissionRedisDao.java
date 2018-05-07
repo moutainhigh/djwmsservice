@@ -41,7 +41,7 @@ public class PermissionRedisDao {
      * @param userId
      * @return
      */
-    public Boolean setPermission(List<UserPermissionVO> list, String userId){
+    public Boolean setPermission( String userId,List<UserPermissionVO> list){
         long result = redisClientCluster.setnx(RedisPrefixConstant.PERMISSION_REDIS_CACHE + userId,JSONObject.toJSONString(list));
         if(result > 0 ){
             redisClientCluster.expire(RedisPrefixConstant.PERMISSION_REDIS_CACHE + userId,PermissionConstants.PERMISSION_REDIS_CACHE_TIME);

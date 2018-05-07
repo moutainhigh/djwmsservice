@@ -1,8 +1,8 @@
 package com.djcps.wms.record.model.param;
 
-import java.util.List;
-
 import com.djcps.wms.commons.base.BaseListBO;
+
+import java.util.List;
 
 /**
  * 获取盘点操作记录列表参数接受类

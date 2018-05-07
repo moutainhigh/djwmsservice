@@ -19,6 +19,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -87,9 +88,10 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
         if (Method.POST.getValue().equals(method)) {
             /**
              * request steam only is not null once
-             * @requestBody use steam when
+             * @requestBody use steam when steam is not used
              */
-            params = request.getParameterMap();
+//            String json = getPostBodyContent(request);
+//            params = JsonUtils.jsonToMap(json,params);
         }
         if (Method.GET.getValue().equals(method)) {
             String[] urls = url.split(AppConstant.W);
@@ -99,6 +101,23 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
             }
         }
         return params;
+    }
+
+    private String getPostBodyContent(HttpServletRequest request){
+        try {
+            BufferedReader br = request.getReader();
+            StringBuilder json = new StringBuilder();
+            String str = null;
+            br.mark(1048576);
+            while ((str = br.readLine()) != null) {
+                json.append(str);
+            }
+            br.reset();
+            return json.toString();
+        }catch (IOException e){
+            LOGGER.error("{}",e.getMessage());
+        }
+        return null;
     }
 
 
@@ -162,6 +181,9 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
      * 传参枚举
      */
     enum Method {
+        /**
+         * 请求方式
+         */
         GET("GET"),
         POST("POST");
 

@@ -1,28 +1,24 @@
 package com.djcps.wms.role.server;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.role.model.DeleteBO;
 import com.djcps.wms.role.model.OrgRoleInfoBO;
-import com.djcps.wms.role.model.UpdateRoleInfoBO;
 import com.djcps.wms.role.model.request.OrgRoleListPO;
 import com.djcps.wms.role.model.request.OrgSavePO;
 import com.djcps.wms.role.request.OrgRoleHttpRequest;
 import com.google.gson.Gson;
-
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @title:调用ORG_http服务

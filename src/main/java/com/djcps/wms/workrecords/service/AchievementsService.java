@@ -14,7 +14,7 @@ public interface AchievementsService {
 
     /**
      * 统计
-     *
+     * @param param
      * @return
      */
     Map<String,Object> statistics(AchievementsBO param);

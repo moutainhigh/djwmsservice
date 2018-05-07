@@ -1,6 +1,7 @@
 package com.djcps.wms.permission.model.bo;
 
 import com.djcps.wms.commons.model.OperatorInfoBO;
+import com.djcps.wms.permission.constants.PermissionConstants;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**

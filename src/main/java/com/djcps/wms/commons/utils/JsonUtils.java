@@ -43,11 +43,4 @@ public class JsonUtils {
         return map;
     }
 
-    public static void main(String[] args){
-        Map<String,String[]> map = new HashMap<>();
-        map.put("name",new String[]{"1"});
-        String json= "{\"name\":\"2\"}";
-        String result = JSONObject.toJSONString(jsonToMap(json,map));
-        System.out.println(result);
-    }
 }

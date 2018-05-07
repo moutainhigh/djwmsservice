@@ -1,8 +1,8 @@
 package com.djcps.wms.commons.base;
 
-import java.io.Serializable;
-
 import com.djcps.wms.commons.constant.AppConstant;
+
+import java.io.Serializable;
 
 /**
  * 该类为 基础版本号 参数类

@@ -1,12 +1,10 @@
 package com.djcps.wms.commons.listener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.djcps.wms.commons.constant.RedisPrefixConstant;
 import com.djcps.wms.commons.redis.RedisClient;
+import com.djcps.wms.sysurl.model.SysUrlPO;
+import com.djcps.wms.sysurl.service.SysUrlService;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +18,7 @@ import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import com.djcps.wms.commons.constant.RedisPrefixConstant;
-import com.djcps.wms.sysurl.model.SysUrlPO;
-import com.djcps.wms.sysurl.service.SysUrlService;
-import com.google.gson.Gson;
+import java.util.*;
 
 /**
  * 扫描并存入数据库url监听器

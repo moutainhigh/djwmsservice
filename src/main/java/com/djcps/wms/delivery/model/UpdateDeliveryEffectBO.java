@@ -1,11 +1,9 @@
 package com.djcps.wms.delivery.model;
 
+import com.djcps.wms.commons.model.PartnerInfoBO;
+
 import java.io.Serializable;
 import java.util.List;
-
-import com.djcps.wms.commons.base.BaseBO;
-import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 
 /**
  * 删除订单信息 参数类

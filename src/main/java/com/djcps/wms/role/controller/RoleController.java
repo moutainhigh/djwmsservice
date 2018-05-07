@@ -1,19 +1,5 @@
 package com.djcps.wms.role.controller;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Validation;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.ResultCollectors;
@@ -31,6 +17,18 @@ import com.djcps.wms.role.model.RoleListBO;
 import com.djcps.wms.role.model.SaveBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
 import com.djcps.wms.role.service.RoleService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Validation;
+import java.util.Map;
+
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @title:角色信息控制层

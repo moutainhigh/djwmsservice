@@ -1,13 +1,5 @@
 package com.djcps.wms.permission.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
@@ -16,21 +8,9 @@ import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OtherHttpResult;
-import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.permission.constants.PermissionConstants;
-import com.djcps.wms.permission.model.bo.BaseOrgBO;
-import com.djcps.wms.permission.model.bo.DeletePerParamBO;
-import com.djcps.wms.permission.model.bo.GetPermissionBO;
-import com.djcps.wms.permission.model.bo.GetPermissionChooseBO;
-import com.djcps.wms.permission.model.bo.GetUserByPermissionIdBO;
-import com.djcps.wms.permission.model.bo.GetWmsPermissionBO;
-import com.djcps.wms.permission.model.bo.InsertOrUpdatePermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionBO;
-import com.djcps.wms.permission.model.bo.PermissionChooseBO;
-import com.djcps.wms.permission.model.bo.UpdatePermissionBO;
-import com.djcps.wms.permission.model.bo.UserPermissionBO;
-import com.djcps.wms.permission.model.bo.WmsPermissionBO;
+import com.djcps.wms.permission.model.bo.*;
 import com.djcps.wms.permission.model.po.GetOnePermissionPO;
 import com.djcps.wms.permission.model.po.GetPermissionPackagePO;
 import com.djcps.wms.permission.model.po.GetWmsPerPO;
@@ -42,6 +22,13 @@ import com.djcps.wms.permission.redis.PermissionRedisDao;
 import com.djcps.wms.permission.server.PermissionServer;
 import com.djcps.wms.permission.service.PermissionService;
 import com.google.gson.reflect.TypeToken;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
@@ -69,20 +56,14 @@ public class PermissionServiceImpl implements PermissionService {
         if (ObjectUtils.isEmpty(param.getKeyWord())) {
             param.setKeyWord("");
         }
-        GetPermissionBO getPermissonBO = new GetPermissionBO();
-        BeanUtils.copyProperties(param, getPermissonBO);
-        getPermissonBO.setCompanyID(param.getCompanyId());
-        getPermissonBO.setBusiness((param.getBusiness()));
+        GetPermissionBO getPermissionBO = new GetPermissionBO();
+        BeanUtils.copyProperties(param, getPermissionBO);
+        getPermissionBO.setCompanyID(param.getCompanyId());
+        getPermissionBO.setBusiness((param.getBusiness()));
         //得到请求的数据
-        OtherHttpResult result = permissionServer.getPermissionList(getPermissonBO);
+        OtherHttpResult result = permissionServer.getPermissionList(getPermissionBO);
         String data = JSONObject.toJSONString(result.getData());
         Integer countData = result.getTotal();
-			/*Integer	count;
-			if(!ObjectUtils.isEmpty(countData)) {
-			    count=Integer.parseInt(countData);
-			}else {
-			    count=0;
-			}*/
         ArrayList<GetPermissionPackagePO> listUser = gson.fromJson(data, new TypeToken<List<GetPermissionPackagePO>>() {
         }.getType());
         //规范返回字段
@@ -251,7 +232,7 @@ public class PermissionServiceImpl implements PermissionService {
             if (ObjectUtils.isEmpty(userPermissionVOList)) {
                 userPermissionVOList = permissionServer.getUserPermission(param);
                 // 设置权限缓存
-//				permissionRedisDao.setPermission(userPermissionVOList,param.getId());
+				permissionRedisDao.setPermission(param.getId(),userPermissionVOList);
             }
             return MsgTemplate.successMsg(userPermissionVOList);
         } catch (Exception e) {

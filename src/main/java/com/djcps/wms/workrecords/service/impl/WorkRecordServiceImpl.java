@@ -226,23 +226,23 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                 WorkRecordsOrderPO workRecordsOrderPO = gson.fromJson(gson.toJson(result.getData()), WorkRecordsOrderPO.class);
                 OrderIdsBO orderIds = new OrderIdsBO();
                 orderIds.setChildOrderIds(Arrays.asList(workRecordsOrderPO.getOrderId()));
-//                List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
-//                if (!childOrderList.isEmpty()) {
-//                    ChildOrderBO childOrderBO = childOrderList.stream()
-//                            .filter(b -> b.getFchildorderid().equals(workRecordsOrderPO.getOrderId())).findFirst()
-//                            .orElse(null);
-//                    if (!ObjectUtils.isEmpty(childOrderBO)) {
-//                        workRecordsOrderPO.setMaterialName(childOrderBO.getFmaterialname());
-//                        workRecordsOrderPO.setMaterialLength(StringUtils.toString(childOrderBO.getFmateriallength()));
-//                        workRecordsOrderPO.setMaterialWidth(StringUtils.toString(childOrderBO.getFmaterialwidth()));
-//                        workRecordsOrderPO.setBoxHeight(StringUtils.toString(childOrderBO.getFboxheight()));
-//                        workRecordsOrderPO.setBoxWidth(StringUtils.toString(childOrderBO.getFboxwidth()));
-//                        workRecordsOrderPO.setBoxLength(StringUtils.toString(childOrderBO.getFboxlength()));
-//                        workRecordsOrderPO.setFluteType(childOrderBO.getFflutetype());
-//                        workRecordsOrderPO.setOrderAmount(childOrderBO.getFamount());
-//                        workRecordsOrderPO.setUnit("片");
-//                    }
-//                }
+                List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
+                if (!childOrderList.isEmpty()) {
+                    ChildOrderBO childOrderBO = childOrderList.stream()
+                            .filter(b -> b.getChildOrderId().equals(workRecordsOrderPO.getOrderId())).findFirst()
+                            .orElse(null);
+                    if (!ObjectUtils.isEmpty(childOrderBO)) {
+                        workRecordsOrderPO.setMaterialName(childOrderBO.getMaterialName());
+                        workRecordsOrderPO.setMaterialLength(StringUtils.toString(childOrderBO.getMaterialLength()));
+                        workRecordsOrderPO.setMaterialWidth(StringUtils.toString(childOrderBO.getMaterialWidth()));
+                        workRecordsOrderPO.setBoxHeight(StringUtils.toString(childOrderBO.getBoxHeight()));
+                        workRecordsOrderPO.setBoxWidth(StringUtils.toString(childOrderBO.getBoxWidth()));
+                        workRecordsOrderPO.setBoxLength(StringUtils.toString(childOrderBO.getBoxLength()));
+                        workRecordsOrderPO.setFluteType(childOrderBO.getFluteType());
+                        workRecordsOrderPO.setOrderAmount(childOrderBO.getAmount());
+                        workRecordsOrderPO.setUnit(childOrderBO.getUnit());
+                    }
+                }
                 return MsgTemplate.successMsg(workRecordsOrderPO);
             }
             return MsgTemplate.customMsg(result);

@@ -1,12 +1,11 @@
 package com.djcps.wms.commons.fluentvalidator;
 
 
-import org.springframework.util.ObjectUtils;
-
 import com.baidu.unbiz.fluentvalidator.Validator;
 import com.baidu.unbiz.fluentvalidator.ValidatorContext;
 import com.baidu.unbiz.fluentvalidator.ValidatorHandler;
 import com.djcps.wms.commons.msg.MsgInterface;
+import org.springframework.util.ObjectUtils;
 
 
 /**

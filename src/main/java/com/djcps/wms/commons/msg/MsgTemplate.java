@@ -1,10 +1,7 @@
 package com.djcps.wms.commons.msg;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

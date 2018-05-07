@@ -1,13 +1,12 @@
 package com.djcps.wms.workrecords.model;
 
+import com.djcps.wms.commons.base.BaseListBO;
+
 import javax.validation.constraints.NotNull;
 
 /**
- * 
  * @author py
  */
-
-import com.djcps.wms.commons.base.BaseListBO;
 
 public class WorkRecordsBO extends BaseListBO{
 	/**

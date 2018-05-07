@@ -1,11 +1,10 @@
 package com.djcps.wms.record.model.param;
 
-import java.io.Serializable;
-
-import java.util.Arrays;
-
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.record.model.OrderOperationRecordPO;
+
+import java.io.Serializable;
+import java.util.Arrays;
 /**
  * 
  * 
