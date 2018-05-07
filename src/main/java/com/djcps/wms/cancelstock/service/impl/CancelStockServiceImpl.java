@@ -35,7 +35,7 @@ import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.record.server.OperationRecordServer;
 import com.google.gson.Gson;
@@ -140,7 +140,7 @@ public class CancelStockServiceImpl implements CancelStockService {
 			if(result.isSuccess()){
 				List<String> orderId = new ArrayList<>();
 				orderId.add(param.getOrderId());
-				Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea());
+				Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea(),param.getPartnerId());
 				if(compareOrderStatus==false){
 					return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 				}

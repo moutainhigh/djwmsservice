@@ -4,6 +4,7 @@ package com.djcps.wms.allocation.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,10 +25,11 @@ import org.springframework.util.StringUtils;
 
 import com.api.partneroperatingmanage.carchecksign.api.TmsCarchecksignServer;
 import com.api.partneroperatingmanage.carchecksign.model.request.ReqVehicleQueuingListBiz;
-import com.api.partneroperatingmanage.carchecksign.model.response.ResPartnercarChecksignBiz;
 import com.base.TmsJsonResult;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
+import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.allocation.constant.AllocationConstant;
 import com.djcps.wms.allocation.enums.AllocationMsgEnum;
 import com.djcps.wms.allocation.model.AddAllocationBO;
@@ -39,6 +41,7 @@ import com.djcps.wms.allocation.model.CancelAllocationBO;
 import com.djcps.wms.allocation.model.CarInfo;
 import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.DeliveryOrderPO;
+import com.djcps.wms.allocation.model.DeliveryPO;
 import com.djcps.wms.allocation.model.GetAllocationManageListPO;
 import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
 import com.djcps.wms.allocation.model.GetExcellentLodingBO;
@@ -53,11 +56,11 @@ import com.djcps.wms.allocation.model.OrderPO;
 import com.djcps.wms.allocation.model.PickerPO;
 import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.SequenceBO;
-import com.djcps.wms.allocation.model.SplitOrderBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.WarehousePO;
 import com.djcps.wms.allocation.model.WaybillDeliveryOrderPO;
+import com.djcps.wms.allocation.model.WaybillPO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.base.BaseAddBO;
@@ -78,7 +81,6 @@ import com.djcps.wms.commons.utils.RedisUtil;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
-import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseAreaBO;
@@ -86,6 +88,8 @@ import com.djcps.wms.order.model.WarehouseLocationBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.push.model.PushMsgBO;
 import com.djcps.wms.push.mq.producer.AppProducer;
@@ -129,10 +133,13 @@ public class AllocationServiceImpl implements AllocationService {
     private LoadingTaskServer loadingTaskServer;
     @Resource
     private AppProducer appProducer;
+    @Autowired
+    private TmsCarchecksignServer carchecksignServer;
 	@Autowired
-	private TmsCarchecksignServer carchecksignServer;
-   @Autowired
-    private OperationRecordServer operationRecordServer;
+	private AbnormalServer abnormalServer;
+	@Autowired
+	private OperationRecordServer operationRecordServer;
+	
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
 		HttpResult result = allocationServer.getOrderType(baseBO);
@@ -301,20 +308,16 @@ public class AllocationServiceImpl implements AllocationService {
 			//根据订单号获取提货单信息
 			HttpResult deliveryResult = allocationServer.getDeliveryByOrderIds(redundantOrderList);
 			if(!ObjectUtils.isEmpty(deliveryResult.getData())){
-				JsonArray deliveryArray = jsonParser.parse(gson.toJson(deliveryResult.getData())).getAsJsonArray();
-				for (JsonElement jsonElement : deliveryArray) {
-					JsonObject deliveryJsonObject = jsonElement.getAsJsonObject();
-					String deliveryIdEffect = deliveryJsonObject.get("deliveryIdEffect").getAsString();
-					String orderId = deliveryJsonObject.get("orderId").getAsString();
+				List<DeliveryPO> deliveryPOList = gson.fromJson(gson.toJson(deliveryResult.getData()), new TypeToken<ArrayList<DeliveryPO>>(){}.getType());
+				for (DeliveryPO delivery : deliveryPOList) {
+					String orderId = delivery.getOrderId();
 					//判断提货单确认有效
-					if(AllocationConstant.DELIVERY_EFFEFT.equals(deliveryIdEffect)){
-						WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
-						if(warehouseOrderDetailPO!=null){
-							//提货单赋值
-							String deliveryId = deliveryJsonObject.get("deliveryId").getAsString();
-							warehouseOrderDetailPO.setDeliveryId(deliveryId);
-							deliveryIdList.add(deliveryId);
-						}
+					WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
+					if(warehouseOrderDetailPO!=null){
+						//提货单赋值
+						String deliveryId = delivery.getDeliveryId();
+						warehouseOrderDetailPO.setDeliveryId(deliveryId);
+						deliveryIdList.add(deliveryId);
 					}
 				}
 			}
@@ -323,12 +326,11 @@ public class AllocationServiceImpl implements AllocationService {
 			//根据提货单号获取运单信息
 			HttpResult waybillResult = allocationServer.getWaybillByDeliveryIds(deliveryIdList);
 			if(!ObjectUtils.isEmpty(waybillResult.getData())){
-				JsonArray waybillJsonArray = jsonParser.parse(gson.toJson(waybillResult.getData())).getAsJsonArray();
-				for (JsonElement jsonElement : waybillJsonArray) {
-					JsonObject waybillObject = jsonElement.getAsJsonObject();
-					String orderId = waybillObject.get("orderId").getAsString();
-					String waybillId = waybillObject.get("waybillId").getAsString();
-					String plateNumber = waybillObject.get("plateNumber").getAsString();
+				List<WaybillPO> waybillPOList = gson.fromJson(gson.toJson(waybillResult.getData()), new TypeToken<ArrayList<WaybillPO>>(){}.getType());
+				for (WaybillPO waybillPO : waybillPOList) {
+					String orderId = waybillPO.getOrderId();
+					String plateNumber = waybillPO.getPlateNumber();
+					String waybillId = waybillPO.getWaybillId();
 					WarehouseOrderDetailPO warehouseOrderDetailPO = map.get(orderId);
 					if(warehouseOrderDetailPO!=null){
 						warehouseOrderDetailPO.setWaybillId(waybillId);
@@ -337,13 +339,10 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 			}
 		}
-		Map<String, Object> result = new HashMap<String, Object>(16);
-        result.put("success",true);
-        result.put("code",100000);
-        result.put("msg", "");
-        result.put("data", stockInfo);
-        result.put("total", total);
-		return result;
+		BaseVO base = new BaseVO();
+		base.setTotal(total);
+		base.setResult(stockInfo);
+		return MsgTemplate.successMsg(base);
 	}
 
 	@Override
@@ -355,7 +354,6 @@ public class AllocationServiceImpl implements AllocationService {
 		OtherHttpResult result = allocationServer.getOrderByAllocationId(param);
 		List<OrderPO> orderPoList = gson.fromJson(gson.toJson(result.getData()), new TypeToken<ArrayList<OrderPO>>(){}.getType());
 		
-		Map<String,OrderPO> map = new HashMap<>(16);
 		if(!ObjectUtils.isEmpty(orderPoList)){
 			//将智能配货结果存入到缓存当中
 			if(!ObjectUtils.isEmpty(orderPoList)){
@@ -421,45 +419,7 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 	}
-	/**
-	 * 处理操作记录数据
-	 * @param param
-	 */
-	public List<OrderOperationRecordPO> saveOrderOperationRecord(VerifyAllocationBO param) {
-	    List<OrderOperationRecordPO> list = new ArrayList<>();
-	    OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
-	    orderOperationRecordPO.setPartnerId(param.getPartnerId());
-	    orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
-	    orderOperationRecordPO.setOperator(param.getOperator());
-	    orderOperationRecordPO.setOperatorId(param.getOperatorId());
-	    OrderIdsBO orderIdsBO = new OrderIdsBO();
-        List<String> orderIds = new ArrayList<>();
-        for(SequenceBO order :param.getOrderIds()) {
-            orderIds.add(order.getOrderId());
-        }
-        orderIdsBO.setChildOrderIds(orderIds);
-        orderIdsBO.setPartnerArea(param.getPartnerArea());
-      //根据订单编号获取订单信息
-        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!orderInfo.getSplitOrderList().isEmpty()) {
-        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
-        }
-        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
-                //处理数据
-                orderOperationRecordPO.setFluteType(info.getFluteType());
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
-              //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
-                orderOperationRecordPO.setArea(String.valueOf(area));
-                list.add(orderOperationRecordPO);
-            }
-           
-        }
-        return list;
-}
+
 	/**
 	 * 确认配货执行逻辑方法
 	 * @param param
@@ -467,8 +427,11 @@ public class AllocationServiceImpl implements AllocationService {
 	 * @throws InterruptedException 
 	 */
 	private Map<String, Object> verifyAllocationSon(VerifyAllocationBO param) throws InterruptedException {
-	    List<OrderOperationRecordPO> orderOperationRecordPO = saveOrderOperationRecord(param);
-	    param.setList(orderOperationRecordPO);
+		//没有参与确认配货的订单直接驳回
+		List<SequenceBO> seqOrderIds = param.getOrderIds();
+		if(!ObjectUtils.isEmpty(seqOrderIds)){
+			return MsgTemplate.failureMsg(AllocationMsgEnum.NO_HAVING_ORDER_ALLOCATION);
+		}
 		//确认配货之前先校验该智能配货结果是否已配货
 		HttpResult existHttpResult = allocationServer.existIntelligentAlloca(param.getAllocationId());
 		if(!ObjectUtils.isEmpty(existHttpResult.getData())){
@@ -482,7 +445,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 		}
 		
-		//伪代码要删除
+		//============================================伪代码要删除
 		HttpResult talbeResult =  allocationServer.getDeliveryTableId(param);
 		if(!ObjectUtils.isEmpty(talbeResult.getData())){
 			JsonObject asJsonObject = new JsonParser().parse(gson.toJson(talbeResult.getData())).getAsJsonObject();
@@ -515,7 +478,7 @@ public class AllocationServiceImpl implements AllocationService {
 			redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 			return MsgTemplate.failureMsg("请检查是否有可用的装车台或检查装车台是否已绑定装车台账号");
 		}
-		//伪代码要删除
+		//============================================伪代码要删除
 		
 		List<String> orderIds = new ArrayList<>();
 		List<SequenceBO> sequenceList = param.getOrderIds();
@@ -525,13 +488,29 @@ public class AllocationServiceImpl implements AllocationService {
 			orderIds.add(sequenceBO.getOrderId());
 		}
 		
-		//配货之前先确认配货结果是否是已配货，此处订单状态必须为22已入库状态,否的话直接全部驳回
-		HttpResult orderResult = allocationServer.getOrderByOrderIds(orderIds);
-		List<OrderPO> orderPOList = gson.fromJson(gson.toJson(orderResult.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
-		for (OrderPO orderPO : orderPOList) {
-			Integer orderStatus = orderPO.getOrderStatus();
+		//配货之前先确认订单状态是否已配货，此处订单状态必须为22已入库状态,否的话直接全部驳回
+		BatchOrderIdListBO batchOrderIdList = new BatchOrderIdListBO();
+		batchOrderIdList.setKeyArea(param.getPartnerArea());
+		batchOrderIdList.setOrderIds(orderIds);
+		HttpResult orderResult =  orderServer.getOrderDeatilByIdList(batchOrderIdList);
+	    BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+        List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+        if(!ObjectUtils.isEmpty(sonOrderList)){
+        	joinOrderParamInfo =  orderServer.joinOrderParamInfo(sonOrderList);
+        }
+        List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+        if(!ObjectUtils.isEmpty(splitOrderList)){
+        	 if(!ObjectUtils.isEmpty(joinOrderParamInfo)){
+             	joinOrderParamInfo.addAll(orderServer.joinOrderParamInfo(splitOrderList));
+             }else{
+            	 joinOrderParamInfo =  orderServer.joinOrderParamInfo(splitOrderList);
+             }
+        }
+		for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+			Integer orderStatus = warehouseOrderDetailPO.getOrderStatus();
 			if(!OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
-				String error = orderPO.getOrderId();
+				String error = warehouseOrderDetailPO.getOrderId();
 				//删除同时确认配货锁
 				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
 				//释放同时确认配货,确认优化公共锁
@@ -567,6 +546,7 @@ public class AllocationServiceImpl implements AllocationService {
 				update.setPartnerId(param.getPartnerId());
 				updateList.add(update);
 			}
+			//修改冗余表订单状态
 			HttpResult updateOrderRedunResult = allocationServer.batchUpdateOrderRedun(updateList);
 			if(updateOrderRedunResult.isSuccess()){
 				//TODO 最后通知提货员和装车台账户
@@ -575,7 +555,6 @@ public class AllocationServiceImpl implements AllocationService {
 				pushExtraFieldBO.setOpenType(AppConstant.PUSH_OPEN_TYPE_DELIVERY);
 				PushMsgBO push = new PushMsgBO();
 				push.setUserid(param.getPickerId());
-//				push.setMsg(AllocationConstant.PUSH_DELIVERY_MSG);
 				push.setAppSystem(AppConstant.WMS);
 				push.setMid(param.getDeliveryId());
 				push.setType(AllocationConstant.PUSH_DELIVERY_TYPE);
@@ -603,14 +582,12 @@ public class AllocationServiceImpl implements AllocationService {
 					return MsgTemplate.failureMsg("智能配货,确认配货修改订单状态失败!!!");
 				}
 				//比较订单状态大小
-				Boolean flag = orderServer.compareOrderStatus(orderList,param.getPartnerArea());
+				Boolean flag = orderServer.compareOrderStatus(orderList,param.getPartnerArea(),param.getPartnerId());
 				if(flag==false){
 					return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 				}
 				
 				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+param.getAllocationId());
-				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+param.getAllocationId());
-				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+param.getAllocationId());
 				//删除同时确认配货锁
 				redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.VERIFY_ALLOCATION+param.getAllocationId());
 				//删除确认优化和确认配货公共锁
@@ -631,28 +608,6 @@ public class AllocationServiceImpl implements AllocationService {
 		String allocationId = param.getAllocationId();
 		//配货中移除订单flag为0,配货管理flag为1
 		if(param.getFlag().equals(AllocationConstant.ALLOCATION_REMOVE_ORDER)){
-			String string = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId);
-			if(!StringUtils.isEmpty(string)){
-				//保存订单号的唯一性,防止误点和网络延迟的特殊情况出现
-				HashSet<String> set = new HashSet<>();
-				List<String> orderIds = gson.fromJson(string, List.class);
-				for (String string2 : orderIds) {
-					set.add(string2);
-				}
-				List<String> otherOrderIds =  param.getOrderIds();
-				for (String string2 : otherOrderIds) {
-					set.add(string2);
-				}
-				orderIds = new ArrayList<>();
-				Iterator<String> iterator = set.iterator();
-				while(iterator.hasNext()){
-					String orderId = iterator.next();
-					orderIds.add(orderId);
-				}
-				redisClient.set(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId, gson.toJson(orderIds));
-			}else{
-				redisClient.set(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId, gson.toJson(param.getOrderIds()));
-			}
 			HttpResult result = allocationServer.allocationMoveOrder(param);
 			return MsgTemplate.customMsg(result);
 		}else if(param.getFlag().equals(AllocationConstant.ALLOCATION_MANAGEMENT_REMOVE_ORDER)){
@@ -683,32 +638,89 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		return MsgTemplate.successMsg(); 
 	}
-
+	
 	@Override
 	public Map<String, Object> getAddOrderList(GetRedundantByAttributeBO param) {
-		String allocationId = param.getAllocationId();
-		String waybillId = param.getWaybillId();
+		List<String> orderIdList = param.getOrderIdList();
+		//key和value都是订单号
+		Map<String,String> orderStrMap = new HashMap<>();
+		List<OrderIdBO> orderIdBOList = new ArrayList<>();
+		for (String string : orderIdList) {
+			if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
+				orderStrMap.put(string, string);
+				String newStr = string.substring(0, string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+				OrderIdBO order = new OrderIdBO();
+				order.setKeyArea(param.getPartnerArea());
+				order.setOrderId(newStr);
+				orderIdBOList.add(order);
+			}
+		}
+		
+		if(!ObjectUtils.isEmpty(orderIdBOList)){
+			//根据订单号批量查询拆单信息
+			HttpResult splitOrderResult = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
+			Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+				List<WarehouseOrderDetailPO> value = entry.getValue();
+				Iterator<WarehouseOrderDetailPO> iterator = value.iterator();
+				while(iterator.hasNext()){
+					WarehouseOrderDetailPO next = iterator.next();
+					String subOrderId = orderStrMap.get(next.getSubOrderId());
+					if(subOrderId!=null){
+						iterator.remove();
+					}
+				}
+			}
+			
+			Map<String, List<WarehouseOrderDetailPO>> newOrderMap = new HashMap<>();
+			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+				List<WarehouseOrderDetailPO> value = entry.getValue();
+				newOrderMap.put(entry.getKey(),new ArrayList<>());
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : value) {
+					Integer subStatus = warehouseOrderDetailPO.getSubStatus();
+					if(subStatus.equals(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()))){
+						newOrderMap.get(entry.getKey()).add(warehouseOrderDetailPO);
+					}
+				}
+			}
+			
+			//判断newOrderMap value中的List的值,大小等于0则表示需要添加到orderIdList中的数据
+			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:newOrderMap.entrySet()){
+				List<WarehouseOrderDetailPO> value = entry.getValue();
+				if(ObjectUtils.isEmpty(value)){
+					orderIdList.add(entry.getKey());
+				}
+			}
+		}
+		HttpResult result = allocationServer.getErrorAddOrderList(param);
+		List<String> redundantOrderList = gson.fromJson(gson.toJson(result.getData()),ArrayList.class);
+		List<String> newRedundantOrderList = new ArrayList<>();
+		for (String string : redundantOrderList) {
+			if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
+				newRedundantOrderList.add(string);
+			}
+		}
+		if(ObjectUtils.isEmpty(newRedundantOrderList)){
+			newRedundantOrderList = redundantOrderList;
+		}
+		param.setOrderIdList(newRedundantOrderList);
+		result = allocationServer.getAddOrderList(param);
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
 		List<WarehouseOrderDetailPO> orderDetailList = new ArrayList<WarehouseOrderDetailPO>();
-		//订单状态:已入库
-		param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
-		OtherHttpResult result = allocationServer.getAddOrderList(param);
-		int total = result.getTotal();
 		if(!ObjectUtils.isEmpty(result.getData())){
-			List<String> redundantOrderList = gson.fromJson(gson.toJson(result.getData()),ArrayList.class);
+			BaseVO base = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
+			redundantOrderList = gson.fromJson(gson.toJson(base.getResult()),ArrayList.class);
 			BatchOrderIdListBO batchOrder = new BatchOrderIdListBO();
 	        batchOrder.setKeyArea(param.getPartnerArea());
 	        batchOrder.setOrderIds(redundantOrderList);
 	        //根据订单号批量查询订单详情信息
-	        HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-	        BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
-	        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
-	        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+	        result = orderServer.getOrderDeatilByIdList(batchOrder);
+	        BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(result.getData()),BatchOrderDetailListPO.class);
+	        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
 				map.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
 				orderDetailList.add(warehouseOrderDetailPO);
 			}
-			
 			//根据订单查询在库信息组织对象
 			SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 			BeanUtils.copyProperties(param, selectAreaByOrderId);
@@ -721,137 +733,28 @@ public class AllocationServiceImpl implements AllocationService {
 			selectAreaByOrderId.setOrderIds(list);
 			//获取在库信息
 			List<WarehouseOrderDetailPO> stockInfo = orderServer.getOrderStockInfo(selectAreaByOrderId);
-			if(!ObjectUtils.isEmpty(stockInfo)){
-				for (WarehouseOrderDetailPO warehouseOrderDetailPO : stockInfo) {
-					String orderId = warehouseOrderDetailPO.getOrderId();
-					WarehouseOrderDetailPO orderDetail = map.get(orderId);
+			for (WarehouseOrderDetailPO warehouseOrderDetailPO : stockInfo) {
+				String orderId = warehouseOrderDetailPO.getOrderId();
+				WarehouseOrderDetailPO orderDetail = map.get(orderId);
+				if(orderDetail!=null){
 					orderDetail.setAreaList(warehouseOrderDetailPO.getAreaList());
 					orderDetail.setWarehouseId(warehouseOrderDetailPO.getWarehouseId());
 					orderDetail.setWarehouseName(warehouseOrderDetailPO.getWarehouseName());
 				}
 			}
 			
-			List<WarehouseOrderDetailPO> detailList = new ArrayList<WarehouseOrderDetailPO>();
-			//等于1表示,装车优化追加订单界面要走缓存
-			if(AllocationConstant.EXCELLENT_LOADING_CACHE.equals(param.getCache())){
-				String str = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.AGAIN_VERIFY_ADDORDER+waybillId);
-				String removeStr = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.REMOVE_ORDER+waybillId);
-				
-				List<String> fromOrderIds = gson.fromJson(str, List.class);
-				List<String> removeStrList = gson.fromJson(removeStr, List.class);
-				if(!StringUtils.isEmpty(fromOrderIds) && !StringUtils.isEmpty(removeStrList)){
-					for(String remove:removeStrList){
-						Iterator<String> addOrderIterator = fromOrderIds.iterator();
-						while(addOrderIterator.hasNext()){
-							String addString = addOrderIterator.next();
-							if(remove.equals(addString)){
-								addOrderIterator.remove();
-							}
-						}
-					}
-				}
-				if(!ObjectUtils.isEmpty(fromOrderIds)){
-					for (String string : fromOrderIds) {
-						WarehouseOrderDetailPO orderDetail = map.get(string);
-						if(orderDetail!=null){
-							map.remove(string);
-							total--;
-						}
-					}
-				}
-				
-				if(map.size()>0){
-					for(Map.Entry<String,WarehouseOrderDetailPO> entry : map.entrySet()){
-						detailList.add(entry.getValue());
-					}
-				}
-			//等于0表示,智能配货追加订单界面
-			}else{
-				String addOrder = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId);
-				String removeOrder = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+allocationId);
-				String allocationOrder = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+allocationId);
-				
-				List<AddAllocationOrderBO> cacheList = null;
-				List<String> orderIdsList = null;
-				if(!StringUtils.isEmpty(allocationOrder)){
-					List<OrderPO> allocationOrderList = gson.fromJson(allocationOrder, new TypeToken<ArrayList<OrderPO>>(){}.getType());
-					for (OrderPO orderPO : allocationOrderList) {
-						String orderId = orderPO.getOrderId();
-						WarehouseOrderDetailPO orderDetail = map.get(orderId);
-						if(orderDetail!=null){
-							map.remove(orderId);
-						}
-					}
-					//判断假如全部移除完毕了,那么就直接返回null
-					if(map.size()==0){
-						BaseVO vo = new BaseVO();
-						vo.setTotal(0);
-						vo.setResult(null);
-						return MsgTemplate.successMsg(vo);
-					}
-				}else{
-					//智能配货缓存为空说明全部的都被删除了
-					BaseVO vo = new BaseVO();
-					vo.setTotal(total);
-					vo.setResult(joinOrderParamInfo);
-					return MsgTemplate.successMsg(vo);
-				}
-				
-				if(!StringUtils.isEmpty(addOrder) && !StringUtils.isEmpty(removeOrder)){
-					cacheList = gson.fromJson(addOrder, new TypeToken<ArrayList<AddAllocationOrderBO>>(){}.getType());
-					orderIdsList = gson.fromJson(removeOrder, List.class);
-					Iterator<AddAllocationOrderBO> addIterator = cacheList.iterator();
-					while(addIterator.hasNext()){
-						AddAllocationOrderBO next = addIterator.next();
-						String orderId = next.getOrderId();
-						Iterator<String> orderIdsIterator = orderIdsList.iterator();
-						while(orderIdsIterator.hasNext()){
-							if(orderId.equals(orderIdsIterator.next())){
-								orderIdsIterator.remove();
-								addIterator.remove();
-							}
-						}
-					}
-				}
-				if(ObjectUtils.isEmpty(cacheList)){
-					cacheList = gson.fromJson(addOrder, new TypeToken<ArrayList<AddAllocationOrderBO>>(){}.getType());
-				}
-				
-				if(!ObjectUtils.isEmpty(cacheList)){
-					for (AddAllocationOrderBO orderBO : cacheList) {
-						String orderId = orderBO.getOrderId();
-						WarehouseOrderDetailPO orderDetail = map.get(orderId);
-						if(orderDetail!=null){
-							map.remove(orderId);
-							total--;
-						}
-					}
-				}
-				if(map.size()>0){
-					for(Map.Entry<String,WarehouseOrderDetailPO> entry : map.entrySet()){
-						detailList.add(entry.getValue());
-					}
-				}
+			List<WarehouseOrderDetailPO> detailList = new ArrayList<>();
+			for(Map.Entry<String,WarehouseOrderDetailPO> entry : map.entrySet()){
+				detailList.add(entry.getValue());
 			}
+			base.setResult(detailList);
+			return MsgTemplate.successMsg(base);
 			
-			//不走缓存,智能配货结果获取追加订单
-			BaseVO vo = new BaseVO();
-			if(!ObjectUtils.isEmpty(detailList)){
-				vo.setTotal(total);
-				vo.setResult(detailList);
-			}else if(!ObjectUtils.isEmpty(orderDetailList)){
-				vo.setTotal(total);
-				vo.setResult(orderDetailList);
-			}else{
-				vo.setResult(null);
-				vo.setTotal(0);
-			}
-			return MsgTemplate.successMsg(vo);
 		}else{
-			BaseVO vo = new BaseVO();
-			vo.setTotal(0);
-			vo.setResult(null);
-			return MsgTemplate.successMsg(vo);
+			BaseVO base = new BaseVO();
+			base.setTotal(0);
+			base.setResult(null);
+			return MsgTemplate.successMsg(base);
 		}
 	}
 
@@ -859,31 +762,38 @@ public class AllocationServiceImpl implements AllocationService {
 	public Map<String, Object> verifyAddOrder(List<AddAllocationOrderBO> param) {
 		//TODO 智能配货判断车辆装载率
 		String allocationId = param.get(0).getAllocationId();
-		//缓存详细订单信息
-		String cacheOrder = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId);
-		if(!StringUtils.isEmpty(cacheOrder)){
-			Map<String,AddAllocationOrderBO> map = new HashMap<>(16);
-			List<AddAllocationOrderBO> cacheList = gson.fromJson(cacheOrder, new TypeToken<ArrayList<AddAllocationOrderBO>>(){}.getType());
-			//保证追加订单的唯一性
-			for (AddAllocationOrderBO addAllocationOrderBO : cacheList) {
-				map.put(addAllocationOrderBO.getOrderId(), addAllocationOrderBO);
+		//已进行智能配货的订单无法在添加
+		String allocationOrder = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+allocationId);
+		List<OrderPO> allocationOrderList = gson.fromJson(allocationOrder, new TypeToken<ArrayList<OrderPO>>(){}.getType());
+		Map<String,OrderPO> orderPOMap = new HashMap<>();
+		for (OrderPO orderPO : allocationOrderList) {
+			orderPOMap.put(orderPO.getOrderId(), orderPO);
+		}
+		List<String> errrOrderIdList = new ArrayList<>();
+		for (AddAllocationOrderBO addAllocationOrderBO : param) {
+			OrderPO orderPO = orderPOMap.get(addAllocationOrderBO.getOrderId());
+			if(orderPO!=null){
+				errrOrderIdList.add(orderPO.getOrderId());
 			}
-			for (AddAllocationOrderBO addAllocationOrderBO : param) {
-				map.put(addAllocationOrderBO.getOrderId(), addAllocationOrderBO);
+		}
+		if(!ObjectUtils.isEmpty(errrOrderIdList)){
+			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer.append("以下订单已参与智能配货,请重新选择:");
+			for(int i =0;i<errrOrderIdList.size();i++){
+				if(i==errrOrderIdList.size()-1){
+					stringBuffer.append(errrOrderIdList.get(i));
+				}else{
+					stringBuffer.append(errrOrderIdList.get(i)).append(",");
+				}
 			}
-			cacheList = new ArrayList<>();
-			//遍历map
-			for(Map.Entry<String,AddAllocationOrderBO> entry : map.entrySet()){
-				AddAllocationOrderBO value = entry.getValue();
-				cacheList.add(value);
-			}
-			redisClient.set(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(cacheList));
-		}else{
-			redisClient.set(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+allocationId, gson.toJson(param));
+			return MsgTemplate.failureMsg(stringBuffer.toString());
 		}
 		for (AddAllocationOrderBO addAllocationOrderBO : param) {
 			addAllocationOrderBO.setDeliveryAmount(addAllocationOrderBO.getOrderAmount());
-			addAllocationOrderBO.setDeliveryIdEffect(Integer.valueOf(AllocationConstant.DELIVERY_EFFEFT));
+			addAllocationOrderBO.setDeliveryIdEffect(Integer.valueOf(AllocationConstant.DELIVERY_UNEFFEFT));
+			//=====================这里前端不需要传提货单号和提货单确认状态=====
+			addAllocationOrderBO.setDeliveryId(null);
+			//=====================这里前端不需要传提货单号和提货单确认状态=====
 		}
 		HttpResult result = allocationServer.verifyAddOrder(param);
 		return MsgTemplate.customMsg(result);
@@ -1135,7 +1045,19 @@ public class AllocationServiceImpl implements AllocationService {
 		HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
 		BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 		List<WarehouseOrderDetailPO> detailList = batchOrderDetailListPO.getOrderList();
-		List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(detailList);
+		List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+		if(!ObjectUtils.isEmpty(detailList)){
+			joinOrderParamInfo = orderServer.joinOrderParamInfo(detailList);
+		}
+		
+		List<WarehouseOrderDetailPO> splitOrderList =  batchOrderDetailListPO.getSplitOrderList();
+		if(!ObjectUtils.isEmpty(splitOrderList)){
+			if(!ObjectUtils.isEmpty(joinOrderParamInfo)){
+				joinOrderParamInfo.addAll(orderServer.joinOrderParamInfo(splitOrderList));
+			}else{
+				joinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
+			}
+		}
 		for (WarehouseOrderDetailPO orderDeatil : joinOrderParamInfo) {
 			orderStatusMap.put(orderDeatil.getOrderId(), orderDeatil);
 		}
@@ -1221,7 +1143,19 @@ public class AllocationServiceImpl implements AllocationService {
 		HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
 		BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 		List<WarehouseOrderDetailPO> detailList = batchOrderDetailListPO.getOrderList();
-		List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(detailList);
+		List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+		List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+		if(!ObjectUtils.isEmpty(detailList)){
+			joinOrderParamInfo = orderServer.joinOrderParamInfo(detailList);
+		}
+		if(!ObjectUtils.isEmpty(splitOrderList)){
+			if(!ObjectUtils.isEmpty(joinOrderParamInfo)){
+				joinOrderParamInfo.addAll(orderServer.joinOrderParamInfo(splitOrderList));
+			}else{
+				joinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
+			}
+		}
+		
 		for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
 			WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getOrderId());
 			BeanUtils.copyProperties(orderDetail, warehouseDetail,"amountSaved","remark","instockAmount","areaList","warehouseId","warehouseName");
@@ -1307,47 +1241,9 @@ public class AllocationServiceImpl implements AllocationService {
 		CarInfo car1 = new CarInfo();
 		return MsgTemplate.successMsg(car1);
 	}
-	/**
-	 * 取消配货生成操作记录组合数据信息
-	 * @param param
-	 * @return
-	 */
-	public List<OrderOperationRecordPO> cancelAllocationOperationInfo(CancelAllocationBO param) {
-        List<OrderOperationRecordPO> list = new ArrayList<>();
-        OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
-        orderOperationRecordPO.setPartnerId(param.getPartnerId());
-        orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
-        orderOperationRecordPO.setOperator(param.getOperator());
-        orderOperationRecordPO.setOperatorId(param.getOperatorId());
-        OrderIdsBO orderIdsBO = new OrderIdsBO();
-        orderIdsBO.setChildOrderIds(param.getOrderIds());
-        orderIdsBO.setPartnerArea(param.getPartnerArea());
-      //根据订单编号获取订单信息
-        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!orderInfo.getSplitOrderList().isEmpty()) {
-        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
-        }
-        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
-                //处理数据
-                orderOperationRecordPO.setFluteType(info.getFluteType());
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
-              //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
-                orderOperationRecordPO.setArea(String.valueOf(area));
-                list.add(orderOperationRecordPO);
-            }
-           
-        }
-        return list;
-}
+
 	@Override
 	public Map<String, Object> cancelAllocation(CancelAllocationBO param) {
-	    //处理操作记录数据
-	    List<OrderOperationRecordPO> operationRecordInfo = cancelAllocationOperationInfo(param);
-	    param.setList(operationRecordInfo);
 		// TODO
 		//传递所有订单号，修改成已入库,通知wms取消车辆
 		//修改提货单确认状态修改为feffect为2
@@ -1372,7 +1268,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 			HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(), orderIdList);
 			if(updateResult.isSuccess()){
-				Boolean flag = orderServer.compareOrderStatus(orderIds, param.getPartnerArea());
+				Boolean flag = orderServer.compareOrderStatus(orderIds, param.getPartnerArea(),param.getPartnerId());
 				if(flag==false){
 					return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 				}
@@ -1414,18 +1310,18 @@ public class AllocationServiceImpl implements AllocationService {
 		batch.setKeyArea(base.getPartnerArea());
 		HttpResult orderResult = orderServer.getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
-		List<WarehouseOrderDetailPO> orderList = new ArrayList<>();
-        orderList = batchOrderDetailListPO.getOrderList();
-        if(!ObjectUtils.isEmpty(orderList)){
-        	orderList = orderServer.joinOrderParamInfo(orderList);
-        }
-        List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
-        if(!ObjectUtils.isEmpty(splitOrderList)){
-        	splitOrderList = orderServer.joinOrderParamInfo(splitOrderList);
-        	orderList.addAll(splitOrderList);
-        }
-        
 		
+		List<WarehouseOrderDetailPO> orderList =null;
+		if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())){
+			orderList = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
+		}
+		if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getSplitOrderList())){
+			if(!ObjectUtils.isEmpty(orderList)){
+				orderList.addAll(orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList()));
+			}else{
+				orderList = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList());
+			}
+		}
 		String uuid = UUID.randomUUID().toString();
 		AddExcellentAllocationBO allocationBO = null;
 		if(!ObjectUtils.isEmpty(orderList)){
@@ -1516,7 +1412,6 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> againVerifyAllocation(MergeModelBO param, PartnerInfoBO partnerInfoBean) {
-	    
 		//确认配货,确认优化公共锁
 		Boolean setnx = RedisUtil.setnx(redisClient, RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId(), 
 				"上锁", AllocationConstant.REDIS_LOCK_TIME);
@@ -1561,45 +1456,7 @@ public class AllocationServiceImpl implements AllocationService {
 		}
 		return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 	}
-	/**
-     * 处理操作记录数据
-     * @param param
-     */
-    public List<OrderOperationRecordPO> saveOperationRecord(MergeModelBO param, PartnerInfoBO partnerInfoBean) {
-        List<OrderOperationRecordPO> list = new ArrayList<>();
-        OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
-        orderOperationRecordPO.setPartnerId(partnerInfoBean.getPartnerId());
-        orderOperationRecordPO.setPartnerArea(partnerInfoBean.getPartnerArea());
-        orderOperationRecordPO.setOperator(partnerInfoBean.getOperator());
-        orderOperationRecordPO.setOperatorId(partnerInfoBean.getOperatorId());
-        OrderIdsBO orderIdsBO = new OrderIdsBO();
-        List<String> orderIds = new ArrayList<>();
-        for(AgainVerifyAllocationBO order :param.getAgainVerifyAllocation()) {
-            orderIds.add(order.getOrderId());
-        }
-        orderIdsBO.setChildOrderIds(orderIds);
-        orderIdsBO.setPartnerArea(partnerInfoBean.getPartnerArea());
-      //根据订单编号获取订单信息
-        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!orderInfo.getSplitOrderList().isEmpty()) {
-        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
-        }
-        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
-                //处理数据
-                orderOperationRecordPO.setFluteType(info.getFluteType());
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
-              //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
-                orderOperationRecordPO.setArea(String.valueOf(area));
-                list.add(orderOperationRecordPO);
-            }
-           
-        }
-        return list;
-}
+	
 	/**
 	 * 装车优化确认配货执行逻辑方法
 	 * @param param
@@ -1607,9 +1464,6 @@ public class AllocationServiceImpl implements AllocationService {
 	 * @return
 	 */
 	private Map<String, Object> againVerifyAllocationSon(MergeModelBO param, PartnerInfoBO partnerInfoBean){
-	    //组合操作记录数据
-	    List<OrderOperationRecordPO> list = saveOperationRecord(param,partnerInfoBean);
-	    param.setList(list);
 		String waybillId = param.getWaybillId();
 		//校验数据的一致性
 		GetDeliveryByWaybillIdsBO waybillDeatil = new GetDeliveryByWaybillIdsBO();
@@ -1833,12 +1687,28 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 				
 				//判断订单状态,此处订单状态必须为22已入库状态
-				HttpResult result = allocationServer.getOrderByOrderIds(orderIds);
-				List<OrderPO> orderPOList = gson.fromJson(gson.toJson(result.getData()),new TypeToken<ArrayList<OrderPO>>(){}.getType());
-				for (OrderPO orderPO : orderPOList) {
-					Integer orderStatus = orderPO.getOrderStatus();
+				BatchOrderIdListBO batchOrderIdList = new BatchOrderIdListBO();
+				batchOrderIdList.setKeyArea(param.getPartnerArea());
+				batchOrderIdList.setOrderIds(orderIds);
+				HttpResult orderResult =  orderServer.getOrderDeatilByIdList(batchOrderIdList);
+			    BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+		        List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
+		        List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+		        if(!ObjectUtils.isEmpty(sonOrderList)){
+		        	joinOrderParamInfo =  orderServer.joinOrderParamInfo(sonOrderList);
+		        }
+		        List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+		        if(!ObjectUtils.isEmpty(splitOrderList)){
+		        	 if(!ObjectUtils.isEmpty(joinOrderParamInfo)){
+		             	joinOrderParamInfo.addAll(orderServer.joinOrderParamInfo(splitOrderList));
+		             }else{
+		            	 joinOrderParamInfo =  orderServer.joinOrderParamInfo(splitOrderList);
+		             }
+		        }
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+					Integer orderStatus = warehouseOrderDetailPO.getOrderStatus();
 					if(!OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
-						String error = orderPO.getOrderId();
+						String error = warehouseOrderDetailPO.getOrderId();
 						//释放同时确认配货,确认优化公共锁
 						redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.COMMON_ALLOCATION_LOADING+param.getPartnerId());
 						//删除同时确认优化锁
@@ -1987,7 +1857,7 @@ public class AllocationServiceImpl implements AllocationService {
 								LOGGER.error("装车优化中的移除订单,该订单已配货允许移除,但是修改订单状态失败!!!");
 								return MsgTemplate.failureMsg("装车优化中的移除订单,该订单已配货允许移除,但是修改订单状态失败!!!");
 							}
-							Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea());
+							Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea(),param.getPartnerId());
 							if(flag==false){
 								return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 							}
@@ -2010,7 +1880,7 @@ public class AllocationServiceImpl implements AllocationService {
 						LOGGER.error("装车优化中的追加订单,追加已配货订单,修改订单状态失败!!!");
 						return MsgTemplate.failureMsg("装车优化中的追加订单,追加已配货订单,修改订单状态失败!!!");
 					}
-					Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea());
+					Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea(),param.getPartnerId());
 					if(flag==false){
 						return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 					}
@@ -2098,8 +1968,6 @@ public class AllocationServiceImpl implements AllocationService {
 	@Override
 	public Map<String, Object> intelligentCancelAllocation(String parameter) {
 		redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+parameter);
-		redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_REMOVE_ORDER+parameter);
-		redisClient.del(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ADD_ORDER+parameter);
 		return MsgTemplate.successMsg();
 	}
 
@@ -2110,43 +1978,293 @@ public class AllocationServiceImpl implements AllocationService {
 	}
 
 	@Override
-	public Map<String, Object> splitOrder(SplitOrderBO param) {
-//		List<String> orderIds = new ArrayList<>();
-//		orderIds.add(param.getOrderId());
-//		BatchOrderIdListBO batchOrder = new BatchOrderIdListBO();
-//        batchOrder.setKeyArea(param.getPartnerArea());
-//        batchOrder.setOrderIds(orderIds);
-//        //根据订单号批量查询订单详情信息
-//        HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-//        BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
-//        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
-//        WarehouseOrderDetailPO joinOrderDetail = orderServer.joinOrderParamInfo(orderList).get(0);
-//        Integer orderStatus = joinOrderDetail.getOrderStatus();
-//        if((OrderStatusTypeEnum.LESS_ADD_STOCK.equals(orderStatus))&&(OrderStatusTypeEnum.ALL_ADD_STOCK.equals(orderStatus))){
-//        	SplitOrderFirstBO splitOrderFirst = param.getSplitOrderFirst();
-//        	splitOrderFirst.setFirstOrder(new StringBuffer().append(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_1).toString());
-//        	splitOrderFirst.setFirstIsSplit(2);
-//        	splitOrderFirst.setFirstOrderStatus(firstOrderStatus);
-//        	
-//        	SplitOrderSecondBO splitOrderSecond = param.getSplitOrderSecond();
-//        	splitOrderSecond.setSecondOrder(new StringBuffer().append(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_2).toString());;
-//        	
-//        	allocationServer.splitOrder();
-//        	
-//        	
-//        	
-//        	List<UpdateSplitSonOrderBO> splitOrderList = new ArrayList<>();
-//        	UpdateSplitSonOrderBO update = new UpdateSplitSonOrderBO();
-//        	return null;
-//        }else{
-//        	return MsgTemplate.failureMsg(AllocationMsgEnum.SPLIT_ORDER_ERROR);
-//        }
-        
-        return null;
-		
+	public Map<String, Object> splitOrder(UpdateOrderBO param) {
+
+		String orderId = param.getDeleteOrdeIdList().get(0);
+		BatchOrderIdListBO batch = new BatchOrderIdListBO();
+		List<String> orderIdList = Arrays.asList(orderId);
+		batch.setKeyArea(param.getPartnerArea());
+		batch.setOrderIds(orderIdList);
+		//根据订单号获取订单详情
+		HttpResult result = orderServer.getOrderDeatilByIdList(batch);
+		if(!ObjectUtils.isEmpty(result.getData())){
+			UpdateSplitOrderBO firstSpiltOrder = param.getFirstSpiltOrder();
+			UpdateSplitOrderBO secondSpiltOrder = param.getSecondSpiltOrder();
+			
+			BatchOrderDetailListPO batchOrder = gson.fromJson(gson.toJson(result.getData()),BatchOrderDetailListPO.class);
+			List<WarehouseOrderDetailPO> orderList = batchOrder.getOrderList();
+			WarehouseOrderDetailPO warehouseOrder = null;
+			Integer orderStatus = null;
+			Integer orderAmount = null;
+			if(!ObjectUtils.isEmpty(orderList)){
+				warehouseOrder = orderServer.joinOrderParamInfo(orderList).get(0);
+				orderStatus = warehouseOrder.getOrderStatus();
+				orderAmount = warehouseOrder.getOrderAmount();
+			}else{
+				//拆单数据
+				orderList = batchOrder.getSplitOrderList();
+				warehouseOrder = orderServer.joinOrderParamInfo(orderList).get(0);
+				orderStatus = warehouseOrder.getSubStatus();
+				orderAmount = warehouseOrder.getSubNumber();
+			}
+			//获取库存信息
+			SelectAreaByOrderIdBO select  = new SelectAreaByOrderIdBO();
+			BeanUtils.copyProperties(param, select);
+			OrderIdBO order = new OrderIdBO();
+			order.setOrderId(param.getOrderId());
+			select.setOrderIds(Arrays.asList(order));
+			List<WarehouseOrderDetailPO> orderStockInfo = orderServer.getOrderStockInfo(select);
+			WarehouseOrderDetailPO orderDetail = orderStockInfo.get(0);
+			
+			//只有部分入库和已入库订单才允许拆分
+			if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
+				//判断库存数量和前端传来的库存数量相等
+				if(!orderDetail.getAmountSaved().equals(firstSpiltOrder.getSubNumber())){
+					return MsgTemplate.failureMsg(AllocationMsgEnum.LESS_STOK_FIRST_ORDER_AMOUNT_ERROR);
+				}
+				//另外订单的拆分数据
+				Integer lessAmount = orderAmount-orderDetail.getAmountSaved();
+				if(!lessAmount.equals(secondSpiltOrder.getSubNumber())){
+					return MsgTemplate.failureMsg(AllocationMsgEnum.LESS_STOK_SECOND_ORDER_AMOUNT_ERROR);
+				}
+				
+				//处理wms的异常订单表,将其修改为正常订单
+				UpdateAbnormalBO updateAbnormalBO = new UpdateAbnormalBO();
+				BeanUtils.copyProperties(param, updateAbnormalBO);
+				updateAbnormalBO.setStatus(1);
+				updateAbnormalBO.setResult(0);
+				HttpResult abnormalResult = abnormalServer.updateAbnormal(updateAbnormalBO);
+				if(!abnormalResult.isSuccess()){
+					return MsgTemplate.customMsg(abnormalResult);
+				}
+				//处理wms的异常订单表,将其修改为正常订单
+				param.setOrderStatus(OrderStatusTypeEnum.NO_STOCK.getValue());
+				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
+				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
+			}else if(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
+				//已入库订单只需要判断,两个拆单的拆单数量之后等于订单数量
+				if(!orderAmount.equals(firstSpiltOrder.getSubNumber()+secondSpiltOrder.getSubNumber())){
+					return MsgTemplate.failureMsg(AllocationMsgEnum.ALL_STOCK_ORDER_SUBNUMBER_ERROR);
+				}
+				param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
+				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
+			}else{
+				return MsgTemplate.failureMsg(AllocationMsgEnum.NOT_ALLOW_SPLIT_ORDER);
+			}
+			
+			//组织oms需要的拆单数据
+			param.setKeyArea(param.getPartnerArea());
+			param.setSplitStatus(1);
+			List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
+			firstSpiltOrder.setKeyArea(param.getPartnerArea());
+			firstSpiltOrder.setInStock(firstSpiltOrder.getSubNumber());
+			firstSpiltOrder.setIsException(0);
+			firstSpiltOrder.setIsProduce(0);
+			firstSpiltOrder.setIsStored(0);
+			
+			secondSpiltOrder.setKeyArea(param.getPartnerArea());
+			secondSpiltOrder.setInStock(secondSpiltOrder.getSubNumber());
+			secondSpiltOrder.setIsException(0);
+			secondSpiltOrder.setIsProduce(0);
+			secondSpiltOrder.setIsStored(0);
+			
+			splitOrders.add(firstSpiltOrder);
+			splitOrders.add(secondSpiltOrder);
+			param.setSplitOrders(splitOrders);
+			
+			//假如是部分入库则删除secondSplit
+			if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
+				param.setSecondSpiltOrder(null);
+			}
+			result = allocationServer.splitOrder(param);
+			
+			//并且假如是部分入库的情况下,修改冗余表的订单状态,改成待入库
+			String deleteOrder = param.getDeleteOrdeIdList().get(0);
+			if(deleteOrder.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
+				List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
+				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
+				update.setStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
+				update.setOrderId(deleteOrder);
+				update.setPartnerId(param.getPartnerId());
+				updateList.add(update);
+				result = allocationServer.batchUpdateOrderRedun(updateList);
+			}
+			if(result.isSuccess()){
+				//调用oms的拆单接口
+				result = orderServer.splitOrder(param);
+			}
+			return MsgTemplate.customMsg(result);
+		}else{
+			return MsgTemplate.failureMsg(AllocationMsgEnum.SPLIT_ORDER_ERROR);
+		}
+	}
+
+	@Override
+	public Map<String, Object> getSplitOrderByOrderId(OrderIdBO param) {
+		param.setKeyArea(param.getPartnerArea());
+		List<OrderIdBO> list = new ArrayList<>();
+		list.add(param);
+		HttpResult result = orderServer.getSplitOrderDeatilByIdList(list);
+		List<WarehouseOrderDetailPO> orderDetail = null;
+		List<String> orderIdStrList = new ArrayList<>();
+		if(!ObjectUtils.isEmpty(result.getData())){
+			Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+				String orderId = entry.getKey();
+				orderDetail = orderServer.joinOrderParamInfo(entry.getValue());
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+					warehouseOrderDetailPO.setChildOrderId(orderId);
+					String subOrderId = warehouseOrderDetailPO.getSubOrderId();
+					orderIdStrList.add(subOrderId);
+				}
+			}
+			
+			if(!ObjectUtils.isEmpty(orderIdStrList)){
+				//根据订单号获取提货单信息
+				HttpResult deliveryResult = allocationServer.getDeliveryByOrderIds(orderIdStrList);
+				if(!ObjectUtils.isEmpty(deliveryResult.getData())){
+					List<DeliveryPO> deliveryPOList = gson.fromJson(gson.toJson(deliveryResult.getData()), new TypeToken<ArrayList<DeliveryPO>>(){}.getType());
+					DeliveryPO deliveryPO = deliveryPOList.get(0);
+					String deliveryId = deliveryPO.getDeliveryId();
+					List<String> deliveryIdStr = Arrays.asList(deliveryId);
+					//根据提货单号获取运单信息
+					HttpResult waybillResult = allocationServer.getWaybillByDeliveryIds(deliveryIdStr);
+					List<WaybillPO> waybillPOList = gson.fromJson(gson.toJson(waybillResult.getData()), new TypeToken<ArrayList<WaybillPO>>(){}.getType());
+					String plateNumber = waybillPOList.get(0).getPlateNumber();
+					String waybillId = waybillPOList.get(0).getWaybillId();
+					
+					for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+						warehouseOrderDetailPO.setPlateNumber(plateNumber);
+						warehouseOrderDetailPO.setDeliveryId(deliveryId);
+						warehouseOrderDetailPO.setWaybillId(waybillId);
+					}
+				}
+			}
+			return MsgTemplate.successMsg(orderDetail);
+		}else{
+			return MsgTemplate.failureMsg(AllocationMsgEnum.ORDER_IS_NULL);
+		}
 	}
 	
-	@Override
+	/**
+	 * 取消配货生成操作记录组合数据信息
+	 * @param param
+	 * @return
+	 */
+	public List<OrderOperationRecordPO> cancelAllocationOperationInfo(CancelAllocationBO param) {
+        List<OrderOperationRecordPO> list = new ArrayList<>();
+        OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+        orderOperationRecordPO.setPartnerId(param.getPartnerId());
+        orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
+        orderOperationRecordPO.setOperator(param.getOperator());
+        orderOperationRecordPO.setOperatorId(param.getOperatorId());
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(param.getOrderIds());
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!orderInfo.getSplitOrderList().isEmpty()) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                orderOperationRecordPO.setFluteType(info.getFluteType());
+                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
+                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
+              //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
+                orderOperationRecordPO.setArea(String.valueOf(area));
+                list.add(orderOperationRecordPO);
+            }
+           
+        }
+        return list;
+	}
+
+	/**
+	 * 处理操作记录数据
+	 * @param param
+	 */
+	public List<OrderOperationRecordPO> saveOrderOperationRecord(VerifyAllocationBO param) {
+	    List<OrderOperationRecordPO> list = new ArrayList<>();
+	    OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+	    orderOperationRecordPO.setPartnerId(param.getPartnerId());
+	    orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
+	    orderOperationRecordPO.setOperator(param.getOperator());
+	    orderOperationRecordPO.setOperatorId(param.getOperatorId());
+	    OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        for(SequenceBO order :param.getOrderIds()) {
+            orderIds.add(order.getOrderId());
+        }
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!orderInfo.getSplitOrderList().isEmpty()) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                orderOperationRecordPO.setFluteType(info.getFluteType());
+                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
+                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
+              //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
+                orderOperationRecordPO.setArea(String.valueOf(area));
+                list.add(orderOperationRecordPO);
+            }
+           
+        }
+        return list;
+	}
+
+	/**
+     * 处理操作记录数据
+     * @param param
+     */
+    public List<OrderOperationRecordPO> saveOperationRecord(MergeModelBO param, PartnerInfoBO partnerInfoBean) {
+        List<OrderOperationRecordPO> list = new ArrayList<>();
+        OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+        orderOperationRecordPO.setPartnerId(partnerInfoBean.getPartnerId());
+        orderOperationRecordPO.setPartnerArea(partnerInfoBean.getPartnerArea());
+        orderOperationRecordPO.setOperator(partnerInfoBean.getOperator());
+        orderOperationRecordPO.setOperatorId(partnerInfoBean.getOperatorId());
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        for(AgainVerifyAllocationBO order :param.getAgainVerifyAllocation()) {
+            orderIds.add(order.getOrderId());
+        }
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(partnerInfoBean.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!orderInfo.getSplitOrderList().isEmpty()) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                orderOperationRecordPO.setFluteType(info.getFluteType());
+                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
+                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
+              //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
+                orderOperationRecordPO.setArea(String.valueOf(area));
+                list.add(orderOperationRecordPO);
+            }
+           
+        }
+        return list;
+	}
+	
+    @Override
     public Map<String, Object> TmsVehicleQueuingList() {
         HeadCookies headCookies = new HeadCookies((x) -> {
             x.put("devTokenId", "123456");
@@ -2154,9 +2272,8 @@ public class AllocationServiceImpl implements AllocationService {
         });
         ReqVehicleQueuingListBiz reqVehicleQueuingListBiz = new ReqVehicleQueuingListBiz()
                 .setFactoryid("FactoryId");
-        HTTPResponse<TmsJsonResult<List<ResPartnercarChecksignBiz>>> response = carchecksignServer.TmsVehicleQueuingList(reqVehicleQueuingListBiz, headCookies, "123456", "123456");
+        HTTPResponse<TmsJsonResult> response = carchecksignServer.TmsVehicleQueuingList(reqVehicleQueuingListBiz, headCookies, "123456", "123456");
         System.out.println(response.getBodyString());
         return MsgTemplate.successMsg();
     }
-	
 }

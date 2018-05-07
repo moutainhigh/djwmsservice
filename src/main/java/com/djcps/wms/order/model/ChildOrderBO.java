@@ -227,6 +227,101 @@ public class ChildOrderBO {
 	 */
 	private Integer orderAmount;
 	
+	
+	//==============拆单属性================
+	
+	 /**
+     * 拆单号
+     */
+    private String subOrderId;
+    /**
+     * 拆单数量
+     */
+    private int subNumber;
+    /**
+     * 拆单状态
+     */
+    private Integer subStatus;
+    /**
+     * 拆单地址
+     */
+    private String subAddress;
+    /**
+     *出库数量
+     */
+    private Integer outStock;
+    /**
+     * 是入库数量
+     */
+    private Integer inStock;
+    /**
+     *是否异常 1有  0无
+     */
+    private int isException;
+    /**
+     * 是否备货 1有  0无
+     */
+    private Integer isStored;
+    /**
+     * 是否生产 1有  0无
+     */
+    private Integer isProduce;
+    
+	
+	public String getSubOrderId() {
+		return subOrderId;
+	}
+	public void setSubOrderId(String subOrderId) {
+		this.subOrderId = subOrderId;
+	}
+	public int getSubNumber() {
+		return subNumber;
+	}
+	public void setSubNumber(int subNumber) {
+		this.subNumber = subNumber;
+	}
+	public Integer getSubStatus() {
+		return subStatus;
+	}
+	public void setSubStatus(Integer subStatus) {
+		this.subStatus = subStatus;
+	}
+	public String getSubAddress() {
+		return subAddress;
+	}
+	public void setSubAddress(String subAddress) {
+		this.subAddress = subAddress;
+	}
+	public Integer getOutStock() {
+		return outStock;
+	}
+	public void setOutStock(Integer outStock) {
+		this.outStock = outStock;
+	}
+	public Integer getInStock() {
+		return inStock;
+	}
+	public void setInStock(Integer inStock) {
+		this.inStock = inStock;
+	}
+	public int getIsException() {
+		return isException;
+	}
+	public void setIsException(int isException) {
+		this.isException = isException;
+	}
+	public Integer getIsStored() {
+		return isStored;
+	}
+	public void setIsStored(Integer isStored) {
+		this.isStored = isStored;
+	}
+	public Integer getIsProduce() {
+		return isProduce;
+	}
+	public void setIsProduce(Integer isProduce) {
+		this.isProduce = isProduce;
+	}
 	public String getOrderId() {
 		return orderId;
 	}

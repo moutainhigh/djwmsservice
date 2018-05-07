@@ -1,7 +1,5 @@
 package com.djcps.wms.order.server;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,11 +15,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
+import com.djcps.wms.allocation.server.AllocationServer;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
@@ -29,11 +29,10 @@ import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitSonOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.request.OnlinePaperboardRequest;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
-import com.djcps.wms.role.model.request.OrgRoleListPO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.server.StockServer;
 import com.google.gson.Gson;
@@ -64,6 +63,9 @@ public class OrderServer {
 	@Autowired
 	private WmsForOrderHttpRequest orderHttpRequest;
 	
+	@Autowired
+	private AllocationServer allocationServer;
+	 
 	@Autowired
 	private UpdateOrderHttpRequest  updateOrderHttpRequest;
 	
@@ -114,7 +116,7 @@ public class OrderServer {
 	 * @author:zdx
 	 * @date:2018年4月19日
 	 */
-	public HttpResult updateOrderInfo(List<UpdateSplitSonOrderBO> param) {
+	public HttpResult updateOrderInfo(List<UpdateOrderBO> param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
@@ -151,16 +153,16 @@ public class OrderServer {
 	 * @date:2018年4月19日
 	 */
 	public HttpResult updateOrderOrSplitOrder(String partnerArea,List<OrderIdBO> orderIdList) {
-		List<UpdateSplitSonOrderBO> orderUpdateList = new ArrayList<>();
+		List<UpdateOrderBO> orderUpdateList = new ArrayList<>();
 		List<UpdateSplitOrderBO> splitOrderUpdateList = new ArrayList<>();
 		for (OrderIdBO orderIdBO : orderIdList) {
 			String string = orderIdBO.getOrderId();
 			String orderStatus = orderIdBO.getStatus();
 			//这里首先需要判断,这个orderId是子订单号还是拆分订单号
-			 int indexOf = string.indexOf("-");
+			 int indexOf = string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER);
 			 if(indexOf==-1){
 				//等于-1表示没有携带-是子订单号
-			 	UpdateSplitSonOrderBO update = new UpdateSplitSonOrderBO();
+			 	UpdateOrderBO update = new UpdateOrderBO();
 	        	update.setOrderId(string);
 	        	update.setOrderStatus(orderStatus);
 	        	update.setKeyArea(partnerArea);
@@ -170,6 +172,7 @@ public class OrderServer {
 				UpdateSplitOrderBO update = new UpdateSplitOrderBO();
 	    		update.setSubOrderId(string);
 	    		update.setSubStatus(Integer.valueOf(orderStatus));
+	    		update.setKeyArea(partnerArea);
 	    		splitOrderUpdateList.add(update);
 			 }
 		}
@@ -200,23 +203,24 @@ public class OrderServer {
 	 * @author:zdx
 	 * @date:2018年4月20日
 	 */
-	public Boolean compareOrderStatus(List<String> orderIdList,String partnerArea){
+	public Boolean compareOrderStatus(List<String> orderIdList,String partnerArea,String partnerId){
+		Boolean flag = false;
 		if(!ObjectUtils.isEmpty(orderIdList)){
 			List<String> orderIds = new ArrayList<>();
 			Set<String> orderSet = new HashSet<>();
 			for (String str : orderIdList) {
-				//修改成功之后判断该订单
-				if(str.indexOf("-")!=-1){
-					str = str.substring(0, str.indexOf("-"));
+				if(str.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
+					str = str.substring(0, str.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
 					orderSet.add(str);
 				}
-			}
-			for (String str : orderSet) {
-				orderIds.add(str);
 			}
 			if(orderSet.size()==0){
 				return true;
 			}
+			for (String str : orderSet) {
+				orderIds.add(str);
+			}
+			
 			BatchOrderIdListBO batch = new BatchOrderIdListBO();
 			batch.setOrderIds(orderIds);
 			batch.setKeyArea(partnerArea);
@@ -228,7 +232,8 @@ public class OrderServer {
 	        Map<String,WarehouseOrderDetailPO> orderDetailMap = new HashMap<>();
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
 	        	OrderIdBO orderIdBO = new OrderIdBO();
-	        	BeanUtils.copyProperties(warehouseOrderDetailPO, orderIdBO);
+	        	orderIdBO.setOrderId(warehouseOrderDetailPO.getOrderId());
+	        	orderIdBO.setKeyArea(partnerArea);
 	        	orderIdBOList.add(orderIdBO);
 	        	orderDetailMap.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
 			}
@@ -238,27 +243,47 @@ public class OrderServer {
 	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
 	        	for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
 	        		int orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus().intValue();
-	        		int splitOrderStatus = orderDetailPO.getOrderStatus().intValue();
+	        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
 	        		//假如拆单状态小于子单状态则把状态赋值给子单
 	        		if(splitOrderStatus<orderStatus){
+	        			//一个开关代表需要进行修改
+	        			flag = true;
 	        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(splitOrderStatus);
 	        		}
 	        	}
 	        }
-	        List<UpdateSplitSonOrderBO> updateList = new ArrayList<>();
-	        for(Map.Entry<String,WarehouseOrderDetailPO> entry : orderDetailMap.entrySet()){
-	        	WarehouseOrderDetailPO orderDetailValue = entry.getValue();
-	        	UpdateSplitSonOrderBO update = new UpdateSplitSonOrderBO();
- 	        	update.setOrderId(orderDetailValue.getOrderId());
- 	        	update.setOrderStatus(String.valueOf(orderDetailValue.getOrderStatus()));
- 	        	update.setKeyArea(partnerArea);
- 	        	updateList.add(update);
+	        if(flag == true){
+	        	List<UpdateOrderBO> updateList = new ArrayList<>();
+	        	List<UpdateOrderRedundantBO> orderRedundantBOList = new ArrayList<>();
+	 	        for(Map.Entry<String,WarehouseOrderDetailPO> entry : orderDetailMap.entrySet()){
+	 	        	WarehouseOrderDetailPO orderDetailValue = entry.getValue();
+	 	        	UpdateOrderBO update = new UpdateOrderBO();
+	  	        	update.setOrderId(orderDetailValue.getOrderId());
+	  	        	update.setOrderStatus(String.valueOf(orderDetailValue.getOrderStatus()));
+	  	        	update.setKeyArea(partnerArea);
+	  	        	updateList.add(update);
+	  	        	
+	  	        	//修改冗余表参数
+	  	        	UpdateOrderRedundantBO updateOrderRedundant = new UpdateOrderRedundantBO();
+	  	        	updateOrderRedundant.setOrderId(orderDetailValue.getOrderId());
+	  	        	updateOrderRedundant.setStatus(orderDetailValue.getOrderStatus());
+	  	        	updateOrderRedundant.setPartnerId(partnerId);
+	  	        	orderRedundantBOList.add(updateOrderRedundant);
+	 	        }
+	 	        HttpResult result = updateOrderInfo(updateList);
+	 	        //关闭开关
+	 	        flag = false;
+	 	    	if(!result.isSuccess()){
+	 	    		LOGGER.error("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+	     		}else{
+	     			//这里已经写好逻辑了,所有这里暂时就不做修改了,应该是先修改wms的订单状态在修改oms
+	     			//修改冗余表订单状态
+	     			result = allocationServer.batchUpdateOrderRedun(orderRedundantBOList);
+	     		}
+	 			return result.isSuccess();
+	        }else{
+	        	return true;
 	        }
-	        HttpResult result = updateOrderInfo(updateList);
-	    	if(!result.isSuccess()){
-	    		LOGGER.error("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
-    		}
-			return result.isSuccess();
 		}
 		return true;
 	}
@@ -290,6 +315,16 @@ public class OrderServer {
         return updateOMSCode(http);
 	}
 	
+	public HttpResult splitOrder(UpdateOrderBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = onlinePaperboardRequest.splitOrder(rb);
+        //校验请求是否成功
+        return updateOMSCode(http);
+	}
+	
 	/**
 	 * 拼接订单中的参数,拼接了楞型,产品规格和材料规格,地址
 	 * @param param
@@ -309,11 +344,21 @@ public class OrderServer {
 				onlinePaperboardPO.setMaterialSize(new StringBuffer().append(onlinePaperboardPO.getMaterialLength()).append("*")
 						.append(onlinePaperboardPO.getMaterialWidth()).toString());
 			}
+			onlinePaperboardPO.setAddressDetailProvince(new StringBuffer().append(onlinePaperboardPO.getCodeProvince()).append(onlinePaperboardPO.getAddressDetail()).toString());
 			String customerName = !StringUtils.isEmpty(onlinePaperboardPO.getCuserName())?onlinePaperboardPO.getCuserName():onlinePaperboardPO.getPuserName();
 			onlinePaperboardPO.setCustomerName(customerName);
-			onlinePaperboardPO.setOrderAmount(onlinePaperboardPO.getAmountPiece());
-			onlinePaperboardPO.setAddressDetailProvince(new StringBuffer().append(onlinePaperboardPO.getCodeProvince()).append(onlinePaperboardPO.getAddressDetail()).toString());
-			onlinePaperboardPO.setOrderId(onlinePaperboardPO.getChildOrderId());
+			String subOrderId = onlinePaperboardPO.getSubOrderId();
+			if(StringUtils.isEmpty(subOrderId)){
+				//为空则表示子单,否则就是拆单	
+				onlinePaperboardPO.setOrderAmount(onlinePaperboardPO.getAmountPiece());
+				if(!StringUtils.isEmpty(onlinePaperboardPO.getChildOrderId())){
+					onlinePaperboardPO.setOrderId(onlinePaperboardPO.getChildOrderId());
+				}
+			}else{
+				onlinePaperboardPO.setOrderAmount(onlinePaperboardPO.getSubNumber());
+				onlinePaperboardPO.setOrderId(subOrderId);
+				onlinePaperboardPO.setOrderStatus(onlinePaperboardPO.getSubStatus());
+			}
 		}
 		return param;
 	}

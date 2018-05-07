@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 
 
 /**
@@ -38,7 +40,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String childOrderId;
 	/**
-	 * 状态
+	 * 订单状态
 	 */
 	private Integer orderStatus;
 	/**

@@ -20,7 +20,12 @@ import com.djcps.wms.record.model.OrderOperationRecordPO;
 public class AddStockBO extends BaseAddBO implements Serializable {
 
     private static final long serialVersionUID = 5650542988348663815L;
-
+	
+	/**
+	 * 入库需要的fid
+	 */
+	private String id;
+	
     /**
      * 订单编号
      */
@@ -107,6 +112,12 @@ public class AddStockBO extends BaseAddBO implements Serializable {
      */
     private Integer abnomalAmount;
    
+    public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
     
     public Integer getAbnomalAmount() {
         return abnomalAmount;
@@ -251,16 +262,15 @@ public class AddStockBO extends BaseAddBO implements Serializable {
     public void setRecommendAreaName(String recommendAreaName) {
         this.recommendAreaName = recommendAreaName;
     }
-
     @Override
     public String toString() {
-        return "AddStockBO [orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave + ", warehouseId="
-                + warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark + ", warehouseAreaId="
-                + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
-                + ", warehouseLocName=" + warehouseLocName + ", recommendAreaId=" + recommendAreaId
-                + ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord
+        return "AddStockBO [id=" + id + ", orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave
+                + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark
+                + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+                + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", recommendAreaId="
+                + recommendAreaId + ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord
                 + ", relativeName=" + relativeName + ", orderType=" + orderType + ", fluteType=" + fluteType + ", area="
                 + area + ", abnomalAmount=" + abnomalAmount + "]";
     }
-
+    
 }

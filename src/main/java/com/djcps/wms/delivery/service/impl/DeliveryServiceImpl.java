@@ -1,42 +1,18 @@
 package com.djcps.wms.delivery.service.impl;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.allocation.model.SequenceBO;
 import com.djcps.wms.commons.base.BaseListPO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.delivery.constant.DeliveryConstant;
 import com.djcps.wms.delivery.enums.DeliveryMsgEnum;
 import com.djcps.wms.delivery.enums.DeliveryStatusEnum;
-import com.djcps.wms.delivery.model.DeliveryOrderBO;
-import com.djcps.wms.delivery.model.DeliveryOrderDetailBO;
-import com.djcps.wms.delivery.model.DeliveryOrderDetailPO;
-import com.djcps.wms.delivery.model.DeliveryOrderPO;
-import com.djcps.wms.delivery.model.DeliveryPO;
-import com.djcps.wms.delivery.model.ListDeliveryBO;
-import com.djcps.wms.delivery.model.ListDeliveryOrderBO;
-import com.djcps.wms.delivery.model.OrderDeliveryPO;
-import com.djcps.wms.delivery.model.OrderInfoPO;
-import com.djcps.wms.delivery.model.PrintDeliveryBO;
-import com.djcps.wms.delivery.model.SaveDeliveryBO;
-import com.djcps.wms.delivery.model.UpdateDeliveryEffectBO;
+import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.server.DeliveryServer;
 import com.djcps.wms.delivery.service.DeliveryService;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
@@ -45,11 +21,22 @@ import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.record.model.OrderOperationRecordPO;
-import com.djcps.wms.record.model.TaskOperationRecordPO;
 import com.djcps.wms.record.server.OperationRecordServer;
-import com.djcps.wms.stocktaking.model.SaveStocktakingOrderInfoBO;
+import com.mysql.fabric.xmlrpc.base.Array;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 提货实现类
@@ -67,6 +54,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Autowired
     private OrderServer orderServer;
+    
     @Autowired
     private OperationRecordServer operationRecordServer;
     /**
@@ -130,47 +118,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
-    /**
-     * 订单提货处理操作记录数据
-     * @param param
-     */
-    public List<OrderOperationRecordPO> orderDeliveryOperationInfo(SaveDeliveryBO param) {
-        List<OrderOperationRecordPO> list = new ArrayList<>();
-        OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
-        orderOperationRecordPO.setPartnerId(param.getPartnerId());
-        orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
-        orderOperationRecordPO.setOperator(param.getOperator());
-        orderOperationRecordPO.setOperatorId(param.getOperatorId());
-        orderOperationRecordPO.setWarehouseId(param.getWarehouseId());
-        orderOperationRecordPO.setWarehouseAreaId(param.getWarehouseAreaId());
-        orderOperationRecordPO.setWarehouseLocId(param.getWarehouseLocId());
-        OrderIdsBO orderIdsBO = new OrderIdsBO();
-        List<String> orderIds = new ArrayList<>();
-        orderIds.add(param.getOrderId());
-        orderIdsBO.setChildOrderIds(orderIds);
-        orderIdsBO.setPartnerArea(param.getPartnerArea());
-      //根据订单编号获取订单信息
-        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!orderInfo.getSplitOrderList().isEmpty()) {
-        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
-        }
-        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
-                //处理数据
-                orderOperationRecordPO.setFluteType(info.getFluteType());
-                orderOperationRecordPO.setRelativeName(info.getProductName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(param.getRealDeliveryAmount().toString());
-              //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getRealDeliveryAmount());
-                orderOperationRecordPO.setArea(String.valueOf(area));
-                list.add(orderOperationRecordPO);
-            }
-           
-        }
-        return list;
-}
-    
+
     /**
      * 完成单条提货订单的提货
      *
@@ -181,8 +129,6 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     @Override
     public Map<String, Object> completeOrder(SaveDeliveryBO param) {
-        List<OrderOperationRecordPO> list =  orderDeliveryOperationInfo(param);
-        param.setList(list);
         HttpResult result = deliveryServer.completeOrder(param);
         if (result.isSuccess()) {
         	List<String> order = new ArrayList<>();
@@ -201,13 +147,14 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             List<String> orderId = new ArrayList<>();
 			orderId.add(param.getOrderId());
-			Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea());
+			Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,  param.getPartnerArea(),param.getPartnerId());
 			if(compareOrderStatus==false){
 				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 			}
         }
         return MsgTemplate.customMsg(result);
     }
+
     /**
      * 附加订单详细信息
      *
@@ -224,7 +171,26 @@ public class DeliveryServiceImpl implements DeliveryService {
         OrderIdsBO orderIds = new OrderIdsBO();
         orderIds.setChildOrderIds(orderIdList);
         orderIds.setPartnerArea(partnerArea);
-        List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
+        List<ChildOrderBO> childOrderList = new ArrayList<>();
+        BatchOrderDetailListPO batchOrderDetailListPO = orderServer.getOrderOrSplitOrder(orderIds);
+        List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
+        List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
+        if(!ObjectUtils.isEmpty(sonOrderList)){
+        	sonOrderList = orderServer.joinOrderParamInfo(sonOrderList);
+        	for (WarehouseOrderDetailPO warehouseOrderDetailPO : sonOrderList) {
+        		ChildOrderBO child = new ChildOrderBO();
+        		BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+        		childOrderList.add(child);
+			}
+        }
+        if(!ObjectUtils.isEmpty(splitOrderList)){
+        	splitOrderList = orderServer.joinOrderParamInfo(splitOrderList);
+        	for (WarehouseOrderDetailPO warehouseOrderDetailPO : splitOrderList) {
+        		ChildOrderBO child = new ChildOrderBO();
+        		BeanUtils.copyProperties(warehouseOrderDetailPO, child);
+        		childOrderList.add(child);
+			}
+        }
         if (!childOrderList.isEmpty()) {
             orderList.stream().forEach(order -> {
                 ChildOrderBO childOrderBO =  childOrderList.stream().filter(
@@ -421,11 +387,52 @@ public class DeliveryServiceImpl implements DeliveryService {
             	LOGGER.error("完成单条提货订单的提货,修改订单状态失败!!!");
             	return MsgTemplate.customMsg(result);
             }
-			Boolean compareOrderStatus = orderServer.compareOrderStatus(param.getOrderIds(),param.getPartnerArea());
+			Boolean compareOrderStatus = orderServer.compareOrderStatus(param.getOrderIds(),param.getPartnerArea(),param.getPartnerId());
 			if(compareOrderStatus==false){
 				return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 			}
         }
         return MsgTemplate.customMsg(result);
     }
+    
+    /**
+     * 订单提货处理操作记录数据
+     * @param param
+     */
+    public List<OrderOperationRecordPO> orderDeliveryOperationInfo(SaveDeliveryBO param) {
+        List<OrderOperationRecordPO> list = new ArrayList<>();
+        OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+        orderOperationRecordPO.setPartnerId(param.getPartnerId());
+        orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
+        orderOperationRecordPO.setOperator(param.getOperator());
+        orderOperationRecordPO.setOperatorId(param.getOperatorId());
+        orderOperationRecordPO.setWarehouseId(param.getWarehouseId());
+        orderOperationRecordPO.setWarehouseAreaId(param.getWarehouseAreaId());
+        orderOperationRecordPO.setWarehouseLocId(param.getWarehouseLocId());
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!orderInfo.getSplitOrderList().isEmpty()) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                orderOperationRecordPO.setFluteType(info.getFluteType());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
+                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
+                orderOperationRecordPO.setAmount(param.getRealDeliveryAmount().toString());
+              //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getRealDeliveryAmount());
+                orderOperationRecordPO.setArea(String.valueOf(area));
+                list.add(orderOperationRecordPO);
+            }
+           
+        }
+        return list;
+	}
 }
