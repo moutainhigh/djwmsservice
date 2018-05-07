@@ -155,7 +155,7 @@ public class StockServiceImpl implements StockService{
 	    orderIdsBO.setPartnerArea(param.getPartnerArea());
 	    //根据订单编号获取订单信息
 	    BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-	    if(!orderInfo.getSplitOrderList().isEmpty()) {
+	    if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
 	    orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
 	    }
 	    if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {

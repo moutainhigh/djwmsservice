@@ -33,12 +33,12 @@
         <property name="mapServer" value="http://restapi.amap.com/v3/" />
         <!-- 订单服务 -->
 		<!-- <property name="orderServer" value="http://192.168.2.74:8080/djorder/" /> -->
-        <property name="orderServer" value="http://192.168.2.73:8080/djorder/" />
+        <property name="orderServer" value="http://192.168.2.74:8080/djorder/" />
        <!--  <property name="orderServer" value="http://localhost:8080/djorder/" /> -->
         <!-- <property name="orderServer" value="http://192.168.10.200/djorderserver/" /> -->
         <!-- 郑天伟临时修改订单服务 -->
         <!-- <property name="updateOrderServer" value="http://192.168.2.74:8080/djorder/" /> -->
-        <property name="updateOrderServer" value="http://192.168.2.73:8080/djorder/" />
+        <property name="updateOrderServer" value="http://192.168.2.74:8080/djorder/" />
       	<!-- <property name="updateOrderServer" value="http://localhost:8080/djorder/" /> -->
       	<!-- 姬明博线上纸板订单服务 -->
       	<property name="onlinePaperboardServer" value="http://172.16.0.33:8081/" />
