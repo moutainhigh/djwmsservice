@@ -150,12 +150,12 @@ public class StockServer {
         return verifyHttpResult(http);
 	}
 	
-	public HttpResult getLessStockOrderId(OrderIdBO param) {
+	public HttpResult getInventoryFidByOrderId(AddStockBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
-        HTTPResponse http = wmsForStockHttpRequest.getLessStockOrderId(rb);
+        HTTPResponse http = wmsForStockHttpRequest.getInventoryFidByOrderId(rb);
         //校验请求是否成功
         return verifyHttpResult(http);
 	}

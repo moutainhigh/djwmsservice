@@ -20,7 +20,7 @@ public class UpdateAbnormalBO extends BaseAddBO implements Serializable{
 	/**
      *异常处理结果
      */
-    private String result;
+    private Integer result;
 
     /**
      * 订单编号
@@ -49,7 +49,7 @@ public class UpdateAbnormalBO extends BaseAddBO implements Serializable{
     /**
      * 处理状态
      */
-    private String status;
+    private Integer status;
     
     /**
      * 异常原因
@@ -102,11 +102,11 @@ public class UpdateAbnormalBO extends BaseAddBO implements Serializable{
 		this.abnomalAmount = abnomalAmount;
 	}
 
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
@@ -126,11 +126,11 @@ public class UpdateAbnormalBO extends BaseAddBO implements Serializable{
 		this.loadingTableName = loadingTableName;
 	}
 
-	public String getResult() {
+	public Integer getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(Integer result) {
         this.result = result;
     }
 

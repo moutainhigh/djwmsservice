@@ -1,6 +1,7 @@
 package com.djcps.wms.abnormal.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -55,26 +56,25 @@ public class AbnormalServiceImpl implements AbnormalService {
 
 	@Override
 	public Map<String, Object> updateAbnormal(UpdateAbnormalBO param) {
-		param.setSubmiter(param.getOperator());
 		HttpResult result = abnormalServer.updateAbnormal(param);
 		
 		//OMS处理订单提醒状态
 		if(result.isSuccess()){
 			String orderId = param.getOrderId();
-			String updateResult = param.getResult();
+			Integer updateResult = param.getResult();
 			List<UpdateSplitOrderBO> list = new ArrayList<>();
 			UpdateSplitOrderBO update = new UpdateSplitOrderBO();
 			update.setSubOrderId(orderId);
 			update.setKeyArea(param.getPartnerArea());
-			if(updateResult.equals(AbnormalConstant.ABNORMAL_UPDATE_1)){
+			if(updateResult.equals(Integer.valueOf(AbnormalConstant.ABNORMAL_UPDATE_1))){
 				update.setIsProduce(1);
 				update.setIsException(0);
-			}else if(updateResult.equals(AbnormalConstant.ABNORMAL_UPDATE_2)){
+			}else if(updateResult.equals(Integer.valueOf(AbnormalConstant.ABNORMAL_UPDATE_2))){
 				update.setIsStored(1);
 				update.setIsException(0);
-			}else if(updateResult.equals(AbnormalConstant.ABNORMAL_UPDATE_3)){
+			}else if(updateResult.equals(Integer.valueOf(AbnormalConstant.ABNORMAL_UPDATE_3))){
 				update.setIsException(0);
-			}else if(updateResult.equals(AbnormalConstant.ABNORMAL_UPDATE_4)){
+			}else if(updateResult.equals(Integer.valueOf(AbnormalConstant.ABNORMAL_UPDATE_4))){
 				update.setIsException(0);
 			}
 			list.add(update);
@@ -88,7 +88,8 @@ public class AbnormalServiceImpl implements AbnormalService {
 		//新增异常订单逻辑,新增时,需要修改OMS处订单的异常状态
 		HttpResult result = abnormalServer.addAbnormal(param);
 		if(result.isSuccess()){
-			result = abnormalServer.updateExecptionFlag(1, param.getOrderId(),param.getPartnerArea());
+			List<String> strOrderIds = Arrays.asList(param.getOrderId());
+			result = abnormalServer.updateExecptionFlag(1,strOrderIds,param.getPartnerArea());
 			if(!result.isSuccess()){
 				return MsgTemplate.failureMsg(AbnormalMsgEnum.STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR);
 			}

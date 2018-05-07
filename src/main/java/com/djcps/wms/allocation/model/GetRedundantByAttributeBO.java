@@ -1,6 +1,9 @@
 package com.djcps.wms.allocation.model;
 
 import java.io.Serializable;
+import java.util.List;
+
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -126,6 +129,20 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	
 	private String allocationId;
 	
+	/**
+	 * 参与智能配货或者装车优化的id
+	 */
+	private List<String> orderIdList;
+	
+	
+	public List<String> getOrderIdList() {
+		return orderIdList;
+	}
+
+	public void setOrderIdList(List<String> orderIdList) {
+		this.orderIdList = orderIdList;
+	}
+
 	public String getAllocationId() {
 		return allocationId;
 	}
@@ -337,7 +354,8 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 				+ ", paymentEndTime=" + paymentEndTime + ", paymentStartTime=" + paymentStartTime
 				+ ", deliveryCreateTime=" + deliveryCreateTime + ", plateNumber=" + plateNumber + ", flag=" + flag
 				+ ", deliveryCreateStartTime=" + deliveryCreateStartTime + ", deliveryCreateEndTime="
-				+ deliveryCreateEndTime + ", cache=" + cache + ", allocationId=" + allocationId + "]";
+				+ deliveryCreateEndTime + ", cache=" + cache + ", allocationId=" + allocationId + ", orderIdList="
+				+ orderIdList + "]";
 	}
 
 }

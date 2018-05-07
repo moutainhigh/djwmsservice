@@ -40,7 +40,7 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String childOrderId;
 	/**
-	 * 状态
+	 * 订单状态
 	 */
 	private Integer orderStatus;
 	/**

@@ -89,14 +89,16 @@ public class AbnormalServer {
 	 * @author:zdx
 	 * @date:2018年5月4日
 	 */
-	public HttpResult updateExecptionFlag(Integer flag,String subOrderId,String partnerArea) {
+	public HttpResult updateExecptionFlag(Integer flag,List<String> subOrderId,String partnerArea) {
 		List<UpdateSplitOrderBO> updateSplitList = new ArrayList<>();
-		UpdateSplitOrderBO updateSplit = new UpdateSplitOrderBO();
-		//oms修改异常标记逻辑
-		updateSplit.setSubOrderId(subOrderId);
-		updateSplit.setIsException(flag);
-		updateSplit.setKeyArea(partnerArea);
-		updateSplitList.add(updateSplit);
+		for (String string : subOrderId) {
+			UpdateSplitOrderBO updateSplit = new UpdateSplitOrderBO();
+			//oms修改异常标记逻辑
+			updateSplit.setSubOrderId(string);
+			updateSplit.setIsException(flag);
+			updateSplit.setKeyArea(partnerArea);
+			updateSplitList.add(updateSplit);
+		}
 		return orderServer.updateSplitOrderInfo(updateSplitList);
 	}
 	

@@ -2,9 +2,12 @@ package com.djcps.wms.stock.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,15 +186,25 @@ public class StockServiceImpl implements StockService{
 			}
 			
 			//判断扫面或者网页端传来的订单号是否为拆分,是的话则需要进行查询另外订单
-			OrderIdBO newOrderIdBO = new OrderIdBO();
-			BeanUtils.copyProperties(param, newOrderIdBO);
-			HttpResult lessStockOrderResult = stockServer.getLessStockOrderId(newOrderIdBO);
-			if(!ObjectUtils.isEmpty(lessStockOrderResult.getData())){
-				param.setOrderId((String)lessStockOrderResult.getData());
+			List<OrderIdBO> splitOrderList = new ArrayList<>();
+			OrderIdBO order = new OrderIdBO();
+			order.setOrderId(param.getOrderId());
+			order.setKeyArea(param.getPartnerArea());
+			HttpResult result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
+			if(!ObjectUtils.isEmpty(result.getData())){
+				List<WarehouseOrderDetailPO> orderDetail = null;
+				Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+					orderDetail = entry.getValue();
+				}
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+					if(warehouseOrderDetailPO.getOrderStatus().equals(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()))){
+						param.setOrderId(warehouseOrderDetailPO.getSubOrderId());
+					}
+				}
 			}
 		}
-		
-		List<OrderIdBO> list = new ArrayList<OrderIdBO>();
+		HttpResult result =null;
 		//订单号
 		String orderId = param.getOrderId();
 		//入库数量
@@ -205,28 +218,50 @@ public class StockServiceImpl implements StockService{
 		orderIdList.add(orderId);
 		
 		OrderIdBO orderIdBO = new OrderIdBO();
-		orderIdBO.setOrderId(orderId);
-		list.add(orderIdBO);
-		selectAreaByOrderId.setOrderIds(list);
-		//解析在库信息
-		List<WarehouseOrderDetailPO> orderDetail = orderServer.getOrderStockInfo(selectAreaByOrderId);
 		UpdateSplitOrderBO splitOrder = new UpdateSplitOrderBO();
-		//修改订单状态需要的参数
-		if(!ObjectUtils.isEmpty(orderDetail)){
-			Integer trueAmount = orderDetail.get(0).getAmountSaved();
-			if(trueAmount+saveAmount>orderAmount){
-				return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
-			}else if(trueAmount+saveAmount==orderAmount){
-				//相等表示已入库修改订单状态
-				orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+		List<OrderIdBO> list = new ArrayList<OrderIdBO>();
+		//正常子单入库
+		if(orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
+			orderIdBO.setOrderId(orderId);
+			list.add(orderIdBO);
+			selectAreaByOrderId.setOrderIds(list);
+			//解析在库信息
+			List<WarehouseOrderDetailPO> orderDetail = orderServer.getOrderStockInfo(selectAreaByOrderId);
+			//修改订单状态需要的参数
+			if(!ObjectUtils.isEmpty(orderDetail)){
+				Integer trueAmount = orderDetail.get(0).getAmountSaved();
+				if(trueAmount+saveAmount>orderAmount){
+					return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
+				}else if(trueAmount+saveAmount==orderAmount){
+					//相等表示已入库修改订单状态
+					orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				}else{
+					//小于表示部分入库
+					orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+					//多次部分入库的情况下要累计拆单数量字段的值
+					splitOrder.setSubNumber(saveAmount+trueAmount);
+					splitOrder.setInStock(saveAmount+trueAmount);
+				}
 			}else{
-				//小于表示部分入库
-				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
-				//多次部分入库的情况下要累计拆单数量字段的值
-				splitOrder.setSubNumber(saveAmount+trueAmount);
-				splitOrder.setInStock(saveAmount+trueAmount);
+				if(saveAmount > orderAmount){
+					return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
+				}else if(saveAmount.equals(orderAmount)){
+					//相等表示已入库修改订单状态
+					orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				}else{
+					//小于表示部分入库
+					orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+					//多次部分入库的情况下要累计拆单数量字段的值
+					splitOrder.setSubNumber(saveAmount);
+					splitOrder.setInStock(saveAmount);
+				}
 			}
+			param.setId(UUID.randomUUID().toString());
 		}else{
+			//拆单入库
+			orderIdBO = new OrderIdBO(); 
+			orderIdBO.setOrderId(orderId);
+			list.add(orderIdBO);
 			if(saveAmount > orderAmount){
 				return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
 			}else if(saveAmount.equals(orderAmount)){
@@ -235,15 +270,14 @@ public class StockServiceImpl implements StockService{
 			}else{
 				//小于表示部分入库
 				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
-				//多次部分入库的情况下要累计拆单数量字段的值
-				splitOrder.setSubNumber(saveAmount);
-				splitOrder.setInStock(saveAmount);
 			}
+			result = stockServer.getInventoryFidByOrderId(param);
+			param.setId((String)result.getData());
 		}
 		//入库
-		HttpResult result = stockServer.addStock(param);
+		result = stockServer.addStock(param);
 		if(result.isSuccess()){
-			//只有在正常子单第一次拆单的情况下才往OMS服务他们的拆单表中生成假数据,并且修改订单状态
+			//只有在正常子单第一次拆单的情况下才往OMS服务他们的拆单表中生成假数据,并且修订单状态
 			if(orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
 				UpdateOrderBO updateOrder = new UpdateOrderBO();
 				updateOrder.setKeyArea(param.getPartnerArea());
@@ -263,27 +297,55 @@ public class StockServiceImpl implements StockService{
 				updateOrder.setSplitOrders(addSplitOrderList);
 				result = orderServer.splitOrder(updateOrder);
 		        if(!result.isSuccess()){
-		        	LOGGER.error("入库修改订单状态失败!!!");
-		        	return MsgTemplate.failureMsg("入库修改订单状态失败!!!");
+		        	LOGGER.error("入库,OMS生成假的拆单数据失败,并且修改子单状态失败");
+		        	return MsgTemplate.failureMsg("入库,OMS生成假的拆单数据失败,并且修改子单状态失败");
 		        }
 			}else{
-				//拆单入库,不需要往oms的拆单表里加数据了,只需要修改拆单状态就可以了
-				List<OrderIdBO> updateOrderIdBOList = new ArrayList<>();
-				OrderIdBO updateOrderIdBO = new OrderIdBO();
-				updateOrderIdBO.setOrderId(orderId);
-				updateOrderIdBO.setStatus(list.get(0).getStatus());
-				updateOrderIdBOList.add(orderIdBO);
-				HttpResult updateSplitOrderResult =  orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),updateOrderIdBOList);
-				if(!updateSplitOrderResult.isSuccess()){
-					LOGGER.error("拆单入库,修改oms拆单状态失败!!!");
-					return MsgTemplate.failureMsg("拆单入库,修改oms拆单状态失败!!!");
+				//拆单入库,不需要往oms的拆单表里加数据了,修改拆单状态和拆单数量,以及子单状态
+				//根据子单号获取拆单信息
+				String sonOrderId = orderId.substring(0, orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+				List<OrderIdBO> splitOrderList = new ArrayList<>();
+				OrderIdBO order = new OrderIdBO();
+				order.setOrderId(sonOrderId);
+				order.setKeyArea(param.getPartnerArea());
+				result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
+				List<WarehouseOrderDetailPO> orderDetail = null;
+				Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+					orderDetail = entry.getValue();
 				}
-				Boolean flag = orderServer.compareOrderStatus(orderIdList,param.getPartnerArea());
-				if(flag==false){
-					return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+				UpdateSplitOrderBO updateSplitOrder = new UpdateSplitOrderBO();
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+					if(orderId.equals(warehouseOrderDetailPO.getSubOrderId())){
+						Integer subNumber = warehouseOrderDetailPO.getSubNumber();
+						updateSplitOrder.setSubNumber(subNumber+saveAmount);
+					}
+				}
+				//修改拆单中的拆单数量
+				List<UpdateSplitOrderBO> updateSplitOrderList = new ArrayList<>();
+				updateSplitOrder.setKeyArea(param.getPartnerArea());
+				updateSplitOrder.setSubOrderId(orderId);
+				updateSplitOrder.setSubStatus(Integer.valueOf(list.get(0).getStatus()));
+				result = orderServer.updateSplitOrderInfo(updateSplitOrderList);
+				if(!result.isSuccess()){
+					LOGGER.error("拆单入库,修改oms拆单状态数量失败!!!");
+					return MsgTemplate.failureMsg("拆单入库,修改oms拆单状态数量失败!!!");
+				}
+				if(list.get(0).getStatus().equals(OrderStatusTypeEnum.ALL_ADD_STOCK)){
+					//子单修改子单状态
+					List<UpdateOrderBO> orderUpdateList = new ArrayList<>();
+				 	UpdateOrderBO update = new UpdateOrderBO();
+		        	update.setOrderId(orderId.substring(0, orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)));
+		        	update.setOrderStatus(list.get(0).getStatus());
+		        	update.setKeyArea(param.getPartnerArea());
+		        	orderUpdateList.add(update);
+	    			result = orderServer.updateOrderInfo(orderUpdateList);
+	    	    	if(!result.isSuccess()){
+	    				LOGGER.error("拆单入库为已入库状态,修改oms子单状态失败");
+	    				return MsgTemplate.failureMsg("拆单入库为已入库状态,修改oms子单状态失败");
+	    			}
 				}
 			}
-	        
 			if(result.isSuccess()){
 				//插入冗余表数据
 				BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
@@ -337,8 +399,8 @@ public class StockServiceImpl implements StockService{
 					orderIdListBO.setList(new ArrayList<>());
 					orderIdListBO.getList().add(param.getOrderId());
 					result= abnormalServer.getOrderByOrderIdList(orderIdListBO);
-					
 					if(ObjectUtils.isEmpty(result.getData())){
+						//未生产异常订单
 						if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(orderIdBO.getStatus())){
 							//剩余的异常订单数量
 							Integer surplusOrderAmount= orderAmount-saveAmount;
@@ -355,19 +417,22 @@ public class StockServiceImpl implements StockService{
 							result = abnormalServer.addAbnormal(addAbnormal);
 							if(result.isSuccess()){
 								//oms修改异常标记逻辑
-								result = abnormalServer.updateExecptionFlag(1, param.getOrderId(),param.getPartnerArea());
+								List<String> strOrderIds = Arrays.asList(param.getOrderId());
+								result = abnormalServer.updateExecptionFlag(1,strOrderIds,param.getPartnerArea());
 								if(!result.isSuccess()){
 									return MsgTemplate.failureMsg(AbnormalMsgEnum.STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR);
 								}
 							}
 						}else{
-							//oms修改异常标记逻辑
-							result = abnormalServer.updateExecptionFlag(0, param.getOrderId(),param.getPartnerArea());
+							//已入库oms修改异常标记逻辑,修改为正常
+							List<String> strOrderIds = Arrays.asList(param.getOrderId());
+							result = abnormalServer.updateExecptionFlag(0, strOrderIds,param.getPartnerArea());
 							if(!result.isSuccess()){
 								return MsgTemplate.failureMsg(AbnormalMsgEnum.STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR);
 							}
 						}
 					}else{
+						//已生产异常订单
 						UpdateAbnormalBO updateOrderBO = new UpdateAbnormalBO();
 						BeanUtils.copyProperties(param, updateOrderBO);
 						if(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue().equals(orderIdBO.getStatus())){
@@ -384,20 +449,22 @@ public class StockServiceImpl implements StockService{
 							result = abnormalServer.updateAbnormal(updateOrderBO);
 							if(result.isSuccess()){
 								//oms修改异常标记逻辑
-								result = abnormalServer.updateExecptionFlag(1, param.getOrderId(),param.getPartnerArea());
+								List<String> strOrderIds = Arrays.asList(param.getOrderId());
+								result = abnormalServer.updateExecptionFlag(1, strOrderIds,param.getPartnerArea());
 								if(!result.isSuccess()){
 									return MsgTemplate.failureMsg(AbnormalMsgEnum.STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR);
 								}
 							}
 						}else{
-							updateOrderBO.setStatus(AbnormalConstant.ABNORMAL_STATUS);
+							updateOrderBO.setStatus(Integer.valueOf(AbnormalConstant.ABNORMAL_STATUS));
 							updateOrderBO.setAbnomalAmount("0");
 							updateOrderBO.setReason(AbnormalConstant.ABNORMAL_REASON_NULL);
 							updateOrderBO.setSubmiter(param.getOperator());
 							result = abnormalServer.updateAbnormal(updateOrderBO);
 							if(result.isSuccess()){
 								//oms修改异常标记逻辑
-								result = abnormalServer.updateExecptionFlag(0, param.getOrderId(),param.getPartnerArea());
+								List<String> strOrderIds = Arrays.asList(param.getOrderId());
+								result = abnormalServer.updateExecptionFlag(0,strOrderIds,param.getPartnerArea());
 								if(!result.isSuccess()){
 									return MsgTemplate.failureMsg(AbnormalMsgEnum.STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR);
 								}

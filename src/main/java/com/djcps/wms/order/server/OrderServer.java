@@ -17,6 +17,9 @@ import org.springframework.util.StringUtils;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
+import com.djcps.wms.allocation.server.AllocationServer;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
@@ -60,6 +63,9 @@ public class OrderServer {
 	@Autowired
 	private WmsForOrderHttpRequest orderHttpRequest;
 	
+	@Autowired
+	private AllocationServer allocationServer;
+	 
 	@Autowired
 	private UpdateOrderHttpRequest  updateOrderHttpRequest;
 	
@@ -153,7 +159,7 @@ public class OrderServer {
 			String string = orderIdBO.getOrderId();
 			String orderStatus = orderIdBO.getStatus();
 			//这里首先需要判断,这个orderId是子订单号还是拆分订单号
-			 int indexOf = string.indexOf("-");
+			 int indexOf = string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER);
 			 if(indexOf==-1){
 				//等于-1表示没有携带-是子订单号
 			 	UpdateOrderBO update = new UpdateOrderBO();
@@ -197,23 +203,24 @@ public class OrderServer {
 	 * @author:zdx
 	 * @date:2018年4月20日
 	 */
-	public Boolean compareOrderStatus(List<String> orderIdList,String partnerArea){
+	public Boolean compareOrderStatus(List<String> orderIdList,String partnerArea,String partnerId){
+		Boolean flag = false;
 		if(!ObjectUtils.isEmpty(orderIdList)){
 			List<String> orderIds = new ArrayList<>();
 			Set<String> orderSet = new HashSet<>();
 			for (String str : orderIdList) {
-				//修改成功之后判断该订单
-				if(str.indexOf("-")!=-1){
-					str = str.substring(0, str.indexOf("-"));
+				if(str.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
+					str = str.substring(0, str.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
 					orderSet.add(str);
 				}
-			}
-			for (String str : orderSet) {
-				orderIds.add(str);
 			}
 			if(orderSet.size()==0){
 				return true;
 			}
+			for (String str : orderSet) {
+				orderIds.add(str);
+			}
+			
 			BatchOrderIdListBO batch = new BatchOrderIdListBO();
 			batch.setOrderIds(orderIds);
 			batch.setKeyArea(partnerArea);
@@ -225,7 +232,8 @@ public class OrderServer {
 	        Map<String,WarehouseOrderDetailPO> orderDetailMap = new HashMap<>();
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
 	        	OrderIdBO orderIdBO = new OrderIdBO();
-	        	BeanUtils.copyProperties(warehouseOrderDetailPO, orderIdBO);
+	        	orderIdBO.setOrderId(warehouseOrderDetailPO.getOrderId());
+	        	orderIdBO.setKeyArea(partnerArea);
 	        	orderIdBOList.add(orderIdBO);
 	        	orderDetailMap.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
 			}
@@ -235,27 +243,47 @@ public class OrderServer {
 	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
 	        	for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
 	        		int orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus().intValue();
-	        		int splitOrderStatus = orderDetailPO.getOrderStatus().intValue();
+	        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
 	        		//假如拆单状态小于子单状态则把状态赋值给子单
 	        		if(splitOrderStatus<orderStatus){
+	        			//一个开关代表需要进行修改
+	        			flag = true;
 	        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(splitOrderStatus);
 	        		}
 	        	}
 	        }
-	        List<UpdateOrderBO> updateList = new ArrayList<>();
-	        for(Map.Entry<String,WarehouseOrderDetailPO> entry : orderDetailMap.entrySet()){
-	        	WarehouseOrderDetailPO orderDetailValue = entry.getValue();
-	        	UpdateOrderBO update = new UpdateOrderBO();
- 	        	update.setOrderId(orderDetailValue.getOrderId());
- 	        	update.setOrderStatus(String.valueOf(orderDetailValue.getOrderStatus()));
- 	        	update.setKeyArea(partnerArea);
- 	        	updateList.add(update);
+	        if(flag == true){
+	        	List<UpdateOrderBO> updateList = new ArrayList<>();
+	        	List<UpdateOrderRedundantBO> orderRedundantBOList = new ArrayList<>();
+	 	        for(Map.Entry<String,WarehouseOrderDetailPO> entry : orderDetailMap.entrySet()){
+	 	        	WarehouseOrderDetailPO orderDetailValue = entry.getValue();
+	 	        	UpdateOrderBO update = new UpdateOrderBO();
+	  	        	update.setOrderId(orderDetailValue.getOrderId());
+	  	        	update.setOrderStatus(String.valueOf(orderDetailValue.getOrderStatus()));
+	  	        	update.setKeyArea(partnerArea);
+	  	        	updateList.add(update);
+	  	        	
+	  	        	//修改冗余表参数
+	  	        	UpdateOrderRedundantBO updateOrderRedundant = new UpdateOrderRedundantBO();
+	  	        	updateOrderRedundant.setOrderId(orderDetailValue.getOrderId());
+	  	        	updateOrderRedundant.setStatus(orderDetailValue.getOrderStatus());
+	  	        	updateOrderRedundant.setPartnerId(partnerId);
+	  	        	orderRedundantBOList.add(updateOrderRedundant);
+	 	        }
+	 	        HttpResult result = updateOrderInfo(updateList);
+	 	        //关闭开关
+	 	        flag = false;
+	 	    	if(!result.isSuccess()){
+	 	    		LOGGER.error("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+	     		}else{
+	     			//这里已经写好逻辑了,所有这里暂时就不做修改了,应该是先修改wms的订单状态在修改oms
+	     			//修改冗余表订单状态
+	     			result = allocationServer.batchUpdateOrderRedun(orderRedundantBOList);
+	     		}
+	 			return result.isSuccess();
+	        }else{
+	        	return true;
 	        }
-	        HttpResult result = updateOrderInfo(updateList);
-	    	if(!result.isSuccess()){
-	    		LOGGER.error("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
-    		}
-			return result.isSuccess();
 		}
 		return true;
 	}

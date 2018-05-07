@@ -287,6 +287,17 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/getAddOrderList.do")
 	public HTTPResponse getAddOrderList(@Body RequestBody rb);
+	
+	/**
+	 * 非追加订单列表
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年1月23日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getErrorAddOrderList.do")
+	public HTTPResponse getErrorAddOrderList(@Body RequestBody rb);
 
 	/**
 	 * 智能配货

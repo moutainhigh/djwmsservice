@@ -315,7 +315,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                                 LOGGER.error("装车,全部退库环节,修改订单状态失败!!!");
                                 return MsgTemplate.customMsg(updateResult);
                             }
-                            Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
+                            Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea(),param.getPartnerId());
                             if(compareOrderStatus==false){
                               return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
                             }
@@ -406,7 +406,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 LOGGER.error("装车,部分退库,修改订单状态失败!!!");
                 return MsgTemplate.customMsg(updateResult);
             }
-        	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,param.getPartnerArea());
+        	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,param.getPartnerArea(),param.getPartnerId());
             if(compareOrderStatus==false){
               return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
             }
