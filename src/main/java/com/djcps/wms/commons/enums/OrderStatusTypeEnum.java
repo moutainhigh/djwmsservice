@@ -6,7 +6,13 @@ package com.djcps.wms.commons.enums;
  * @since 2018/1/26 12:17.
  */
 public enum OrderStatusTypeEnum {
-    /**
+	
+	/**
+	 *待入库 
+	 */
+	NO_STOCK("3"),
+	
+	/**
      * 部分入库
      */
     LESS_ADD_STOCK("21"),

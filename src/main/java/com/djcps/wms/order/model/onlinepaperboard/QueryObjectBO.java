@@ -22,7 +22,7 @@ public class QueryObjectBO extends PartnerInfoBO implements Serializable{
 	/**
 	 * 当前页
 	 */
-	private Integer currentPage;
+	private Integer pageNum;
 	
 	/**
 	 * 条数 
@@ -37,12 +37,12 @@ public class QueryObjectBO extends PartnerInfoBO implements Serializable{
 		this.queryObject = queryObject;
 	}
 
-	public Integer getCurrentPage() {
-		return currentPage;
+	public Integer getPageNum() {
+		return pageNum;
 	}
 
-	public void setCurrentPage(Integer currentPage) {
-		this.currentPage = currentPage;
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
 	}
 
 	public Integer getPageSize() {
@@ -55,8 +55,7 @@ public class QueryObjectBO extends PartnerInfoBO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "QueryObjectBO [queryObject=" + queryObject + ", currentPage=" + currentPage + ", pageSize=" + pageSize
-				+ "]";
+		return "QueryObjectBO [queryObject=" + queryObject + ", pageNum=" + pageNum + ", pageSize=" + pageSize + "]";
 	}
 	
 }

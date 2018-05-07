@@ -33,13 +33,13 @@ public class UpdateSplitOrderBO {
      */
     private Integer outStock;
     /**
-     * 是入库数量
+     * 入库数量
      */
     private Integer inStock;
     /**
      *是否异常 1有  0无
      */
-    private int isException;
+    private Integer isException;
     /**
      * 是否备货 1有  0无
      */
@@ -109,11 +109,11 @@ public class UpdateSplitOrderBO {
         this.inStock = inStock;
     }
 
-    public int getIsException() {
+    public Integer getIsException() {
         return isException;
     }
 
-    public void setIsException(int isException) {
+    public void setIsException(Integer isException) {
         this.isException = isException;
     }
 

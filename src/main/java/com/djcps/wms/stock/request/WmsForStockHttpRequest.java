@@ -85,13 +85,13 @@ public interface WmsForStockHttpRequest {
 	HTTPResponse getAreaByOrderId(@Body RequestBody rb);
 
 	/**
-	 * 入库部分,根据订单号获取部分入库的拆分订单号
+	 * 根据订单号获取库存表的原有的库存订单的fid
 	 * @param rb
 	 * @return
 	 * @author:zdx
-	 * @date:2018年4月23日
+	 * @date:2018年5月6日
 	 */
 	@Headers("content-type:application/json")
-	@POST("entry/getLessStockOrderId.do")
-	HTTPResponse getLessStockOrderId(@Body RequestBody rb);
+	@POST("entry/getInventoryFidByOrderId.do")
+	HTTPResponse getInventoryFidByOrderId(@Body RequestBody rb);
 }

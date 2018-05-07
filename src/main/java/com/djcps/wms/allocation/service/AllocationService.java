@@ -22,7 +22,9 @@ import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 
 
 /**
@@ -294,12 +296,19 @@ public interface AllocationService {
 	 * @param param
 	 * @return
 	 * @author:zdx
-	 * @date:2018年4月18日
+	 * @date:2018年5月3日
 	 */
-	Map<String, Object> splitOrder(SplitOrderBO param);
+	Map<String, Object> splitOrder(UpdateOrderBO param);
 
 
+	/**
+	 * 根据订单号获取拆单信息
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月3日
+	 */
+	Map<String, Object> getSplitOrderByOrderId(OrderIdBO param);
+	
 	Map<String, Object> TmsVehicleQueuingList();
-
-
 }

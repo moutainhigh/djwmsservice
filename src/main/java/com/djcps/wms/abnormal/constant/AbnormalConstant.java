@@ -32,6 +32,14 @@ public class AbnormalConstant {
 	public static String ABNORMAL_ERROR_less = "盘亏";
 	
 	public static final String ABNORMAL_REASON_NULL = "无";
+	
+	/**
+	 * 异常处理结果,1:下生产补单;2:分线执行;3:不补;4:作废
+	 */
+	public static final String ABNORMAL_UPDATE_1 = "1";
+	public static final String ABNORMAL_UPDATE_2 = "2";
+	public static final String ABNORMAL_UPDATE_3 = "3";
+	public static final String ABNORMAL_UPDATE_4 = "4";
 
 	public static void setAbnormalErrorReason(String abnormalErrorReason) {
 		ABNORMAL_ERROR_REASON = abnormalErrorReason;
