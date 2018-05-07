@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -2041,7 +2042,6 @@ public class AllocationServiceImpl implements AllocationService {
 					return MsgTemplate.customMsg(abnormalResult);
 				}
 				//处理wms的异常订单表,将其修改为正常订单
-				param.setOrderStatus(OrderStatusTypeEnum.NO_STOCK.getValue());
 				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
 			}else if(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
@@ -2049,14 +2049,54 @@ public class AllocationServiceImpl implements AllocationService {
 				if(!orderAmount.equals(firstSpiltOrder.getSubNumber()+secondSpiltOrder.getSubNumber())){
 					return MsgTemplate.failureMsg(AllocationMsgEnum.ALL_STOCK_ORDER_SUBNUMBER_ERROR);
 				}
-				param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 			}else{
 				return MsgTemplate.failureMsg(AllocationMsgEnum.NOT_ALLOW_SPLIT_ORDER);
 			}
 			
+			//获取真正的子单需要的订单状态
+			
+			String updateOrderId = param.getOrderId();
+			if(updateOrderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
+				updateOrderId = updateOrderId.substring(0, updateOrderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+			}
+			List<String> orderIds = Arrays.asList(updateOrderId);
+			BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
+			batchOrderIdListBO.setOrderIds(orderIds);
+			batchOrderIdListBO.setKeyArea(param.getPartnerArea());
+			HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(batch);
+			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+	        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
+	        List<OrderIdBO> orderIdBOList = new ArrayList<>();
+	        Map<String,WarehouseOrderDetailPO> orderDetailMap = new HashMap<>();
+	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+	        	OrderIdBO orderIdBO = new OrderIdBO();
+	        	orderIdBO.setOrderId(warehouseOrderDetailPO.getOrderId());
+	        	orderIdBO.setKeyArea(param.getPartnerArea());
+	        	orderIdBOList.add(orderIdBO);
+	        	orderDetailMap.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
+			}
+	        
+	        String newOrderStatus = null;
+	        HttpResult splitOrderResult  = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
+	        Map<String,List<WarehouseOrderDetailPO>> detailMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
+	        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
+	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
+	        	if(!ObjectUtils.isEmpty(detailValueList)){
+	        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
+		        		int otherOrderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus().intValue();
+		        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
+		        		//假如拆单状态小于子单状态则把状态赋值给子单
+		        		if(splitOrderStatus<otherOrderStatus){
+		        			newOrderStatus = String.valueOf(splitOrderStatus);
+		        		}
+		        	}
+	        	}
+	        }
+			
 			//组织oms需要的拆单数据
+	        param.setOrderStatus(newOrderStatus==null?String.valueOf(orderStatus):newOrderStatus);
 			param.setKeyArea(param.getPartnerArea());
 			param.setSplitStatus(1);
 			List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();

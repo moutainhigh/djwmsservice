@@ -61,7 +61,7 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	/**
 	 * 订单号
 	 */
-	private String fchildorderid;
+	private String orderId;
 	/**
 	 * 客户名称
 	 */
@@ -231,13 +231,13 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	public void setWaybillIdStatus(String waybillIdStatus) {
 		this.waybillIdStatus = waybillIdStatus;
 	}
-
-	public String getFchildorderid() {
-		return fchildorderid;
+	
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setFchildorderid(String fchildorderid) {
-		this.fchildorderid = fchildorderid;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public String getCustomerName() {
@@ -347,10 +347,10 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	public String toString() {
 		return "GetRedundantByAttributeBO [partnerName=" + partnerName + ", partnerArea=" + partnerArea
 				+ ", operatorId=" + operatorId + ", operator=" + operator + ", waybillId=" + waybillId + ", deliveryId="
-				+ deliveryId + ", orderStatus=" + orderStatus + ", waybillIdStatus=" + waybillIdStatus
-				+ ", fchildorderid=" + fchildorderid + ", customerName=" + customerName + ", productName=" + productName
-				+ ", materialName=" + materialName + ", orderEndTime=" + orderEndTime + ", orderStartTime="
-				+ orderStartTime + ", deliveryEndTime=" + deliveryEndTime + ", deliveryStartTime=" + deliveryStartTime
+				+ deliveryId + ", orderStatus=" + orderStatus + ", waybillIdStatus=" + waybillIdStatus + ", orderId="
+				+ orderId + ", customerName=" + customerName + ", productName=" + productName + ", materialName="
+				+ materialName + ", orderEndTime=" + orderEndTime + ", orderStartTime=" + orderStartTime
+				+ ", deliveryEndTime=" + deliveryEndTime + ", deliveryStartTime=" + deliveryStartTime
 				+ ", paymentEndTime=" + paymentEndTime + ", paymentStartTime=" + paymentStartTime
 				+ ", deliveryCreateTime=" + deliveryCreateTime + ", plateNumber=" + plateNumber + ", flag=" + flag
 				+ ", deliveryCreateStartTime=" + deliveryCreateStartTime + ", deliveryCreateEndTime="
