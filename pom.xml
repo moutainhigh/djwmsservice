@@ -99,7 +99,6 @@
 
     <dependencies>
 
-
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
@@ -369,6 +368,12 @@
         </dependency>
         
         <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>logging-interceptor</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+        
+        <dependency>
             <groupId>com.squareup.retrofit2</groupId>
             <artifactId>converter-scalars</artifactId>
             <version>2.3.0</version>
@@ -421,7 +426,20 @@
             <artifactId>djcpslog4j</artifactId>
             <version>1.3.0.RELEASE</version>
         </dependency>
-
+        
+        <!-- 对接tms-jar包 -->
+        <dependency>
+            <groupId>com.djtms</groupId>
+            <artifactId>djtms</artifactId>
+            <version>djtmsjar-1.0</version>
+        </dependency>
+        
+        <!--减化retrofit2代码-->
+        <dependency>
+            <groupId>http.plugin</groupId>
+            <artifactId>httprequest</artifactId>
+            <version>2.1</version>
+        </dependency>
     </dependencies>
 
     <build>
