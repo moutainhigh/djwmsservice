@@ -61,9 +61,6 @@ import com.djcps.wms.allocation.model.OrderPO;
 import com.djcps.wms.allocation.model.PickerPO;
 import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.SequenceBO;
-import com.djcps.wms.allocation.model.SplitOrderBO;
-import com.djcps.wms.allocation.model.SplitOrderFirstBO;
-import com.djcps.wms.allocation.model.SplitOrderSecondBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.WarehousePO;
@@ -81,9 +78,7 @@ import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
-import com.djcps.wms.commons.server.MsgServer;
 import com.djcps.wms.commons.utils.RedisUtil;
-import com.djcps.wms.loadingtable.server.LoadingTableServer;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
@@ -307,6 +302,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 		}
 		if(!ObjectUtils.isEmpty(redundantOrderList)){
+			List<String> newOrderList = new ArrayList();
 			//根据订单号获取提货单信息
 			HttpResult deliveryResult = allocationServer.getDeliveryByOrderIds(redundantOrderList);
 			if(!ObjectUtils.isEmpty(deliveryResult.getData())){
@@ -431,7 +427,7 @@ public class AllocationServiceImpl implements AllocationService {
 	private Map<String, Object> verifyAllocationSon(VerifyAllocationBO param) throws InterruptedException {
 		//没有参与确认配货的订单直接驳回
 		List<SequenceBO> seqOrderIds = param.getOrderIds();
-		if(!ObjectUtils.isEmpty(seqOrderIds)){
+		if(ObjectUtils.isEmpty(seqOrderIds)){
 			return MsgTemplate.failureMsg(AllocationMsgEnum.NO_HAVING_ORDER_ALLOCATION);
 		}
 		//确认配货之前先校验该智能配货结果是否已配货
@@ -644,69 +640,75 @@ public class AllocationServiceImpl implements AllocationService {
 	@Override
 	public Map<String, Object> getAddOrderList(GetRedundantByAttributeBO param) {
 		List<String> orderIdList = param.getOrderIdList();
-		//key和value都是订单号
-		Map<String,String> orderStrMap = new HashMap<>();
-		List<OrderIdBO> orderIdBOList = new ArrayList<>();
-		for (String string : orderIdList) {
-			if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
-				orderStrMap.put(string, string);
-				String newStr = string.substring(0, string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
-				OrderIdBO order = new OrderIdBO();
-				order.setKeyArea(param.getPartnerArea());
-				order.setOrderId(newStr);
-				orderIdBOList.add(order);
-			}
-		}
-		
-		if(!ObjectUtils.isEmpty(orderIdBOList)){
-			//根据订单号批量查询拆单信息
-			HttpResult splitOrderResult = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
-			Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
-			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
-				List<WarehouseOrderDetailPO> value = entry.getValue();
-				Iterator<WarehouseOrderDetailPO> iterator = value.iterator();
-				while(iterator.hasNext()){
-					WarehouseOrderDetailPO next = iterator.next();
-					String subOrderId = orderStrMap.get(next.getSubOrderId());
-					if(subOrderId!=null){
-						iterator.remove();
-					}
+		HttpResult result = null;
+		List<String> redundantOrderList = null;
+		if(ObjectUtils.isEmpty(orderIdList)){
+			result = allocationServer.getAddOrderListByParamisNull(param);
+		}else{
+			//key和value都是订单号
+			Map<String,String> orderStrMap = new HashMap<>();
+			List<OrderIdBO> orderIdBOList = new ArrayList<>();
+			for (String string : orderIdList) {
+				if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
+					orderStrMap.put(string, string);
+					String newStr = string.substring(0, string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+					OrderIdBO order = new OrderIdBO();
+					order.setKeyArea(param.getPartnerArea());
+					order.setOrderId(newStr);
+					orderIdBOList.add(order);
 				}
 			}
 			
-			Map<String, List<WarehouseOrderDetailPO>> newOrderMap = new HashMap<>();
-			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
-				List<WarehouseOrderDetailPO> value = entry.getValue();
-				newOrderMap.put(entry.getKey(),new ArrayList<>());
-				for (WarehouseOrderDetailPO warehouseOrderDetailPO : value) {
-					Integer subStatus = warehouseOrderDetailPO.getSubStatus();
-					if(subStatus.equals(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()))){
-						newOrderMap.get(entry.getKey()).add(warehouseOrderDetailPO);
+			if(!ObjectUtils.isEmpty(orderIdBOList)){
+				//根据订单号批量查询拆单信息
+				HttpResult splitOrderResult = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
+				Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+					List<WarehouseOrderDetailPO> value = entry.getValue();
+					Iterator<WarehouseOrderDetailPO> iterator = value.iterator();
+					while(iterator.hasNext()){
+						WarehouseOrderDetailPO next = iterator.next();
+						String subOrderId = orderStrMap.get(next.getSubOrderId());
+						if(subOrderId!=null){
+							iterator.remove();
+						}
+					}
+				}
+				
+				Map<String, List<WarehouseOrderDetailPO>> newOrderMap = new HashMap<>();
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+					List<WarehouseOrderDetailPO> value = entry.getValue();
+					newOrderMap.put(entry.getKey(),new ArrayList<>());
+					for (WarehouseOrderDetailPO warehouseOrderDetailPO : value) {
+						Integer subStatus = warehouseOrderDetailPO.getSubStatus();
+						if(subStatus.equals(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()))){
+							newOrderMap.get(entry.getKey()).add(warehouseOrderDetailPO);
+						}
+					}
+				}
+				
+				//判断newOrderMap value中的List的值,大小等于0则表示需要添加到orderIdList中的数据
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:newOrderMap.entrySet()){
+					List<WarehouseOrderDetailPO> value = entry.getValue();
+					if(ObjectUtils.isEmpty(value)){
+						orderIdList.add(entry.getKey());
 					}
 				}
 			}
-			
-			//判断newOrderMap value中的List的值,大小等于0则表示需要添加到orderIdList中的数据
-			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:newOrderMap.entrySet()){
-				List<WarehouseOrderDetailPO> value = entry.getValue();
-				if(ObjectUtils.isEmpty(value)){
-					orderIdList.add(entry.getKey());
+			result = allocationServer.getErrorAddOrderList(param);
+			redundantOrderList = gson.fromJson(gson.toJson(result.getData()),ArrayList.class);
+			List<String> newRedundantOrderList = new ArrayList<>();
+			for (String string : redundantOrderList) {
+				if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
+					newRedundantOrderList.add(string);
 				}
 			}
-		}
-		HttpResult result = allocationServer.getErrorAddOrderList(param);
-		List<String> redundantOrderList = gson.fromJson(gson.toJson(result.getData()),ArrayList.class);
-		List<String> newRedundantOrderList = new ArrayList<>();
-		for (String string : redundantOrderList) {
-			if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
-				newRedundantOrderList.add(string);
+			if(ObjectUtils.isEmpty(newRedundantOrderList)){
+				newRedundantOrderList = redundantOrderList;
 			}
+			param.setOrderIdList(newRedundantOrderList);
+			result = allocationServer.getAddOrderList(param);
 		}
-		if(ObjectUtils.isEmpty(newRedundantOrderList)){
-			newRedundantOrderList = redundantOrderList;
-		}
-		param.setOrderIdList(newRedundantOrderList);
-		result = allocationServer.getAddOrderList(param);
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
 		List<WarehouseOrderDetailPO> orderDetailList = new ArrayList<WarehouseOrderDetailPO>();
 		if(!ObjectUtils.isEmpty(result.getData())){
@@ -1981,7 +1983,6 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> splitOrder(UpdateOrderBO param) {
-
 		String orderId = param.getDeleteOrdeIdList().get(0);
 		BatchOrderIdListBO batch = new BatchOrderIdListBO();
 		List<String> orderIdList = Arrays.asList(orderId);

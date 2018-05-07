@@ -264,6 +264,8 @@ public class StockServiceImpl implements StockService{
 				updateOrder.setKeyArea(param.getPartnerArea());
 				updateOrder.setOrderId(orderId);
 				updateOrder.setOrderStatus(list.get(0).getStatus());
+				List<String> deleteList = Arrays.asList(orderId);
+				updateOrder.setDeleteOrdeIdList(deleteList);
 				
 				List<UpdateSplitOrderBO> addSplitOrderList = new ArrayList<>();
 				splitOrder.setOrderId(orderId);

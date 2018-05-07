@@ -101,6 +101,7 @@ public class OrderServiceImpl implements OrderService {
 		OrderIdBO order = new OrderIdBO();
 		order.setOrderId(param.getOrderIds().get(0));
 		order.setKeyArea(param.getPartnerArea());
+		splitOrderList.add(order);
 		HttpResult result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
 		if(!ObjectUtils.isEmpty(result.getData())){
 			List<WarehouseOrderDetailPO> orderDetail = null;
@@ -108,10 +109,12 @@ public class OrderServiceImpl implements OrderService {
 			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
 				orderDetail = entry.getValue();
 			}
-			for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
-				if(warehouseOrderDetailPO.getOrderStatus().equals(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()))){
-					List<String> strList = Arrays.asList(warehouseOrderDetailPO.getSubOrderId());
-					param.setOrderIds(strList);
+			if(!ObjectUtils.isEmpty(orderDetail)){
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+					if(warehouseOrderDetailPO.getSubStatus().equals(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()))){
+						List<String> strList = Arrays.asList(warehouseOrderDetailPO.getSubOrderId());
+						param.setOrderIds(strList);
+					}
 				}
 			}
 		}
