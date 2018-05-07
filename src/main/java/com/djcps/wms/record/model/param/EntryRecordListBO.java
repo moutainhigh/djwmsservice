@@ -1,10 +1,9 @@
 package com.djcps.wms.record.model.param;
 
 import com.djcps.wms.commons.base.BaseListBO;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.List;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 获取入库移库操作记录列表参数接受类

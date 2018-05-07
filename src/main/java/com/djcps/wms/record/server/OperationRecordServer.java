@@ -1,11 +1,5 @@
 package com.djcps.wms.record.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
-
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -15,7 +9,9 @@ import com.djcps.wms.record.model.param.StocktakingRecordListBO;
 import com.djcps.wms.record.model.result.OperationRecordResult;
 import com.djcps.wms.record.request.OperationRecordHttpRequest;
 import com.google.gson.Gson;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
 /**

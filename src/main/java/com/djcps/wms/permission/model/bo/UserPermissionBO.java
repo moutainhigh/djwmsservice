@@ -21,7 +21,7 @@ public class UserPermissionBO extends OperatorInfoBO {
     /**
      * 业务 目前固定 30
      */
-    private String pbusiness = PermissionConstants.BUSINESS_ID;
+    private String pbusiness;
 
     public String getId() {
         return id;

@@ -158,7 +158,7 @@ public class PermissionServer {
      * @watch business default: 30
      */
     public List<UserPermissionVO> getUserPermission(UserPermissionBO param) {
-//		param.setpBusiness(PermissionConstants.BUSINESS_ID);
+		param.setpBusiness(PermissionConstants.BUSINESS_ID);
         String json = gson.toJson(param);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse http = djorForPermissionHttpRequest.getUserPermission(map);
@@ -178,7 +178,7 @@ public class PermissionServer {
      * @since 2018/4/23  20:47
      */
     public List<UserPermissionVO> listUserPermission(UserPermissionBO param) {
-//		param.setpBusiness(PermissionConstants.BUSINESS_ID);
+		param.setpBusiness(PermissionConstants.BUSINESS_ID);
         String json = gson.toJson(param);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse http = djorForPermissionHttpRequest.getUserPermission(map);
