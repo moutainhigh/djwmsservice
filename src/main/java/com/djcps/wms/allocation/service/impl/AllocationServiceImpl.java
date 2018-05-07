@@ -341,11 +341,10 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 			}
 		}
-		Map<String, Object> result = new HashMap<String, Object>(16);
 		BaseVO base = new BaseVO();
 		base.setTotal(total);
 		base.setResult(stockInfo);
-		return MsgTemplate.successMsg(result);
+		return MsgTemplate.successMsg(base);
 	}
 
 	@Override
@@ -430,6 +429,11 @@ public class AllocationServiceImpl implements AllocationService {
 	 * @throws InterruptedException 
 	 */
 	private Map<String, Object> verifyAllocationSon(VerifyAllocationBO param) throws InterruptedException {
+		//没有参与确认配货的订单直接驳回
+		List<SequenceBO> seqOrderIds = param.getOrderIds();
+		if(!ObjectUtils.isEmpty(seqOrderIds)){
+			return MsgTemplate.failureMsg(AllocationMsgEnum.NO_HAVING_ORDER_ALLOCATION);
+		}
 		//确认配货之前先校验该智能配货结果是否已配货
 		HttpResult existHttpResult = allocationServer.existIntelligentAlloca(param.getAllocationId());
 		if(!ObjectUtils.isEmpty(existHttpResult.getData())){
@@ -639,9 +643,9 @@ public class AllocationServiceImpl implements AllocationService {
 	
 	@Override
 	public Map<String, Object> getAddOrderList(GetRedundantByAttributeBO param) {
+		List<String> orderIdList = param.getOrderIdList();
 		//key和value都是订单号
 		Map<String,String> orderStrMap = new HashMap<>();
-		List<String> orderIdList = param.getOrderIdList();
 		List<OrderIdBO> orderIdBOList = new ArrayList<>();
 		for (String string : orderIdList) {
 			if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){

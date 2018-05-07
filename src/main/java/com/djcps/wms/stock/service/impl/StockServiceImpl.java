@@ -184,25 +184,6 @@ public class StockServiceImpl implements StockService{
 			}else{
 				return MsgTemplate.failureMsg(AllocationMsgEnum.ORDER_IS_NULL);
 			}
-			
-			//判断扫面或者网页端传来的订单号是否为拆分,是的话则需要进行查询另外订单
-			List<OrderIdBO> splitOrderList = new ArrayList<>();
-			OrderIdBO order = new OrderIdBO();
-			order.setOrderId(param.getOrderId());
-			order.setKeyArea(param.getPartnerArea());
-			HttpResult result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
-			if(!ObjectUtils.isEmpty(result.getData())){
-				List<WarehouseOrderDetailPO> orderDetail = null;
-				Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
-				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
-					orderDetail = entry.getValue();
-				}
-				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
-					if(warehouseOrderDetailPO.getOrderStatus().equals(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()))){
-						param.setOrderId(warehouseOrderDetailPO.getSubOrderId());
-					}
-				}
-			}
 		}
 		HttpResult result =null;
 		//订单号

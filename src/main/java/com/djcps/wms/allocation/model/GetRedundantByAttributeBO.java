@@ -130,7 +130,7 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	private String allocationId;
 	
 	/**
-	 * 参与智能配货或者装车优化的id
+	 * 参与智能配货或者装车优化的订单号
 	 */
 	private List<String> orderIdList;
 	

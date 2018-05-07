@@ -1,6 +1,7 @@
 package com.djcps.wms.order.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.base.BaseVO;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.order.model.OrderIdBO;
@@ -23,6 +25,7 @@ import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 /**
@@ -93,30 +96,52 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public Map<String, Object> getOnlinePaperboardByOrderId(BatchOrderIdListBO param) {
-		HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(param);
-		if(!ObjectUtils.isEmpty(orderDeatilByIdList.getData())){
-			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
-		    List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
-		    List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
-		    
-		    SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
-			BeanUtils.copyProperties(param, selectAreaByOrderId);
-			List<OrderIdBO> list = new ArrayList();
-			OrderIdBO orderIdBO = new OrderIdBO();
-			orderIdBO.setOrderId(param.getOrderIds().get(0));
-			list.add(orderIdBO);
-			selectAreaByOrderId.setOrderIds(list);
-			List<WarehouseOrderDetailPO> orderStockInfo = orderServer.getOrderStockInfo(selectAreaByOrderId);
-			if(!ObjectUtils.isEmpty(orderStockInfo)){
-				WarehouseOrderDetailPO warehouseOrderDetailPO = orderStockInfo.get(0);
-				BeanUtils.copyProperties(joinOrderParamInfo.get(0), warehouseOrderDetailPO,"amountSaved","remark","instockAmount","areaList");
-				return MsgTemplate.successMsg(warehouseOrderDetailPO);
-			}else{
-				joinOrderParamInfo.get(0).setAmountSaved(0);
-				return MsgTemplate.successMsg(joinOrderParamInfo.get(0));
+		//判断扫面或者网页端传来的订单号是否为拆分,是的话则需要进行查询另外订单
+		List<OrderIdBO> splitOrderList = new ArrayList<>();
+		OrderIdBO order = new OrderIdBO();
+		order.setOrderId(param.getOrderIds().get(0));
+		order.setKeyArea(param.getPartnerArea());
+		HttpResult result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
+		if(!ObjectUtils.isEmpty(result.getData())){
+			List<WarehouseOrderDetailPO> orderDetail = null;
+			Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+				orderDetail = entry.getValue();
 			}
+			for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+				if(warehouseOrderDetailPO.getOrderStatus().equals(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()))){
+					List<String> strList = Arrays.asList(warehouseOrderDetailPO.getSubOrderId());
+					param.setOrderIds(strList);
+				}
+			}
+		}
+		HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(param);
+		BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+	    List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
+	    List<WarehouseOrderDetailPO> newSplitOrderList = batchOrderDetailListPO.getSplitOrderList();
+	    List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+	    if(!ObjectUtils.isEmpty(orderList)){
+	    	joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+	    }else if(!ObjectUtils.isEmpty(newSplitOrderList)){
+	    	joinOrderParamInfo = orderServer.joinOrderParamInfo(newSplitOrderList);
+	    }else{
+	    	return MsgTemplate.successMsg(null);
+	    }
+	    SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+		BeanUtils.copyProperties(param, selectAreaByOrderId);
+		List<OrderIdBO> list = new ArrayList();
+		OrderIdBO orderIdBO = new OrderIdBO();
+		orderIdBO.setOrderId(param.getOrderIds().get(0));
+		list.add(orderIdBO);
+		selectAreaByOrderId.setOrderIds(list);
+		List<WarehouseOrderDetailPO> orderStockInfo = orderServer.getOrderStockInfo(selectAreaByOrderId);
+		if(!ObjectUtils.isEmpty(orderStockInfo)){
+			WarehouseOrderDetailPO warehouseOrderDetailPO = orderStockInfo.get(0);
+			BeanUtils.copyProperties(joinOrderParamInfo.get(0), warehouseOrderDetailPO,"amountSaved","remark","instockAmount","areaList");
+			return MsgTemplate.successMsg(warehouseOrderDetailPO);
 		}else{
-			return null;
+			joinOrderParamInfo.get(0).setAmountSaved(0);
+			return MsgTemplate.successMsg(joinOrderParamInfo.get(0));
 		}
 	}
 
