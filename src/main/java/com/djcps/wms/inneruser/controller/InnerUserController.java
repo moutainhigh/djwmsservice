@@ -1,22 +1,5 @@
 package com.djcps.wms.inneruser.controller;
 
-import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Validation;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
@@ -27,16 +10,11 @@ import com.djcps.wms.commons.aop.inneruser.annotation.OperatorAnnotation;
 import com.djcps.wms.commons.aop.log.AddLog;
 import com.djcps.wms.commons.config.ParamsConfig;
 import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.OperatorInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
 import com.djcps.wms.inneruser.enums.InnerUserMsgEnum;
-import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordBO;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
-import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
-import com.djcps.wms.inneruser.model.param.UserTokenBO;
+import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
@@ -44,6 +22,17 @@ import com.djcps.wms.inneruser.model.userparam.UpdateUserStatusBO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.inneruser.service.UserService;
 import com.djcps.wms.permission.service.PermissionService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Validation;
+import java.util.Map;
+
+import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @author Chengw

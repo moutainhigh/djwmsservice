@@ -16,6 +16,17 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.commons.base.BaseBO;
+import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
+import com.djcps.wms.commons.base.BaseVO;
+import com.djcps.wms.commons.base.PushExtraFieldBO;
+import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.constant.RedisPrefixConstant;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
+import com.djcps.wms.commons.enums.SysMsgEnum;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,11 +54,6 @@ import com.djcps.wms.allocation.model.ChangeCarInfoBO;
 import com.djcps.wms.allocation.model.DeliveryOrderPO;
 import com.djcps.wms.allocation.model.DeliveryPO;
 import com.djcps.wms.allocation.model.GetAllocationManageListPO;
-import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
-import com.djcps.wms.allocation.model.GetExcellentLodingBO;
-import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
-import com.djcps.wms.allocation.model.GetOrderIdByOrderType;
-import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.model.IntelligentAllocationPO;
 import com.djcps.wms.allocation.model.LoadingPersonPO;
 import com.djcps.wms.allocation.model.MergeModelBO;
@@ -61,23 +67,19 @@ import com.djcps.wms.allocation.model.VerifyAllocationBO;
 import com.djcps.wms.allocation.model.WarehousePO;
 import com.djcps.wms.allocation.model.WaybillDeliveryOrderPO;
 import com.djcps.wms.allocation.model.WaybillPO;
+import com.djcps.wms.allocation.model.GetDeliveryByWaybillIdsBO;
+import com.djcps.wms.allocation.model.GetExcellentLodingBO;
+import com.djcps.wms.allocation.model.GetIntelligentAllocaBO;
+import com.djcps.wms.allocation.model.GetOrderIdByOrderType;
+import com.djcps.wms.allocation.model.GetRedundantByAttributeBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.allocation.service.AllocationService;
-import com.djcps.wms.commons.base.BaseAddBO;
-import com.djcps.wms.commons.base.BaseBO;
-import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
-import com.djcps.wms.commons.base.BaseVO;
-import com.djcps.wms.commons.base.PushExtraFieldBO;
-import com.djcps.wms.commons.constant.AppConstant;
-import com.djcps.wms.commons.constant.RedisPrefixConstant;
-import com.djcps.wms.commons.enums.FluteTypeEnum1;
-import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
-import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.commons.utils.RedisUtil;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
@@ -119,7 +121,7 @@ public class AllocationServiceImpl implements AllocationService {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServiceImpl.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	private JsonParser jsonParser = new JsonParser();
 
@@ -306,6 +308,7 @@ public class AllocationServiceImpl implements AllocationService {
 			}
 		}
 		if(!ObjectUtils.isEmpty(redundantOrderList)){
+			List<String> newOrderList = new ArrayList();
 			//根据订单号获取提货单信息
 			HttpResult deliveryResult = allocationServer.getDeliveryByOrderIds(redundantOrderList);
 			if(!ObjectUtils.isEmpty(deliveryResult.getData())){
@@ -646,69 +649,75 @@ public class AllocationServiceImpl implements AllocationService {
 	@Override
 	public Map<String, Object> getAddOrderList(GetRedundantByAttributeBO param) {
 		List<String> orderIdList = param.getOrderIdList();
-		//key和value都是订单号
-		Map<String,String> orderStrMap = new HashMap<>();
-		List<OrderIdBO> orderIdBOList = new ArrayList<>();
-		for (String string : orderIdList) {
-			if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
-				orderStrMap.put(string, string);
-				String newStr = string.substring(0, string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
-				OrderIdBO order = new OrderIdBO();
-				order.setKeyArea(param.getPartnerArea());
-				order.setOrderId(newStr);
-				orderIdBOList.add(order);
-			}
-		}
-		
-		if(!ObjectUtils.isEmpty(orderIdBOList)){
-			//根据订单号批量查询拆单信息
-			HttpResult splitOrderResult = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
-			Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
-			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
-				List<WarehouseOrderDetailPO> value = entry.getValue();
-				Iterator<WarehouseOrderDetailPO> iterator = value.iterator();
-				while(iterator.hasNext()){
-					WarehouseOrderDetailPO next = iterator.next();
-					String subOrderId = orderStrMap.get(next.getSubOrderId());
-					if(subOrderId!=null){
-						iterator.remove();
-					}
+		HttpResult result = null;
+		List<String> redundantOrderList = null;
+		if(ObjectUtils.isEmpty(orderIdList)){
+			result = allocationServer.getAddOrderListByParamisNull(param);
+		}else{
+			//key和value都是订单号
+			Map<String,String> orderStrMap = new HashMap<>(16);
+			List<OrderIdBO> orderIdBOList = new ArrayList<>();
+			for (String string : orderIdList) {
+				if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
+					orderStrMap.put(string, string);
+					String newStr = string.substring(0, string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+					OrderIdBO order = new OrderIdBO();
+					order.setKeyArea(param.getPartnerArea());
+					order.setOrderId(newStr);
+					orderIdBOList.add(order);
 				}
 			}
 			
-			Map<String, List<WarehouseOrderDetailPO>> newOrderMap = new HashMap<>();
-			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
-				List<WarehouseOrderDetailPO> value = entry.getValue();
-				newOrderMap.put(entry.getKey(),new ArrayList<>());
-				for (WarehouseOrderDetailPO warehouseOrderDetailPO : value) {
-					Integer subStatus = warehouseOrderDetailPO.getSubStatus();
-					if(subStatus.equals(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()))){
-						newOrderMap.get(entry.getKey()).add(warehouseOrderDetailPO);
+			if(!ObjectUtils.isEmpty(orderIdBOList)){
+				//根据订单号批量查询拆单信息
+				HttpResult splitOrderResult = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
+				Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+					List<WarehouseOrderDetailPO> value = entry.getValue();
+					Iterator<WarehouseOrderDetailPO> iterator = value.iterator();
+					while(iterator.hasNext()){
+						WarehouseOrderDetailPO next = iterator.next();
+						String subOrderId = orderStrMap.get(next.getSubOrderId());
+						if(subOrderId!=null){
+							iterator.remove();
+						}
+					}
+				}
+				
+				Map<String, List<WarehouseOrderDetailPO>> newOrderMap = new HashMap<>(16);
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
+					List<WarehouseOrderDetailPO> value = entry.getValue();
+					newOrderMap.put(entry.getKey(),new ArrayList<>());
+					for (WarehouseOrderDetailPO warehouseOrderDetailPO : value) {
+						Integer subStatus = warehouseOrderDetailPO.getSubStatus();
+						if(subStatus.equals(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()))){
+							newOrderMap.get(entry.getKey()).add(warehouseOrderDetailPO);
+						}
+					}
+				}
+				
+				//判断newOrderMap value中的List的值,大小等于0则表示需要添加到orderIdList中的数据
+				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:newOrderMap.entrySet()){
+					List<WarehouseOrderDetailPO> value = entry.getValue();
+					if(ObjectUtils.isEmpty(value)){
+						orderIdList.add(entry.getKey());
 					}
 				}
 			}
-			
-			//判断newOrderMap value中的List的值,大小等于0则表示需要添加到orderIdList中的数据
-			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:newOrderMap.entrySet()){
-				List<WarehouseOrderDetailPO> value = entry.getValue();
-				if(ObjectUtils.isEmpty(value)){
-					orderIdList.add(entry.getKey());
+			result = allocationServer.getErrorAddOrderList(param);
+			redundantOrderList = gson.fromJson(gson.toJson(result.getData()),ArrayList.class);
+			List<String> newRedundantOrderList = new ArrayList<>();
+			for (String string : redundantOrderList) {
+				if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
+					newRedundantOrderList.add(string);
 				}
 			}
-		}
-		HttpResult result = allocationServer.getErrorAddOrderList(param);
-		List<String> redundantOrderList = gson.fromJson(gson.toJson(result.getData()),ArrayList.class);
-		List<String> newRedundantOrderList = new ArrayList<>();
-		for (String string : redundantOrderList) {
-			if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
-				newRedundantOrderList.add(string);
+			if(ObjectUtils.isEmpty(newRedundantOrderList)){
+				newRedundantOrderList = redundantOrderList;
 			}
+			param.setOrderIdList(newRedundantOrderList);
+			result = allocationServer.getAddOrderList(param);
 		}
-		if(ObjectUtils.isEmpty(newRedundantOrderList)){
-			newRedundantOrderList = redundantOrderList;
-		}
-		param.setOrderIdList(newRedundantOrderList);
-		result = allocationServer.getAddOrderList(param);
 		Map<String,WarehouseOrderDetailPO> map = new HashMap<String,WarehouseOrderDetailPO>(16);
 		List<WarehouseOrderDetailPO> orderDetailList = new ArrayList<WarehouseOrderDetailPO>();
 		if(!ObjectUtils.isEmpty(result.getData())){
@@ -1027,7 +1036,7 @@ public class AllocationServiceImpl implements AllocationService {
 		
 		//统一根据订单号获取订单状态,不管上面代码是否已经获取订单状态,这里统一从订单服务获取
 		//key是订单号,value是订单状态
-		Map<String,WarehouseOrderDetailPO> orderStatusMap = new HashMap<>();
+		Map<String,WarehouseOrderDetailPO> orderStatusMap = new HashMap<>(16);
 		List<String> orderIdsList = new ArrayList<>();
 		List<DeliveryOrderPO> newDeliveryList = waybillDeliveryOrder.getDeliveryOrder();
 		//这个值为空表示所有的订单都被移除了
@@ -1262,16 +1271,13 @@ public class AllocationServiceImpl implements AllocationService {
 		HttpResult result = allocationServer.cancelAllocation(param);
 		if(result.isSuccess()){
 			//修改订单的订单状态，修改成已入库
-			OrderIdBO orderId = new OrderIdBO();
 			List<String> orderIds = param.getOrderIds();
-			
 			List<OrderIdBO> orderIdList = new ArrayList<>();
 			for (String string : orderIds) {
 				OrderIdBO order = new OrderIdBO();
 				order.setOrderId(string);
 				order.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 				orderIdList.add(order);
-				orderIds.add(string);
 			}
 			HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(), orderIdList);
 			if(updateResult.isSuccess()){

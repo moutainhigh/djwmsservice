@@ -26,6 +26,7 @@ import com.djcps.wms.allocation.model.AddAllocationOrderBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.OrderParamBO;
@@ -51,7 +52,7 @@ public class OrderController {
 	
 	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OrderController.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private OrderService orderService;

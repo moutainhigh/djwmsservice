@@ -3,8 +3,11 @@ package com.djcps.wms.delivery.server;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.request.WmsForDeliveryHttpRequest;
+import com.google.gson.Gson;
+
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * @author Chengw
@@ -26,6 +28,8 @@ public class DeliveryServer {
     @Autowired
     private WmsForDeliveryHttpRequest wmsForDeliveryHttpRequest;
 
+    private Gson gson = GsonUtils.gson;
+    
     /**
      * 获取提货单列表
      * @autuor Chengw

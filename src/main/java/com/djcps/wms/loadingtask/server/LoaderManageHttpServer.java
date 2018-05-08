@@ -1,6 +1,5 @@
 package com.djcps.wms.loadingtask.server;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +8,14 @@ import org.springframework.stereotype.Component;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtask.model.DelLoaderBO;
 import com.djcps.wms.loadingtask.model.GetLoadingPersonInfoBO;
 import com.djcps.wms.loadingtask.model.SaveLoaderBO;
 import com.djcps.wms.loadingtask.model.UpdataLoaderBO;
 import com.djcps.wms.loadingtask.request.LoaderManageHttpRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -28,7 +30,8 @@ public class LoaderManageHttpServer {
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(LoaderManageHttpServer.class);
     @Autowired
     private LoaderManageHttpRequest loaderManageHttpRequest;
-
+    
+    private Gson gson = GsonUtils.gson;
     /**
      * 修改装车员
      * 

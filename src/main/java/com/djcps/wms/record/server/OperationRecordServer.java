@@ -16,6 +16,7 @@ import com.djcps.wms.record.model.OrderOperationRecordPO;
 import com.djcps.wms.record.model.TaskOperationRecordPO;
 import com.djcps.wms.record.model.param.DeleteOrderRecordBO;
 import com.djcps.wms.record.model.param.DeleteTaskRecordBO;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.record.model.param.EntryRecordListBO;
 import com.djcps.wms.record.model.param.RelativeIdBO;
 import com.djcps.wms.record.model.param.SaveOperationRecordBO;
@@ -39,7 +40,7 @@ import rpc.plugin.http.HTTPResponse;
 public class OperationRecordServer {
     private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OperationRecordServer.class);
 
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
     @Autowired
     private OperationRecordHttpRequest operationRecordHttpRequest;
     /**

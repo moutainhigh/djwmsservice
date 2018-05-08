@@ -13,6 +13,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
@@ -24,7 +25,6 @@ import com.djcps.wms.outorder.model.SelectOutOrderBO;
 import com.djcps.wms.outorder.model.outorderresult.OrderDetailInfoVO;
 import com.djcps.wms.outorder.server.OutOrderServer;
 import com.djcps.wms.outorder.service.OutOrderService;
-import com.google.gson.Gson;
 /**
  * 出库单模块业务层
  * @author ldh
@@ -37,8 +37,6 @@ public class OutOrderServiceImpl implements OutOrderService{
 	
 	@Autowired
 	private OrderServer orderServer;
-	
-	private Gson gson = new Gson();
 	
 	@Override
 	public Map<String, Object> getOrderDetail(OutOrderBO param) {

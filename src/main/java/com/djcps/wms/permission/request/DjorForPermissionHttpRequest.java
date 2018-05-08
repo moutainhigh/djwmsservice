@@ -1,19 +1,12 @@
 package com.djcps.wms.permission.request;
 
 
-import java.util.Map;
-
 import com.djcps.wms.commons.config.ParamsConfig;
-
-
-
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.QueryMap;
+import retrofit2.http.*;
 import rpc.plugin.http.HTTPResponse;
 import rpc.plugin.http.RPCClientFields;
+
+import java.util.Map;
 
 /**
  * @author zhq

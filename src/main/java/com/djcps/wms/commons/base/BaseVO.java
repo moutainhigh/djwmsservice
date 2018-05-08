@@ -1,7 +1,6 @@
 package com.djcps.wms.commons.base;
 
 import java.io.Serializable;
-import java.util.List;
 /**
  * 列表返回集
  * @author admin

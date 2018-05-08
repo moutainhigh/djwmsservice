@@ -1,10 +1,4 @@
 package com.djcps.wms.role.server;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
@@ -17,13 +11,17 @@ import com.djcps.wms.role.model.SaveBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
 import com.djcps.wms.role.model.request.GetUserStatusPO;
 import com.djcps.wms.role.model.request.RoleInfoResultPO;
-import com.djcps.wms.role.model.request.RoleTypeInfoPO;
 import com.djcps.wms.role.request.RoleHttpRequest;
 import com.google.gson.Gson;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 /**
  * @title:调用WMS_http服务
  * @description:

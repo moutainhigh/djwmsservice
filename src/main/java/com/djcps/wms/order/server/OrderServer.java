@@ -21,6 +21,7 @@ import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
@@ -36,6 +37,7 @@ import com.djcps.wms.order.request.WmsForOrderHttpRequest;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.server.StockServer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import rpc.plugin.http.HTTPResponse;
@@ -52,7 +54,7 @@ public class OrderServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OrderServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private StockServer stockServer;
@@ -241,34 +243,41 @@ public class OrderServer {
 	        Map<String,List<WarehouseOrderDetailPO>> detailMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
 	        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
 	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
-	        	for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
-	        		int orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus().intValue();
-	        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
-	        		//假如拆单状态小于子单状态则把状态赋值给子单
-	        		if(splitOrderStatus<orderStatus){
-	        			//一个开关代表需要进行修改
-	        			flag = true;
-	        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(splitOrderStatus);
-	        		}
+	        	if(!ObjectUtils.isEmpty(detailValueList)){
+	        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
+		        		int orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus().intValue();
+		        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
+		        		//假如拆单状态小于子单状态则把状态赋值给子单
+		        		if(splitOrderStatus<orderStatus){
+		        			//一个开关代表需要进行修改
+		        			flag = true;
+		        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(splitOrderStatus);
+		        			//这里暂时拿这个字段拿来用只是为了判断orderStatus进行了修改需要进行update操作
+		        			orderDetailMap.get(orderDetailPO.getOrderId()).setAmountPiece(666);
+		        		}
+		        	}
 	        	}
+	        	
 	        }
 	        if(flag == true){
 	        	List<UpdateOrderBO> updateList = new ArrayList<>();
 	        	List<UpdateOrderRedundantBO> orderRedundantBOList = new ArrayList<>();
 	 	        for(Map.Entry<String,WarehouseOrderDetailPO> entry : orderDetailMap.entrySet()){
 	 	        	WarehouseOrderDetailPO orderDetailValue = entry.getValue();
-	 	        	UpdateOrderBO update = new UpdateOrderBO();
-	  	        	update.setOrderId(orderDetailValue.getOrderId());
-	  	        	update.setOrderStatus(String.valueOf(orderDetailValue.getOrderStatus()));
-	  	        	update.setKeyArea(partnerArea);
-	  	        	updateList.add(update);
-	  	        	
-	  	        	//修改冗余表参数
-	  	        	UpdateOrderRedundantBO updateOrderRedundant = new UpdateOrderRedundantBO();
-	  	        	updateOrderRedundant.setOrderId(orderDetailValue.getOrderId());
-	  	        	updateOrderRedundant.setStatus(orderDetailValue.getOrderStatus());
-	  	        	updateOrderRedundant.setPartnerId(partnerId);
-	  	        	orderRedundantBOList.add(updateOrderRedundant);
+	 	        	if(orderDetailValue.getAmountPiece()==666){
+	 	        		UpdateOrderBO update = new UpdateOrderBO();
+		  	        	update.setOrderId(orderDetailValue.getOrderId());
+		  	        	update.setOrderStatus(String.valueOf(orderDetailValue.getOrderStatus()));
+		  	        	update.setKeyArea(partnerArea);
+		  	        	updateList.add(update);
+		  	        	
+		  	        	//修改冗余表参数
+		  	        	UpdateOrderRedundantBO updateOrderRedundant = new UpdateOrderRedundantBO();
+		  	        	updateOrderRedundant.setOrderId(orderDetailValue.getOrderId());
+		  	        	updateOrderRedundant.setStatus(orderDetailValue.getOrderStatus());
+		  	        	updateOrderRedundant.setPartnerId(partnerId);
+		  	        	orderRedundantBOList.add(updateOrderRedundant);
+	 	        	}
 	 	        }
 	 	        HttpResult result = updateOrderInfo(updateList);
 	 	        //关闭开关

@@ -27,6 +27,7 @@ import com.djcps.wms.cancelstock.service.CancelStockService;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.delivery.constant.DeliveryConstant;
 import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdBO;
@@ -39,6 +40,7 @@ import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.record.server.OperationRecordServer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -53,7 +55,7 @@ public class CancelStockServiceImpl implements CancelStockService {
 
 	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(CancelStockServiceImpl.class);
 	
-	Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private CancelStockServer cancelStockServer;

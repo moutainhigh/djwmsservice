@@ -34,6 +34,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
@@ -58,6 +59,7 @@ import com.djcps.wms.stock.server.StockServer;
 import com.djcps.wms.stock.service.StockService;
 import com.djcps.wms.warehouse.server.WarehouseServer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
@@ -92,7 +94,7 @@ public class StockServiceImpl implements StockService{
     
 	private JsonParser jsonParser = new JsonParser();
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Override
 	public Map<String, Object> getRecommendLoca(RecommendLocaBO param) {
@@ -296,6 +298,8 @@ public class StockServiceImpl implements StockService{
 				updateOrder.setKeyArea(param.getPartnerArea());
 				updateOrder.setOrderId(orderId);
 				updateOrder.setOrderStatus(list.get(0).getStatus());
+				List<String> deleteList = Arrays.asList(orderId);
+				updateOrder.setDeleteOrdeIdList(deleteList);
 				
 				List<UpdateSplitOrderBO> addSplitOrderList = new ArrayList<>();
 				splitOrder.setOrderId(orderId);

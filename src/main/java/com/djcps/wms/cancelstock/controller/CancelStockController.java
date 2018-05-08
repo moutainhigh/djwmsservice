@@ -25,6 +25,7 @@ import com.djcps.wms.cancelstock.service.CancelStockService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.google.gson.Gson;
 
 /**
@@ -39,7 +40,7 @@ public class CancelStockController {
 	
 	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(CancelStockController.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private CancelStockService cancelStockService;

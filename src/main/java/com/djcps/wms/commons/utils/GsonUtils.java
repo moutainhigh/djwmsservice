@@ -8,9 +8,12 @@ import com.google.gson.GsonBuilder;
  * @since 2017/12/5 09:23.
  */
 public class GsonUtils {
-
+	
     /**
      * gson 转换静态类
      */
-    public static Gson gson = new GsonBuilder().serializeNulls().create();
+    public static Gson gson = new GsonBuilder()
+    							.serializeNulls()
+    							.setDateFormat("yyyy-MM-dd HH:mm:ss")
+    							.create();
 }

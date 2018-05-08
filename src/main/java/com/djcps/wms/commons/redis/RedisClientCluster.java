@@ -1,15 +1,14 @@
 package com.djcps.wms.commons.redis;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.GeoUnit;
 import redis.clients.jedis.JedisCluster;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Redis客户端-集群版

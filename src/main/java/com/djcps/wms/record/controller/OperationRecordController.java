@@ -25,6 +25,7 @@ import com.djcps.wms.record.model.OrderOperationRecordPO;
 import com.djcps.wms.record.model.TaskOperationRecordPO;
 import com.djcps.wms.record.model.param.DeleteOrderRecordBO;
 import com.djcps.wms.record.model.param.DeleteTaskRecordBO;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.record.model.param.EntryRecordListBO;
 import com.djcps.wms.record.model.param.RelativeIdBO;
 import com.djcps.wms.record.model.param.SaveOperationRecordBO;
@@ -47,7 +48,7 @@ public class OperationRecordController {
     private static final Logger logger = LoggerFactory.getLogger(OperationRecordController.class);
     @Autowired
     private OperationRecordService operationRecordService;
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
 
     /**
      * 获取盘点操作记录

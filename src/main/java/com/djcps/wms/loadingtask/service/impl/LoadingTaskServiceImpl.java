@@ -29,6 +29,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.enums.LoadingTaskEnum;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
@@ -64,9 +65,9 @@ import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.push.mq.producer.AppProducer;
 import com.djcps.wms.record.model.OrderOperationRecordPO;
 import com.djcps.wms.record.server.OperationRecordServer;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
-
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 装车实现类
@@ -90,6 +91,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     
     @Resource
     private AppProducer appProducer;
+    
+    private Gson gson = GsonUtils.gson;
     
     @Autowired
     private OperationRecordServer operationRecordServer;

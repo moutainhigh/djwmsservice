@@ -1,8 +1,7 @@
 package com.djcps.wms.role.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.djcps.wms.commons.base.BaseOrgBO;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 获取角色列表信息参数

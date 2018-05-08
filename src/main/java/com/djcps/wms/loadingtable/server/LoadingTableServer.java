@@ -14,8 +14,10 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtable.request.WmsForLoadingTableHttpRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import rpc.plugin.http.HTTPResponse;
 
@@ -34,7 +36,7 @@ public class LoadingTableServer {
 
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(LoadingTableServer.class);
 
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
 
     @Autowired
     private WmsForLoadingTableHttpRequest loadingTableHttpRequest;

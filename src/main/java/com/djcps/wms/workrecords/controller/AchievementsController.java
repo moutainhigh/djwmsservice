@@ -13,7 +13,6 @@ import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.record.enums.OperationTypeEnum;
 import com.djcps.wms.workrecords.model.AchievementsBO;
 import com.djcps.wms.workrecords.model.AchievementsInfoBO;
-import com.djcps.wms.workrecords.model.WorkRecordsBO;
 import com.djcps.wms.workrecords.service.AchievementsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;

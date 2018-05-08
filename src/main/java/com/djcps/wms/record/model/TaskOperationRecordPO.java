@@ -1,12 +1,11 @@
 package com.djcps.wms.record.model;
 
-import java.io.Serializable;
-import java.util.Date;
-
+import com.djcps.wms.commons.base.BaseBO;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.djcps.wms.commons.base.BaseBO;
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**

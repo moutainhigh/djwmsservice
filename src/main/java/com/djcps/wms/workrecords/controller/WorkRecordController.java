@@ -1,29 +1,27 @@
 package com.djcps.wms.workrecords.controller;
 
-import java.util.Map;
-
-import javax.validation.Validation;
-
+import com.baidu.unbiz.fluentvalidator.ComplexResult;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
+import com.baidu.unbiz.fluentvalidator.ResultCollectors;
+import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
+import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
+import com.djcps.wms.record.controller.OperationRecordController;
 import com.djcps.wms.workrecords.model.*;
+import com.djcps.wms.workrecords.service.WorkRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.baidu.unbiz.fluentvalidator.ComplexResult;
-import com.baidu.unbiz.fluentvalidator.FluentValidator;
-import com.baidu.unbiz.fluentvalidator.ResultCollectors;
-import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
-import com.djcps.wms.commons.enums.SysMsgEnum;
-import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.record.controller.OperationRecordController;
-import com.djcps.wms.workrecords.service.WorkRecordService;
-import com.google.gson.Gson;
+import javax.validation.Validation;
+import java.util.Map;
+
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**

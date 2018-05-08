@@ -300,6 +300,17 @@ public interface WmsForAllocationHttpRequest {
 	public HTTPResponse getErrorAddOrderList(@Body RequestBody rb);
 
 	/**
+	 * 当请求list为空时追加订单所调用的接口
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月7日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getAddOrderListByParamisNull.do")
+	public HTTPResponse getAddOrderListByParamisNull(@Body RequestBody rb);
+	
+	/**
 	 * 智能配货
 	 * @param rb
 	 * @return

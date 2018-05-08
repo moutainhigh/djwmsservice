@@ -1,8 +1,8 @@
 package com.djcps.wms.commons.model;
 
-import java.io.Serializable;
-
 import com.djcps.wms.commons.base.BaseBO;
+
+import java.io.Serializable;
 
 /**
  * 合作方对象

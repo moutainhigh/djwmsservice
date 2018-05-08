@@ -2,8 +2,6 @@ package com.djcps.wms.role.model.request;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 修改用户工作状态参数
  * 

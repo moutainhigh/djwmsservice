@@ -10,6 +10,7 @@ import com.djcps.wms.commons.aop.log.AddLog;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.stocktaking.model.*;
 import com.djcps.wms.stocktaking.service.StocktakingTaskService;
 import com.google.gson.Gson;
@@ -39,7 +40,7 @@ public class StocktakingTaskController {
     @Autowired
     private StocktakingTaskService stocktakingTaskService;
 
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
 
     /**
      * 优化版新增全盘

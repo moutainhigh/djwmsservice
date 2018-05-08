@@ -166,7 +166,7 @@ public class AllocationConstant {
     /**
      * redis锁过期时间
      */
-    public static final Integer REDIS_LOCK_TIME=60;
+    public static final Integer REDIS_LOCK_TIME=15;
     
     /**
      * 操作有误

@@ -1,8 +1,8 @@
 package com.djcps.wms.commons.base;
 
-import java.io.Serializable;
-
 import org.hibernate.validator.constraints.NotBlank;
+
+import java.io.Serializable;
 
 /**
  * @title:删除基础对象

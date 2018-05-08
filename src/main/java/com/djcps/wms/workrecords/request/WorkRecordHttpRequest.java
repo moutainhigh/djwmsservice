@@ -1,7 +1,6 @@
 package com.djcps.wms.workrecords.request;
 
 import com.djcps.wms.commons.config.ParamsConfig;
-
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;

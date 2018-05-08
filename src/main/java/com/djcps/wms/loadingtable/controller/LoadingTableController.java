@@ -23,6 +23,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
 import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
 import com.djcps.wms.loadingtable.model.GetUserListBO;
@@ -46,7 +47,7 @@ public class LoadingTableController {
 	
 	private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(LoadingTableController.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private LoadingTableService loadingTableService;

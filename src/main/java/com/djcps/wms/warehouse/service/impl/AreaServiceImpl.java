@@ -19,6 +19,7 @@ import com.djcps.wms.address.server.AddressServer;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.warehouse.controller.AreaController;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
@@ -51,7 +52,7 @@ public class AreaServiceImpl implements AreaService {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AreaServiceImpl.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private AreaServer wareAreaServer;

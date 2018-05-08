@@ -21,6 +21,7 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.outorder.model.OutOrderBO;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
 import com.djcps.wms.outorder.service.OutOrderService;
@@ -36,7 +37,7 @@ public class OutOrderController {
 	@Autowired
 	private OutOrderService outOrderService;
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OutOrderController.class);
 	

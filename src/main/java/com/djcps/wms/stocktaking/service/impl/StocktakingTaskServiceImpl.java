@@ -14,6 +14,7 @@ import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.delivery.model.SaveDeliveryBO;
 import com.djcps.wms.order.model.*;
@@ -69,7 +70,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     @Autowired
     private AbnormalServer abnormalServer;
 
-    Gson gson=new Gson();
+    private Gson gson = GsonUtils.gson;
 
     /**
      * 新增全盘
@@ -1001,7 +1002,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 .collect(Collectors.toList());
         collectList.stream().forEach(orderInfoBO->{
                     childOrderList.stream().forEach(childOrderBO -> {
-                        if(orderInfoBO.getOrderId().equals(childOrderBO.getChildOrderId())){
+                        if(orderInfoBO.getOrderId().equals(childOrderBO.getOrderId())){
                             orderInfoBO.setPartnerName(saveStocktakingOrderInfoBOList.getPartnerName());
                             orderInfoBO.setPartnerArea(saveStocktakingOrderInfoBOList.getPartnerArea());
                             orderInfoBO.setOrderAmount(childOrderBO.getOrderAmount());

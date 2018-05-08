@@ -5,9 +5,11 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.*;
 import com.djcps.wms.abnormal.request.AbnormalServerHttpRequest;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +30,7 @@ public class AbnormalServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AbnormalServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private AbnormalServerHttpRequest abnormalServerHttpRequest;

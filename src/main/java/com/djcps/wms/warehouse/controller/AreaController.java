@@ -11,6 +11,7 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.area.*;
 import com.djcps.wms.warehouse.model.warehouse.SelectWarehouseByIdBO;
@@ -44,7 +45,7 @@ import java.util.Map;
 public class AreaController {
 	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(AreaController.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private AreaService areaService;

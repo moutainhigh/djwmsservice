@@ -3,6 +3,7 @@ package com.djcps.wms.stocktaking.server;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtable.request.NumberServerHttpRequest;
 import com.djcps.wms.stocktaking.model.*;
@@ -10,6 +11,8 @@ import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingOrderHttpRequest;
 import com.djcps.wms.stocktaking.request.WmsForStocktakingTaskHttpRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
@@ -25,7 +28,7 @@ import rpc.plugin.http.HTTPResponse;
 public class StocktakingTaskServer {
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(StocktakingTaskServer.class);
 
-    private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 
     @Autowired
     private NumberServerHttpRequest numberServerHttp;
