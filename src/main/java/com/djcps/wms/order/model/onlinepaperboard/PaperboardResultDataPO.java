@@ -10,7 +10,7 @@ import com.djcps.wms.order.model.WarehouseOrderDetailPO;
  * @author:zdx
  * @date:2018年4月12日
  */
-public class OnlinePaperboardResultDataPO {
+public class PaperboardResultDataPO {
 	
 	/**
 	 * 映射对象list

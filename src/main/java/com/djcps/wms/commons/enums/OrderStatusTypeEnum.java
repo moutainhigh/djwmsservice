@@ -7,6 +7,12 @@ package com.djcps.wms.commons.enums;
  */
 public enum OrderStatusTypeEnum {
 	
+	
+	/**
+	 * 全部的订单状态
+	 */
+	All_STATUS("-3"),
+	
 	/**
 	 *待入库 
 	 */

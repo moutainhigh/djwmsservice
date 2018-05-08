@@ -1,6 +1,7 @@
 package com.djcps.wms.order.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -23,13 +24,16 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
+import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.OrderParamBO;
+import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
@@ -105,6 +109,11 @@ public class OrderController {
 			}else{
 				BeanUtils.copyProperties(partnerInfoBean,param.getQueryObject());
 				param.getQueryObject().setKeyArea(Integer.valueOf(partnerInfoBean.getPartnerArea()));
+				if(param.getQueryObject().getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+					List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
+							OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+					param.getQueryObject().setAllOrderStatus(allOrderStatus);
+				}
 			}
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
@@ -121,5 +130,33 @@ public class OrderController {
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
-
+	
+	@RequestMapping(name="线下纸板订单列表接口",value = "/getOffinePaperboardList", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getOffinePaperboardList(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			LOGGER.debug("json : " + json);
+			OffineQueryObjectBO param = gson.fromJson(json, OffineQueryObjectBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			param.setKeyArea(param.getPartnerArea());
+			if(param.getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+				List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
+						OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				param.setAllOrderStatus(allOrderStatus);
+			}
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<OffineQueryObjectBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return orderService.getOffinePaperboardList(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
 }

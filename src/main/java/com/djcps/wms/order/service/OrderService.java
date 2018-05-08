@@ -6,6 +6,7 @@ import java.util.Map;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderParamBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
@@ -40,5 +41,14 @@ public interface OrderService {
 	 * @date:2018年4月23日
 	 */
 	Map<String, Object> getOnlinePaperboardByOrderId(BatchOrderIdListBO param);
+
+	/**
+	 * 查询线下纸板订单
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月8日
+	 */
+	Map<String, Object> getOffinePaperboardList(OffineQueryObjectBO param);
 
 }

@@ -91,6 +91,8 @@ public class StockServiceImpl implements StockService{
 	
 	private Gson gson = GsonUtils.gson;
 	
+	private Gson dataFormatGson = GsonUtils.gson;
+	
 	@Override
 	public Map<String, Object> getRecommendLoca(RecommendLocaBO param) {
 		StringBuilder bulider1 = new StringBuilder();
@@ -177,7 +179,7 @@ public class StockServiceImpl implements StockService{
 			batchOrderIdListBO.setKeyArea(param.getPartnerArea());
 			HttpResult orderResult = orderServer.getOrderDeatilByIdList(batchOrderIdListBO);
 			if(!ObjectUtils.isEmpty(orderResult.getData())){
-				BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+				BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
 				List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 				Integer splitOrder = orderServer.joinOrderParamInfo(orderList).get(0).getSplitOrder();
 				if(splitOrder==1){
@@ -295,7 +297,7 @@ public class StockServiceImpl implements StockService{
 				order.setKeyArea(param.getPartnerArea());
 				result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
 				List<WarehouseOrderDetailPO> orderDetail = null;
-				Map<String,List<WarehouseOrderDetailPO>> orderMap = gson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+				Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
 				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
 					orderDetail = entry.getValue();
 				}

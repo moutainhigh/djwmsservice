@@ -67,6 +67,8 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     private AbnormalServer abnormalServer;
 
     private Gson gson = GsonUtils.gson;
+    
+    private Gson dataFormatGson = GsonUtils.gson;
 
     /**
      * 新增全盘
@@ -614,7 +616,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     		batch.setOrderIds(list);
     		HttpResult httpResult = orderServer.getOrderDeatilByIdList(batch);
     		if(!ObjectUtils.isEmpty(httpResult.getData())){
-    			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
+    			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
     			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 			    if(ObjectUtils.isEmpty(orderList) ){
 	                return MsgTemplate.failureMsg(StocktakingMsgEnum.STOCKTAKING_ORDER_WRONG);

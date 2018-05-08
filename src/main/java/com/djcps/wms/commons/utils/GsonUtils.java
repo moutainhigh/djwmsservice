@@ -12,8 +12,11 @@ public class GsonUtils {
     /**
      * gson 转换静态类
      */
-    public static Gson gson = new GsonBuilder()
-    							.serializeNulls()
-    							.setDateFormat("yyyy-MM-dd HH:mm:ss")
-    							.create();
+    public static Gson gson = new GsonBuilder().serializeNulls().create();
+    
+    
+    /**
+     * gson 转换静态类
+     */
+    public static Gson dataFormatGson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 }

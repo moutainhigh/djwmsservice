@@ -63,15 +63,24 @@ public class ParamsConfig {
 	public static String UPDATE_ORDER_SERVER = "";
 	
 	/**
-	 * OMS服务
+	 * 线上纸板订单
 	 */
 	public static String ONLINE_PAPERBOARD_SERVER = "";
+	
+	/**
+	 * 线下纸板订单
+	 */
+	public static String OFFLINE_PAPERBOARD_SERVER = "";
 	
 	/**
 	 * ORG服务
 	 */
 	public static String ORG_SERVER = "";
 
+	public static void setOfflinePaperboardServer(String offlinePaperboardServer) {
+		OFFLINE_PAPERBOARD_SERVER = offlinePaperboardServer;
+	}
+	
 	public static void setOnlinePaperboardServer(String onlinePaperboardServer) {
 		ONLINE_PAPERBOARD_SERVER = onlinePaperboardServer;
 	}

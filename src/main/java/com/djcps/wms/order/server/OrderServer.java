@@ -26,11 +26,13 @@ import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
+import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
+import com.djcps.wms.order.request.OffinePaperboardRequest;
 import com.djcps.wms.order.request.OnlinePaperboardRequest;
 import com.djcps.wms.order.request.UpdateOrderHttpRequest;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
@@ -56,11 +58,16 @@ public class OrderServer {
 	
 	private Gson gson = GsonUtils.gson;
 	
+	private Gson dataFormatGson = GsonUtils.dataFormatGson;
+	
 	@Autowired
 	private StockServer stockServer;
 	
 	@Autowired
 	OnlinePaperboardRequest onlinePaperboardRequest;
+	
+	@Autowired
+	OffinePaperboardRequest offinePaperboardRequest;
 	
 	@Autowired
 	private WmsForOrderHttpRequest orderHttpRequest;
@@ -227,7 +234,7 @@ public class OrderServer {
 			batch.setOrderIds(orderIds);
 			batch.setKeyArea(partnerArea);
 			HttpResult orderDeatilByIdList = getOrderDeatilByIdList(batch);
-			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
 	        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo = joinOrderParamInfo(orderList);
 	        List<OrderIdBO> orderIdBOList = new ArrayList<>();
@@ -240,7 +247,7 @@ public class OrderServer {
 	        	orderDetailMap.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
 			}
 	        HttpResult splitOrderResult  = getSplitOrderDeatilByIdList(orderIdBOList);
-	        Map<String,List<WarehouseOrderDetailPO>> detailMap = gson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
+	        Map<String,List<WarehouseOrderDetailPO>> detailMap = dataFormatGson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
 	        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
 	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
 	        	if(!ObjectUtils.isEmpty(detailValueList)){
@@ -389,6 +396,16 @@ public class OrderServer {
 		}
 	}
 	
+	public HttpResult getOffinePaperboardList(OffineQueryObjectBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = offinePaperboardRequest.getOffinePaperboardList(rb);
+        //校验请求是否成功
+        return updateOMSCode(http);
+	}
+	
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
@@ -443,7 +460,7 @@ public class OrderServer {
 		HttpResult httpResult = getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = null;
 		if(!ObjectUtils.isEmpty(httpResult.getData())){
-			batchOrderDetailListPO = gson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
+			batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
 		}
 		return  batchOrderDetailListPO;
 	}
@@ -461,7 +478,7 @@ public class OrderServer {
 		HttpResult httpResult = getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = null;
 		if(!ObjectUtils.isEmpty(httpResult.getData())){
-			batchOrderDetailListPO = gson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
+			batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo =joinOrderParamInfo(orderList);
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {

@@ -1,69 +1,81 @@
-package com.djcps.wms.order.model.onlinepaperboard;
-
-
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import com.djcps.wms.commons.base.BaseBO;
-import com.djcps.wms.commons.base.BaseVO;
-import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.fasterxml.jackson.databind.deser.Deserializers.Base;
-
-import javax.validation.constraints.NotNull;
+package com.djcps.wms.order.model.offlinepaperboard;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+
+
 /**
- * 线上纸板订单查询对象
+ * 线下纸板订单查询model
  * @company:djwms
  * @author:zdx
- * @date:2018年4月12日
+ * @date:2018年5月8日
  */
-public class OnlinePaperboardBO implements Serializable{
-   
-	private static final long serialVersionUID = 778949046213494674L;
+public class OffineQueryObjectBO implements Serializable{
 	
-    /**
+	private static final long serialVersionUID = -4663390483329978061L;
+
+	/**
+	 * 当前页
+	 */
+	@NotNull
+	private Integer pageNum;
+	
+	/**
+	 * 条数 
+	 */
+	@NotNull
+	private Integer pageSize;
+	
+	/**
      * 合作方下id
      */
-    @NotBlank
+	@NotEmpty
     private String partnerId;
 	
 	/**
 	 * 合作方名称
 	 */
+	@NotEmpty
 	private String partnerName;
 	
 	/**
 	 * 合作方区域
 	 */
+	@NotEmpty
 	private String partnerArea;
 	
 	/**
 	 * 操作人id
 	 */
+	@NotEmpty
 	private String operatorId;
 	
 	/**
 	 * 操作人名称
 	 */
+	@NotEmpty
 	private String operator;
     
     /**
-     * 区域下拉框
+     * 区域拆分键
      */
-    @NotNull
-    private Integer keyArea;
+	@NotEmpty
+    private String keyArea;
     
     /**
-     * 状态下拉框
+     * 订单状态
      */
     private Integer orderStatus;
     
     /**
-     * orderStatus为-3时,全部订单状态
+     * 全部订单状态
      */
     private List<String> allOrderStatus;
     
@@ -104,11 +116,11 @@ public class OnlinePaperboardBO implements Serializable{
      */
     private BigDecimal materialWidth;
     /**
-     * 下单开始时间(也是支付时间字段)
+     * 下单开始时间(线下纸板订单没有支付时间)
      */
     private String orderStartTime;
     /**
-     * 下单结束时间(也是支付时间字段)
+     * 下单结束时间(线下纸板订单没有支付时间)
      */
     private String orderEndTime;
     /**
@@ -128,10 +140,18 @@ public class OnlinePaperboardBO implements Serializable{
      * 是否是急单
      */
     private Integer urgencyOrder;
-    /**
-     * 异常订单状态
-     */
-    private Integer excpStatus;
+	public Integer getPageNum() {
+		return pageNum;
+	}
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+	public Integer getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
 	public String getPartnerId() {
 		return partnerId;
 	}
@@ -162,10 +182,10 @@ public class OnlinePaperboardBO implements Serializable{
 	public void setOperator(String operator) {
 		this.operator = operator;
 	}
-	public Integer getKeyArea() {
+	public String getKeyArea() {
 		return keyArea;
 	}
-	public void setKeyArea(Integer keyArea) {
+	public void setKeyArea(String keyArea) {
 		this.keyArea = keyArea;
 	}
 	public Integer getOrderStatus() {
@@ -264,13 +284,7 @@ public class OnlinePaperboardBO implements Serializable{
 	public void setUrgencyOrder(Integer urgencyOrder) {
 		this.urgencyOrder = urgencyOrder;
 	}
-	public Integer getExcpStatus() {
-		this.excpStatus = 0;
-		return excpStatus;
-	}
-	public void setExcpStatus(Integer excpStatus) {
-		this.excpStatus = excpStatus;
-	}
+	
 	public List<String> getAllOrderStatus() {
 		return allOrderStatus;
 	}
@@ -279,15 +293,15 @@ public class OnlinePaperboardBO implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "OnlinePaperboardBO [partnerId=" + partnerId + ", partnerName=" + partnerName + ", partnerArea="
-				+ partnerArea + ", operatorId=" + operatorId + ", operator=" + operator + ", keyArea=" + keyArea
-				+ ", orderStatus=" + orderStatus + ", allOrderStatus=" + allOrderStatus + ", childOrderId="
-				+ childOrderId + ", customerName=" + customerName + ", productName=" + productName + ", materialName="
-				+ materialName + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
-				+ ", materialLength=" + materialLength + ", materialWidth=" + materialWidth + ", orderStartTime="
-				+ orderStartTime + ", orderEndTime=" + orderEndTime + ", deliveryStartTime=" + deliveryStartTime
-				+ ", deliveryEndTime=" + deliveryEndTime + ", isPayOrOrderTime=" + isPayOrOrderTime + ", urgencyOrder="
-				+ urgencyOrder + ", excpStatus=" + excpStatus + "]";
+		return "OffineQueryObjectBO [pageNum=" + pageNum + ", pageSize=" + pageSize + ", partnerId=" + partnerId
+				+ ", partnerName=" + partnerName + ", partnerArea=" + partnerArea + ", operatorId=" + operatorId
+				+ ", operator=" + operator + ", keyArea=" + keyArea + ", orderStatus=" + orderStatus
+				+ ", allOrderStatus=" + allOrderStatus + ", childOrderId=" + childOrderId + ", customerName="
+				+ customerName + ", productName=" + productName + ", materialName=" + materialName + ", boxLength="
+				+ boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight + ", materialLength="
+				+ materialLength + ", materialWidth=" + materialWidth + ", orderStartTime=" + orderStartTime
+				+ ", orderEndTime=" + orderEndTime + ", deliveryStartTime=" + deliveryStartTime + ", deliveryEndTime="
+				+ deliveryEndTime + ", isPayOrOrderTime=" + isPayOrOrderTime + ", urgencyOrder=" + urgencyOrder + "]";
 	}
-
+    
 }
