@@ -40,7 +40,7 @@ import rpc.plugin.http.HTTPResponse;
 public class OperationRecordServer {
     private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OperationRecordServer.class);
 
-    private Gson gson = GsonUtils.gson;
+    private Gson gson = new Gson();
     @Autowired
     private OperationRecordHttpRequest operationRecordHttpRequest;
     /**

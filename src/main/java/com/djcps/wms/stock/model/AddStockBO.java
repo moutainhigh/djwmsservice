@@ -20,12 +20,12 @@ import com.djcps.wms.record.model.OrderOperationRecordPO;
 public class AddStockBO extends BaseAddBO implements Serializable {
 
     private static final long serialVersionUID = 5650542988348663815L;
-	
-	/**
-	 * 入库需要的fid
-	 */
-	private String id;
-	
+
+    /**
+     * 入库需要的fid
+     */
+    private String id;
+
     /**
      * 订单编号
      */
@@ -102,7 +102,7 @@ public class AddStockBO extends BaseAddBO implements Serializable {
     /**
      * 塄型
      */
-    private String fluteType;
+    private Integer fluteType;
     /**
      * 操作面积
      */
@@ -111,14 +111,15 @@ public class AddStockBO extends BaseAddBO implements Serializable {
      * 异常数量
      */
     private Integer abnomalAmount;
-   
+
     public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-    
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Integer getAbnomalAmount() {
         return abnomalAmount;
     }
@@ -135,10 +136,6 @@ public class AddStockBO extends BaseAddBO implements Serializable {
         return orderType;
     }
 
-    public String getFluteType() {
-        return fluteType;
-    }
-
     public String getArea() {
         return area;
     }
@@ -149,10 +146,6 @@ public class AddStockBO extends BaseAddBO implements Serializable {
 
     public void setOrderType(String orderType) {
         this.orderType = orderType;
-    }
-
-    public void setFluteType(String fluteType) {
-        this.fluteType = fluteType;
     }
 
     public void setArea(String area) {
@@ -262,6 +255,15 @@ public class AddStockBO extends BaseAddBO implements Serializable {
     public void setRecommendAreaName(String recommendAreaName) {
         this.recommendAreaName = recommendAreaName;
     }
+
+    public Integer getFluteType() {
+        return fluteType;
+    }
+
+    public void setFluteType(Integer fluteType) {
+        this.fluteType = fluteType;
+    }
+
     @Override
     public String toString() {
         return "AddStockBO [id=" + id + ", orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave
@@ -272,5 +274,5 @@ public class AddStockBO extends BaseAddBO implements Serializable {
                 + ", relativeName=" + relativeName + ", orderType=" + orderType + ", fluteType=" + fluteType + ", area="
                 + area + ", abnomalAmount=" + abnomalAmount + "]";
     }
-    
+
 }

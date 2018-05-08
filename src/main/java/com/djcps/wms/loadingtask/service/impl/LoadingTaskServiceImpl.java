@@ -221,6 +221,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             .filter(amount -> info.getOrderId().equals(map.get(amount.getOrderId())))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
+                    
                 });
                 confirmPO.setOrderInfo(orderInfo);
             }

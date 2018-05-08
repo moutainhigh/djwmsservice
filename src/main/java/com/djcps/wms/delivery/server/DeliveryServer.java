@@ -28,7 +28,7 @@ public class DeliveryServer {
     @Autowired
     private WmsForDeliveryHttpRequest wmsForDeliveryHttpRequest;
 
-    private Gson gson = GsonUtils.gson;
+    private Gson gson = new Gson();
     
     /**
      * 获取提货单列表

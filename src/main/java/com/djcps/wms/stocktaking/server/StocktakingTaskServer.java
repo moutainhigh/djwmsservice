@@ -28,7 +28,7 @@ import rpc.plugin.http.HTTPResponse;
 public class StocktakingTaskServer {
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(StocktakingTaskServer.class);
 
-	private Gson gson = GsonUtils.gson;
+	private Gson gson = new Gson();
 
     @Autowired
     private NumberServerHttpRequest numberServerHttp;

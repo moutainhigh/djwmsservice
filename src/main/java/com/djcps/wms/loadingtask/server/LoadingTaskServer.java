@@ -48,7 +48,7 @@ public class LoadingTaskServer {
     private NumberServerHttpRequest numberServerHttpRequest;
     @Autowired
     private WmsForOutOrderHttpRequest wmsForOutOrderHttpRequest;
-    private Gson gson = GsonUtils.gson;
+    private Gson gson = new Gson();
     /**
      * 获取装车员列表
      * 

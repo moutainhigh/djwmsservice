@@ -29,6 +29,7 @@ import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.cancelstock.enums.CancelStockMsgEnum;
 import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -171,7 +172,7 @@ public class StockServiceImpl implements StockService{
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
             for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
                 //处理数据
-                param.setFluteType(info.getFluteType());
+                param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 param.setRelativeName(info.getPartnerName());
                 //计算操作面积
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmountSave());
@@ -511,7 +512,7 @@ public class StockServiceImpl implements StockService{
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
             for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
                 //处理数据
-                param.setFluteType(info.getFluteType());
+                param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 param.setRelativeName(info.getPartnerName());
                 //计算操作面积
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), Integer.parseInt(param.getAmountSave()));

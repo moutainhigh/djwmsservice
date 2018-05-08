@@ -18,7 +18,14 @@ import com.djcps.wms.commons.base.BaseAddBO;
 public class MoveStockBO extends BaseAddBO implements Serializable {
 
     private static final long serialVersionUID = 2489810729435810994L;
-
+    /**
+     * 原库位名称。。新增
+     */
+    private String originalWarehouseLocName;
+    /**
+     * 原库区名称。。新增
+     */
+    private String originalWarehouseAreaName;
     /**
      * 订单编号
      */
@@ -71,7 +78,7 @@ public class MoveStockBO extends BaseAddBO implements Serializable {
     /**
      * 塄型
      */
-    private String fluteType;
+    private Integer fluteType;
     /**
      * 操作面积
      */
@@ -85,10 +92,6 @@ public class MoveStockBO extends BaseAddBO implements Serializable {
         return orderType;
     }
 
-    public String getFluteType() {
-        return fluteType;
-    }
-
     public String getArea() {
         return area;
     }
@@ -99,10 +102,6 @@ public class MoveStockBO extends BaseAddBO implements Serializable {
 
     public void setOrderType(String orderType) {
         this.orderType = orderType;
-    }
-
-    public void setFluteType(String fluteType) {
-        this.fluteType = fluteType;
     }
 
     public void setArea(String area) {
@@ -173,13 +172,39 @@ public class MoveStockBO extends BaseAddBO implements Serializable {
         this.warehouseLocName = warehouseLocName;
     }
 
+    public Integer getFluteType() {
+        return fluteType;
+    }
+
+    public void setFluteType(Integer fluteType) {
+        this.fluteType = fluteType;
+    }
+
+    public String getOriginalWarehouseLocName() {
+        return originalWarehouseLocName;
+    }
+
+    public String getOriginalWarehouseAreaName() {
+        return originalWarehouseAreaName;
+    }
+
+    public void setOriginalWarehouseLocName(String originalWarehouseLocName) {
+        this.originalWarehouseLocName = originalWarehouseLocName;
+    }
+
+    public void setOriginalWarehouseAreaName(String originalWarehouseAreaName) {
+        this.originalWarehouseAreaName = originalWarehouseAreaName;
+    }
+
     @Override
     public String toString() {
-        return "MoveStockBO [orderId=" + orderId + ", amountSave=" + amountSave + ", warehouseAreaId=" + warehouseAreaId
-                + ", originalWarehouseAreaId=" + originalWarehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
-                + ", warehouseLocId=" + warehouseLocId + ", originalWarehouseLocId=" + originalWarehouseLocId
-                + ", warehouseLocName=" + warehouseLocName + ", relativeName=" + relativeName + ", orderType="
-                + orderType + ", fluteType=" + fluteType + ", area=" + area + "]";
+        return "MoveStockBO [originalWarehouseLocName=" + originalWarehouseLocName + ", originalWarehouseAreaName="
+                + originalWarehouseAreaName + ", orderId=" + orderId + ", amountSave=" + amountSave
+                + ", warehouseAreaId=" + warehouseAreaId + ", originalWarehouseAreaId=" + originalWarehouseAreaId
+                + ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
+                + ", originalWarehouseLocId=" + originalWarehouseLocId + ", warehouseLocName=" + warehouseLocName
+                + ", relativeName=" + relativeName + ", orderType=" + orderType + ", fluteType=" + fluteType + ", area="
+                + area + "]";
     }
 
 }

@@ -121,7 +121,7 @@ public class AllocationServiceImpl implements AllocationService {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServiceImpl.class);	
 	
-	private Gson gson = GsonUtils.gson;
+	private Gson gson = new Gson();
 	
 	private JsonParser jsonParser = new JsonParser();
 
