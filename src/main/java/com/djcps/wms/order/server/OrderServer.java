@@ -21,6 +21,7 @@ import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
@@ -36,6 +37,7 @@ import com.djcps.wms.order.request.WmsForOrderHttpRequest;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.server.StockServer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import rpc.plugin.http.HTTPResponse;
@@ -52,7 +54,7 @@ public class OrderServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OrderServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private StockServer stockServer;

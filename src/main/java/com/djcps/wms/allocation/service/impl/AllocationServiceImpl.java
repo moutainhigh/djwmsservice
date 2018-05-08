@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -79,6 +78,7 @@ import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.commons.utils.RedisUtil;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
@@ -118,7 +118,7 @@ public class AllocationServiceImpl implements AllocationService {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServiceImpl.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	private JsonParser jsonParser = new JsonParser();
 
@@ -647,7 +647,7 @@ public class AllocationServiceImpl implements AllocationService {
 			result = allocationServer.getAddOrderListByParamisNull(param);
 		}else{
 			//key和value都是订单号
-			Map<String,String> orderStrMap = new HashMap<>();
+			Map<String,String> orderStrMap = new HashMap<>(16);
 			List<OrderIdBO> orderIdBOList = new ArrayList<>();
 			for (String string : orderIdList) {
 				if(string.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
@@ -676,7 +676,7 @@ public class AllocationServiceImpl implements AllocationService {
 					}
 				}
 				
-				Map<String, List<WarehouseOrderDetailPO>> newOrderMap = new HashMap<>();
+				Map<String, List<WarehouseOrderDetailPO>> newOrderMap = new HashMap<>(16);
 				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
 					List<WarehouseOrderDetailPO> value = entry.getValue();
 					newOrderMap.put(entry.getKey(),new ArrayList<>());
@@ -770,7 +770,7 @@ public class AllocationServiceImpl implements AllocationService {
 		//已进行智能配货的订单无法在添加
 		String allocationOrder = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+allocationId);
 		List<OrderPO> allocationOrderList = gson.fromJson(allocationOrder, new TypeToken<ArrayList<OrderPO>>(){}.getType());
-		Map<String,OrderPO> orderPOMap = new HashMap<>();
+		Map<String,OrderPO> orderPOMap = new HashMap<>(16);
 		for (OrderPO orderPO : allocationOrderList) {
 			orderPOMap.put(orderPO.getOrderId(), orderPO);
 		}
@@ -1028,7 +1028,7 @@ public class AllocationServiceImpl implements AllocationService {
 		
 		//统一根据订单号获取订单状态,不管上面代码是否已经获取订单状态,这里统一从订单服务获取
 		//key是订单号,value是订单状态
-		Map<String,WarehouseOrderDetailPO> orderStatusMap = new HashMap<>();
+		Map<String,WarehouseOrderDetailPO> orderStatusMap = new HashMap<>(16);
 		List<String> orderIdsList = new ArrayList<>();
 		List<DeliveryOrderPO> newDeliveryList = waybillDeliveryOrder.getDeliveryOrder();
 		//这个值为空表示所有的订单都被移除了
@@ -1260,16 +1260,13 @@ public class AllocationServiceImpl implements AllocationService {
 		HttpResult result = allocationServer.cancelAllocation(param);
 		if(result.isSuccess()){
 			//修改订单的订单状态，修改成已入库
-			OrderIdBO orderId = new OrderIdBO();
 			List<String> orderIds = param.getOrderIds();
-			
 			List<OrderIdBO> orderIdList = new ArrayList<>();
 			for (String string : orderIds) {
 				OrderIdBO order = new OrderIdBO();
 				order.setOrderId(string);
 				order.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 				orderIdList.add(order);
-				orderIds.add(string);
 			}
 			HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(), orderIdList);
 			if(updateResult.isSuccess()){
@@ -2011,6 +2008,13 @@ public class AllocationServiceImpl implements AllocationService {
 				orderStatus = warehouseOrder.getSubStatus();
 				orderAmount = warehouseOrder.getSubNumber();
 			}
+			
+			//判断提醒字段标记,含有备,或生,不允许拆单
+			Integer isProduce = warehouseOrder.getIsProduce();
+			Integer isStored = warehouseOrder.getIsStored();
+			if(1==isStored || isProduce==1){
+				return MsgTemplate.failureMsg(AllocationMsgEnum.SPLIT_ORDER_PRODUCE_STORED_ERROR);
+			}
 			//获取库存信息
 			SelectAreaByOrderIdBO select  = new SelectAreaByOrderIdBO();
 			BeanUtils.copyProperties(param, select);
@@ -2069,7 +2073,7 @@ public class AllocationServiceImpl implements AllocationService {
 			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
 	        List<OrderIdBO> orderIdBOList = new ArrayList<>();
-	        Map<String,WarehouseOrderDetailPO> orderDetailMap = new HashMap<>();
+	        Map<String,WarehouseOrderDetailPO> orderDetailMap = new HashMap<>(16);
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
 	        	OrderIdBO orderIdBO = new OrderIdBO();
 	        	orderIdBO.setOrderId(warehouseOrderDetailPO.getOrderId());

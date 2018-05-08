@@ -7,6 +7,7 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.record.model.param.EntryRecordListBO;
 import com.djcps.wms.record.model.param.SaveOperationRecordBO;
 import com.djcps.wms.record.model.param.StocktakingRecordListBO;
@@ -38,7 +39,7 @@ public class OperationRecordController {
     private static final Logger logger = LoggerFactory.getLogger(OperationRecordController.class);
     @Autowired
     private OperationRecordService operationRecordService;
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
 
     /**
      * 获取盘点操作记录

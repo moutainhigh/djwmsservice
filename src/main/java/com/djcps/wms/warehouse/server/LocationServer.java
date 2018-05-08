@@ -12,6 +12,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.GetCodeRequest;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.warehouse.model.location.AddLocationBO;
 import com.djcps.wms.warehouse.model.location.DeleteLocationBO;
 import com.djcps.wms.warehouse.model.location.SelectAllLocationListBO;
@@ -34,7 +35,7 @@ public class LocationServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(LocationServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private WmsForLocationHttpRequest locationHttpRequest;

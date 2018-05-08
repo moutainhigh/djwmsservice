@@ -12,6 +12,7 @@ import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
 import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
 import com.djcps.wms.loadingtable.model.GetUserListBO;
@@ -24,6 +25,7 @@ import com.djcps.wms.loadingtable.model.UserPO;
 import com.djcps.wms.loadingtable.server.LoadingTableServer;
 import com.djcps.wms.loadingtable.service.LoadingTableService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
@@ -37,7 +39,7 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class LoadingTableServiceImpl implements LoadingTableService {
 	
-	Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private LoadingTableServer loadingTableServer;

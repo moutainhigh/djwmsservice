@@ -12,6 +12,7 @@ import com.djcps.wms.abnormal.service.AbnormalService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.google.gson.Gson;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class AbnormalController {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AbnormalController.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private AbnormalService abnormalService;

@@ -12,6 +12,7 @@ import com.djcps.wms.commons.fluentvalidator.ValidateNotNullInteger;
 import com.djcps.wms.commons.fluentvalidator.ValidateNullInteger;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
@@ -42,7 +43,7 @@ public class ProviderController {
 	
 	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(ProviderController.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private ProviderService providerService;

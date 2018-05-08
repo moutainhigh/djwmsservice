@@ -3,6 +3,7 @@ package com.djcps.wms.record.server;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.record.model.param.EntryRecordListBO;
 import com.djcps.wms.record.model.param.SaveOperationRecordBO;
 import com.djcps.wms.record.model.param.StocktakingRecordListBO;
@@ -25,7 +26,7 @@ import rpc.plugin.http.HTTPResponse;
 public class OperationRecordServer {
     private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OperationRecordServer.class);
 
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
     @Autowired
     private OperationRecordHttpRequest operationRecordHttpRequest;
     /**

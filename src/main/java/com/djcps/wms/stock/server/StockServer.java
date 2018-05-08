@@ -14,6 +14,7 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.MapAddressComponentPO;
 import com.djcps.wms.commons.request.MapHttpRequest;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.stock.dao.StockDao;
 import com.djcps.wms.stock.model.AddStockBO;
@@ -24,6 +25,7 @@ import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
 import com.djcps.wms.stock.request.WmsForStockHttpRequest;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -41,7 +43,7 @@ public class StockServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(StockServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	StockDao stockDao;

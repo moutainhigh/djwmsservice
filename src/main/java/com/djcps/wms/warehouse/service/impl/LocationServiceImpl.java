@@ -8,6 +8,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
 import com.djcps.wms.warehouse.model.area.DeleteAreaBO;
@@ -45,7 +46,7 @@ public class LocationServiceImpl implements LocationService {
 	@Autowired
 	private LocationServer locationServer;
 
-	Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 
 	@Override
 	public Map<String, Object> addLocation(AddLocationBO param) {

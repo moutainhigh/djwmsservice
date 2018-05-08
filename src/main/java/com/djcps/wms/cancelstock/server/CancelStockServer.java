@@ -15,7 +15,9 @@ import com.djcps.wms.cancelstock.model.param.CancelOrderIdBO;
 import com.djcps.wms.cancelstock.model.param.PickerIdBO;
 import com.djcps.wms.cancelstock.request.CancelStockServerHttpRequest;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import rpc.plugin.http.HTTPResponse;
 
@@ -31,7 +33,7 @@ public class CancelStockServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(CancelStockServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private CancelStockServerHttpRequest cancelStockServerHttpRequest;

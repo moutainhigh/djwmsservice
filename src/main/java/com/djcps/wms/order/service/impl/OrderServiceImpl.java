@@ -15,6 +15,7 @@ import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
@@ -25,6 +26,7 @@ import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
@@ -37,8 +39,8 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class OrderServiceImpl implements OrderService {
 	
-	private Gson gson = new Gson();
-	
+	private Gson gson = GsonUtils.gson;
+
 	@Autowired
 	private OrderServer orderServer;
 	

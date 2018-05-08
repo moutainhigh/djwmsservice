@@ -1,7 +1,5 @@
 package com.djcps.wms.address.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +8,7 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
 import com.djcps.wms.address.request.AddressServerHttpRequest;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.google.gson.Gson;
 
 import rpc.plugin.http.HTTPResponse;
@@ -26,7 +25,7 @@ public class AddressServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AddressServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private AddressServerHttpRequest addressServerHttpRequest;

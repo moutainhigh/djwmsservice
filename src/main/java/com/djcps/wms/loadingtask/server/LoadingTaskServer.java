@@ -11,6 +11,7 @@ import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.NumberServerHttpRequest;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
@@ -24,12 +25,12 @@ import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
 import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.loadingtask.request.WmsForLoadingTaskHttpRequest;
 import com.djcps.wms.outorder.request.WmsForOutOrderHttpRequest;
-import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rpc.plugin.http.HTTPResponse;
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class LoadingTaskServer {
     private NumberServerHttpRequest numberServerHttpRequest;
     @Autowired
     private WmsForOutOrderHttpRequest wmsForOutOrderHttpRequest;
-
+    private Gson gson = GsonUtils.gson;
     /**
      * 获取装车员列表
      * 

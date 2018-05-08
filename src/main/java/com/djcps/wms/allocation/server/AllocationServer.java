@@ -3,8 +3,6 @@ package com.djcps.wms.allocation.server;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +25,6 @@ import com.djcps.wms.allocation.model.MoveOrderPO;
 import com.djcps.wms.allocation.model.RelativeIdBO;
 import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.model.VerifyAllocationBO;
-import com.djcps.wms.allocation.model.ZhiNengHttpResult;
 import com.djcps.wms.allocation.request.NumberServerHttpRequest;
 import com.djcps.wms.allocation.request.WmsForAllocationHttpRequest;
 import com.djcps.wms.commons.base.BaseAddBO;
@@ -36,7 +33,7 @@ import com.djcps.wms.commons.base.BaseUpdateAndDeleteBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OtherHttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
-import com.djcps.wms.order.model.OrderParamBO;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.request.WmsForOrderHttpRequest;
@@ -57,7 +54,7 @@ public class AllocationServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private WmsForAllocationHttpRequest allocationHttpRequest;

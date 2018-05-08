@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.role.model.OrgRoleInfoBO;
 import com.djcps.wms.role.model.request.OrgRoleListPO;
 import com.djcps.wms.role.model.request.OrgSavePO;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class OrgRoleHttpServer {
     private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OrgRoleHttpServer.class);
 
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
     @Autowired
     private OrgRoleHttpRequest orgRoleHttpRequest;
     /**

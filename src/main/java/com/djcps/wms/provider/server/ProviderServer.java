@@ -10,6 +10,7 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.provider.model.AddProviderBO;
 import com.djcps.wms.provider.model.DeleteProviderBO;
 import com.djcps.wms.provider.model.SelectProviderByAttributeBO;
@@ -31,7 +32,7 @@ public class ProviderServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(ProviderServer.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private WmsForProviderHttpRequest providerHttpRequest;

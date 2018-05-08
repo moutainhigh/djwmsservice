@@ -17,12 +17,8 @@ import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.abnormal.service.AbnormalService;
-import com.djcps.wms.address.model.ProvinceCityAreaCodeBO;
-import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 
@@ -40,7 +36,6 @@ public class AbnormalServiceImpl implements AbnormalService {
 	private AbnormalServer abnormalServer;
 	@Autowired
 	private OrderServer orderServer;
-	
 	
 	@Override
 	public Map<String, Object> getOrderByAttributeBO(GetOrderByAttributeBO param) {

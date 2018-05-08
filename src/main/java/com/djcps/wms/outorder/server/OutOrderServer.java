@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.outorder.model.OutOrderBO;
 import com.djcps.wms.outorder.model.SelectOutOrderBO;
 import com.djcps.wms.outorder.request.WmsForOutOrderHttpRequest;
@@ -26,7 +27,7 @@ public class OutOrderServer {
 	@Autowired
 	private WmsForOutOrderHttpRequest wmsForOutOrderHttpRequest;
 	
-	private Gson gson = new GsonBuilder().serializeNulls().create();
+	private Gson gson = GsonUtils.gson;
 	
 	private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(OutOrderServer.class);
 	

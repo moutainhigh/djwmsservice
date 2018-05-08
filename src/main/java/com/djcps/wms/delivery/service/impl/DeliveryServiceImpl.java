@@ -8,6 +8,7 @@ import com.djcps.wms.commons.base.BaseListPO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.delivery.constant.DeliveryConstant;
 import com.djcps.wms.delivery.enums.DeliveryMsgEnum;
 import com.djcps.wms.delivery.enums.DeliveryStatusEnum;
@@ -20,9 +21,9 @@ import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
-import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.server.OrderServer;
+import com.google.gson.Gson;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 提货实现类
@@ -52,6 +52,8 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Autowired
     private OrderServer orderServer;
+    
+    private Gson gson = GsonUtils.gson;
 
     /**
      * 获取提货单列表

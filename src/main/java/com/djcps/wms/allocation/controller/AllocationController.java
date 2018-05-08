@@ -10,8 +10,6 @@ import javax.validation.Validation;
 
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -43,6 +41,7 @@ import com.djcps.wms.allocation.service.AllocationService;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
@@ -63,7 +62,7 @@ public class AllocationController {
 	
 	private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(AllocationController.class);
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 	
 	@Autowired
 	private AllocationService allocationService;

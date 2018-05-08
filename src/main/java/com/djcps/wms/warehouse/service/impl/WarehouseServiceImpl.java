@@ -8,6 +8,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.server.WarehouseServer;
@@ -37,7 +38,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	@Autowired
 	private WarehouseServer warehouseServer;
 
-	Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
 
 	/**
 	 * @title:新增仓库

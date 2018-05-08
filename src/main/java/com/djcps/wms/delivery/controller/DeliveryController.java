@@ -10,9 +10,12 @@ import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.delivery.model.*;
 import com.djcps.wms.delivery.service.DeliveryService;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
+import com.google.gson.Gson;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
 
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 提货
@@ -41,6 +43,8 @@ public class DeliveryController {
     @Autowired
     private DeliveryService deliveryService;
 
+    private Gson gson = GsonUtils.gson;
+    
     /**
      * 获取提货单列表
      * 
