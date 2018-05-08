@@ -10,6 +10,7 @@ import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.FluteTypeEnum;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -236,9 +237,13 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         InventoryClerkBO inventoryClerkBO3=new InventoryClerkBO();
         inventoryClerkBO3.setInventoryClerk("超級管理員");
         inventoryClerkBO3.setInventoryClerkId("81");
+        InventoryClerkBO inventoryClerkBO4=new InventoryClerkBO();
+        inventoryClerkBO4.setInventoryClerk("东城周德星");
+        inventoryClerkBO4.setInventoryClerkId("fedafb813d254ed19a4617f1e633773e");
         list.add(inventoryClerkBO);
         list.add(inventoryClerkBO2);
         list.add(inventoryClerkBO3);
+        list.add(inventoryClerkBO4);
         return MsgTemplate.successMsg(list);
     }
 
@@ -773,15 +778,38 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      * @param saveStocktakingOrderInfoBOList
      * @return
      */
-  public double area(SaveStocktakingOrderInfoList saveStocktakingOrderInfoBOList) {
+  public double area(SaveStocktakingOrderInfoList param) {
       double areaSum = 0;
-    if(!ObjectUtils.isEmpty(saveStocktakingOrderInfoBOList.getSaveStocktaking())) {
-        for(SaveStocktakingOrderInfoBO info : saveStocktakingOrderInfoBOList.getSaveStocktaking()) {
-          //计算操作面积
-            double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getTakeStockAmount());
-            areaSum = areaSum +area;
-        }
-    }
+      OrderIdsBO orderIdsBO = new OrderIdsBO();
+      List<String> orderIds = new ArrayList<>();
+      if(!ObjectUtils.isEmpty(param.getSaveStocktaking())) {
+      for(SaveStocktakingOrderInfoBO stockIfo : param.getSaveStocktaking()) {
+          orderIds.add(stockIfo.getOrderId());
+      }
+      }
+      
+      orderIdsBO.setChildOrderIds(orderIds);
+      orderIdsBO.setPartnerArea(param.getPartnerArea());
+    //根据订单编号获取订单信息
+      BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+      if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+      orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+      }
+      //遍历页面传输订单号
+      for(SaveStocktakingOrderInfoBO info : param.getSaveStocktaking()) {
+          if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+              //遍历从订单服务查寻对应订单信息
+          for(WarehouseOrderDetailPO orderList : orderInfo.getOrderList()) {
+              if(info.getOrderId().equals(orderList.getChildOrderId())) {
+                  //计算操作面积
+                  double area = operationRecordServer.getVolume(Double.parseDouble(orderList.getMaterialLength()), Double.parseDouble(orderList.getMaterialWidth()), info.getTakeStockAmount());
+                  areaSum = areaSum +area;
+              }
+          }
+          }
+          
+         
+      }
       return areaSum;
     
   }
@@ -792,23 +820,53 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
    */
   public List<OrderOperationRecordPO> orderStocktakingOperationInfo(SaveStocktakingOrderInfoList param,PartnerInfoBO partnerInfoBO) {
       List<OrderOperationRecordPO> list = new ArrayList<>();
-      OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
-      orderOperationRecordPO.setPartnerId(partnerInfoBO.getPartnerId());
-      orderOperationRecordPO.setPartnerArea(partnerInfoBO.getPartnerArea());
-      orderOperationRecordPO.setOperator(partnerInfoBO.getOperator());
-      orderOperationRecordPO.setOperatorId(partnerInfoBO.getOperatorId());
+     
       OrderIdsBO orderIdsBO = new OrderIdsBO();
       List<String> orderIds = new ArrayList<>();
+      if(!ObjectUtils.isEmpty(param.getSaveStocktaking())) {
+      for(SaveStocktakingOrderInfoBO stockIfo : param.getSaveStocktaking()) {
+          orderIds.add(stockIfo.getOrderId());
+      }
+      }
+      
+      orderIdsBO.setChildOrderIds(orderIds);
+      orderIdsBO.setPartnerArea(param.getPartnerArea());
+    //根据订单编号获取订单信息
+      BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+      List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+      if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+          OrderList.addAll(orderInfo.getOrderList());
+      }
+      if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+          OrderList.addAll(orderInfo.getSplitOrderList());
+      }
+      //遍历页面传输订单号
       for(SaveStocktakingOrderInfoBO info : param.getSaveStocktaking()) {
-          //处理数据
-          orderOperationRecordPO.setRelativeName(info.getProductName());
-          orderOperationRecordPO.setRelativeId(info.getOrderId());
-          orderOperationRecordPO.setAmount(info.getTakeStockAmount().toString());
-          orderOperationRecordPO.setFluteType(info.getFluteType());
-          //计算操作面积
-          double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getTakeStockAmount());
-          orderOperationRecordPO.setArea(String.valueOf(area));
-          list.add(orderOperationRecordPO);
+          if(!ObjectUtils.isEmpty(OrderList)) {
+              //遍历从订单服务查寻对应订单信息
+          for(WarehouseOrderDetailPO orderList : OrderList) {
+              if(info.getOrderId().equals(orderList.getChildOrderId())) {
+                  OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+                  orderOperationRecordPO.setPartnerId(partnerInfoBO.getPartnerId());
+                  orderOperationRecordPO.setPartnerArea(partnerInfoBO.getPartnerArea());
+                  orderOperationRecordPO.setOperator(partnerInfoBO.getOperator());
+                  orderOperationRecordPO.setOperatorId(partnerInfoBO.getOperatorId());
+                //订单类型后面判断TODO
+                  orderOperationRecordPO.setOrderType("2");
+                //处理数据
+                  orderOperationRecordPO.setRelativeName(orderList.getProductName());
+                  orderOperationRecordPO.setRelativeId(info.getOrderId());
+                  orderOperationRecordPO.setAmount(info.getTakeStockAmount().toString());
+                  orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(orderList.getFluteType()));
+                  //计算操作面积
+                  double area = operationRecordServer.getVolume(Double.parseDouble(orderList.getMaterialLength()), Double.parseDouble(orderList.getMaterialWidth()), info.getTakeStockAmount());
+                  orderOperationRecordPO.setArea(String.valueOf(area));
+                  list.add(orderOperationRecordPO);
+              }
+          }
+          }
+          
+         
       }
       return list;
 }
@@ -1219,11 +1277,13 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
         orderOperationRecordPO.setOperator(param.getOperator());
         orderOperationRecordPO.setOperatorId(param.getOperatorId());
+      //订单类型后面判断TODO
+        orderOperationRecordPO.setOrderType("2");
         //处理数据
         orderOperationRecordPO.setRelativeName(param.getProductName());
         orderOperationRecordPO.setRelativeId(param.getOrderId());
         orderOperationRecordPO.setAmount(param.getTakeStockAmount().toString());
-        orderOperationRecordPO.setFluteType(param.getFluteType());
+        orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(param.getFluteType()));
         //计算操作面积
         double area = operationRecordServer.getVolume(Double.parseDouble(param.getMaterialLength()), Double.parseDouble(param.getMaterialWidth()), param.getTakeStockAmount());
         orderOperationRecordPO.setArea(String.valueOf(area));

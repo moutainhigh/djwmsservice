@@ -78,7 +78,7 @@ public class OrderOperationRecordPO extends BaseBO implements Serializable {
      * 楞型
      */
     @NotBlank
-    private String fluteType;
+    private Integer fluteType;
 
     /**
      * 仓库id
@@ -174,10 +174,6 @@ public class OrderOperationRecordPO extends BaseBO implements Serializable {
         return orderType;
     }
 
-    public String getFluteType() {
-        return fluteType;
-    }
-
     public String getWarehouseId() {
         return warehouseId;
     }
@@ -258,10 +254,6 @@ public class OrderOperationRecordPO extends BaseBO implements Serializable {
         this.orderType = orderType;
     }
 
-    public void setFluteType(String fluteType) {
-        this.fluteType = fluteType;
-    }
-
     public void setWarehouseId(String warehouseId) {
         this.warehouseId = warehouseId;
     }
@@ -308,6 +300,14 @@ public class OrderOperationRecordPO extends BaseBO implements Serializable {
 
     public void setUpdateTimeEnd(String updateTimeEnd) {
         this.updateTimeEnd = updateTimeEnd;
+    }
+
+    public Integer getFluteType() {
+        return fluteType;
+    }
+
+    public void setFluteType(Integer fluteType) {
+        this.fluteType = fluteType;
     }
 
     @Override

@@ -151,9 +151,36 @@ public class StockServiceImpl implements StockService{
 		HttpResult result = stockServer.getOperationRecord(fromJson);
 		return MsgTemplate.customMsg(result);
 	}
-
+	/**
+	 * 入库操作记录数据处理
+	 * @param param
+	 */
+	public void addStockOperationRecord(AddStockBO param) {
+	    OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                param.setFluteType(info.getFluteType());
+                param.setRelativeName(info.getPartnerName());
+                //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmountSave());
+                param.setArea(String.valueOf(area));
+            }
+        }
+	}
 	@Override
 	public Map<String, Object> addStock(AddStockBO param) {
+	    //处理操作记录数据
+	    addStockOperationRecord(param);
 		//先判断入库的仓库是否被启用,禁用直接驳回
 		PartnerInfoBO partnerInfoBean = new PartnerInfoBO();
 		BeanUtils.copyProperties(param, partnerInfoBean);
@@ -474,7 +501,7 @@ public class StockServiceImpl implements StockService{
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!orderInfo.getSplitOrderList().isEmpty()) {
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
         orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {

@@ -310,5 +310,5 @@ public interface AllocationService {
 	 */
 	Map<String, Object> getSplitOrderByOrderId(OrderIdBO param);
 	
-	Map<String, Object> TmsVehicleQueuingList();
+	//Map<String, Object> TmsVehicleQueuingList();
 }

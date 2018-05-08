@@ -124,7 +124,19 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
     /**
      * 操作记录信息
      */
-    List<OrderOperationRecordPO> list;
+    private List<OrderOperationRecordPO> list;
+    /**
+     * 仓库编号
+     */
+    private String warehouseId;
+
+    public String getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
     public List<OrderOperationRecordPO> getList() {
         return list;
@@ -295,7 +307,7 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
                 + pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
                 + deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
                 + ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime
-                + ", driverName=" + driverName + ", list=" + list + "]";
+                + ", driverName=" + driverName + ", list=" + list + ", warehouseId=" + warehouseId + "]";
     }
 
 }
