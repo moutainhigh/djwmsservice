@@ -67,24 +67,19 @@ public class PermissionServiceImpl implements PermissionService {
         ArrayList<GetPermissionPackagePO> listUser = gson.fromJson(data, new TypeToken<List<GetPermissionPackagePO>>() {
         }.getType());
         //规范返回字段
-        if (!ObjectUtils.isEmpty(listUser)) {
-            List listUserChange = listUser.stream().map(x -> new ChangePerPackageVO() {{
-                setBussion(x.getPbussion());
-                setDescribe(x.getPdes());
-                setId(x.getId());
-                setPerList(x.getPerlist());
-                setTitle(x.getPtitle());
-            }}).collect(Collectors.toList());
-            //组织返回数据
-            BaseListPO info = new BaseListPO() {{
-                setList(listUserChange);
-                setTotal(countData);
-            }};
-            return MsgTemplate.successMsg(info);
-        } else {
-            return MsgTemplate.successMsg(null);
-        }
-
+        List listUserChange = listUser.stream().map(x -> new ChangePerPackageVO() {{
+            setBussion(x.getPbussion());
+            setDescribe(x.getPdes());
+            setId(x.getId());
+            setPerList(x.getPerlist());
+            setTitle(x.getPtitle());
+        }}).collect(Collectors.toList());
+        //组织返回数据
+        BaseListPO info = new BaseListPO() {{
+            setList(listUserChange);
+            setTotal(countData);
+        }};
+        return MsgTemplate.successMsg(info);
     }
 
 
