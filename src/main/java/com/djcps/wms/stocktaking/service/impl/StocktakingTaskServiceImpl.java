@@ -887,6 +887,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         saveStocktakingOrderInfoBOList.setOrderOperationInfo(orderOperationInfo);
         //盘点任务操作记录数据组合
         TaskOperationRecordPO taskOperationRecordPO = new TaskOperationRecordPO();
+       //计算盘点对应订单总面积
         double area = area(saveStocktakingOrderInfoBOList);
         taskOperationRecordPO.setArea(String.valueOf(area));
         saveStocktakingOrderInfoBOList.setTaskOperationRecordPO(taskOperationRecordPO);

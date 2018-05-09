@@ -32,7 +32,7 @@ import java.util.Map;
 public class OrgRoleHttpServer {
     private static DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(OrgRoleHttpServer.class);
 
-    private Gson gson = GsonUtils.gson;
+    private Gson gson = new Gson();
     @Autowired
     private OrgRoleHttpRequest orgRoleHttpRequest;
     /**

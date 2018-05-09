@@ -133,7 +133,6 @@ public class RoleServiceImpl implements RoleService {
         deleteBO.setUserid(deleteBO.getOperator());
         List<DeleteBO> list = new ArrayList<DeleteBO>();
         HttpResult result = null;
-        if (!ObjectUtils.isEmpty(deleteBO)) {
             /*4]
              * String[] roleTypeCode = deleteBO.getRoleTypeCode().split(","); for(String s :
              * roleTypeCode) { DeleteBO roleType = new DeleteBO();
@@ -161,7 +160,6 @@ public class RoleServiceImpl implements RoleService {
                 // 删除org角色信息
                 result = orgRoleHttpServer.delRoleManage(orgRoleInfoBO);
             }
-        }
         return MsgTemplate.customMsg(result);
     }
 
@@ -184,6 +182,9 @@ public class RoleServiceImpl implements RoleService {
         orgRoleInfoBO.setRdesc(saveBO.getRoleDesc());
         orgRoleInfoBO.setRname(saveBO.getRoleName());
         orgRoleInfoBO.setRtype(saveBO.getRoleType());
+        if (ObjectUtils.isEmpty(orgRoleInfoBO.getId())) {
+            orgRoleInfoBO.setId("");;
+        }
         // 新增org角色关联信息
         OrgSavePO orgSavePO = orgRoleHttpServer.addPostRoleManage(orgRoleInfoBO);
         HttpResult save = null;
