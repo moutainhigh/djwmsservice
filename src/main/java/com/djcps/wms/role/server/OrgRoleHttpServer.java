@@ -4,7 +4,7 @@ package com.djcps.wms.role.server;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
-import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.log.DjcpsLoggerFactory; 
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.role.model.OrgRoleInfoBO;
 import com.djcps.wms.role.model.OrgUserRoleBO;
