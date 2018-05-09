@@ -2232,7 +2232,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
               //计算操作面积
@@ -2253,7 +2253,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
               //计算操作面积
@@ -2315,7 +2315,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
                 for(SequenceBO ordersInfo :param.getOrderIds()) {
@@ -2365,7 +2365,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
               //计算操作面积

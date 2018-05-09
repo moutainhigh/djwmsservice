@@ -175,7 +175,7 @@ public class StockServiceImpl implements StockService{
             for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
                 //处理数据
                 param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                param.setRelativeName(info.getPartnerName());
+                param.setRelativeName(info.getProductName());
                 //计算操作面积
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmountSave());
                 param.setArea(String.valueOf(area));
@@ -515,7 +515,7 @@ public class StockServiceImpl implements StockService{
             for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
                 //处理数据
                 param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                param.setRelativeName(info.getPartnerName());
+                param.setRelativeName(info.getProductName());
                 //计算操作面积
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), Integer.parseInt(param.getAmountSave()));
                 param.setArea(String.valueOf(area));

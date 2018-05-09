@@ -718,6 +718,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         }
         if(!ObjectUtils.isEmpty(OrderList)) {
             for(WarehouseOrderDetailPO info : OrderList) {
+                if(info.getOrderId().equals(param.getOrderId())) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
@@ -734,6 +735,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getLoadingAmount());
                 orderOperationRecordPO.setArea(String.valueOf(area));
                 list.add(orderOperationRecordPO);
+                }
             }
            
         }

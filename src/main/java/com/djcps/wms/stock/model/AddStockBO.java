@@ -111,6 +111,18 @@ public class AddStockBO extends BaseAddBO implements Serializable {
      * 异常数量
      */
     private Integer abnomalAmount;
+    /**
+     * 产品名称
+     */
+    private String productName;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
     public String getId() {
         return id;
@@ -272,7 +284,7 @@ public class AddStockBO extends BaseAddBO implements Serializable {
                 + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", recommendAreaId="
                 + recommendAreaId + ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord
                 + ", relativeName=" + relativeName + ", orderType=" + orderType + ", fluteType=" + fluteType + ", area="
-                + area + ", abnomalAmount=" + abnomalAmount + "]";
+                + area + ", abnomalAmount=" + abnomalAmount + ", productName=" + productName + "]";
     }
 
 }
