@@ -1994,7 +1994,6 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> splitOrder(UpdateOrderBO param) {
-
 		String orderId = param.getDeleteOrdeIdList().get(0);
 		BatchOrderIdListBO batch = new BatchOrderIdListBO();
 		List<String> orderIdList = Arrays.asList(orderId);
@@ -2085,7 +2084,13 @@ public class AllocationServiceImpl implements AllocationService {
 			batchOrderIdListBO.setKeyArea(param.getPartnerArea());
 			HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(batch);
 			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
-	        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
+			List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+	        if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())){
+	        	joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
+	        }
+	        if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getSplitOrderList())){
+	        	joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList());
+	        }
 	        List<OrderIdBO> orderIdBOList = new ArrayList<>();
 	        Map<String,WarehouseOrderDetailPO> orderDetailMap = new HashMap<>(16);
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
