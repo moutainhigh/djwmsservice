@@ -27,6 +27,19 @@ public interface RoleHttpRequest {
     @Headers("content-type:application/json")
     @POST("role/list.do")
     HTTPResponse list(@Body RequestBody json);
+
+    /**
+     * 获取角色关联信息列表接口
+     *
+     * @param json
+     * @return
+     * @author wyb
+     * @create 2018/4/12
+     **/
+    @Headers("content-type:application/json")
+    @POST("role/listRole.do")
+    HTTPResponse listRole(@Body RequestBody json);
+
     /**
      * 更新角色关联信息列表接口
      *
@@ -38,6 +51,7 @@ public interface RoleHttpRequest {
     @Headers("content-type:application/json")
     @POST("role/update.do")
     HTTPResponse update(@Body RequestBody json);
+
     /**
      * 删除角色关联信息接口
      *
@@ -49,6 +63,7 @@ public interface RoleHttpRequest {
     @Headers("content-type:application/json")
     @POST("role/delete.do")
     HTTPResponse delete(@Body RequestBody json);
+
     /**
      * 新增角色关联信息接口
      *
@@ -60,6 +75,7 @@ public interface RoleHttpRequest {
     @Headers("content-type:application/json")
     @POST("role/save.do")
     HTTPResponse save(@Body RequestBody json);
+
     /**
      * 根据角色类型批量获取用户状态等信息
      *
@@ -71,6 +87,7 @@ public interface RoleHttpRequest {
     @Headers("content-type:application/json")
     @POST("user/getUserStatusList.do")
     HTTPResponse getUserStatusList(@Body RequestBody json);
+
     /**
      * 获取角色类型信息列表
      *
@@ -82,5 +99,5 @@ public interface RoleHttpRequest {
     @Headers("content-type:application/json")
     @POST("role/roleType.do")
     HTTPResponse roleType(@Body RequestBody json);
-    
+
 }

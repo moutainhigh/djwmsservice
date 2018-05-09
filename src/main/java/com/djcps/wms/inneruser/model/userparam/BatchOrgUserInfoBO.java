@@ -5,7 +5,7 @@ package com.djcps.wms.inneruser.model.userparam;
  * @author:wzy
  * @date:2018/4/12
  **/
-public class OrgGetUserInfoByIds {
+public class BatchOrgUserInfoBO {
 
     /**
      * 合作方id
@@ -61,7 +61,7 @@ public class OrgGetUserInfoByIds {
 
     @Override
     public String toString() {
-        return "OrgGetUserInfoByIds{" +
+        return "BatchOrgUserInfoBO{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
                 ", business='" + business + '\'' +

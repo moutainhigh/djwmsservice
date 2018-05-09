@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
+import com.djcps.wms.order.model.onlinepaperboard.PaperboardResultDataPO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,20 +17,18 @@ import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
-import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
-import com.djcps.wms.order.model.onlinepaperboard.PaperboardResultDataPO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import static com.djcps.wms.commons.utils.GsonUtils.dataFormatGson;
 
 
 /**
@@ -40,10 +40,8 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class OrderServiceImpl implements OrderService {
 	
-	private Gson gson = GsonUtils.gson;
+	private Gson gson = new Gson();
 	
-	private Gson dataFormatGson = GsonUtils.gson;
-
 	@Autowired
 	private OrderServer orderServer;
 	
@@ -53,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 		//组织订单详情信息和库位信息
 		return getOrderDetailInfoAndStockInfo(onlinePaperResult,param.getPartnerId());
 	}
-	
+
 	@Override
 	public Map<String, Object> getOffinePaperboardList(OffineQueryObjectBO param) {
 		HttpResult onlinePaperResult = orderServer.getOffinePaperboardList(param);
@@ -115,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
 		}
 	}
 
-	
+
 	/**
 	 * 线上,线下纸板订单,共用模代码,组织参数和库位信息
 	 * @param onlinePaperResult
@@ -141,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
 			List<WarehouseOrderDetailPO> orderStockList = orderServer.getOrderStockInfo(selectAreaByOrderId);
 			//拼接参数
 			List<WarehouseOrderDetailPO> onlinePaperboardPOList = orderServer.joinOrderParamInfo(paperResultData.getContent());
-			
+
 			//key订单号
 			Map<String,WarehouseOrderDetailPO> orderStockInfoPOMap = new HashMap<>(16);
 			if(!ObjectUtils.isEmpty(orderStockList)){

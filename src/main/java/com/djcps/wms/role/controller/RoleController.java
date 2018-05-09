@@ -14,7 +14,7 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.role.model.DeleteBO;
 import com.djcps.wms.role.model.RoleListBO;
-import com.djcps.wms.role.model.SaveBO;
+import com.djcps.wms.role.model.SaveRoleBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
 import com.djcps.wms.role.service.RoleService;
 import org.springframework.beans.BeanUtils;
@@ -178,13 +178,13 @@ public class RoleController {
             HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
-            SaveBO param = gson.fromJson(json, SaveBO.class);
+            SaveRoleBO param = gson.fromJson(json, SaveRoleBO.class);
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             BeanUtils.copyProperties(partnerInfoBo, param);
             BeanUtils.copyProperties(operatorInfoBO, param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
-                            new HibernateSupportedValidator<SaveBO>()
+                            new HibernateSupportedValidator<SaveRoleBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {

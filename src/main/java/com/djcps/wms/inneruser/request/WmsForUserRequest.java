@@ -95,17 +95,6 @@ public interface WmsForUserRequest {
     HTTPResponse insertUserWarehouseList(@Body RequestBody json);
 
     /**
-     *根绝角色类型编码获取角色列表
-     * @author  wzy
-     * @param json
-     * @return http
-     * @date  2018/4/16 15:42
-     **/
-    @Headers("content-type:application/json")
-    @POST("role/list.do")
-    HTTPResponse roleList(@Body RequestBody json);
-
-    /**
      * 获取用户关联仓库
      * @author  wzy
      * @param json

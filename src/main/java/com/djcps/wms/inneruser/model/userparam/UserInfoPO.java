@@ -8,10 +8,19 @@ import java.util.List;
  * @date:2018/4/18
  **/
 public class UserInfoPO {
+    /**
+     * 手机号码
+     */
     private String phone;
 
+    /**
+     * 密码
+     */
     private String password;
 
+    /**
+     * 用户名称
+     */
     private String userName;
 
     /**

@@ -1,14 +1,18 @@
 package com.djcps.wms.inneruser.server;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.httpclient.HttpResult;
+import com.djcps.wms.commons.utils.HttpResultUtils;
 import com.djcps.wms.inneruser.model.userparam.*;
 import com.djcps.wms.inneruser.request.UserRequest;
 import com.djcps.wms.inneruser.request.WmsForUserRequest;
+import com.djcps.wms.role.request.RoleHttpRequest;
 import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
@@ -19,8 +23,6 @@ import rpc.plugin.http.HTTPResponse;
 
 import java.util.List;
 import java.util.Map;
-
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 用户管理
@@ -33,8 +35,13 @@ public class UserServer {
 
     private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(UserServer.class);
 
+    private Gson gson = new GsonBuilder().create();
+
     @Autowired
     private UserRequest userRequest;
+
+    @Autowired
+    private RoleHttpRequest roleHttpRequest;
 
     @Autowired
     private WmsForUserRequest wmsForUserRequest;
@@ -47,7 +54,7 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/12 14:06
      **/
-    public List<OrgUserInfoPO> getUserListByOrg(OrgGetUserInfoByIds orgGetUserInfo) {
+    public List<OrgUserInfoPO> getUserListByOrg(BatchOrgUserInfoBO orgGetUserInfo) {
         String json = gson.toJson(orgGetUserInfo);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getUserInfoList(map);
@@ -70,7 +77,7 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/12 14:39
      **/
-    public OrgUserInfoPO getUserByOrg(OrgGetUserInfoById orgGetUserInfo) {
+    public OrgUserInfoPO getUserByOrg(GetOrgUserInfoBO orgGetUserInfo) {
         String json = gson.toJson(orgGetUserInfo);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getUserInfo(map);
@@ -144,7 +151,7 @@ public class UserServer {
         String paramJson = gson.toJson(updateUserStatusBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.updateUserStatus(requestBody);
-        return returnResult(httpResponse);
+        return HttpResultUtils.returnResult(httpResponse);
     }
 
     /**
@@ -159,7 +166,7 @@ public class UserServer {
         String paramJson = gson.toJson(deleteUserBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.deleteUserRelevance(requestBody);
-        return returnResult(httpResponse);
+        return HttpResultUtils.returnResult(httpResponse);
     }
 
     /**
@@ -174,7 +181,7 @@ public class UserServer {
         String paramJson = gson.toJson(userRelevanceBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.insertUserRelevance(requestBody);
-        return returnResult(httpResponse);
+        return HttpResultUtils.returnResult(httpResponse);
     }
 
     /**
@@ -189,7 +196,7 @@ public class UserServer {
         String paramJson = gson.toJson(userRelevanceBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.insertUserWarehouse(requestBody);
-        return returnResult(httpResponse);
+        return HttpResultUtils.returnResult(httpResponse);
     }
 
     /**
@@ -204,7 +211,7 @@ public class UserServer {
         String paramJson = gson.toJson(addUserWarehouseBOList);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.insertUserWarehouseList(requestBody);
-        return returnResult(httpResponse);
+        return HttpResultUtils.returnResult(httpResponse);
     }
 
     /**
@@ -324,7 +331,7 @@ public class UserServer {
         String json = gson.toJson(saveUserBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.addPostUserInfo(map);
-        return returnResult(httpResponse);
+        return HttpResultUtils.returnResult(httpResponse);
         // HttpResult result = null;
 //        SaveUserBO saveUserBO1=null;
 //        List<SaveUserBO> list=null;
@@ -349,19 +356,16 @@ public class UserServer {
      * @date 2018/4/16 15:54
      **/
     public List<GetRoleTypePO> roleList(RoleTypeBO getRoleTypeBO) {
-        String json = gson.toJson(getRoleTypeBO);
+        String json = JSONObject.toJSONString(getRoleTypeBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-        HTTPResponse httpResponse = wmsForUserRequest.roleList(requestBody);
+        HTTPResponse httpResponse = roleHttpRequest.listRole(requestBody);
         if (httpResponse.isSuccessful()) {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
                 if (!ObjectUtils.isEmpty(data)) {
-                    BaseVO baseVO = gson.fromJson(data, BaseVO.class);
-                    if (!ObjectUtils.isEmpty(baseVO)) {
-                        List<GetRoleTypePO> roleTypePOList = (List<GetRoleTypePO>) baseVO.getResult();
-                        return roleTypePOList;
-                    }
+                    List<GetRoleTypePO> roleTypePOList = JSONObject.parseArray(data,GetRoleTypePO.class);
+                    return roleTypePOList;
                 }
             }
         }
@@ -409,29 +413,6 @@ public class UserServer {
                 String json = gson.toJson(result.getData());
                 List<WarehouseListPO> warehouseList = JSONArray.parseArray(json, WarehouseListPO.class);
                 return warehouseList;
-            }
-        }
-        return null;
-    }
-
-
-    /**
-     * 公共返回
-     *
-     * @param httpResponse
-     * @return
-     */
-    private HttpResult returnResult(HTTPResponse httpResponse) {
-        if (httpResponse.isSuccessful()) {
-            try {
-                String body = httpResponse.getBodyString();
-                if (StringUtils.isNotBlank(body)) {
-                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                    return baseResult;
-                }
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-                e.printStackTrace();
             }
         }
         return null;

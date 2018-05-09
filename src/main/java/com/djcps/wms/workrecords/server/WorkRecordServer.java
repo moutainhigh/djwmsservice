@@ -8,10 +8,10 @@ import com.djcps.wms.workrecords.request.WorkRecordHttpRequest;
 import okhttp3.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
+import static com.djcps.wms.commons.utils.HttpResultUtils.*;
 
 /**
  * @author panyang
@@ -39,7 +39,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.getAllRecordListByOperationType(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -54,7 +54,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.getWorkRecordsDetail(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
 
@@ -70,7 +70,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.getDeliveryRecordList(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -85,7 +85,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.getDeliveryWorkRecordsDetail(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -100,7 +100,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.listPdaWorkRecordsInfo(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -115,7 +115,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.listPdaLoadingTaskWorkRecords(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -130,7 +130,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.listPdaDeliveryWorkRecords(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -145,7 +145,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.listPdaStockTakingWorkRecords(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -160,7 +160,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.listPdaLoadingTaskWorkRecordsInfo(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -175,7 +175,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.listPdaDeliveryWorkRecordsInfo(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -190,7 +190,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.getBasicDetail(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -205,21 +205,7 @@ public class WorkRecordServer {
         //调用借口获取信息
         HTTPResponse http = workRecordHttpRequest.listPdaStockTakingWorkRecordsInfo(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
-
-
-    private HttpResult verifyHttpResult(HTTPResponse http) {
-        HttpResult result = null;
-        //校验请求是否成功
-        if (http.isSuccessful()) {
-            result = gson.fromJson(http.getBodyString(), HttpResult.class);
-        }
-        if (ObjectUtils.isEmpty(result)) {
-            LOGGER.error("Http请求出错,HttpResult结果为null");
-        }
-        return result;
-    }
-
 
 }

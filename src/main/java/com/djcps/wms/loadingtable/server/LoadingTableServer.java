@@ -3,15 +3,11 @@ package com.djcps.wms.loadingtable.server;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.loadingtable.model.*;
 import com.djcps.wms.loadingtable.request.NumberServerHttpRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.utils.GsonUtils;
@@ -23,6 +19,8 @@ import rpc.plugin.http.HTTPResponse;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.djcps.wms.commons.utils.HttpResultUtils.*;
 
 /**
  * @title:装车台服务
@@ -52,7 +50,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.add(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     public HttpResult modify(UpdateLoadingTableBO loadingTable) {
@@ -62,7 +60,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.modify(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     public HttpResult delete(DeleteLoadingTableBO loadingTable) {
@@ -72,7 +70,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.delete(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     public HttpResult getAllList(BaseListPartnerIdBO baseListParam) {
@@ -82,7 +80,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.getAllList(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     public HttpResult getLoadingTableByAttribute(SelectLoadingTableByAttributeBO loadingTable) {
@@ -92,7 +90,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.getLoadingTableByAttribute(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     public HttpResult getLoadingTableById(SelectLoadingTableByIdBO loadingTable) {
@@ -102,7 +100,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.getLoadingTableById(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     public HttpResult enable(IsUseLoadingTableBO loadingTable) {
@@ -112,7 +110,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.enable(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     public HttpResult disable(IsUseLoadingTableBO loadingTable) {
@@ -122,7 +120,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = loadingTableHttpRequest.disable(rb);
         //校验请求是否成功
-        return verifyHttpResult(http);
+        return returnResult(http);
     }
 
     /**
@@ -138,7 +136,7 @@ public class LoadingTableServer {
         //调用借口获取信息
         HTTPResponse http = numberServerHttp.getnumber(rb);
         //校验请求是否成功
-        HttpResult result = verifyHttpResult(http);
+        HttpResult result = returnResult(http);
         //更换data为字符串"ZTC+numbers"
         String backjson = gson.toJson(result.getData());
         System.out.println("");
@@ -153,24 +151,4 @@ public class LoadingTableServer {
         return result;
     }
 
-    /**
-     * @param http
-     * @return
-     * @title:校验HTTPResponse结果是否成功
-     * @description:
-     * @author:zdx
-     * @date:2017年11月24日
-     */
-    private HttpResult verifyHttpResult(HTTPResponse http) {
-        HttpResult result = null;
-        //校验请求是否成功
-        if (http.isSuccessful()) {
-            result = gson.fromJson(http.getBodyString(), HttpResult.class);
-        }
-        if (ObjectUtils.isEmpty(result)) {
-            System.err.println("Http请求出错,HttpResult结果为null");
-            LOGGER.error("Http请求出错,HttpResult结果为null");
-        }
-        return result;
-    }
 }
