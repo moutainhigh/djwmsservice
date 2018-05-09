@@ -15,9 +15,11 @@ import com.djcps.wms.inneruser.request.InnerUserRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
+import static com.djcps.wms.commons.utils.HttpResultUtils.*;
 
 /**
  * 内部用户 server
@@ -70,27 +72,9 @@ public class InnerUserServer {
      * @since 2017/12/4 15:11
      */
     public HttpResult loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
-        // String userCode = getUserCode(innerUserLoginBO.getUserName());
-        // if (StringUtils.isNotBlank(userCode)) {
-        // String password = DigestUtils.md5Hex(innerUserLoginBO.getPassword() +
-        // userCode);
         HTTPResponse httpResponse = innerUserRequest.getApplogin(innerUserLoginBO.getUserName(),
                 innerUserLoginBO.getPassword(), AppConstant.LOGIN_TYPE);
-        if (httpResponse.isSuccessful()) {
-            try {
-                String body = httpResponse.getBodyString();
-                if (StringUtils.isNotBlank(body)) {
-                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                    
-                    return baseResult;
-                }
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        // }
-        return null;
+        return returnResult(httpResponse);
     }
     /**
      * 获取用户token
@@ -114,20 +98,7 @@ public class InnerUserServer {
     public HttpResult loginTokenWithPhone(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
         HTTPResponse httpResponse = innerUserRequest.appLoginByPhone(innerUserLoginPhoneBO.getPhone(),
                 Integer.valueOf(innerUserLoginPhoneBO.getPhoneCode()), AppConstant.LOGIN_TYPE);
-        if (httpResponse.isSuccessful()) {
-            try {
-                String body = httpResponse.getBodyString();
-                if (StringUtils.isNotBlank(body)) {
-                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                    return baseResult;
-                }
-
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        return null;
+        return returnResult(httpResponse);
     }
 
     /**
@@ -225,12 +196,9 @@ public class InnerUserServer {
     public Boolean changeUserPassword(String userId, String oldPassword, String newPassword) {
         try {
             HTTPResponse httpResponse = innerUserRequest.getModifyPassword(userId, oldPassword, newPassword);
-            if (httpResponse.isSuccessful()) {
-                String body = httpResponse.getBodyString();
-                if (StringUtils.isNotBlank(body)) {
-                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                    return baseResult.isSuccess();
-                }
+            HttpResult result = returnResult(httpResponse);
+            if(!ObjectUtils.isEmpty(result)){
+                return result.isSuccess();
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage());

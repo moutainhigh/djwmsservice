@@ -18,7 +18,7 @@ public interface UserService {
      * @author:wzy
      * @date:2018/4/12
      **/
-    Map<String,Object> getUserList(OrgGetUserInfoByIds orgGetUserInfo);
+    Map<String,Object> getUserList(BatchOrgUserInfoBO orgGetUserInfo);
 
     /**
      * 从org获取一个用户的信息
@@ -27,7 +27,7 @@ public interface UserService {
      * @return map
      * @date:2018/4/12
      **/
-    Map<String,Object> getUser(OrgGetUserInfoById orgGetUserInfo);
+    Map<String,Object> getUser(GetOrgUserInfoBO orgGetUserInfo);
 
     /**
      * wms获取单条用户关联信息
@@ -113,11 +113,11 @@ public interface UserService {
     /**
      * 获取个人部门职位信息和全部信息
      * @author  wzy
-     * @param orgGetUserInfoById
+     * @param getOrgUserInfoBO
      * @return map
      * @date  2018/4/17 9:58
      **/
-    Map<String,Object> getDepartAndJob(OrgGetUserInfoById orgGetUserInfoById);
+    Map<String,Object> getDepartAndJob(GetOrgUserInfoBO getOrgUserInfoBO);
 
     /**
      * 获取角色列表，根据id获取或者获取全部

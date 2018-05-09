@@ -36,7 +36,7 @@ public class PermissionBO {
 	/**
 	 * 关键字
 	 */
-	private String keyWord;
+	private String keyword;
 	/**
 	 * 分页大小
 	 */
@@ -75,13 +75,15 @@ public class PermissionBO {
 	public void setPage(String page) {
 		this.page = page;
 	}
-	public String getKeyWord() {
-		return keyWord;
+
+	public String getKeyword() {
+		return keyword;
 	}
-	public void setKeyWord(String keyWord) {
-		this.keyWord = keyWord;
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
-	
+
 	public String getPageSize() {
 		return pageSize;
 	}
@@ -97,7 +99,7 @@ public class PermissionBO {
 				", business='" + business + '\'' +
 				", companyId='" + companyId + '\'' +
 				", page='" + page + '\'' +
-				", keyWord='" + keyWord + '\'' +
+				", keyword='" + keyword + '\'' +
 				", pageSize='" + pageSize + '\'' +
 				'}';
 	}

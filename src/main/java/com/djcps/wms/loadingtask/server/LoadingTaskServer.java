@@ -6,12 +6,10 @@ import org.springframework.stereotype.Component;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
-import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.NumberServerHttpRequest;
-import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
@@ -25,12 +23,13 @@ import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
 import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.loadingtask.request.WmsForLoadingTaskHttpRequest;
 import com.djcps.wms.outorder.request.WmsForOutOrderHttpRequest;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rpc.plugin.http.HTTPResponse;
+
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
+import static com.djcps.wms.commons.utils.HttpResultUtils.*;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class LoadingTaskServer {
     private NumberServerHttpRequest numberServerHttpRequest;
     @Autowired
     private WmsForOutOrderHttpRequest wmsForOutOrderHttpRequest;
-    private Gson gson = new Gson();
+
     /**
      * 获取装车员列表
      * 
@@ -212,7 +211,7 @@ public class LoadingTaskServer {
     	HttpResult result = returnResult(response);
     	return result;
     }
-    
+
     /**
      * 生成出库单数据
      */
@@ -223,7 +222,7 @@ public class LoadingTaskServer {
     	HttpResult result = returnResult(response);
     	return result;
     }
-    
+
     /**
      * 获取统一编号服务的编号
      * @param count
@@ -253,38 +252,13 @@ public class LoadingTaskServer {
 		return result;
     	
     }
-    
+
     public HttpResult getLoadingTableIdByUserId(PartnerInfoBO params) {
-    	String json = gson.toJson(params);
-    	RequestBody rb =RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json);
-    	HTTPResponse response = wmsForLoadingTaskHttpRequest.getLoadingTableIdByUserId(rb);
-    	HttpResult result = returnResult(response);
-    	return result;
-	}
-    
-    /**
-     * 公共返回
-     *
-     * @param httpResponse
-     * @return
-     */
-    private HttpResult returnResult(HTTPResponse httpResponse) {
-        if (httpResponse.isSuccessful()) {
-            try {
-                String body = httpResponse.getBodyString();
-                if (StringUtils.isNotBlank(body)) {
-                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                    return baseResult;
-                }
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        return null;
+        String json = gson.toJson(params);
+        RequestBody rb = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        HTTPResponse response = wmsForLoadingTaskHttpRequest.getLoadingTableIdByUserId(rb);
+        HttpResult result = returnResult(response);
+        return result;
     }
 
-	
-    
-    
 }

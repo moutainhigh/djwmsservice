@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rpc.plugin.http.HTTPResponse;
 
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
+import static com.djcps.wms.commons.utils.HttpResultUtils.*;
 
 /**
  * @author Chengw
@@ -28,7 +30,7 @@ public class DeliveryServer {
     @Autowired
     private WmsForDeliveryHttpRequest wmsForDeliveryHttpRequest;
 
-    private Gson gson = new Gson();
+    private Gson gson = GsonUtils.gson;
     
     /**
      * 获取提货单列表
@@ -142,29 +144,6 @@ public class DeliveryServer {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForDeliveryHttpRequest.updateDeliveryEffect(requestBody);
         return returnResult(httpResponse);
-
     }
-    /**
-     * 公共返回
-     *
-     * @param httpResponse
-     * @return
-     */
-    private HttpResult returnResult(HTTPResponse httpResponse) {
-        if(httpResponse.isSuccessful()) {
-            try{
-                String body = httpResponse.getBodyString();
-                if(StringUtils.isNotBlank(body)){
-                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                    return baseResult;
-                }
-            }catch(Exception e){
-                LOGGER.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
 
 }

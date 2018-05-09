@@ -41,10 +41,6 @@ public class RoleTypeBO {
      */
     private List<String> typeCodeList;
 
-    private Integer pageSize;
-
-    private Integer pageNo;
-
     public List<String> getTypeCodeList() {
         return typeCodeList;
     }
@@ -101,22 +97,6 @@ public class RoleTypeBO {
         this.list = list;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public Integer getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(Integer pageNo) {
-        this.pageNo = pageNo;
-    }
-
     @Override
     public String toString() {
         return "RoleTypeBO{" +
@@ -127,8 +107,6 @@ public class RoleTypeBO {
                 ", partnerId='" + partnerId + '\'' +
                 ", list=" + list +
                 ", typeCodeList=" + typeCodeList +
-                ", pageSize=" + pageSize +
-                ", pageNo=" + pageNo +
                 '}';
     }
 }

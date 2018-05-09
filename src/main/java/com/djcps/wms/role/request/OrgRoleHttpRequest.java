@@ -24,29 +24,46 @@ public interface OrgRoleHttpRequest {
      * @create 2018/4/12
      **/
     @GET("getRolePerInfo.org")
-    HTTPResponse getRolePerInfo(@QueryMap Map<String,Object> map);
+    HTTPResponse getRolePerInfo(@QueryMap Map<String, Object> map);
+
     /**
      * 修改角色信息
+     *
      * @param map
      * @return
      */
     @FormUrlEncoded
-    @POST("updatePostRoleManage.org") 
-    HTTPResponse updatePostRoleManage(@FieldMap Map<String,Object> map);
+    @POST("updatePostRoleManage.org")
+    HTTPResponse updatePostRoleManage(@FieldMap Map<String, Object> map);
+
     /**
      * 新增角色信息
+     *
      * @param map
      * @return
      */
     @FormUrlEncoded
-    @POST("addPostRoleManage.org") 
-    HTTPResponse addPostRoleManage(@FieldMap Map<String,Object> map);
+    @POST("addPostRoleManage.org")
+    HTTPResponse addPostRoleManage(@FieldMap Map<String, Object> map);
+
     /**
      * 删除角色信息
+     *
      * @param map
      * @return
      */
     @FormUrlEncoded
     @POST("delRoleManage.org")
-    HTTPResponse delRoleManage(@FieldMap Map<String,Object> map);
+    HTTPResponse delRoleManage(@FieldMap Map<String, Object> map);
+
+    /**
+     * org获取用户角色信息
+     *
+     * @param map
+     * @return
+     * @autuor Chengw
+     * @since 2018/5/8  15:15
+     */
+    @GET("getRole.org")
+    HTTPResponse getUserRole(@QueryMap Map<String, Object> map);
 }

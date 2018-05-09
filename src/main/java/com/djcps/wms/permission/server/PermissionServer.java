@@ -184,8 +184,7 @@ public class PermissionServer {
         HTTPResponse http = djorForPermissionHttpRequest.getUserPermission(map);
         HttpResult result = returnHttpResult(http);
         String data = JSONObject.toJSONString(result.getData());
-        List<UserPermissionPO> userPermissionPOList = gson.fromJson(data, new TypeToken<List<UserPermissionPO>>() {
-        }.getType());
+        List<UserPermissionPO> userPermissionPOList = JSONObject.parseArray(data,UserPermissionPO.class);
         return toUserPermissionVO(userPermissionPOList);
     }
 

@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * ORG 获取用户信息
  * @author
  */
-public class OrgGetUserInfoById {
+public class GetOrgUserInfoBO {
 
     /**
      * 合作方id
@@ -88,7 +88,7 @@ public class OrgGetUserInfoById {
 
     @Override
     public String toString() {
-        return "OrgGetUserInfoById{" +
+        return "GetOrgUserInfoBO{" +
                 "operator='" + operator + '\'' +
                 ", ip='" + ip + '\'' +
                 ", business='" + business + '\'' +
