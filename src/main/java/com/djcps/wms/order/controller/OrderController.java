@@ -33,7 +33,7 @@ import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.OrderParamBO;
-import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
+import com.djcps.wms.order.model.offlinepaperboard.OfflineQueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.OnlinePaperboardBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
@@ -135,7 +135,7 @@ public class OrderController {
 	public Map<String, Object> getOffinePaperboardList(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			LOGGER.debug("json : " + json);
-			OffineQueryObjectBO param = gson.fromJson(json, OffineQueryObjectBO.class);
+			OfflineQueryObjectBO param = gson.fromJson(json, OfflineQueryObjectBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			param.setKeyArea(param.getPartnerArea());
@@ -146,13 +146,42 @@ public class OrderController {
 			}
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
-							new HibernateSupportedValidator<OffineQueryObjectBO>()
+							new HibernateSupportedValidator<OfflineQueryObjectBO>()
 									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
 					.doValidate().result(ResultCollectors.toComplex());
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
 			return orderService.getOffinePaperboardList(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	@RequestMapping(name="线下纸箱订单列表接口",value = "/getOffineBoxOrderList", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getOffineBoxOrderList(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			LOGGER.debug("json : " + json);
+			OfflineQueryObjectBO param = gson.fromJson(json, OfflineQueryObjectBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			param.setKeyArea(param.getPartnerArea());
+			if(param.getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+				List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
+						OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+				param.setAllOrderStatus(allOrderStatus);
+			}
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<OfflineQueryObjectBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return orderService.getOffineBoxOrderList(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

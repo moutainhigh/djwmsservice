@@ -18,7 +18,7 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
-import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
+import com.djcps.wms.order.model.offlinepaperboard.OfflineQueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.PaperboardResultDataPO;
@@ -49,16 +49,23 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public Map<String, Object> getOnlinePaperboardList(QueryObjectBO param) {
-		HttpResult onlinePaperResult = orderServer.getOnlinePaperboardList(param);
+		HttpResult result = orderServer.getOnlinePaperboardList(param);
 		//组织订单详情信息和库位信息
-		return getOrderDetailInfoAndStockInfo(onlinePaperResult,param.getPartnerId());
+		return getOrderDetailInfoAndStockInfo(result,param.getPartnerId());
 	}
 	
 	@Override
-	public Map<String, Object> getOffinePaperboardList(OffineQueryObjectBO param) {
-		HttpResult onlinePaperResult = orderServer.getOffinePaperboardList(param);
+	public Map<String, Object> getOffinePaperboardList(OfflineQueryObjectBO param) {
+		HttpResult result = orderServer.getOffinePaperboardList(param);
 		//组织订单详情信息和库位信息
-		return getOrderDetailInfoAndStockInfo(onlinePaperResult,param.getPartnerId());
+		return getOrderDetailInfoAndStockInfo(result,param.getPartnerId());
+	}
+	
+	@Override
+	public Map<String, Object> getOffineBoxOrderList(OfflineQueryObjectBO param) {
+		HttpResult result = orderServer.getOffineBoxOrderList(param);
+		//组织订单详情信息和库位信息
+		return getOrderDetailInfoAndStockInfo(result,param.getPartnerId());
 	}
 	
 	@Override
@@ -99,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 	    }
 	    SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 		BeanUtils.copyProperties(param, selectAreaByOrderId);
-		List<OrderIdBO> list = new ArrayList();
+		List<OrderIdBO> list = new ArrayList<>();
 		OrderIdBO orderIdBO = new OrderIdBO();
 		orderIdBO.setOrderId(param.getOrderIds().get(0));
 		list.add(orderIdBO);
@@ -133,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
 			List<OrderIdBO> orderIdBOList = new ArrayList<OrderIdBO>();
 			for (WarehouseOrderDetailPO onlinePaperboardPO : paperResultData.getContent()) {
 				OrderIdBO orderIdBO = new OrderIdBO();
-				orderIdBO.setOrderId(onlinePaperboardPO.getChildOrderId());
+				orderIdBO.setOrderId(onlinePaperboardPO.getOrderId());
 				orderIdBOList.add(orderIdBO);
 			}
 			selectAreaByOrderId.setOrderIds(orderIdBOList);

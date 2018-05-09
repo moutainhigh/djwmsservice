@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  * @author:zdx
  * @date:2018年5月8日
  */
-public class OffineQueryObjectBO implements Serializable{
+public class OfflineQueryObjectBO implements Serializable{
 	
 	private static final long serialVersionUID = -4663390483329978061L;
 
