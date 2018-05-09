@@ -125,6 +125,16 @@ public class AllocationConstant {
     public static final String INTELLIGENT_ALLOCATION="IntelligentAllocation";
     
     /**
+     * redis,智能配货移除订单
+     */
+    public static final String INTELLIGENT_REMOVE_ORDER="IntelligentRemoveOrder";
+    
+    /**
+     * redis,智能配货追加订单
+     */
+    public static final String INTELLIGENT_ADD_ORDER="IntelligentAddOrder";
+    
+    /**
      * redis,智能配货确认配货锁
      */
     public static final String VERIFY_ALLOCATION="verifyAllocation";

@@ -29,6 +29,7 @@ import com.djcps.wms.allocation.model.UpdateOrderRedundantBO;
 import com.djcps.wms.allocation.server.AllocationServer;
 import com.djcps.wms.cancelstock.enums.CancelStockMsgEnum;
 import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -37,12 +38,14 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.record.server.OperationRecordServer;
 import com.djcps.wms.stock.enums.StockMsgEnum;
 import com.djcps.wms.stock.model.AddOrderRedundantBO;
 import com.djcps.wms.stock.model.AddStockBO;
@@ -87,6 +90,9 @@ public class StockServiceImpl implements StockService{
 	@Autowired
 	private WarehouseServer warehouseServer;
 	
+	@Autowired
+    private OperationRecordServer operationRecordServer;
+    
 	private JsonParser jsonParser = new JsonParser();
 	
 	private Gson gson = GsonUtils.gson;
@@ -150,9 +156,36 @@ public class StockServiceImpl implements StockService{
 		HttpResult result = stockServer.getOperationRecord(fromJson);
 		return MsgTemplate.customMsg(result);
 	}
-
+	/**
+	 * 入库操作记录数据处理
+	 * @param param
+	 */
+	public void addStockOperationRecord(AddStockBO param) {
+	    OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
+                param.setRelativeName(info.getPartnerName());
+                //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmountSave());
+                param.setArea(String.valueOf(area));
+            }
+        }
+	}
 	@Override
 	public Map<String, Object> addStock(AddStockBO param) {
+	    //处理操作记录数据
+	    addStockOperationRecord(param);
 		//先判断入库的仓库是否被启用,禁用直接驳回
 		PartnerInfoBO partnerInfoBean = new PartnerInfoBO();
 		BeanUtils.copyProperties(param, partnerInfoBean);
@@ -468,6 +501,26 @@ public class StockServiceImpl implements StockService{
 	
 	@Override
 	public Map<String, Object> moveStock(MoveStockBO param) {
+	    OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
+                param.setRelativeName(info.getPartnerName());
+                //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), Integer.parseInt(param.getAmountSave()));
+                param.setArea(String.valueOf(area));
+            }
+        }
 		HttpResult result = stockServer.moveStock(param);
 		return MsgTemplate.customMsg(result);
 	}
@@ -483,5 +536,5 @@ public class StockServiceImpl implements StockService{
 		HttpResult result = stockServer.getAreaByOrderId(param);
 		return MsgTemplate.customMsg(result);
 	}
-
+	
 }

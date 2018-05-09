@@ -28,7 +28,7 @@ import java.util.Map;
 public class StocktakingOrderServer {
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(StocktakingOrderServer.class);
 
-	private Gson gson = GsonUtils.gson;
+	private Gson gson = new Gson();
 
     @Autowired
     private WmsForStocktakingOrderHttpRequest wmsStocktakingOrderHttpRequest;

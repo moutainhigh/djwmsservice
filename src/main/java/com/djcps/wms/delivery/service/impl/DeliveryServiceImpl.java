@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListPO;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -21,7 +22,11 @@ import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
+import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
+import com.djcps.wms.record.server.OperationRecordServer;
 import com.google.gson.Gson;
 
 import org.springframework.beans.BeanUtils;
@@ -35,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 提货实现类
@@ -54,7 +60,9 @@ public class DeliveryServiceImpl implements DeliveryService {
     private OrderServer orderServer;
     
     private Gson gson = GsonUtils.gson;
-
+    
+    @Autowired
+    private OperationRecordServer operationRecordServer;
     /**
      * 获取提货单列表
      *
@@ -127,6 +135,9 @@ public class DeliveryServiceImpl implements DeliveryService {
      */
     @Override
     public Map<String, Object> completeOrder(SaveDeliveryBO param) {
+        //处理操作记录数据
+        List<OrderOperationRecordPO> list = orderDeliveryOperationInfo(param);
+        param.setList(list);
         HttpResult result = deliveryServer.completeOrder(param);
         if (result.isSuccess()) {
         	List<String> order = new ArrayList<>();
@@ -392,4 +403,51 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         return MsgTemplate.customMsg(result);
     }
+    
+    /**
+     * 订单提货处理操作记录数据
+     * @param param
+     */
+    public List<OrderOperationRecordPO> orderDeliveryOperationInfo(SaveDeliveryBO param) {
+        List<OrderOperationRecordPO> list = new ArrayList<>();
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            OrderList.addAll(orderInfo.getOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+            OrderList.addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(OrderList)) {
+            for(WarehouseOrderDetailPO info : OrderList) {
+                OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+                orderOperationRecordPO.setPartnerId(param.getPartnerId());
+                orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
+                orderOperationRecordPO.setOperator(param.getOperator());
+                orderOperationRecordPO.setOperatorId(param.getOperatorId());
+                orderOperationRecordPO.setWarehouseId(param.getWarehouseId());
+                orderOperationRecordPO.setWarehouseAreaId(param.getWarehouseAreaId());
+                orderOperationRecordPO.setWarehouseLocId(param.getWarehouseLocId());
+              //订单类型后面判断TODO
+                orderOperationRecordPO.setOrderType("2");
+                //处理数据
+                orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
+                orderOperationRecordPO.setRelativeName(info.getProductName());
+                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
+                orderOperationRecordPO.setAmount(param.getRealDeliveryAmount().toString());
+              //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getRealDeliveryAmount());
+                orderOperationRecordPO.setArea(String.valueOf(area));
+                list.add(orderOperationRecordPO);
+            }
+           
+        }
+        return list;
+	}
 }

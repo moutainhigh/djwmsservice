@@ -9,94 +9,108 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
 
 /**
  * 装车优化确认配货合并逻辑对象
+ * 
  * @company:djwms
  * @author:zdx
  * @date:2018年2月4日
  */
-public class MergeModelBO extends BaseAddBO implements Serializable{
+public class MergeModelBO extends BaseAddBO implements Serializable {
 
-	private static final long serialVersionUID = 5391909362682990757L;
-	
-	/**
-	 * 装车优化确认配货
-	 */
-	private List<AgainVerifyAllocationBO> againVerifyAllocation;
-	
-	/**
-	 * 装车优化移除订单
-	 */
-	private MoveOrderPO moveOrder;
-	
-	/**
-	 * 装车优化再次追加订单
-	 */
-	private AgainVerifyAddOrderBO againVerifyAddOrder;
-	
-	/**
-	 * 装车顺序
-	 */
-	private List<SequenceBO> sequenceList;
-	
-	/**
-	 * 智能配货id
-	 */
-	private String allocationId;
-	/**
-	 * 运单号
-	 */
-	@NotBlank
-	private String waybillId;
-	/**
-	 * 提货单号
-	 */
-	private String newDeliveryId;
-	/**
-	 * 装车台id
-	 */
-	private String loadingTableId;
-	/**
-	 * 装车台名称
-	 */
-	private String loadingTableName;
-	/**
-	 * 提货员id
-	 */
-	private String pickerId;
-	/**
-	 * 提货员名称
-	 */
-	private String pickerName;
-	/**
-	 * 提货员联系方式
-	 */
-	private String pickerPhone;
-	
-	/**
-	 * 车牌号
-	 */
-	private String plateNumber;
-	/**
-	 * 装车员id
-	 */
-	private String loadingPersonId;
-	/**
-	 * 装车员名称
-	 */
-	private String loadingPersonName;
-	/**
-	 * 装车员联系方式
-	 */
-	private String loadingPersonPhone;
-	
-	/**
-	 * 区分追加订单处理界面和装车优化界面的标识
-	 */
-	private String flag;
-	
-	public String getFlag() {
+    private static final long serialVersionUID = 5391909362682990757L;
+
+    /**
+     * 装车优化确认配货
+     */
+    private List<AgainVerifyAllocationBO> againVerifyAllocation;
+
+    /**
+     * 装车优化移除订单
+     */
+    private MoveOrderPO moveOrder;
+
+    /**
+     * 装车优化再次追加订单
+     */
+    private AgainVerifyAddOrderBO againVerifyAddOrder;
+
+    /**
+     * 装车顺序
+     */
+    private List<SequenceBO> sequenceList;
+
+    /**
+     * 智能配货id
+     */
+    private String allocationId;
+    /**
+     * 运单号
+     */
+    @NotBlank
+    private String waybillId;
+    /**
+     * 提货单号
+     */
+    private String newDeliveryId;
+    /**
+     * 装车台id
+     */
+    private String loadingTableId;
+    /**
+     * 装车台名称
+     */
+    private String loadingTableName;
+    /**
+     * 提货员id
+     */
+    private String pickerId;
+    /**
+     * 提货员名称
+     */
+    private String pickerName;
+    /**
+     * 提货员联系方式
+     */
+    private String pickerPhone;
+
+    /**
+     * 车牌号
+     */
+    private String plateNumber;
+    /**
+     * 装车员id
+     */
+    private String loadingPersonId;
+    /**
+     * 装车员名称
+     */
+    private String loadingPersonName;
+    /**
+     * 装车员联系方式
+     */
+    private String loadingPersonPhone;
+
+    /**
+     * 区分追加订单处理界面和装车优化界面的标识
+     */
+    private String flag;
+    /**
+     * 操作记录
+     */
+    private List<OrderOperationRecordPO> list;
+
+    public List<OrderOperationRecordPO> getList() {
+        return list;
+    }
+
+    public void setList(List<OrderOperationRecordPO> list) {
+        this.list = list;
+    }
+
+    public String getFlag() {
         return flag;
     }
 
@@ -105,129 +119,132 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
     }
 
     public List<SequenceBO> getSequenceList() {
-		return sequenceList;
-	}
+        return sequenceList;
+    }
 
-	public void setSequenceList(List<SequenceBO> sequenceList) {
-		this.sequenceList = sequenceList;
-	}
-	public String getAllocationId() {
-		return allocationId;
-	}
-	public void setAllocationId(String allocationId) {
-		this.allocationId = allocationId;
-	}
-	public String getNewDeliveryId() {
-		return newDeliveryId;
-	}
+    public void setSequenceList(List<SequenceBO> sequenceList) {
+        this.sequenceList = sequenceList;
+    }
 
-	public void setNewDeliveryId(String newDeliveryId) {
-		this.newDeliveryId = newDeliveryId;
-	}
+    public String getAllocationId() {
+        return allocationId;
+    }
 
-	public List<AgainVerifyAllocationBO> getAgainVerifyAllocation() {
-		return againVerifyAllocation;
-	}
+    public void setAllocationId(String allocationId) {
+        this.allocationId = allocationId;
+    }
 
-	public void setAgainVerifyAllocation(List<AgainVerifyAllocationBO> againVerifyAllocation) {
-		this.againVerifyAllocation = againVerifyAllocation;
-	}
+    public String getNewDeliveryId() {
+        return newDeliveryId;
+    }
 
-	public MoveOrderPO getMoveOrder() {
-		return moveOrder;
-	}
+    public void setNewDeliveryId(String newDeliveryId) {
+        this.newDeliveryId = newDeliveryId;
+    }
 
-	public void setMoveOrder(MoveOrderPO moveOrder) {
-		this.moveOrder = moveOrder;
-	}
+    public List<AgainVerifyAllocationBO> getAgainVerifyAllocation() {
+        return againVerifyAllocation;
+    }
 
-	public AgainVerifyAddOrderBO getAgainVerifyAddOrder() {
-		return againVerifyAddOrder;
-	}
+    public void setAgainVerifyAllocation(List<AgainVerifyAllocationBO> againVerifyAllocation) {
+        this.againVerifyAllocation = againVerifyAllocation;
+    }
 
-	public void setAgainVerifyAddOrder(AgainVerifyAddOrderBO againVerifyAddOrder) {
-		this.againVerifyAddOrder = againVerifyAddOrder;
-	}
+    public MoveOrderPO getMoveOrder() {
+        return moveOrder;
+    }
 
-	public String getWaybillId() {
-		return waybillId;
-	}
+    public void setMoveOrder(MoveOrderPO moveOrder) {
+        this.moveOrder = moveOrder;
+    }
 
-	public void setWaybillId(String waybillId) {
-		this.waybillId = waybillId;
-	}
+    public AgainVerifyAddOrderBO getAgainVerifyAddOrder() {
+        return againVerifyAddOrder;
+    }
 
-	public String getLoadingTableId() {
-		return loadingTableId;
-	}
+    public void setAgainVerifyAddOrder(AgainVerifyAddOrderBO againVerifyAddOrder) {
+        this.againVerifyAddOrder = againVerifyAddOrder;
+    }
 
-	public void setLoadingTableId(String loadingTableId) {
-		this.loadingTableId = loadingTableId;
-	}
+    public String getWaybillId() {
+        return waybillId;
+    }
 
-	public String getLoadingTableName() {
-		return loadingTableName;
-	}
+    public void setWaybillId(String waybillId) {
+        this.waybillId = waybillId;
+    }
 
-	public void setLoadingTableName(String loadingTableName) {
-		this.loadingTableName = loadingTableName;
-	}
+    public String getLoadingTableId() {
+        return loadingTableId;
+    }
 
-	public String getPickerId() {
-		return pickerId;
-	}
+    public void setLoadingTableId(String loadingTableId) {
+        this.loadingTableId = loadingTableId;
+    }
 
-	public void setPickerId(String pickerId) {
-		this.pickerId = pickerId;
-	}
+    public String getLoadingTableName() {
+        return loadingTableName;
+    }
 
-	public String getPickerName() {
-		return pickerName;
-	}
+    public void setLoadingTableName(String loadingTableName) {
+        this.loadingTableName = loadingTableName;
+    }
 
-	public void setPickerName(String pickerName) {
-		this.pickerName = pickerName;
-	}
+    public String getPickerId() {
+        return pickerId;
+    }
 
-	public String getPickerPhone() {
-		return pickerPhone;
-	}
+    public void setPickerId(String pickerId) {
+        this.pickerId = pickerId;
+    }
 
-	public void setPickerPhone(String pickerPhone) {
-		this.pickerPhone = pickerPhone;
-	}
+    public String getPickerName() {
+        return pickerName;
+    }
 
-	public String getPlateNumber() {
-		return plateNumber;
-	}
+    public void setPickerName(String pickerName) {
+        this.pickerName = pickerName;
+    }
 
-	public void setPlateNumber(String plateNumber) {
-		this.plateNumber = plateNumber;
-	}
+    public String getPickerPhone() {
+        return pickerPhone;
+    }
 
-	public String getLoadingPersonId() {
-		return loadingPersonId;
-	}
+    public void setPickerPhone(String pickerPhone) {
+        this.pickerPhone = pickerPhone;
+    }
 
-	public void setLoadingPersonId(String loadingPersonId) {
-		this.loadingPersonId = loadingPersonId;
-	}
+    public String getPlateNumber() {
+        return plateNumber;
+    }
 
-	public String getLoadingPersonName() {
-		return loadingPersonName;
-	}
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
 
-	public void setLoadingPersonName(String loadingPersonName) {
-		this.loadingPersonName = loadingPersonName;
-	}
+    public String getLoadingPersonId() {
+        return loadingPersonId;
+    }
 
-	public String getLoadingPersonPhone() {
-		return loadingPersonPhone;
-	}
+    public void setLoadingPersonId(String loadingPersonId) {
+        this.loadingPersonId = loadingPersonId;
+    }
 
-	public void setLoadingPersonPhone(String loadingPersonPhone) {
-		this.loadingPersonPhone = loadingPersonPhone;
-	}
+    public String getLoadingPersonName() {
+        return loadingPersonName;
+    }
+
+    public void setLoadingPersonName(String loadingPersonName) {
+        this.loadingPersonName = loadingPersonName;
+    }
+
+    public String getLoadingPersonPhone() {
+        return loadingPersonPhone;
+    }
+
+    public void setLoadingPersonPhone(String loadingPersonPhone) {
+        this.loadingPersonPhone = loadingPersonPhone;
+    }
 
     @Override
     public String toString() {
@@ -237,7 +254,7 @@ public class MergeModelBO extends BaseAddBO implements Serializable{
                 + loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
                 + pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", loadingPersonId="
                 + loadingPersonId + ", loadingPersonName=" + loadingPersonName + ", loadingPersonPhone="
-                + loadingPersonPhone + ", flag=" + flag + "]";
+                + loadingPersonPhone + ", flag=" + flag + ", list=" + list + "]";
     }
 
 }

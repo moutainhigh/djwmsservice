@@ -1,24 +1,27 @@
 package com.djcps.wms.abnormal.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
 
 /**
- *	新增异常订单
+ * 新增异常订单
+ * 
  * @company:djwms
  * @author:zdx
  * @date:2018年3月7日
  */
-public class AddAbnormal extends BaseAddBO implements Serializable{
+public class AddAbnormal extends BaseAddBO implements Serializable {
 
-	private static final long serialVersionUID = 3388158413759565152L;
-	
-   /**
+    private static final long serialVersionUID = 3388158413759565152L;
+
+    /**
      * 仓库id
      */
     @NotBlank
@@ -43,173 +46,174 @@ public class AddAbnormal extends BaseAddBO implements Serializable{
     private String productName;
 
     /**
-     *订单数量
+     * 订单数量
      */
     @NotNull
     private Integer amount;
 
     /**
-     *客户名称
+     * 客户名称
      */
     @NotBlank
     private String customerName;
 
     /**
-     *是否拆分 0:正常订单(默认)  1:被拆分订单 2:拆后订单
+     * 是否拆分 0:正常订单(默认) 1:被拆分订单 2:拆后订单
      */
     @NotNull
     private Integer isSplit;
 
     /**
-     *异常环节 1：入库 2：盘点 3：提货
+     * 异常环节 1：入库 2：盘点 3：提货
      */
     @NotBlank
     private String link;
 
     /**
-     *异常原因
+     * 异常原因
      */
     @NotBlank
     private String reason;
 
     /**
-     *异常数量
+     * 异常数量
      */
     @NotNull
     private Integer abnomalAmount;
 
     /**
-     *异常处理结果
+     * 异常处理结果
      */
     private String result;
 
     /**
-     *备注
+     * 备注
      */
     private String remark;
 
     private String loadingTableId;
-    
+
     private String loadingTableName;
-    
-	public String getLoadingTableId() {
-		return loadingTableId;
-	}
 
-	public void setLoadingTableId(String loadingTableId) {
-		this.loadingTableId = loadingTableId;
-	}
+    public String getLoadingTableId() {
+        return loadingTableId;
+    }
 
-	public String getLoadingTableName() {
-		return loadingTableName;
-	}
+    public void setLoadingTableId(String loadingTableId) {
+        this.loadingTableId = loadingTableId;
+    }
 
-	public void setLoadingTableName(String loadingTableName) {
-		this.loadingTableName = loadingTableName;
-	}
+    public String getLoadingTableName() {
+        return loadingTableName;
+    }
 
-	public String getWarehouseId() {
-		return warehouseId;
-	}
+    public void setLoadingTableName(String loadingTableName) {
+        this.loadingTableName = loadingTableName;
+    }
 
-	public void setWarehouseId(String warehouseId) {
-		this.warehouseId = warehouseId;
-	}
+    public String getWarehouseId() {
+        return warehouseId;
+    }
 
-	public String getWarehouseName() {
-		return warehouseName;
-	}
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
-	public void setWarehouseName(String warehouseName) {
-		this.warehouseName = warehouseName;
-	}
+    public String getWarehouseName() {
+        return warehouseName;
+    }
 
-	public String getOrderId() {
-		return orderId;
-	}
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
+    public String getOrderId() {
+        return orderId;
+    }
 
-	public String getProductName() {
-		return productName;
-	}
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
+    public String getProductName() {
+        return productName;
+    }
 
-	public Integer getAmount() {
-		return amount;
-	}
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-	public void setAmount(Integer amount) {
-		this.amount = amount;
-	}
+    public Integer getAmount() {
+        return amount;
+    }
 
-	public String getCustomerName() {
-		return customerName;
-	}
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
 
-	public void setCustomerName(String customerName) {
-		this.customerName = customerName;
-	}
-	public Integer getIsSplit() {
-		return isSplit;
-	}
+    public String getCustomerName() {
+        return customerName;
+    }
 
-	public void setIsSplit(Integer isSplit) {
-		this.isSplit = isSplit;
-	}
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
-	public String getLink() {
-		return link;
-	}
+    public Integer getIsSplit() {
+        return isSplit;
+    }
 
-	public void setLink(String link) {
-		this.link = link;
-	}
+    public void setIsSplit(Integer isSplit) {
+        this.isSplit = isSplit;
+    }
 
-	public String getReason() {
-		return reason;
-	}
+    public String getLink() {
+        return link;
+    }
 
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
+    public void setLink(String link) {
+        this.link = link;
+    }
 
-	public Integer getAbnomalAmount() {
-		return abnomalAmount;
-	}
+    public String getReason() {
+        return reason;
+    }
 
-	public void setAbnomalAmount(Integer abnomalAmount) {
-		this.abnomalAmount = abnomalAmount;
-	}
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
 
-	public String getResult() {
-		return result;
-	}
+    public Integer getAbnomalAmount() {
+        return abnomalAmount;
+    }
 
-	public void setResult(String result) {
-		this.result = result;
-	}
+    public void setAbnomalAmount(Integer abnomalAmount) {
+        this.abnomalAmount = abnomalAmount;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getResult() {
+        return result;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setResult(String result) {
+        this.result = result;
+    }
 
-	@Override
-	public String toString() {
-		return "AddAbnormal [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", orderId=" + orderId
-				+ ", productName=" + productName + ", amount=" + amount + ", customerName=" + customerName
-				+ ", isSplit=" + isSplit + ", link=" + link + ", reason=" + reason + ", abnomalAmount=" + abnomalAmount
-				+ ", result=" + result + ", remark=" + remark + ", loadingTableId=" + loadingTableId
-				+ ", loadingTableName=" + loadingTableName + "]";
-	}
-    
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Override
+    public String toString() {
+        return "AddAbnormal [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", orderId=" + orderId
+                + ", productName=" + productName + ", amount=" + amount + ", customerName=" + customerName
+                + ", isSplit=" + isSplit + ", link=" + link + ", reason=" + reason + ", abnomalAmount=" + abnomalAmount
+                + ", result=" + result + ", remark=" + remark + ", loadingTableId=" + loadingTableId
+                + ", loadingTableName=" + loadingTableName + "]";
+    }
+
 }

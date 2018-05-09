@@ -24,6 +24,7 @@ import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
@@ -62,6 +63,8 @@ import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.push.mq.producer.AppProducer;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
+import com.djcps.wms.record.server.OperationRecordServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
@@ -85,11 +88,14 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
     @Autowired
     private AbnormalServer abnormalServer;
+    
     @Resource
     private AppProducer appProducer;
     
     private Gson gson = GsonUtils.gson;
-
+    
+    @Autowired
+    private OperationRecordServer operationRecordServer;
     /**
      * 获取装车员列表
      *
@@ -215,6 +221,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             .filter(amount -> info.getOrderId().equals(map.get(amount.getOrderId())))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
+                    
                 });
                 confirmPO.setOrderInfo(orderInfo);
             }
@@ -254,6 +261,9 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
      */
     @Override
     public Map<String, Object> loading(LoadingBO param) {
+		//处理操作记录数据
+        List<OrderOperationRecordPO> orderOperationRecordInfo = orderOperationRecordInfo(param);
+        param.setList(orderOperationRecordInfo);
         List<String> childOrderIds = new ArrayList<String>();
         childOrderIds.add(param.getOrderId());
         OrderIdsBO orderIdsBO = new OrderIdsBO();
@@ -288,15 +298,10 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             }
         }
 
-        if (!ObjectUtils.isEmpty(param)) {
             Integer loadingAmount = param.getLoadingAmount();
             Integer orderAmount = param.getOrderAmount();
-            if (!orderAmount.equals(loadingAmount)) {
-                param.setOnceOrderid(
-                        new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_1).toString());
-                param.setTwiceOrderid(
-                        new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_2).toString());
-                if (!ObjectUtils.isEmpty(loadingAmount)) {
+            //if (!orderAmount.equals(loadingAmount)) {
+            if(!param.getRealDeliveryAmount().equals(loadingAmount)) {
                     // 全部退库
                     if (loadingAmount == 0) {
                         param.setCancelStockAmount(orderAmount);
@@ -326,6 +331,13 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             return MsgTemplate.customMsg(result);
                         }
                     } else {
+                        param.setOnceOrderid(
+                                new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_1).toString());
+                        param.setTwiceOrderid(
+                                new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_2).toString());
+                        //组合订单拆单操作记录数据
+                        List<OrderOperationRecordPO> splitOrder = SplitOrderOperationInfo(param);
+                        param.setSplitOrder(splitOrder);
                         // 部分退库
                         param.setCancelStockAmount(orderAmount - loadingAmount);
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
@@ -392,9 +404,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             return MsgTemplate.customMsg(result);
                         }
                     }
-                }
             }
-        }
         HttpResult result = loadingTaskServer.loading(param);
         if (result.isSuccess()) {
             List<OrderIdBO> orderIdBOList = new ArrayList<>();
@@ -685,5 +695,91 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         HttpResult result = loadingTaskServer.getLoadingTableIdByUserId(partnerInfoBO);
         return MsgTemplate.customMsg(result);
     }
-
+	
+	/**
+     * 处理操作记录数据
+     * @param param
+     */
+    public List<OrderOperationRecordPO> orderOperationRecordInfo(LoadingBO param) {
+        List<OrderOperationRecordPO> list = new ArrayList<>();
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            OrderList.addAll(orderInfo.getOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+            OrderList.addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(OrderList)) {
+            for(WarehouseOrderDetailPO info : OrderList) {
+                OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+                orderOperationRecordPO.setPartnerId(param.getPartnerId());
+                orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
+                orderOperationRecordPO.setOperator(param.getOperator());
+                orderOperationRecordPO.setOperatorId(param.getOperatorId());
+              //订单类型后面判断TODO
+                orderOperationRecordPO.setOrderType("2");
+                //处理数据
+                orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
+                orderOperationRecordPO.setRelativeName(info.getProductName());
+                orderOperationRecordPO.setRelativeId(param.getOrderId());
+                orderOperationRecordPO.setAmount(param.getLoadingAmount().toString());
+              //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getLoadingAmount());
+                orderOperationRecordPO.setArea(String.valueOf(area));
+                list.add(orderOperationRecordPO);
+            }
+           
+        }
+        return list;
+	}
+    /**
+     * 订单部分退库拆单操作记录数据
+     * @param param
+     */
+    public List<OrderOperationRecordPO> SplitOrderOperationInfo(LoadingBO param) {
+        List<OrderOperationRecordPO> list = new ArrayList<>();
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            OrderList.addAll(orderInfo.getOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+            OrderList.addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(OrderList)) {
+            for(WarehouseOrderDetailPO info : OrderList) {
+                OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
+                orderOperationRecordPO.setPartnerId(param.getPartnerId());
+                orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
+                orderOperationRecordPO.setOperator(param.getOperator());
+                orderOperationRecordPO.setOperatorId(param.getOperatorId());
+              //订单类型后面判断TODO
+                orderOperationRecordPO.setOrderType("2");
+                //处理数据
+                orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
+                orderOperationRecordPO.setRelativeName(info.getProductName());
+                orderOperationRecordPO.setRelativeId(param.getOrderId());
+                orderOperationRecordPO.setAmount(String.valueOf(param.getOrderAmount()-param.getLoadingAmount()));
+              //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getOrderAmount()-param.getLoadingAmount());
+                orderOperationRecordPO.setArea(String.valueOf(area));
+                list.add(orderOperationRecordPO);
+            }
+           
+        }
+        return list;
+	}
 }

@@ -7,302 +7,307 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
 
 /**
  * 确认配货
+ * 
  * @company:djwms
  * @author:zdx
  * @date:2018年1月22日
  */
-public class VerifyAllocationBO extends BaseAddBO implements Serializable{
+public class VerifyAllocationBO extends BaseAddBO implements Serializable {
 
-	private static final long serialVersionUID = -5147017176184795518L;
-	
-	/**
-	 * 所有的装车顺序
-	 */
-	@NotEmpty
-	private List<SequenceBO> orderIds;
-	
-	/**
-	 * 智能配货id
-	 */
-	private String allocationId;
-	/**
-	 * 确认配货状态
-	 */
-	private String allocationIdEffect;
-	/**
-	 * 确认配货时间
-	 */
-	private String allocationIdEffectTime;
+    private static final long serialVersionUID = -5147017176184795518L;
 
-	/**
-	 * ======================提货单=================================
-	 */
-	
-	/**
-	 * 运单号
-	 */
-	@NotBlank
-	private String waybillId;
-	
-	/**
-	 * 运单创建时间
-	 */
-	private String waybillIdCreateTime;
-	
-	/**
-	 * 提货单号
-	 */
-	@NotBlank
-	private String deliveryId;
-	/**
-	 * 装车台id
-	 */
-	@NotBlank
-	private String loadingTableId;
-	/**
-	 * 装车台名称
-	 */
-	@NotBlank
-	private String loadingTableName;
-	/**
-	 * 提货员id
-	 */
-	@NotBlank
-	private String pickerId;
-	/**
-	 * 提货员名称
-	 */
-	@NotBlank
-	private String pickerName;
-	/**
-	 * 提货员联系方式
-	 */
-	@NotBlank
-	private String pickerPhone;
-	/**
-	 * 车牌号
-	 */
-	@NotBlank
-	private String plateNumber;
-	
-	/**
-	 * 提货单的确认状态
-	 */
-	private String deliveryIdEffect;
-	
-	/**
-	 * 装车员id
-	 */
-	@NotBlank
-	private String loadingPersonId;
-	/**
-	 * 装车员名称
-	 */
-	@NotBlank
-	private String loadingPersonName;
-	/**
-	 * 装车员联系方式
-	 */
-	@NotBlank
-	private String loadingPersonPhone;
-	
-	/**
-	 * 提货单创建时间
-	 */
-	private String deliveryCreateTime;
-	
-	/**
-	 * 司机姓名
-	 */
-	@NotBlank
-	private String driverName;
-	
-	
-	public String getDriverName() {
-		return driverName;
-	}
+    /**
+     * 所有的装车顺序
+     */
+    @NotEmpty
+    private List<SequenceBO> orderIds;
 
-	public void setDriverName(String driverName) {
-		this.driverName = driverName;
-	}
+    /**
+     * 智能配货id
+     */
+    private String allocationId;
+    /**
+     * 确认配货状态
+     */
+    private String allocationIdEffect;
+    /**
+     * 确认配货时间
+     */
+    private String allocationIdEffectTime;
 
-	public String getPickerPhone() {
-		return pickerPhone;
-	}
+    /**
+     * ======================提货单=================================
+     */
 
-	public void setPickerPhone(String pickerPhone) {
-		this.pickerPhone = pickerPhone;
-	}
+    /**
+     * 运单号
+     */
+    @NotBlank
+    private String waybillId;
 
-	public String getLoadingPersonPhone() {
-		return loadingPersonPhone;
-	}
+    /**
+     * 运单创建时间
+     */
+    private String waybillIdCreateTime;
 
-	public void setLoadingPersonPhone(String loadingPersonPhone) {
-		this.loadingPersonPhone = loadingPersonPhone;
-	}
+    /**
+     * 提货单号
+     */
+    @NotBlank
+    private String deliveryId;
+    /**
+     * 装车台id
+     */
+    @NotBlank
+    private String loadingTableId;
+    /**
+     * 装车台名称
+     */
+    @NotBlank
+    private String loadingTableName;
+    /**
+     * 提货员id
+     */
+    @NotBlank
+    private String pickerId;
+    /**
+     * 提货员名称
+     */
+    @NotBlank
+    private String pickerName;
+    /**
+     * 提货员联系方式
+     */
+    @NotBlank
+    private String pickerPhone;
+    /**
+     * 车牌号
+     */
+    @NotBlank
+    private String plateNumber;
 
-	public String getWaybillIdCreateTime() {
-		return waybillIdCreateTime;
-	}
+    /**
+     * 提货单的确认状态
+     */
+    private String deliveryIdEffect;
 
-	public String getDeliveryCreateTime() {
-		return deliveryCreateTime;
-	}
+    /**
+     * 装车员id
+     */
+    @NotBlank
+    private String loadingPersonId;
+    /**
+     * 装车员名称
+     */
+    @NotBlank
+    private String loadingPersonName;
+    /**
+     * 装车员联系方式
+     */
+    @NotBlank
+    private String loadingPersonPhone;
 
-	public void setDeliveryCreateTime(String deliveryCreateTime) {
-		this.deliveryCreateTime = deliveryCreateTime;
-	}
+    /**
+     * 提货单创建时间
+     */
+    private String deliveryCreateTime;
 
-	public void setWaybillIdCreateTime(String waybillIdCreateTime) {
-		this.waybillIdCreateTime = waybillIdCreateTime;
-	}
-	public List<SequenceBO> getOrderIds() {
-		return orderIds;
-	}
+    /**
+     * 司机姓名
+     */
+    @NotBlank
+    private String driverName;
+    /**
+     * 操作记录信息
+     */
+    private List<OrderOperationRecordPO> list;
+    /**
+     * 仓库编号
+     */
+    private String warehouseId;
 
-	public void setOrderIds(List<SequenceBO> orderIds) {
-		this.orderIds = orderIds;
-	}
+    public String getWarehouseId() {
+        return warehouseId;
+    }
 
-	public String getAllocationId() {
-		return allocationId;
-	}
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
 
-	public void setAllocationId(String allocationId) {
-		this.allocationId = allocationId;
-	}
+    public List<OrderOperationRecordPO> getList() {
+        return list;
+    }
 
+    public void setList(List<OrderOperationRecordPO> list) {
+        this.list = list;
+    }
 
-	public String getAllocationIdEffect() {
-		return allocationIdEffect;
-	}
+    public String getDriverName() {
+        return driverName;
+    }
 
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
 
-	public void setAllocationIdEffect(String allocationIdEffect) {
-		this.allocationIdEffect = allocationIdEffect;
-	}
+    public String getPickerPhone() {
+        return pickerPhone;
+    }
 
+    public void setPickerPhone(String pickerPhone) {
+        this.pickerPhone = pickerPhone;
+    }
 
-	public String getAllocationIdEffectTime() {
-		return allocationIdEffectTime;
-	}
+    public String getLoadingPersonPhone() {
+        return loadingPersonPhone;
+    }
 
+    public void setLoadingPersonPhone(String loadingPersonPhone) {
+        this.loadingPersonPhone = loadingPersonPhone;
+    }
 
-	public void setAllocationIdEffectTime(String allocationIdEffectTime) {
-		this.allocationIdEffectTime = allocationIdEffectTime;
-	}
+    public String getWaybillIdCreateTime() {
+        return waybillIdCreateTime;
+    }
 
+    public String getDeliveryCreateTime() {
+        return deliveryCreateTime;
+    }
 
-	public String getWaybillId() {
-		return waybillId;
-	}
+    public void setDeliveryCreateTime(String deliveryCreateTime) {
+        this.deliveryCreateTime = deliveryCreateTime;
+    }
 
+    public void setWaybillIdCreateTime(String waybillIdCreateTime) {
+        this.waybillIdCreateTime = waybillIdCreateTime;
+    }
 
-	public void setWaybillId(String waybillId) {
-		this.waybillId = waybillId;
-	}
+    public List<SequenceBO> getOrderIds() {
+        return orderIds;
+    }
 
+    public void setOrderIds(List<SequenceBO> orderIds) {
+        this.orderIds = orderIds;
+    }
 
-	public String getDeliveryId() {
-		return deliveryId;
-	}
+    public String getAllocationId() {
+        return allocationId;
+    }
 
+    public void setAllocationId(String allocationId) {
+        this.allocationId = allocationId;
+    }
 
-	public void setDeliveryId(String deliveryId) {
-		this.deliveryId = deliveryId;
-	}
+    public String getAllocationIdEffect() {
+        return allocationIdEffect;
+    }
 
+    public void setAllocationIdEffect(String allocationIdEffect) {
+        this.allocationIdEffect = allocationIdEffect;
+    }
 
-	public String getLoadingTableId() {
-		return loadingTableId;
-	}
+    public String getAllocationIdEffectTime() {
+        return allocationIdEffectTime;
+    }
 
+    public void setAllocationIdEffectTime(String allocationIdEffectTime) {
+        this.allocationIdEffectTime = allocationIdEffectTime;
+    }
 
-	public void setLoadingTableId(String loadingTableId) {
-		this.loadingTableId = loadingTableId;
-	}
+    public String getWaybillId() {
+        return waybillId;
+    }
 
-	public String getLoadingTableName() {
-		return loadingTableName;
-	}
+    public void setWaybillId(String waybillId) {
+        this.waybillId = waybillId;
+    }
 
-	public void setLoadingTableName(String loadingTableName) {
-		this.loadingTableName = loadingTableName;
-	}
+    public String getDeliveryId() {
+        return deliveryId;
+    }
 
-	public String getPickerId() {
-		return pickerId;
-	}
+    public void setDeliveryId(String deliveryId) {
+        this.deliveryId = deliveryId;
+    }
 
+    public String getLoadingTableId() {
+        return loadingTableId;
+    }
 
-	public void setPickerId(String pickerId) {
-		this.pickerId = pickerId;
-	}
+    public void setLoadingTableId(String loadingTableId) {
+        this.loadingTableId = loadingTableId;
+    }
 
+    public String getLoadingTableName() {
+        return loadingTableName;
+    }
 
-	public String getPickerName() {
-		return pickerName;
-	}
+    public void setLoadingTableName(String loadingTableName) {
+        this.loadingTableName = loadingTableName;
+    }
 
+    public String getPickerId() {
+        return pickerId;
+    }
 
-	public void setPickerName(String pickerName) {
-		this.pickerName = pickerName;
-	}
+    public void setPickerId(String pickerId) {
+        this.pickerId = pickerId;
+    }
 
+    public String getPickerName() {
+        return pickerName;
+    }
 
-	public String getPlateNumber() {
-		return plateNumber;
-	}
+    public void setPickerName(String pickerName) {
+        this.pickerName = pickerName;
+    }
 
+    public String getPlateNumber() {
+        return plateNumber;
+    }
 
-	public void setPlateNumber(String plateNumber) {
-		this.plateNumber = plateNumber;
-	}
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
 
+    public String getDeliveryIdEffect() {
+        return deliveryIdEffect;
+    }
 
-	public String getDeliveryIdEffect() {
-		return deliveryIdEffect;
-	}
+    public void setDeliveryIdEffect(String deliveryIdEffect) {
+        this.deliveryIdEffect = deliveryIdEffect;
+    }
 
+    public String getLoadingPersonId() {
+        return loadingPersonId;
+    }
 
-	public void setDeliveryIdEffect(String deliveryIdEffect) {
-		this.deliveryIdEffect = deliveryIdEffect;
-	}
+    public void setLoadingPersonId(String loadingPersonId) {
+        this.loadingPersonId = loadingPersonId;
+    }
 
+    public String getLoadingPersonName() {
+        return loadingPersonName;
+    }
 
-	public String getLoadingPersonId() {
-		return loadingPersonId;
-	}
+    public void setLoadingPersonName(String loadingPersonName) {
+        this.loadingPersonName = loadingPersonName;
+    }
 
+    @Override
+    public String toString() {
+        return "VerifyAllocationBO [orderIds=" + orderIds + ", allocationId=" + allocationId + ", allocationIdEffect="
+                + allocationIdEffect + ", allocationIdEffectTime=" + allocationIdEffectTime + ", waybillId=" + waybillId
+                + ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingTableId="
+                + loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
+                + pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
+                + deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
+                + ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime
+                + ", driverName=" + driverName + ", list=" + list + ", warehouseId=" + warehouseId + "]";
+    }
 
-	public void setLoadingPersonId(String loadingPersonId) {
-		this.loadingPersonId = loadingPersonId;
-	}
-
-
-	public String getLoadingPersonName() {
-		return loadingPersonName;
-	}
-
-
-	public void setLoadingPersonName(String loadingPersonName) {
-		this.loadingPersonName = loadingPersonName;
-	}
-
-	@Override
-	public String toString() {
-		return "VerifyAllocationBO [orderIds=" + orderIds + ", allocationId=" + allocationId + ", allocationIdEffect="
-				+ allocationIdEffect + ", allocationIdEffectTime=" + allocationIdEffectTime + ", waybillId=" + waybillId
-				+ ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingTableId="
-				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
-				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
-				+ deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
-				+ ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime
-				+ ", driverName=" + driverName + "]";
-	}
-	
 }

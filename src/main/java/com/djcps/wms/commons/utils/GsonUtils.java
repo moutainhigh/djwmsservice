@@ -14,7 +14,7 @@ public class GsonUtils {
      */
     public static Gson gson = new GsonBuilder().serializeNulls().create();
     
-    
+     
     /**
      * gson 转换静态类
      */

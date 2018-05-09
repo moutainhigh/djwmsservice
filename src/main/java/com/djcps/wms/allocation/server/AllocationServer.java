@@ -54,7 +54,7 @@ public class AllocationServer {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServer.class);	
 	
-	private Gson gson = GsonUtils.gson;
+	private Gson gson = new Gson();
 	
 	@Autowired
 	private WmsForAllocationHttpRequest allocationHttpRequest;

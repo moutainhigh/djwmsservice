@@ -2,6 +2,8 @@ package com.djcps.wms.stocktaking.model;
 
 import java.util.List;
 
+import com.djcps.wms.commons.base.BaseAddBO;
+
 /**
  * @title:保存盘点任务
  * @description:
@@ -9,32 +11,17 @@ import java.util.List;
  * @company:djwms
  * @create:2018/1/14
  **/
-public class SaveStocktakingTaskBO {
+public class SaveStocktakingTaskBO extends BaseAddBO {
 
     /**
      * 保存盘点类型1，2，3(只保存，保存并打印，保存并发起推送)
      */
     private Integer saveStocktakingType;
 
-    /** 作业单号
-    */
+    /**
+     * 作业单号
+     */
     private String jobId;
-
-    /**
-     * 合作方编号
-     */
-    private String partnerId;
-
-    /**
-     * 合作方名称
-     */
-    private String partnerName;
-
-    /**
-     * 合作方区域
-     */
-    private String partnerArea;
-
     /**
      * 盘点类型
      */
@@ -82,153 +69,117 @@ public class SaveStocktakingTaskBO {
      */
     private List<SaveStocktakingOrderInfoBO> stocktakingOrderInfo;
 
-    public String getPartnerArea() {
-        return partnerArea;
-    }
-
-    public void setPartnerArea(String partnerArea) {
-        this.partnerArea = partnerArea;
-    }
-
-    public String getPartnerName() {
-        return partnerName;
-    }
-
-    public void setPartnerName(String partnerName) {
-        this.partnerName = partnerName;
-    }
-
-    public String getPartnerId() {
-        return partnerId;
-    }
-
-    public void setPartnerId(String partnerId) {
-        this.partnerId = partnerId;
+    public Integer getSaveStocktakingType() {
+        return saveStocktakingType;
     }
 
     public String getJobId() {
         return jobId;
     }
 
-    public void setJobId(String jobId) {
-        this.jobId = jobId;
-    }
-
     public Integer getType() {
         return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
     }
 
     public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Integer getPdaStatus() {
         return pdaStatus;
-    }
-
-    public void setPdaStatus(Integer pdaStatus) {
-        this.pdaStatus = pdaStatus;
     }
 
     public String getCreator() {
         return creator;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
     public String getCreatorId() {
         return creatorId;
-    }
-
-    public void setCreatorId(String creatorId) {
-        this.creatorId = creatorId;
     }
 
     public String getInventoryClerk() {
         return inventoryClerk;
     }
 
-    public void setInventoryClerk(String inventoryClerk) {
-        this.inventoryClerk = inventoryClerk;
-    }
-
     public String getInventoryClerkId() {
         return inventoryClerkId;
-    }
-
-    public void setInventoryClerkId(String inventoryClerkId) {
-        this.inventoryClerkId = inventoryClerkId;
     }
 
     public String getRemark() {
         return remark;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public List<SaveStocktakingOrderInfoBO> getStocktakingOrderInfo() {
-        return stocktakingOrderInfo;
-    }
-
-    public void setStocktakingOrderInfo(List<SaveStocktakingOrderInfoBO> stocktakingOrderInfo) {
-        this.stocktakingOrderInfo = stocktakingOrderInfo;
-    }
-
     public String getWarehouseId() {
         return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
     }
 
     public String getWarehouseName() {
         return warehouseName;
     }
 
-    public void setWarehouseName(String warehouseName) {
-        this.warehouseName = warehouseName;
-    }
-
-    public Integer getSaveStocktakingType() {
-        return saveStocktakingType;
+    public List<SaveStocktakingOrderInfoBO> getStocktakingOrderInfo() {
+        return stocktakingOrderInfo;
     }
 
     public void setSaveStocktakingType(Integer saveStocktakingType) {
         this.saveStocktakingType = saveStocktakingType;
     }
 
+    public void setJobId(String jobId) {
+        this.jobId = jobId;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public void setPdaStatus(Integer pdaStatus) {
+        this.pdaStatus = pdaStatus;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
+    public void setInventoryClerk(String inventoryClerk) {
+        this.inventoryClerk = inventoryClerk;
+    }
+
+    public void setInventoryClerkId(String inventoryClerkId) {
+        this.inventoryClerkId = inventoryClerkId;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public void setWarehouseId(String warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public void setStocktakingOrderInfo(List<SaveStocktakingOrderInfoBO> stocktakingOrderInfo) {
+        this.stocktakingOrderInfo = stocktakingOrderInfo;
+    }
+
     @Override
     public String toString() {
-        return "SaveStocktakingTaskBO{" +
-                "saveStocktakingType=" + saveStocktakingType +
-                ", jobId='" + jobId + '\'' +
-                ", partnerId='" + partnerId + '\'' +
-                ", partnerName='" + partnerName + '\'' +
-                ", partnerArea='" + partnerArea + '\'' +
-                ", type=" + type +
-                ", status=" + status +
-                ", pdaStatus=" + pdaStatus +
-                ", creator='" + creator + '\'' +
-                ", creatorId='" + creatorId + '\'' +
-                ", inventoryClerk='" + inventoryClerk + '\'' +
-                ", inventoryClerkId='" + inventoryClerkId + '\'' +
-                ", remark='" + remark + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", stocktakingOrderInfo=" + stocktakingOrderInfo +
-                '}';
+        return "SaveStocktakingTaskBO [saveStocktakingType=" + saveStocktakingType + ", jobId=" + jobId + ", type="
+                + type + ", status=" + status + ", pdaStatus=" + pdaStatus + ", creator=" + creator + ", creatorId="
+                + creatorId + ", inventoryClerk=" + inventoryClerk + ", inventoryClerkId=" + inventoryClerkId
+                + ", remark=" + remark + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName
+                + ", stocktakingOrderInfo=" + stocktakingOrderInfo + "]";
     }
+
 }

@@ -47,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
      **/
     @Override
     public Map<String, Object> roleList(RoleListBO roleListBO) {
-        roleListBO.setCompanyID(roleListBO.getCompanyId());
+        roleListBO.setCompanyID(roleListBO.getPartnerId());
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         // 从wms服务获取角色关联信息
         RoleInfoResultPO wmsRoleInfo = roleHttpServer.roleList(roleListBO);
@@ -55,14 +55,10 @@ public class RoleServiceImpl implements RoleService {
             BeanUtils.copyProperties(roleListBO, orgRoleInfoBO);
             for (WmsRoleInfoPO roleId : wmsRoleInfo.getResult()) {
                 orgRoleInfoBO.setId(roleId.getRoleId());
-                // 通过角色id从org获取角色信息
+                //通过角色id从org获取角色信息
                 List<OrgRoleListPO> orgRoleInfo = orgRoleHttpServer.getRoleFromId(orgRoleInfoBO);
-                if (ObjectUtils.isEmpty(orgRoleInfo)) {
-
-                    return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
-                }
                 List<WmsPessionInfoPO> list = new ArrayList<WmsPessionInfoPO>();
-
+                if(!ObjectUtils.isEmpty(orgRoleInfo)) {
                 // 进行数据组合
                 if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
                     roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
@@ -77,6 +73,7 @@ public class RoleServiceImpl implements RoleService {
                         }
                         roleId.setPerssions(list);
                     }
+                }
                 }
             }
         }
@@ -93,8 +90,8 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Map<String, Object> update(UpdateRoleInfoBO updateRoleInfoBO) {
-        updateRoleInfoBO.setOid(updateRoleInfoBO.getCompanyId());
-        updateRoleInfoBO.setCompanyID(updateRoleInfoBO.getCompanyId());
+        updateRoleInfoBO.setOid(updateRoleInfoBO.getPartnerId());
+        updateRoleInfoBO.setCompanyID(updateRoleInfoBO.getPartnerId());
         updateRoleInfoBO.setUserid(updateRoleInfoBO.getOperator());
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         // 更新wms角色关联信息
@@ -132,7 +129,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Map<String, Object> delete(DeleteBO deleteBO) {
-        deleteBO.setCompanyID(deleteBO.getCompanyId());
+        deleteBO.setCompanyID(deleteBO.getPartnerId());
         deleteBO.setUserid(deleteBO.getOperator());
         List<DeleteBO> list = new ArrayList<DeleteBO>();
         HttpResult result = null;
@@ -177,8 +174,8 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Map<String, Object> save(SaveBO saveBO) {
-        saveBO.setOid(saveBO.getCompanyId());
-        saveBO.setCompanyID(saveBO.getCompanyId());
+        saveBO.setOid(saveBO.getPartnerId());
+        saveBO.setCompanyID(saveBO.getPartnerId());
         saveBO.setUserid(saveBO.getOperator());
         saveBO.setRoleType(RoleConstant.SYSTEM);
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();

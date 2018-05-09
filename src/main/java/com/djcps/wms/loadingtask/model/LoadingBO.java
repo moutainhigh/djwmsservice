@@ -1,6 +1,9 @@
 package com.djcps.wms.loadingtask.model;
 
+import java.util.List;
+
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.record.model.OrderOperationRecordPO;
 
 /**
  * 装车信息参数
@@ -57,6 +60,30 @@ public class LoadingBO extends BaseAddBO {
      * 实际提货数量
      */
     private Integer realDeliveryAmount;
+    /**
+     * 订单装车操作记录信息
+     */
+    private List<OrderOperationRecordPO> list;
+    /**
+     * 退库拆单操作记录信息
+     */
+    private List<OrderOperationRecordPO> splitOrder;
+
+    public List<OrderOperationRecordPO> getSplitOrder() {
+        return splitOrder;
+    }
+
+    public void setSplitOrder(List<OrderOperationRecordPO> splitOrder) {
+        this.splitOrder = splitOrder;
+    }
+
+    public List<OrderOperationRecordPO> getList() {
+        return list;
+    }
+
+    public void setList(List<OrderOperationRecordPO> list) {
+        this.list = list;
+    }
 
     public Integer getRealDeliveryAmount() {
         return realDeliveryAmount;
@@ -143,7 +170,7 @@ public class LoadingBO extends BaseAddBO {
         return "LoadingBO [loadingAmount=" + loadingAmount + ", orderAmount=" + orderAmount + ", orderId=" + orderId
                 + ", wayBillId=" + wayBillId + ", status=" + status + ", cancelStockAmount=" + cancelStockAmount
                 + ", cancelType=" + cancelType + ", onceOrderid=" + onceOrderid + ", twiceOrderid=" + twiceOrderid
-                + ", realDeliveryAmount=" + realDeliveryAmount + "]";
+                + ", realDeliveryAmount=" + realDeliveryAmount + ", list=" + list + ", splitOrder=" + splitOrder + "]";
     }
 
 }

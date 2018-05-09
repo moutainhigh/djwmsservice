@@ -83,4 +83,5 @@ public interface DeliveryService {
      * @return
      */
     Map<String,Object> updateDeliveryEffect(UpdateDeliveryEffectBO param);
+
 }

@@ -29,13 +29,16 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.delivery.constant.DeliveryConstant;
+import com.djcps.wms.order.model.ChildOrderBO;
 import com.djcps.wms.order.model.OrderIdBO;
+import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.server.OrderServer;
+import com.djcps.wms.record.server.OperationRecordServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -59,7 +62,8 @@ public class CancelStockServiceImpl implements CancelStockService {
 
 	@Autowired
 	private OrderServer orderServer;
-	
+	@Autowired
+    private OperationRecordServer operationRecordServer;
 	@Override
 	public Map<String, Object> getOrderByOrderId(CancelOrderIdBO param) {
 		HttpResult result = cancelStockServer.getOrderByOrderId(param);
@@ -92,6 +96,28 @@ public class CancelStockServiceImpl implements CancelStockService {
 
 	@Override
 	public Map<String, Object> addStock(AddStockBO param) {
+	    OrderIdsBO orderIdsBO = new OrderIdsBO();
+        List<String> orderIds = new ArrayList<>();
+        orderIds.add(param.getOrderId());
+        orderIdsBO.setChildOrderIds(orderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+      //根据订单编号获取订单信息
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        if(!orderInfo.getSplitOrderList().isEmpty()) {
+        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+                //处理数据
+                param.setFluteType(info.getFluteType());
+                param.setRelativeName(info.getPartnerName());
+                //计算操作面积
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmount());
+                param.setArea(String.valueOf(area));
+            }
+           
+        }
+        
 		CancelOrderIdBO cancelOrderIdBO = new CancelOrderIdBO();
 		BeanUtils.copyProperties(param, cancelOrderIdBO);
 		HttpResult cancelOrderResult = cancelStockServer.getOrderByOrderId(cancelOrderIdBO);
