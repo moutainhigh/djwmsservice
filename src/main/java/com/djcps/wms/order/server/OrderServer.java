@@ -167,7 +167,7 @@ public class OrderServer {
         List<UpdateSplitOrderBO> onlineList = new ArrayList<>();
 		List<UpdateSplitOrderBO> offlineList = new ArrayList<>();
 		for (UpdateSplitOrderBO updateOrderBO : param) {
-			String orderId = updateOrderBO.getOrderId();
+			String orderId = updateOrderBO.getSubOrderId();
 			if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
 				onlineList.add(updateOrderBO);
 	        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1 || orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){

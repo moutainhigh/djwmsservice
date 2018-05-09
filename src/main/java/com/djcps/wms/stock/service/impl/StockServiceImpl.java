@@ -168,18 +168,19 @@ public class StockServiceImpl implements StockService{
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+        List<WarehouseOrderDetailPO> orderList = null;
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())){
+        	orderList = orderInfo.getOrderList();
+        }else{
+        	orderList = orderInfo.getSplitOrderList();
         }
-        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
-                //处理数据
-                param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                param.setRelativeName(info.getPartnerName());
-                //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmountSave());
-                param.setArea(String.valueOf(area));
-            }
+        for(WarehouseOrderDetailPO info : orderList) {
+            //处理数据
+            param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
+            param.setRelativeName(info.getPartnerName());
+            //计算操作面积
+            double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmountSave());
+            param.setArea(String.valueOf(area));
         }
 	}
 	@Override
@@ -289,6 +290,7 @@ public class StockServiceImpl implements StockService{
 				//小于表示部分入库
 				orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
 			}
+			String newSonOrderId = param.getOrderId().substring(0, param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
 			result = stockServer.getInventoryFidByOrderId(param);
 			param.setId((String)result.getData());
 		}
