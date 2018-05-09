@@ -109,7 +109,7 @@ public class OrderController {
 			}else{
 				BeanUtils.copyProperties(partnerInfoBean,param.getQueryObject());
 				param.getQueryObject().setKeyArea(Integer.valueOf(partnerInfoBean.getPartnerArea()));
-				if(param.getQueryObject().getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+				if(param.getQueryObject().getOrderStatus().equals(Integer.valueOf(OrderStatusTypeEnum.All_STATUS.getValue()))){
 					List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
 							OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 					param.getQueryObject().setAllOrderStatus(allOrderStatus);
