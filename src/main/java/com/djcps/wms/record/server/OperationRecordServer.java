@@ -236,15 +236,17 @@ public class OperationRecordServer {
     }
     /**
      * 纸板面积计算
-     * @param length
-     * @param wide
+     * @param length  unit：cm
+     * @param wide    unit：cm
      * @param fluteType
      * @param amount
-     * @return落料长乘落料宽
+     * @return落料长乘落料宽  unit:m2
      */
     public double getVolume(double length, double wide,int amount){
-        BigDecimal lengthBD = new BigDecimal(Double.toString(length));
-        BigDecimal wideBD = new BigDecimal(Double.toString(wide));
+        BigDecimal lengthBD = new BigDecimal(Double.toString(length))
+                              .divide(new BigDecimal(100));
+        BigDecimal wideBD = new BigDecimal(Double.toString(wide))
+                            .divide(new BigDecimal(100));
         BigDecimal amountBD = new BigDecimal(amount);
         return lengthBD.multiply(wideBD).multiply(amountBD).setScale(2, BigDecimal.ROUND_UP).doubleValue();
     }    
