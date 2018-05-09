@@ -30,11 +30,6 @@ public class PartnerInfoBO  extends BaseBO implements Serializable{
 	private String partnerArea;
 	
 	/**
-	 * 合作方区域,就是区域拆分键,因为oms都需要这个字段,所有的话为什么方便映射冗余了这个字段
-	 */
-	private String keyArea;
-	
-	/**
 	 * 操作人id
 	 */
 	private String operatorId;
