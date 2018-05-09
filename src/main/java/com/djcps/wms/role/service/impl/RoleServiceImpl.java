@@ -55,25 +55,25 @@ public class RoleServiceImpl implements RoleService {
             BeanUtils.copyProperties(roleListBO, orgRoleInfoBO);
             for (WmsRoleInfoPO roleId : wmsRoleInfo.getResult()) {
                 orgRoleInfoBO.setId(roleId.getRoleId());
-                //通过角色id从org获取角色信息
+                // 通过角色id从org获取角色信息
                 List<OrgRoleListPO> orgRoleInfo = orgRoleHttpServer.getRoleFromId(orgRoleInfoBO);
-                List<WmsPessionInfoPO> list = new ArrayList<WmsPessionInfoPO>();
-                if(!ObjectUtils.isEmpty(orgRoleInfo)) {
-                // 进行数据组合
-                if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
-                    roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
-                    if (!ObjectUtils.isEmpty(orgRoleInfo.get(0).getPerssions())) {
-                        List<OrgPerssionsInfoPO> info = orgRoleInfo.get(0).getPerssions();
-                        // 替换字段
-                        for (OrgPerssionsInfoPO perssions : info) {
-                            WmsPessionInfoPO wmsPessionInfoPO = new WmsPessionInfoPO();
-                            wmsPessionInfoPO.setId(perssions.getPid());
-                            wmsPessionInfoPO.setTitle(perssions.getPtitle());
-                            list.add(wmsPessionInfoPO);
+                if (!ObjectUtils.isEmpty(orgRoleInfo)) {
+                    List<WmsPermissionInfoPO> list = new ArrayList<WmsPermissionInfoPO>();
+                    // 进行数据组合
+                    if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
+                        roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
+                        if (!ObjectUtils.isEmpty(orgRoleInfo.get(0).getPerssions())) {
+                            List<OrgPerssionsInfoPO> info = orgRoleInfo.get(0).getPerssions();
+                            // 替换字段
+                            for (OrgPerssionsInfoPO perssions : info) {
+                                WmsPermissionInfoPO wmsPermissionInfoPO = new WmsPermissionInfoPO();
+                                wmsPermissionInfoPO.setId(perssions.getPid());
+                                wmsPermissionInfoPO.setTitle(perssions.getPtitle());
+                                list.add(wmsPermissionInfoPO);
+                            }
+                            roleId.setPerssions(list);
                         }
-                        roleId.setPerssions(list);
                     }
-                }
                 }
             }
         }
@@ -168,28 +168,28 @@ public class RoleServiceImpl implements RoleService {
     /**
      * 保存角色信息信息
      * 
-     * @param saveBO
+     * @param saveRoleBO
      * @return
      * @create 2018/4/12
      */
     @Override
-    public Map<String, Object> save(SaveBO saveBO) {
-        saveBO.setOid(saveBO.getPartnerId());
-        saveBO.setCompanyID(saveBO.getPartnerId());
-        saveBO.setUserid(saveBO.getOperator());
-        saveBO.setRoleType(RoleConstant.SYSTEM);
+    public Map<String, Object> save(SaveRoleBO saveRoleBO) {
+        saveRoleBO.setOid(saveRoleBO.getPartnerId());
+        saveRoleBO.setCompanyID(saveRoleBO.getPartnerId());
+        saveRoleBO.setUserid(saveRoleBO.getOperator());
+        saveRoleBO.setRoleType(RoleConstant.SYSTEM);
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
-        BeanUtils.copyProperties(saveBO, orgRoleInfoBO);
-        orgRoleInfoBO.setPid(saveBO.getPerId());
-        orgRoleInfoBO.setRdesc(saveBO.getRoleDesc());
-        orgRoleInfoBO.setRname(saveBO.getRoleName());
-        orgRoleInfoBO.setRtype(saveBO.getRoleType());
+        BeanUtils.copyProperties(saveRoleBO, orgRoleInfoBO);
+        orgRoleInfoBO.setPid(saveRoleBO.getPerId());
+        orgRoleInfoBO.setRdesc(saveRoleBO.getRoleDesc());
+        orgRoleInfoBO.setRname(saveRoleBO.getRoleName());
+        orgRoleInfoBO.setRtype(saveRoleBO.getRoleType());
         // 新增org角色关联信息
-        OrgSavePO orgSavePO = orgRoleHttpServer.addPostRoleManage(orgRoleInfoBO);
+        OrgSaveRolePO orgSaveRolePO = orgRoleHttpServer.addPostRoleManage(orgRoleInfoBO);
         HttpResult save = null;
-        if (!ObjectUtils.isEmpty(orgSavePO)) {
-            saveBO.setRoleId(orgSavePO.getInsertID());
-            save = roleHttpServer.save(saveBO);
+        if (!ObjectUtils.isEmpty(orgSaveRolePO)) {
+            saveRoleBO.setRoleId(orgSaveRolePO.getInsertID());
+            save = roleHttpServer.save(saveRoleBO);
         }
         return MsgTemplate.customMsg(save);
     }

@@ -53,8 +53,8 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public Map<String, Object> getPermissionList(PermissionBO param) {
-        if (ObjectUtils.isEmpty(param.getKeyWord())) {
-            param.setKeyWord("");
+        if (ObjectUtils.isEmpty(param.getKeyword())) {
+            param.setKeyword("");
         }
         GetPermissionBO getPermissionBO = new GetPermissionBO();
         BeanUtils.copyProperties(param, getPermissionBO);

@@ -33,7 +33,7 @@ public class GetPermissionBO implements Serializable{
 	/**
 	 * 关键字
 	 */
-	private String keyWord;
+	private String keyword;
 	/**
 	 * 分页大小
 	 */
@@ -69,13 +69,15 @@ public class GetPermissionBO implements Serializable{
 	public void setPage(String page) {
 		this.page = page;
 	}
-	public String getKeyWord() {
-		return keyWord;
+
+	public String getKeyword() {
+		return keyword;
 	}
-	public void setKeyWord(String keyWord) {
-		this.keyWord = keyWord;
+
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
-	
+
 	public String getPageSize() {
 		return pageSize;
 	}
@@ -85,7 +87,7 @@ public class GetPermissionBO implements Serializable{
 	@Override
 	public String toString() {
 		return "GetPermissionBO [operator=" + operator + ", ip=" + ip + ", business=" + business + ", companyID="
-				+ companyID + ", page=" + page + ", keyWord=" + keyWord + ", pageSize=" + pageSize + "]";
+				+ companyID + ", page=" + page + ", keyword=" + keyword + ", pageSize=" + pageSize + "]";
 	}
 	
 }

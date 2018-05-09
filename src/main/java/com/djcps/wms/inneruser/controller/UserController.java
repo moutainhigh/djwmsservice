@@ -14,7 +14,6 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.inneruser.model.userparam.*;
 import com.djcps.wms.inneruser.service.UserService;
-import com.google.gson.Gson;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -27,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
 
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
+
 /**
  * 用户管理
  * @author:wzy
@@ -35,9 +36,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(UserController.class);
 
-    private Gson gson = new Gson();
+    private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -54,13 +54,13 @@ public class UserController {
     public Map<String, Object> getUser(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try{
             PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
-            OrgGetUserInfoById orgGetUserInfoById=gson.fromJson(json,OrgGetUserInfoById.class);
+            GetOrgUserInfoBO orgGetUserInfoById=gson.fromJson(json,GetOrgUserInfoBO.class);
             orgGetUserInfoById.setId(orgGetUserInfoById.getUserId());
             BeanUtils.copyProperties(operatorInfoBO,orgGetUserInfoById);
             orgGetUserInfoById.setPartnerId(partnerInfoBo.getPartnerId());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(orgGetUserInfoById,
-                            new HibernateSupportedValidator<OrgGetUserInfoById>()
+                            new HibernateSupportedValidator<GetOrgUserInfoBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
@@ -219,7 +219,7 @@ public class UserController {
     public Map<String, Object> getJob(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            GetJobBO getJobBO=gson.fromJson(json, GetJobBO.class);
+            GetJobBO getJobBO = gson.fromJson(json, GetJobBO.class);
             BeanUtils.copyProperties(operatorInfoBO,getJobBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(getJobBO,
@@ -272,18 +272,19 @@ public class UserController {
     public Map<String, Object> getDepartAndJob(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            OrgGetUserInfoById orgGetUserInfoById = gson.fromJson(json, OrgGetUserInfoById.class);
-            orgGetUserInfoById.setOperator(partnerInfoBo.getPartnerId());
-            BeanUtils.copyProperties(operatorInfoBO,orgGetUserInfoById);
+            GetOrgUserInfoBO getOrgUserInfoBO = gson.fromJson(json, GetOrgUserInfoBO.class);
+            getOrgUserInfoBO.setOperator(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, getOrgUserInfoBO);
+            getOrgUserInfoBO.setPartnerId(operatorInfoBO.getBusiness());
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(orgGetUserInfoById,
-                            new HibernateSupportedValidator<OrgGetUserInfoById>()
+                    .on(getOrgUserInfoBO,
+                            new HibernateSupportedValidator<GetOrgUserInfoBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return userService.getDepartAndJob(orgGetUserInfoById);
+            return userService.getDepartAndJob(getOrgUserInfoBO);
         } catch (Exception e) {
             LOGGER.error("获取用户部门职位和所有部门职位职务信息异常：{} ", e.getMessage());
             e.printStackTrace();

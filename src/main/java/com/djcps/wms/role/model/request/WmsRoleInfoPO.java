@@ -37,7 +37,7 @@ public class WmsRoleInfoPO implements Serializable {
     /**
      * 权限信息
      */
-    private List<WmsPessionInfoPO> perssions;
+    private List<WmsPermissionInfoPO> perssions;
 
     public String getRoleId() {
         return roleId;
@@ -79,11 +79,11 @@ public class WmsRoleInfoPO implements Serializable {
         this.roleDesc = roleDesc;
     }
 
-    public List<WmsPessionInfoPO> getPerssions() {
+    public List<WmsPermissionInfoPO> getPerssions() {
         return perssions;
     }
 
-    public void setPerssions(List<WmsPessionInfoPO> perssions) {
+    public void setPerssions(List<WmsPermissionInfoPO> perssions) {
         this.perssions = perssions;
     }
 

@@ -40,7 +40,7 @@ public interface OrderService {
 	 * @author:zdx
 	 * @date:2018年4月23日
 	 */
-	Map<String, Object> getOnlinePaperboardByOrderId(BatchOrderIdListBO param);
+	Map<String, Object> getOrderByOrderId(BatchOrderIdListBO param);
 
 	/**
 	 * 查询线下纸板订单

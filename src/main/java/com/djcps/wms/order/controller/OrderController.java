@@ -77,7 +77,7 @@ public class OrderController {
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
-			return orderService.getOnlinePaperboardByOrderId(param);
+			return orderService.getOrderByOrderId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

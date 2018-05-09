@@ -21,6 +21,8 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rpc.plugin.http.HTTPResponse;
 
+import static com.djcps.wms.commons.utils.HttpResultUtils.*;
+
 /**
  * @author  wyb
  * @since 2018/3/19
@@ -94,28 +96,6 @@ public class LoaderManageHttpServer {
         HTTPResponse httpResponse = loaderManageHttpRequest.loaderList(requestBody);
         return returnResult(httpResponse);
 
-    }
-
-    /**
-     * 公共返回
-     *
-     * @param httpResponse
-     * @return
-     */
-    private HttpResult returnResult(HTTPResponse httpResponse) {
-        if (httpResponse.isSuccessful()) {
-            try {
-                String body = httpResponse.getBodyString();
-                if (StringUtils.isNotBlank(body)) {
-                    HttpResult baseResult = gson.fromJson(body, HttpResult.class);
-                    return baseResult;
-                }
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 
 }
