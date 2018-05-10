@@ -8,6 +8,7 @@ import com.djcps.wms.abnormal.model.AddAbnormal;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.model.UpdateAbnormalBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.FluteTypeEnum;
 import com.djcps.wms.commons.enums.FluteTypeEnum1;
@@ -229,7 +230,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      * @create  2018/1/11 15:07
      **/
     @Override
-    public Map<String, Object> getInventoryclerk() {
+    public Map<String, Object> getInventoryclerk(BaseAddBO param) {
        List<InventoryClerkBO> list=new ArrayList<InventoryClerkBO>();
        InventoryClerkBO inventoryClerkBO=new InventoryClerkBO();
         inventoryClerkBO.setInventoryClerk("吴智勇");
@@ -243,10 +244,14 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         InventoryClerkBO inventoryClerkBO4=new InventoryClerkBO();
         inventoryClerkBO4.setInventoryClerk("东城周德星");
         inventoryClerkBO4.setInventoryClerkId("fedafb813d254ed19a4617f1e633773e");
+        InventoryClerkBO inventoryClerkBO5=new InventoryClerkBO();
+        inventoryClerkBO5.setInventoryClerkId(param.getOperatorId());
+        inventoryClerkBO5.setInventoryClerk(param.getOperator());
         list.add(inventoryClerkBO);
         list.add(inventoryClerkBO2);
         list.add(inventoryClerkBO3);
         list.add(inventoryClerkBO4);
+        list.add(inventoryClerkBO5);
         return MsgTemplate.successMsg(list);
     }
 

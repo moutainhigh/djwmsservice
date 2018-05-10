@@ -1,5 +1,6 @@
 package com.djcps.wms.stocktaking.service;
 
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.stocktaking.model.*;
 
@@ -48,7 +49,7 @@ public interface StocktakingTaskService {
      * @return
      * @create  2018/1/11 15:07
      **/
-    Map<String,Object> getInventoryclerk();
+    Map<String,Object> getInventoryclerk(BaseAddBO param);
 
     /**
      * 获取随机编码生成作业单号

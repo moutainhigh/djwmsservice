@@ -7,6 +7,7 @@ import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.log.AddLog;
+import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -173,7 +174,10 @@ public class StocktakingTaskController {
      **/
     @RequestMapping(name="获取可用盘点人员集合",value = "/getInventoryclerk", method = RequestMethod.POST, produces = "application/json")
     public Map<String, Object> getInventoryclerk(@RequestBody(required = false) String json, HttpServletRequest request){
-        return stocktakingTaskService.getInventoryclerk();
+        BaseAddBO param = new BaseAddBO();
+        PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+        BeanUtils.copyProperties(partnerInfoBean,param);
+        return stocktakingTaskService.getInventoryclerk(param);
     }
 
     /**
