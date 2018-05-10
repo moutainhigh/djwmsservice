@@ -332,44 +332,6 @@ public class UserServer {
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.addPostUserInfo(map);
         return HttpResultUtils.returnResult(httpResponse);
-        // HttpResult result = null;
-//        SaveUserBO saveUserBO1=null;
-//        List<SaveUserBO> list=null;
-//        if (httpResponse.isSuccessful()){
-        //  result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
-//            if(!ObjectUtils.isEmpty(result)){
-//                String data = gson.toJson(result.getData());
-//                saveUserBO1=new SaveUserBO();
-//                list= JSONArray.parseArray(data,SaveUserBO.class);
-//                saveUserBO1=list.get(0);
-//            }
-//        }
-//        return saveUserBO1;
-    }
-
-    /**
-     * 根绝角色类型编码获取角色列表
-     *
-     * @param
-     * @return
-     * @author wzy
-     * @date 2018/4/16 15:54
-     **/
-    public List<GetRoleTypePO> roleList(RoleTypeBO getRoleTypeBO) {
-        String json = JSONObject.toJSONString(getRoleTypeBO);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-        HTTPResponse httpResponse = roleHttpRequest.listRole(requestBody);
-        if (httpResponse.isSuccessful()) {
-            HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
-            if (result.isSuccess()) {
-                String data = gson.toJson(result.getData());
-                if (!ObjectUtils.isEmpty(data)) {
-                    List<GetRoleTypePO> roleTypePOList = JSONObject.parseArray(data,GetRoleTypePO.class);
-                    return roleTypePOList;
-                }
-            }
-        }
-        return null;
     }
 
     /**

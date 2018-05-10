@@ -23,6 +23,11 @@ public class RedisPrefixConstant {
 	 */
 	public static final String PERMISSION_REDIS_CACHE = "djwms:cache:user:permission:";
 
+	/**
+	 * 用户权限模块的前缀
+	 */
+	public static final String PERMISSION_REDIS_BASIC_CACHE = "djwms:cache:basic:permission:";
+
 		/**
 	 * 用户登陆状态token前缀
 	 */

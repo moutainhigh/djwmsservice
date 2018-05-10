@@ -1,23 +1,28 @@
 package com.djcps.wms.role.server;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 
+import com.djcps.wms.inneruser.model.userparam.GetRoleTypePO;
+import com.djcps.wms.inneruser.model.userparam.RoleTypeBO;
 import com.djcps.wms.role.model.DeleteBO;
 import com.djcps.wms.role.model.RoleListBO;
 import com.djcps.wms.role.model.SaveRoleBO;
 import com.djcps.wms.role.model.UpdateRoleInfoBO;
 import com.djcps.wms.role.model.request.GetUserStatusPO;
-import com.djcps.wms.role.model.request.RoleInfoResultPO;
+import com.djcps.wms.role.model.request.RoleInfoResultVO;
+import com.djcps.wms.role.model.request.WmsRoleInfoPO;
 import com.djcps.wms.role.request.RoleHttpRequest;
 import com.google.gson.Gson;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
 import java.util.ArrayList;
@@ -50,22 +55,47 @@ public class RoleHttpServer {
      * @author wyb
      * @create 2018/4/12
      **/
-    public RoleInfoResultPO roleList(RoleListBO roleListBO) {
+    public RoleInfoResultVO pageRole(RoleListBO roleListBO) {
         String json = gson.toJson(roleListBO);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
         HTTPResponse http = roleHttpRequest.list(rb);
-        RoleInfoResultPO roleInfoResultPO = null;
+        RoleInfoResultVO roleInfoResultVO = null;
         HttpResult result = null;
         //校验请求是否成功
         if (http.isSuccessful()) {
             result = gson.fromJson(http.getBodyString(), HttpResult.class);
             String data = gson.toJson(result.getData());
-            roleInfoResultPO = gson.fromJson(data, RoleInfoResultPO.class);
+            roleInfoResultVO = gson.fromJson(data, RoleInfoResultVO.class);
         }
         if (result == null) {
             LOGGER.error("Http请求出错,HttpResult结果为null");
         }
-        return roleInfoResultPO;
+        return roleInfoResultVO;
+    }
+
+    /**
+     * 根据角色类型编码获取角色列表
+     *
+     * @param
+     * @return
+     * @author wzy
+     * @date 2018/4/16 15:54
+     **/
+    public List<WmsRoleInfoPO> listRole(RoleTypeBO getRoleTypeBO) {
+        String json = JSONObject.toJSONString(getRoleTypeBO);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        HTTPResponse httpResponse = roleHttpRequest.listRole(requestBody);
+        if (httpResponse.isSuccessful()) {
+            HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
+            if (result.isSuccess()) {
+                String data = gson.toJson(result.getData());
+                if (!ObjectUtils.isEmpty(data)) {
+                    List<WmsRoleInfoPO> wmsRoleInfoPOList = JSONObject.parseArray(data,WmsRoleInfoPO.class);
+                    return wmsRoleInfoPOList;
+                }
+            }
+        }
+        return null;
     }
 
     /**
