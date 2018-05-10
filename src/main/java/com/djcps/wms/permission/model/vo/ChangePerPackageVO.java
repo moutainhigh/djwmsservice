@@ -10,15 +10,30 @@ public class ChangePerPackageVO implements Serializable {
 
 	private static final long serialVersionUID = -1614555952685626481L;
 
+	/**
+	 * id
+	 */
 	private String id;
 
+	/**
+	 * 标题
+	 */
 	private String title;
 
+	/**
+	 * 描述
+	 */
 	private String describe;
 
+	/**
+	 * 权限id集合
+	 */
 	private String perList;
 
-	private String bussion;
+	/**
+	 * 业务
+	 */
+	private String business;
 
 	public String getId() {
 		return id;
@@ -52,17 +67,17 @@ public class ChangePerPackageVO implements Serializable {
 		this.perList = perList;
 	}
 
-	public String getBussion() {
-		return bussion;
+	public String getBusiness() {
+		return business;
 	}
 
-	public void setBussion(String bussion) {
-		this.bussion = bussion;
+	public void setBusiness(String business) {
+		this.business = business;
 	}
 
 	@Override
 	public String toString() {
 		return "ChangePerPackagePO [id=" + id + ", title=" + title + ", describe=" + describe + ", perList=" + perList
-				+ ", bussion=" + bussion + "]";
+				+ ", business=" + business + "]";
 	}
 }

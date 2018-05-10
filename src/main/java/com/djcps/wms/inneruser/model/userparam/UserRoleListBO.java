@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.model.userparam;
 
+import com.djcps.wms.role.model.request.WmsRoleInfoPO;
+
 import java.util.List;
 
 /**
@@ -11,26 +13,26 @@ public class UserRoleListBO {
     /**
      * 当前用户角色类型
      */
-   private List<GetRoleTypePO> personRoleList;
+   private List<WmsRoleInfoPO> personRoleList;
 
     /**
      * 所有角色类型
      */
-   private List<GetRoleTypePO> allRoleList;
+   private List<WmsRoleInfoPO> allRoleList;
 
-    public List<GetRoleTypePO> getPersonRoleList() {
+    public List<WmsRoleInfoPO> getPersonRoleList() {
         return personRoleList;
     }
 
-    public void setPersonRoleList(List<GetRoleTypePO> personRoleList) {
+    public void setPersonRoleList(List<WmsRoleInfoPO> personRoleList) {
         this.personRoleList = personRoleList;
     }
 
-    public List<GetRoleTypePO> getAllRoleList() {
+    public List<WmsRoleInfoPO> getAllRoleList() {
         return allRoleList;
     }
 
-    public void setAllRoleList(List<GetRoleTypePO> allRoleList) {
+    public void setAllRoleList(List<WmsRoleInfoPO> allRoleList) {
         this.allRoleList = allRoleList;
     }
 

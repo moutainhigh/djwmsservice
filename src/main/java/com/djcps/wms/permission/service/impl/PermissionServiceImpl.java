@@ -68,7 +68,7 @@ public class PermissionServiceImpl implements PermissionService {
         }.getType());
         //规范返回字段
         List listUserChange = listUser.stream().map(x -> new ChangePerPackageVO() {{
-            setBussion(x.getPbussion());
+            setBusiness(x.getPbussion());
             setDescribe(x.getPdes());
             setId(x.getId());
             setPerList(x.getPerlist());
@@ -93,28 +93,16 @@ public class PermissionServiceImpl implements PermissionService {
         BeanUtils.copyProperties(param, wmsPermissionBO);
         wmsPermissionBO.setBusiness(param.getBusiness());
         //得到wms权限数据
-        HttpResult result = permissionServer.getWmsPermission(wmsPermissionBO);
-        String data = JSONObject.toJSONString(result.getData());
-        ArrayList<GetWmsPerPO> listUser = gson.fromJson(data, new TypeToken<List<GetWmsPerPO>>() {
-        }.getType());
-        //规范返回字段
-        if (!ObjectUtils.isEmpty(listUser)) {
-            List listUserChange = listUser.stream().map(x -> new ChangeWmsPerVO() {{
-                setId(x.getId());
-                setTitle(x.getPtitle());
-                setLayer(x.getPolayer());
-                setFatherId(x.getPfather());
-                setFirstId(x.getPfirst());
-                setIsParent(x.getIsParent());
-                setMark(x.getPmark());
-                setIcon(x.getIcon());
-                setInterfaceInfo(x.getPinterface());
-            }}).collect(Collectors.toList());
-            return MsgTemplate.successMsg(listUserChange);
-        } else {
-            return MsgTemplate.successMsg(null);
+        List<ChangeWmsPerVO> result = permissionRedisDao.getBasicPermission();
+        if(ObjectUtils.isEmpty(result)){
+            result = permissionServer.getWmsPermission(wmsPermissionBO);
+            permissionRedisDao.setBasicPermission(result);
         }
-
+        //规范返回字段
+        if (!ObjectUtils.isEmpty(result)){
+            return MsgTemplate.successMsg(result);
+        }
+        return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
     }
 
     /**
@@ -171,25 +159,8 @@ public class PermissionServiceImpl implements PermissionService {
         getPerChoose.setCompanyID(param.getCompanyId());
         getPerChoose.setBusiness(param.getBusiness());
         //得到查询权限信息
-        HttpResult result = permissionServer.getPerChoose(getPerChoose);
-        String data = JSONObject.toJSONString(result.getData());
-        ArrayList<GetOnePermissionPO> list = gson.fromJson(data, new TypeToken<List<GetOnePermissionPO>>() {
-        }.getType());
-        //规范返回字段
-        List listChange = list.stream().map(x -> new ChangeOnePerVO() {{
-            setTitle(x.getPtitle());
-            setDescribe(x.getPdes());
-            setCompanyId(x.getPcompany());
-            setUserId(x.getPuserid());
-            setPerList(x.getPperlist());
-            setBussion(x.getPbussion());
-            setId(x.getId());
-            setIsDel(x.getIsdel());
-            setDeletePerson(x.getIsdel_per());
-            setCreateTime(x.getCreate_time());
-            setUpdateTime(x.getUpdate_time());
-        }}).collect(Collectors.toList());
-        return MsgTemplate.successMsg(listChange);
+        List<ChangeOnePerVO> changeList = permissionServer.getPerChoose(getPerChoose);
+        return MsgTemplate.successMsg(changeList);
     }
 
     /**

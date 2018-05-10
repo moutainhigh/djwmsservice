@@ -8,27 +8,60 @@ import java.io.Serializable;
  * 2018年4月19日
  */
 public class ChangeOnePerVO implements Serializable{
-	
+
+	/**
+	 * 标题
+	 */
 	private String title;
-	
+
+	/**
+	 * 描述
+	 */
 	private String describe;
-	
+
+	/**
+	 * 公司id
+	 */
 	private String companyId;
-	
+
+	/**
+	 * 用户id
+	 */
 	private String userId;
-	
+
+	/**
+	 * 权限集合
+	 */
 	private String perList;
-	
-	private String bussion;
-	
+
+	/**
+	 * 业务
+	 */
+	private String business;
+
+	/**
+	 * id
+	 */
 	private String id;
-	
+
+	/**
+	 * 是否删除
+	 */
 	private String isDel;
-	
+
+	/**
+	 * 删除人
+	 */
 	private String deletePerson;
-	
+
+	/**
+	 * 创建时间
+	 */
 	private String createTime;
-	
+
+	/**
+	 * 更新时间
+	 */
 	private String updateTime;
 
 	public String getTitle() {
@@ -71,12 +104,12 @@ public class ChangeOnePerVO implements Serializable{
 		this.perList = perList;
 	}
 
-	public String getBussion() {
-		return bussion;
+	public String getBusiness() {
+		return business;
 	}
 
-	public void setBussion(String bussion) {
-		this.bussion = bussion;
+	public void setBusiness(String business) {
+		this.business = business;
 	}
 
 	public String getId() {
@@ -122,7 +155,7 @@ public class ChangeOnePerVO implements Serializable{
 	@Override
 	public String toString() {
 		return "ChangeOnePerPO [title=" + title + ", describe=" + describe + ", companyId=" + companyId + ", userId="
-				+ userId + ", perList=" + perList + ", bussion=" + bussion + ", id=" + id + ", isDel=" + isDel
+				+ userId + ", perList=" + perList + ", business=" + business + ", id=" + id + ", isDel=" + isDel
 				+ ", deletePerson=" + deletePerson + ", createTime=" + createTime + ", updateTime=" + updateTime + "]";
 	}
 }
