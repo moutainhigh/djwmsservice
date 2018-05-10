@@ -206,7 +206,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             }
             if (!ObjectUtils.isEmpty(newOrderInfo)) {
                 // 组合数据将对应订单的异常数量set进入对应订单信息里
-                for (OrderInfoPO orderInformation : orderInfo) {
+                for (OrderInfoPO orderInformation : newOrderInfo) {
                     for (AbnormalOrderPO abnormalOrderPO : abnormalInfo) {
                         if (orderInformation.getOrderId().equals(abnormalOrderPO.getOrderId())) {
                             if (!abnormalOrderPO.getAbnomalAmount().equals(0)) {
@@ -216,14 +216,14 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                     }
                 }
                 // 匹配对应订单将对应装车数量set进入对应订单信息
-                orderInfo.stream().forEach(info -> {
+                newOrderInfo.stream().forEach(info -> {
                     List<OrderIdAndLoadingAmountPO> loadingAmount = orderPOList.stream()
                             .filter(amount -> info.getOrderId().equals(map.get(amount.getOrderId())))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
                     
                 });
-                confirmPO.setOrderInfo(orderInfo);
+                confirmPO.setOrderInfo(newOrderInfo);
             }
             return MsgTemplate.successMsg(confirmPO);
         }
@@ -396,11 +396,13 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                                 LOGGER.error("装车,部分退库,修改订单状态失败!!!");
                                 return MsgTemplate.customMsg(updateResult);
                             }
+                        	return MsgTemplate.customMsg(result);
 //                        	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
 //                            if(compareOrderStatus==false){
 //                              return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
 //                            }
                         } else {
+                            
                             return MsgTemplate.customMsg(result);
                         }
                     }
@@ -718,6 +720,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         }
         if(!ObjectUtils.isEmpty(OrderList)) {
             for(WarehouseOrderDetailPO info : OrderList) {
+                if(info.getOrderId().equals(param.getOrderId())) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
@@ -734,6 +737,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getLoadingAmount());
                 orderOperationRecordPO.setArea(String.valueOf(area));
                 list.add(orderOperationRecordPO);
+                }
             }
            
         }
