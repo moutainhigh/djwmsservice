@@ -28,5 +28,85 @@ public interface OffinePaperboardRequest {
 	@Headers("content-type:application/json")
 	@POST("offline/findOfflineCBPage.do")
 	public HTTPResponse getOffinePaperboardList(@Body RequestBody rb);
+
+	
+	/**
+	 *	查询线下纸箱订单
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月9日
+	 */
+	@Headers("content-type:application/json")
+	@POST("offline/findOfflineCTPage.do")
+	public HTTPResponse getOffineBoxOrderList(@Body RequestBody rb);
+
+
+	/**
+	 * 批量修改子单信息
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月9日
+	 */
+	@Headers("content-type:application/json")
+	@POST("offline/updateOfflineOrderStatus")
+	public HTTPResponse updateOrderInfo(@Body RequestBody rb);
+
+	/**
+	 * 修改拆单信息接口
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月9日
+	 */
+	@Headers("content-type:application/json")
+	@POST("offline/updateSplitOrderInfo")
+	public HTTPResponse updateSplitOrderInfo(@Body RequestBody rb);
+
+
+	/**
+	 * 拆分订单
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月9日
+	 */
+	@Headers("content-type:application/json")
+	@POST("offline/updateSplitOrderStatus")
+	public HTTPResponse splitOrder(@Body RequestBody rb);
+
+	/**
+	 * 获取线下纸板订单(订单号和拆单号混合批量查询)
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月9日
+	 */
+	@Headers("content-type:application/json")
+	@POST("offline/orderCardboardInfoByIds")
+	public HTTPResponse getOfflinePaperboardByIdList(@Body RequestBody rb);
+	
+	/**
+	 * 获取线下纸板纸箱订单 (订单号和拆单号混合批量查询)
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月9日
+	 */
+	@Headers("content-type:application/json")
+	@POST("offline/orderCartonInfoByIds")
+	public HTTPResponse getOfflineBoxOrderByIdList(@Body RequestBody rb);
+
+	/**
+	 * 根据订单号获取拆单详情
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月9日
+	 */
+	@Headers("content-type:application/json")
+	@POST("offline/loadSplitOrderByBoxOrderIds")
+	public HTTPResponse getSplitOrderDeatilByI(@Body RequestBody rb);
 	
 }

@@ -60,7 +60,7 @@ public interface OnlinePaperboardRequest {
 	 */
 	@Headers("content-type:application/json")
 	@POST("oms/orderInfoByIds.do")
-	public HTTPResponse getOrderDeatilByIdList(@Body RequestBody rb);
+	public HTTPResponse getOnlinePaperboardByIdList(@Body RequestBody rb);
 
 	/**
 	 * 根据子单号获取拆单信息

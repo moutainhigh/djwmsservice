@@ -1,6 +1,7 @@
 package com.djcps.wms.workrecords.service.impl;
 
 import com.djcps.wms.commons.base.BaseVO;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -52,7 +53,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                         new TypeToken<List<WorkRecordsPO>>() {
                         }.getType());
                 list.stream().forEach(w -> {
-                    w.setFluteTypeName(w.getFluteType().toString());
+                    w.setFluteTypeName(FluteTypeEnum1.getName(w.getFluteType()));
                 });
                 baseVO.setResult(list);
                 return MsgTemplate.successMsg(baseVO);
@@ -98,7 +99,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                         new TypeToken<List<WorkRecordsPO>>() {
                         }.getType());
                 list.stream().forEach(w -> {
-                    w.setFluteTypeName(w.getFluteType().toString());
+                    w.setFluteTypeName(FluteTypeEnum1.getName(w.getFluteType()));
                 });
                 baseVO.setResult(list);
                 return MsgTemplate.successMsg(baseVO);
@@ -226,6 +227,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                 WorkRecordsOrderPO workRecordsOrderPO = gson.fromJson(gson.toJson(result.getData()), WorkRecordsOrderPO.class);
                 OrderIdsBO orderIds = new OrderIdsBO();
                 orderIds.setChildOrderIds(Arrays.asList(workRecordsOrderPO.getOrderId()));
+                orderIds.setPartnerArea(param.getPartnerArea());
                 List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
                 if (!childOrderList.isEmpty()) {
                     ChildOrderBO childOrderBO = childOrderList.stream()

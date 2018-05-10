@@ -13,8 +13,10 @@ import com.djcps.wms.commons.msg.MsgInterface;
  */
 public enum AbnormalMsgEnum implements MsgInterface {
 	
-    STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR(1,"OMS处修改订单异常状态标志失败!!!")
-	;
+    /**
+     * OMS处修改订单异常状态标志失败!!!
+     */
+    STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR(1,"OMS处修改订单异常状态标志失败!!!");
 
     private int code;
     

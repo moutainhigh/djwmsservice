@@ -60,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
                 List<OrgRoleListPO> orgRoleInfo = orgRoleHttpServer.getRoleFromId(orgRoleInfoBO);
                 if (!ObjectUtils.isEmpty(orgRoleInfo)) {
                     List<WmsPermissionInfoPO> list = new ArrayList<WmsPermissionInfoPO>();
-                    // 进行数据组合
+                    // 进行数据组合 
                     if (roleId.getRoleId().equals(orgRoleInfo.get(0).getId())) {
                         roleId.setRoleDesc(orgRoleInfo.get(0).getRdesc());
                         if (!ObjectUtils.isEmpty(orgRoleInfo.get(0).getPerssions())) {
