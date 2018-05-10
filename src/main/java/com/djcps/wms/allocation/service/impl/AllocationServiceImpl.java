@@ -2174,36 +2174,65 @@ public class AllocationServiceImpl implements AllocationService {
 		HttpResult result = orderServer.getSplitOrderDeatilByIdList(list);
 		List<WarehouseOrderDetailPO> orderDetail = null;
 		List<String> orderIdStrList = new ArrayList<>();
+		List<OrderIdBO> orderIdBOList = new ArrayList<OrderIdBO>();
+		Map<String,WarehouseOrderDetailPO> queryOrderMap = new HashMap<>(16);
 		if(!ObjectUtils.isEmpty(result.getData())){
 			Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
 			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
-				String orderId = entry.getKey();
-				orderDetail = orderServer.joinOrderParamInfo(entry.getValue());
-				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
-					warehouseOrderDetailPO.setChildOrderId(orderId);
-					String subOrderId = warehouseOrderDetailPO.getSubOrderId();
-					orderIdStrList.add(subOrderId);
+				if(!ObjectUtils.isEmpty(entry.getValue())){
+					orderDetail = orderServer.joinOrderParamInfo(entry.getValue());
+					for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
+						String subOrderId = warehouseOrderDetailPO.getSubOrderId();
+						OrderIdBO orderIdBO = new OrderIdBO();
+						orderIdBO.setOrderId(subOrderId);
+						orderIdBOList.add(orderIdBO);
+						orderIdStrList.add(subOrderId);
+						queryOrderMap.put(subOrderId, warehouseOrderDetailPO);
+					}
 				}
 			}
-			
+			//根据订单号获取提货单信息
 			if(!ObjectUtils.isEmpty(orderIdStrList)){
-				//根据订单号获取提货单信息
 				HttpResult deliveryResult = allocationServer.getDeliveryByOrderIds(orderIdStrList);
 				if(!ObjectUtils.isEmpty(deliveryResult.getData())){
 					List<DeliveryPO> deliveryPOList = gson.fromJson(gson.toJson(deliveryResult.getData()), new TypeToken<ArrayList<DeliveryPO>>(){}.getType());
-					DeliveryPO deliveryPO = deliveryPOList.get(0);
-					String deliveryId = deliveryPO.getDeliveryId();
-					List<String> deliveryIdStr = Arrays.asList(deliveryId);
+					List<String> deliveryIdStr = new ArrayList<>();
+					for (DeliveryPO deliveryPO : deliveryPOList) {
+						deliveryIdStr.add(deliveryPO.getDeliveryId());
+						WarehouseOrderDetailPO orderDetailPO = queryOrderMap.get(deliveryPO.getOrderId());
+						if(orderDetailPO!=null){
+							orderDetailPO.setDeliveryId(deliveryPO.getDeliveryId());
+						}
+					}
 					//根据提货单号获取运单信息
 					HttpResult waybillResult = allocationServer.getWaybillByDeliveryIds(deliveryIdStr);
 					List<WaybillPO> waybillPOList = gson.fromJson(gson.toJson(waybillResult.getData()), new TypeToken<ArrayList<WaybillPO>>(){}.getType());
-					String plateNumber = waybillPOList.get(0).getPlateNumber();
-					String waybillId = waybillPOList.get(0).getWaybillId();
-					
-					for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderDetail) {
-						warehouseOrderDetailPO.setPlateNumber(plateNumber);
-						warehouseOrderDetailPO.setDeliveryId(deliveryId);
-						warehouseOrderDetailPO.setWaybillId(waybillId);
+					for (WaybillPO waybillPO : waybillPOList) {
+						WarehouseOrderDetailPO orderDetailPO = queryOrderMap.get(waybillPO.getOrderId());
+						if(orderDetailPO!=null){
+							orderDetailPO.setWaybillId(waybillPO.getWaybillId());
+							orderDetailPO.setPlateNumber(waybillPO.getPlateNumber());
+						}
+					}
+				}
+			}
+			if(!ObjectUtils.isEmpty(orderIdBOList)){
+				//获取在库信息
+				//根据订单查询在库信息组织对象
+				SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+				BeanUtils.copyProperties(param, selectAreaByOrderId);
+				selectAreaByOrderId.setOrderIds(orderIdBOList);
+				List<WarehouseOrderDetailPO> orderStock= orderServer.getOrderStockInfo(selectAreaByOrderId);
+				for (WarehouseOrderDetailPO warehouseOrderDetailPO : orderStock) {
+					WarehouseOrderDetailPO otherOrderDetailPO = queryOrderMap.get(warehouseOrderDetailPO.getOrderId());
+					if(otherOrderDetailPO!=null){
+						//将订单详情信息和在库信息数据进行拼接
+						otherOrderDetailPO.setAreaList(warehouseOrderDetailPO.getAreaList());
+						otherOrderDetailPO.setAmountSaved(warehouseOrderDetailPO.getAmountSaved());
+						otherOrderDetailPO.setInstockAmount(warehouseOrderDetailPO.getInstockAmount());
+						otherOrderDetailPO.setRemark(warehouseOrderDetailPO.getRemark());
+						otherOrderDetailPO.setWarehouseId(warehouseOrderDetailPO.getWarehouseId());
+						otherOrderDetailPO.setWarehouseName(warehouseOrderDetailPO.getWarehouseName());
 					}
 				}
 			}

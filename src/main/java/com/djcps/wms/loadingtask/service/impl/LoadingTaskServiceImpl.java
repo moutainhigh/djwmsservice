@@ -290,14 +290,11 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         		orderInfo.add(orderInfoPO);
 			}
         }
-        
-        
         for (OrderInfoPO orderInfoPO : orderInfo) {
             if (!orderInfoPO.getOrderStatus().equals(LoadingTaskConstant.ORDERSTATUS_24)) {
                 return MsgTemplate.failureMsg(LoadingTaskEnum.NOTLOADING);
             }
         }
-
             Integer loadingAmount = param.getLoadingAmount();
             Integer orderAmount = param.getOrderAmount();
             //if (!orderAmount.equals(loadingAmount)) {
@@ -317,7 +314,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             order.setOrderId(param.getOrderId());
                             order.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
                             orderIdBOList.add(order);
-                            
                         	HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
                         	if(!updateResult.isSuccess()){
                                 LOGGER.error("装车,全部退库环节,修改订单状态失败!!!");
@@ -364,6 +360,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				BeanUtils.copyProperties(param, updateOrderBO);
             				updateOrderBO.setKeyArea(updateOrderBO.getPartnerArea());
             				updateOrderBO.setOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+            				updateOrderBO.setSplitStatus(1);
             				
             				UpdateSplitOrderBO firstSpiltOrder = new UpdateSplitOrderBO();
             				UpdateSplitOrderBO secondSpiltOrder = new UpdateSplitOrderBO();

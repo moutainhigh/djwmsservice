@@ -24,6 +24,7 @@ import com.djcps.wms.cancelstock.model.param.CancelOrderIdBO;
 import com.djcps.wms.cancelstock.model.param.PickerIdBO;
 import com.djcps.wms.cancelstock.server.CancelStockServer;
 import com.djcps.wms.cancelstock.service.CancelStockService;
+import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
@@ -73,7 +74,7 @@ public class CancelStockServiceImpl implements CancelStockService {
 		CancalOrderAttributePO orderAttribute = gson.fromJson(gson.toJson(result.getData()), CancalOrderAttributePO.class);
 		BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
 		List<String> orderIdsList = new ArrayList<>();
-		orderIdsList.add(param.getOrderId());
+		orderIdsList.add(orderAttribute.getOrderId());
 		batchOrderIdListBO.setOrderIds(orderIdsList);
 		batchOrderIdListBO.setKeyArea(param.getPartnerArea());
 		HttpResult orderResult = orderServer.getOrderDeatilByIdList(batchOrderIdListBO);
@@ -103,14 +104,18 @@ public class CancelStockServiceImpl implements CancelStockService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!orderInfo.getSplitOrderList().isEmpty()) {
-        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
-        }
+        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+            OrderList.addAll(orderInfo.getOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+            OrderList.addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(OrderList)) {
+            for(WarehouseOrderDetailPO info : OrderList) {
                 //处理数据
-                param.setFluteType(info.getFluteType());
-                param.setRelativeName(info.getPartnerName());
+                param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()) + "");
+                param.setRelativeName(info.getProductName());
                 //计算操作面积
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getAmount());
                 param.setArea(String.valueOf(area));
@@ -159,8 +164,8 @@ public class CancelStockServiceImpl implements CancelStockService {
 		if(!ObjectUtils.isEmpty(result.getData())){
 			List<CancelStockPO> cancelStockList = gson.fromJson(gson.toJson(result.getData()), new TypeToken<ArrayList<CancelStockPO>>(){}.getType());
 			for (CancelStockPO cancelStockPO : cancelStockList) {
-				map.put(cancelStockPO.getSonOrderId(), cancelStockPO);
-				orderIdList.add(cancelStockPO.getSonOrderId());
+				map.put(cancelStockPO.getOrderId(), cancelStockPO);
+				orderIdList.add(cancelStockPO.getOrderId());
 			}
 		}else{
 			return MsgTemplate.successMsg();
@@ -177,7 +182,7 @@ public class CancelStockServiceImpl implements CancelStockService {
 	        	List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
 	 			for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
 	 				CancalOrderAttributePO orderAttribute = new CancalOrderAttributePO();
-	 				CancelStockPO cancelStockPO = map.get(orderDetail.getChildOrderId());
+	 				CancelStockPO cancelStockPO = map.get(orderDetail.getOrderId());
 	 				BeanUtils.copyProperties(cancelStockPO,orderAttribute);
 	 				BeanUtils.copyProperties(orderDetail,orderAttribute);
 	 				orderAttributeList.add(orderAttribute);
@@ -189,7 +194,7 @@ public class CancelStockServiceImpl implements CancelStockService {
 				List<WarehouseOrderDetailPO> splitJoinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
 				for (WarehouseOrderDetailPO orderDetail : splitJoinOrderParamInfo) {
 						CancalOrderAttributePO orderAttribute = new CancalOrderAttributePO();
-						CancelStockPO cancelStockPO = map.get(orderDetail.getChildOrderId());
+						CancelStockPO cancelStockPO = map.get(orderDetail.getOrderId());
 						BeanUtils.copyProperties(cancelStockPO,orderAttribute);
 						BeanUtils.copyProperties(orderDetail,orderAttribute);
 						orderAttributeList.add(orderAttribute);
