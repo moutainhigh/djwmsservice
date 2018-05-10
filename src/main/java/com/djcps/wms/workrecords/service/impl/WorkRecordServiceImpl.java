@@ -227,6 +227,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                 WorkRecordsOrderPO workRecordsOrderPO = gson.fromJson(gson.toJson(result.getData()), WorkRecordsOrderPO.class);
                 OrderIdsBO orderIds = new OrderIdsBO();
                 orderIds.setChildOrderIds(Arrays.asList(workRecordsOrderPO.getOrderId()));
+                orderIds.setPartnerArea(param.getPartnerArea());
                 List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
                 if (!childOrderList.isEmpty()) {
                     ChildOrderBO childOrderBO = childOrderList.stream()

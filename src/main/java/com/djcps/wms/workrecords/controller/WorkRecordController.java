@@ -8,17 +8,21 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.enums.SysMsgEnum;
+import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.record.controller.OperationRecordController;
 import com.djcps.wms.workrecords.model.*;
 import com.djcps.wms.workrecords.service.WorkRecordService;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
 
@@ -347,9 +351,11 @@ public class WorkRecordController {
 	 * @return
 	 */
 	@RequestMapping(name = "获取订单明细", value = "/getOrderDetail", method = RequestMethod.POST)
-	public Map<String, Object> getOrderDetail(@RequestBody String json) {
+	public Map<String, Object> getOrderDetail(@RequestBody String json, HttpServletRequest request) {
 		try {
 			WorkRecordsOrderBO param = gson.fromJson(json, WorkRecordsOrderBO.class);
+			PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
+            BeanUtils.copyProperties(partnerInfoBo, param);
 			ComplexResult ret = FluentValidator.checkAll().failFast()
 					.on(param,
 							new HibernateSupportedValidator<WorkRecordsOrderBO>()

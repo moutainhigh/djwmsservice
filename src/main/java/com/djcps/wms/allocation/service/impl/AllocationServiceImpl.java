@@ -2237,7 +2237,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
               //计算操作面积
@@ -2258,7 +2258,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
               //计算操作面积
@@ -2320,7 +2320,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
                 for(SequenceBO ordersInfo :param.getOrderIds()) {
@@ -2356,11 +2356,15 @@ public class AllocationServiceImpl implements AllocationService {
         orderIdsBO.setPartnerArea(partnerInfoBean.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-        orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
-        }
+        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
+            OrderList.addAll(orderInfo.getOrderList());
+        }
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+            OrderList.addAll(orderInfo.getSplitOrderList());
+        }
+        if(!ObjectUtils.isEmpty(OrderList)) {
+            for(WarehouseOrderDetailPO info : OrderList) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(partnerInfoBean.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(partnerInfoBean.getPartnerArea());
@@ -2370,7 +2374,7 @@ public class AllocationServiceImpl implements AllocationService {
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
+                orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(info.getChildOrderId());
                 orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
               //计算操作面积
