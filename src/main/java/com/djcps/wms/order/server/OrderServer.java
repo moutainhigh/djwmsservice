@@ -296,15 +296,22 @@ public class OrderServer {
 	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
 	        	if(!ObjectUtils.isEmpty(detailValueList)){
 	        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
-		        		int orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus().intValue();
-		        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
-		        		//假如拆单状态小于子单状态则把状态赋值给子单
-		        		if(splitOrderStatus<orderStatus){
-		        			//一个开关代表需要进行修改
-		        			flag = true;
-		        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(splitOrderStatus);
-		        			//这里暂时拿这个字段拿来用只是为了判断orderStatus进行了修改需要进行update操作
-		        			orderDetailMap.get(orderDetailPO.getOrderId()).setAmountPiece(666);
+		        		Integer orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus();
+		        		String splitOrderStatus = String.valueOf(orderDetailPO.getSubStatus());
+		        		
+		        		if(splitOrderStatus.equals(OrderStatusTypeEnum.NO_STOCK) || splitOrderStatus.equals(OrderStatusTypeEnum.LESS_ADD_STOCK) 
+		        				|| splitOrderStatus.equals(OrderStatusTypeEnum.ALL_ADD_STOCK)|| splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION)
+		        				||splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_DELIVERY) || splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_LOADING) 
+		        				|| splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_GOTO) ){
+		        			
+			        		//假如拆单状态小于子单状态则把状态赋值给子单
+			        		if(Integer.valueOf(splitOrderStatus).intValue()<orderStatus.intValue()){
+			        			//一个开关代表需要进行修改
+			        			flag = true;
+			        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(orderDetailPO.getSubStatus());
+			        			//这里暂时拿这个字段拿来用只是为了判断orderStatus进行了修改需要进行update操作
+			        			orderDetailMap.get(orderDetailPO.getOrderId()).setAmountPiece(666);
+			        		}
 		        		}
 		        	}
 	        	}

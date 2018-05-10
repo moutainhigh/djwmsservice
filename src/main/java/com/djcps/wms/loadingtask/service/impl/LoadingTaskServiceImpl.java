@@ -364,6 +364,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				BeanUtils.copyProperties(param, updateOrderBO);
             				updateOrderBO.setKeyArea(updateOrderBO.getPartnerArea());
             				updateOrderBO.setOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+            				updateOrderBO.setSplitStatus(1);
             				
             				UpdateSplitOrderBO firstSpiltOrder = new UpdateSplitOrderBO();
             				UpdateSplitOrderBO secondSpiltOrder = new UpdateSplitOrderBO();
