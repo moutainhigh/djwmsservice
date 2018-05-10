@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
+import com.djcps.wms.order.constant.OrderConstant;
 import com.djcps.wms.order.model.ChildOrderBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
-import com.djcps.wms.order.model.offlinepaperboard.OffineQueryObjectBO;
+import com.djcps.wms.order.model.offlinepaperboard.OfflineQueryObjectBO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
@@ -126,11 +126,32 @@ public class OrderServer {
 	 * @date:2018年4月19日
 	 */
 	public HttpResult updateOrderInfo(List<UpdateOrderBO> param) {
+		List<UpdateOrderBO> onlineList = new ArrayList<>();
+		List<UpdateOrderBO> offlineList = new ArrayList<>();
+		for (UpdateOrderBO updateOrderBO : param) {
+			String orderId = updateOrderBO.getOrderId();
+			if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
+				onlineList.add(updateOrderBO);
+	        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1 || orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
+	        	offlineList.add(updateOrderBO);
+	        }
+		}
+		if(!ObjectUtils.isEmpty(onlineList)){
+			param = onlineList;
+    	}else{
+    		param = offlineList;
+    	}
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        //调用借口获取信息
-        HTTPResponse http = onlinePaperboardRequest.updateOrderInfo(rb);
+        HTTPResponse http = null;
+    	if(!ObjectUtils.isEmpty(onlineList)){
+    		//调用借口获取信息
+        	http = onlinePaperboardRequest.updateOrderInfo(rb);
+    	}else{
+    		//调用借口获取信息
+        	http = offinePaperboardRequest.updateOrderInfo(rb);
+    	}
         //校验请求是否成功
         return updateOMSCode(http);
 	}
@@ -143,13 +164,36 @@ public class OrderServer {
 	 * @date:2018年4月19日
 	 */
 	public HttpResult updateSplitOrderInfo(List<UpdateSplitOrderBO> param) {
+        List<UpdateSplitOrderBO> onlineList = new ArrayList<>();
+		List<UpdateSplitOrderBO> offlineList = new ArrayList<>();
+		for (UpdateSplitOrderBO updateOrderBO : param) {
+			String orderId = updateOrderBO.getSubOrderId();
+			if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
+				onlineList.add(updateOrderBO);
+	        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1 || orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
+	        	offlineList.add(updateOrderBO);
+	        }
+		}
+		if(!ObjectUtils.isEmpty(onlineList)){
+			param = onlineList;
+    	}else{
+    		param = offlineList;
+    	}
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        //调用借口获取信息
-        HTTPResponse http = onlinePaperboardRequest.updateSplitOrderInfo(rb);
+        HTTPResponse http = null;
+    	if(!ObjectUtils.isEmpty(onlineList)){
+    		//调用借口获取信息
+        	http = onlinePaperboardRequest.updateSplitOrderInfo(rb);
+    	}else{
+    		//调用借口获取信息
+        	http = offinePaperboardRequest.updateSplitOrderInfo(rb);
+    	}
         //校验请求是否成功
         return updateOMSCode(http);
+        
+        
 	}
 	
 	/**
@@ -305,11 +349,19 @@ public class OrderServer {
 	}
 	
 	public HttpResult getOrderDeatilByIdList(BatchOrderIdListBO param) {
+		List<String> orderIdList = param.getOrderIds();
+		String orderId = orderIdList.get(0);
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        //调用借口获取信息
-        HTTPResponse http = onlinePaperboardRequest.getOrderDeatilByIdList(rb);
+        HTTPResponse http = null;
+		if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
+			http = onlinePaperboardRequest.getOnlinePaperboardByIdList(rb);
+        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1){
+        	http = offinePaperboardRequest.getOfflinePaperboardByIdList(rb);
+        }else if(orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
+        	http = offinePaperboardRequest.getOfflineBoxOrderByIdList(rb);
+        }
         //校验请求是否成功
         return updateOMSCode(http);
 	}
@@ -322,11 +374,17 @@ public class OrderServer {
 	 * @date:2018年4月20日
 	 */
 	public HttpResult getSplitOrderDeatilByIdList(List<OrderIdBO> param) {
+		String orderId = param.get(0).getOrderId();
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
-        HTTPResponse http = onlinePaperboardRequest.getSplitOrderDeatilByI(rb);
+        HTTPResponse http = null;
+        if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
+			http = onlinePaperboardRequest.getSplitOrderDeatilByI(rb);
+        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1 || orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
+        	http = offinePaperboardRequest.getSplitOrderDeatilByI(rb);
+        }
         //校验请求是否成功
         return updateOMSCode(http);
 	}
@@ -336,7 +394,15 @@ public class OrderServer {
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
-        HTTPResponse http = onlinePaperboardRequest.splitOrder(rb);
+        HTTPResponse http = null;
+        String orderId = param.getOrderId();
+		if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
+			//调用借口获取信息
+        	http = onlinePaperboardRequest.splitOrder(rb);
+        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1 || orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
+        	//调用借口获取信息
+        	http = offinePaperboardRequest.splitOrder(rb);
+        }
         //校验请求是否成功
         return updateOMSCode(http);
 	}
@@ -361,7 +427,14 @@ public class OrderServer {
 						.append(onlinePaperboardPO.getMaterialWidth()).toString());
 			}
 			onlinePaperboardPO.setAddressDetailProvince(new StringBuffer().append(onlinePaperboardPO.getCodeProvince()).append(onlinePaperboardPO.getAddressDetail()).toString());
-			String customerName = !StringUtils.isEmpty(onlinePaperboardPO.getCuserName())?onlinePaperboardPO.getCuserName():onlinePaperboardPO.getPuserName();
+			String customerName = null;
+			if(!StringUtils.isEmpty(onlinePaperboardPO.getCuserName())){
+				customerName = onlinePaperboardPO.getCuserName();
+			}else if(!StringUtils.isEmpty(onlinePaperboardPO.getPuserName())){
+				customerName = onlinePaperboardPO.getPuserName();
+			}else{
+				customerName = onlinePaperboardPO.getCustomerName();
+			}
 			onlinePaperboardPO.setCustomerName(customerName);
 			String subOrderId = onlinePaperboardPO.getSubOrderId();
 			if(StringUtils.isEmpty(subOrderId)){
@@ -396,12 +469,22 @@ public class OrderServer {
 		}
 	}
 	
-	public HttpResult getOffinePaperboardList(OffineQueryObjectBO param) {
+	public HttpResult getOffinePaperboardList(OfflineQueryObjectBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         //调用借口获取信息
         HTTPResponse http = offinePaperboardRequest.getOffinePaperboardList(rb);
+        //校验请求是否成功
+        return updateOMSCode(http);
+	}
+	
+	public HttpResult getOffineBoxOrderList(OfflineQueryObjectBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = offinePaperboardRequest.getOffineBoxOrderList(rb);
         //校验请求是否成功
         return updateOMSCode(http);
 	}
