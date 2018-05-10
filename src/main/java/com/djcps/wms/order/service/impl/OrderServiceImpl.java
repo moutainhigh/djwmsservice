@@ -76,6 +76,44 @@ public class OrderServiceImpl implements OrderService {
 		order.setOrderId(param.getOrderIds().get(0));
 		order.setKeyArea(param.getPartnerArea());
 		splitOrderList.add(order);
+		HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(param);
+		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+	    List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
+	    List<WarehouseOrderDetailPO> newSplitOrderList = batchOrderDetailListPO.getSplitOrderList();
+	    List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
+	    if(!ObjectUtils.isEmpty(orderList)){
+	    	joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+	    }else if(!ObjectUtils.isEmpty(newSplitOrderList)){
+	    	joinOrderParamInfo = orderServer.joinOrderParamInfo(newSplitOrderList);
+	    }else{
+	    	return MsgTemplate.successMsg(null);
+	    }
+	    SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
+		BeanUtils.copyProperties(param, selectAreaByOrderId);
+		List<OrderIdBO> list = new ArrayList<>();
+		OrderIdBO orderIdBO = new OrderIdBO();
+		orderIdBO.setOrderId(param.getOrderIds().get(0));
+		list.add(orderIdBO);
+		selectAreaByOrderId.setOrderIds(list);
+		List<WarehouseOrderDetailPO> orderStockInfo = orderServer.getOrderStockInfo(selectAreaByOrderId);
+		if(!ObjectUtils.isEmpty(orderStockInfo)){
+			WarehouseOrderDetailPO warehouseOrderDetailPO = orderStockInfo.get(0);
+			BeanUtils.copyProperties(joinOrderParamInfo.get(0), warehouseOrderDetailPO,"amountSaved","remark","instockAmount","areaList");
+			return MsgTemplate.successMsg(warehouseOrderDetailPO);
+		}else{
+			joinOrderParamInfo.get(0).setAmountSaved(0);
+			return MsgTemplate.successMsg(joinOrderParamInfo.get(0));
+		}
+	}
+	
+	@Override
+	public Map<String, Object> getPdaOrderByOrderId(BatchOrderIdListBO param) {
+		//判断扫面或者网页端传来的订单号是否为拆分,是的话则需要进行查询另外订单
+		List<OrderIdBO> splitOrderList = new ArrayList<>();
+		OrderIdBO order = new OrderIdBO();
+		order.setOrderId(param.getOrderIds().get(0));
+		order.setKeyArea(param.getPartnerArea());
+		splitOrderList.add(order);
 		HttpResult result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
 		if(!ObjectUtils.isEmpty(result.getData())){
 			List<WarehouseOrderDetailPO> orderDetail = null;

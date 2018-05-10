@@ -86,6 +86,38 @@ public class OrderController {
 	}
 	
 	/**
+	 * pda专用的根据订单号获取订单详情
+	 * @param json
+	 * @param request
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月10日
+	 */
+	@RequestMapping(name="根据订单号获取订单",value = "/getPdaOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getPdaOrderByOrderId(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			LOGGER.debug("json : " + json);
+			BatchOrderIdListBO param = gson.fromJson(json, BatchOrderIdListBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			param.setKeyArea(partnerInfoBean.getPartnerArea());
+			BeanUtils.copyProperties(partnerInfoBean, param);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<BatchOrderIdListBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return orderService.getPdaOrderByOrderId(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	/**
 	 * 获取线上纸板订单
 	 * @param json
 	 * @param request

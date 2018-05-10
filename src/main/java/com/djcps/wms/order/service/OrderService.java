@@ -60,4 +60,13 @@ public interface OrderService {
 	 */
 	Map<String, Object> getOffineBoxOrderList(OfflineQueryObjectBO param);
 
+	/**
+	 * pda专用的根据订单号获取订单详情
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月10日
+	 */
+	Map<String, Object> getPdaOrderByOrderId(BatchOrderIdListBO param);
+
 }
