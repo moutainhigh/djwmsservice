@@ -355,12 +355,15 @@ public class OrderServer {
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
         HTTPResponse http = null;
-		if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
+		/*if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
 			http = onlinePaperboardRequest.getOnlinePaperboardByIdList(rb);
-        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1){
+        }else */if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1){
         	http = offinePaperboardRequest.getOfflinePaperboardByIdList(rb);
         }else if(orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
         	http = offinePaperboardRequest.getOfflineBoxOrderByIdList(rb);
+        }else {
+            //TODO 临时方案
+            http = onlinePaperboardRequest.getOnlinePaperboardByIdList(rb);
         }
         //校验请求是否成功
         return updateOMSCode(http);

@@ -1397,7 +1397,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
      * @return
      * @create  2018/3/7
      **/
-    public void saveOperationRecord(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO){
+        public void saveOperationRecord(SaveStocktakingOrderInfoBO saveStocktakingOrderInfoBO){
         List<String> list=new ArrayList<String>();
         list.add(StockTakingOperationConstant.START_INVENTORY_TASK);
         StocktakingRecordListBO stocktakingRecordListBO=new StocktakingRecordListBO();
