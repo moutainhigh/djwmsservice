@@ -221,7 +221,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             .filter(amount -> info.getOrderId().equals(map.get(amount.getOrderId())))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
-                    
+                    info.setRealDeliveryAmount(loadingAmount.get(0).getRealDeliveryAmount());
                 });
                 confirmPO.setOrderInfo(newOrderInfo);
             }
@@ -360,7 +360,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				BeanUtils.copyProperties(param, updateOrderBO);
             				updateOrderBO.setKeyArea(updateOrderBO.getPartnerArea());
             				updateOrderBO.setOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
-            				
             				UpdateSplitOrderBO firstSpiltOrder = new UpdateSplitOrderBO();
             				UpdateSplitOrderBO secondSpiltOrder = new UpdateSplitOrderBO();
             				List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
@@ -373,7 +372,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				firstSpiltOrder.setIsException(0);
             				firstSpiltOrder.setIsProduce(0);
             				firstSpiltOrder.setIsStored(0);
-            				
             				secondSpiltOrder.setOrderId(param.getOrderId());
             				secondSpiltOrder.setSubOrderId(param.getTwiceOrderid());
             				secondSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_24));

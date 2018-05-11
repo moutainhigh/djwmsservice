@@ -77,104 +77,147 @@ public class OrderInfoPO {
      * 异常数量
      */
     private Integer abnomalAmount;
-	public String getProductName() {
-		return productName;
-	}
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-	public String getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-	public String getFluteType() {
-		return fluteType;
-	}
-	public void setFluteType(String fluteType) {
-		this.fluteType = fluteType;
-	}
-	public String getBoxLength() {
-		return boxLength;
-	}
-	public void setBoxLength(String boxLength) {
-		this.boxLength = boxLength;
-	}
-	public String getBoxWidth() {
-		return boxWidth;
-	}
-	public void setBoxWidth(String boxWidth) {
-		this.boxWidth = boxWidth;
-	}
-	public String getBoxHeight() {
-		return boxHeight;
-	}
-	public void setBoxHeight(String boxHeight) {
-		this.boxHeight = boxHeight;
-	}
-	public String getMaterialLength() {
-		return materialLength;
-	}
-	public void setMaterialLength(String materialLength) {
-		this.materialLength = materialLength;
-	}
-	public String getMaterialWidth() {
-		return materialWidth;
-	}
-	public void setMaterialWidth(String materialWidth) {
-		this.materialWidth = materialWidth;
-	}
-	public String getMaterialName() {
-		return materialName;
-	}
-	public void setMaterialName(String materialName) {
-		this.materialName = materialName;
-	}
-	public Integer getOrderAmount() {
-		return orderAmount;
-	}
-	public void setOrderAmount(Integer orderAmount) {
-		this.orderAmount = orderAmount;
-	}
-	public String getMaterialSize() {
-		return materialSize;
-	}
-	public void setMaterialSize(String materialSize) {
-		this.materialSize = materialSize;
-	}
-	public String getProductSize() {
-		return productSize;
-	}
-	public void setProductSize(String productSize) {
-		this.productSize = productSize;
-	}
-	public Integer getLoadingAmount() {
-		return loadingAmount;
-	}
-	public void setLoadingAmount(Integer loadingAmount) {
-		this.loadingAmount = loadingAmount;
-	}
-	public Integer getOrderStatus() {
-		return orderStatus;
-	}
-	public void setOrderStatus(Integer orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-	public Integer getAbnomalAmount() {
-		return abnomalAmount;
-	}
-	public void setAbnomalAmount(Integer abnomalAmount) {
-		this.abnomalAmount = abnomalAmount;
-	}
-	@Override
-	public String toString() {
-		return "OrderInfoPO [productName=" + productName + ", orderId=" + orderId + ", fluteType=" + fluteType
-				+ ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
-				+ ", materialLength=" + materialLength + ", materialWidth=" + materialWidth + ", materialName="
-				+ materialName + ", orderAmount=" + orderAmount + ", materialSize=" + materialSize + ", productSize="
-				+ productSize + ", loadingAmount=" + loadingAmount + ", orderStatus=" + orderStatus + ", abnomalAmount="
-				+ abnomalAmount + "]";
-	}
+    /**
+     * 实际提货数量
+     */
+    private Integer realDeliveryAmount;
+
+    public Integer getRealDeliveryAmount() {
+        return realDeliveryAmount;
+    }
+
+    public void setRealDeliveryAmount(Integer realDeliveryAmount) {
+        this.realDeliveryAmount = realDeliveryAmount;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getFluteType() {
+        return fluteType;
+    }
+
+    public void setFluteType(String fluteType) {
+        this.fluteType = fluteType;
+    }
+
+    public String getBoxLength() {
+        return boxLength;
+    }
+
+    public void setBoxLength(String boxLength) {
+        this.boxLength = boxLength;
+    }
+
+    public String getBoxWidth() {
+        return boxWidth;
+    }
+
+    public void setBoxWidth(String boxWidth) {
+        this.boxWidth = boxWidth;
+    }
+
+    public String getBoxHeight() {
+        return boxHeight;
+    }
+
+    public void setBoxHeight(String boxHeight) {
+        this.boxHeight = boxHeight;
+    }
+
+    public String getMaterialLength() {
+        return materialLength;
+    }
+
+    public void setMaterialLength(String materialLength) {
+        this.materialLength = materialLength;
+    }
+
+    public String getMaterialWidth() {
+        return materialWidth;
+    }
+
+    public void setMaterialWidth(String materialWidth) {
+        this.materialWidth = materialWidth;
+    }
+
+    public String getMaterialName() {
+        return materialName;
+    }
+
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
+
+    public Integer getOrderAmount() {
+        return orderAmount;
+    }
+
+    public void setOrderAmount(Integer orderAmount) {
+        this.orderAmount = orderAmount;
+    }
+
+    public String getMaterialSize() {
+        return materialSize;
+    }
+
+    public void setMaterialSize(String materialSize) {
+        this.materialSize = materialSize;
+    }
+
+    public String getProductSize() {
+        return productSize;
+    }
+
+    public void setProductSize(String productSize) {
+        this.productSize = productSize;
+    }
+
+    public Integer getLoadingAmount() {
+        return loadingAmount;
+    }
+
+    public void setLoadingAmount(Integer loadingAmount) {
+        this.loadingAmount = loadingAmount;
+    }
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Integer getAbnomalAmount() {
+        return abnomalAmount;
+    }
+
+    public void setAbnomalAmount(Integer abnomalAmount) {
+        this.abnomalAmount = abnomalAmount;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderInfoPO [productName=" + productName + ", orderId=" + orderId + ", fluteType=" + fluteType
+                + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
+                + ", materialLength=" + materialLength + ", materialWidth=" + materialWidth + ", materialName="
+                + materialName + ", orderAmount=" + orderAmount + ", materialSize=" + materialSize + ", productSize="
+                + productSize + ", loadingAmount=" + loadingAmount + ", orderStatus=" + orderStatus + ", abnomalAmount="
+                + abnomalAmount + ", realDeliveryAmount=" + realDeliveryAmount + "]";
+    }
 
 }
