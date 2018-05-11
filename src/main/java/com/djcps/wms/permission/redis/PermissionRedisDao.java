@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.djcps.wms.commons.constant.RedisPrefixConstant;
 import com.djcps.wms.commons.redis.RedisClientCluster;
 import com.djcps.wms.permission.constants.PermissionConstants;
+import com.djcps.wms.permission.model.vo.ChangeWmsPerVO;
 import com.djcps.wms.permission.model.vo.UserPermissionVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,33 @@ public class PermissionRedisDao {
     public Boolean delPermission(String userId){
         long result = redisClientCluster.del(RedisPrefixConstant.PERMISSION_REDIS_CACHE + userId);
         if(result > 0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 获取 基础权限数据项
+     * @param
+     * @return
+     */
+    public List<ChangeWmsPerVO> getBasicPermission(){
+        String data = redisClientCluster.get(RedisPrefixConstant.PERMISSION_REDIS_BASIC_CACHE );
+        if(StringUtils.isNotBlank(data)){
+            return JSONObject.parseArray(data,ChangeWmsPerVO.class);
+        }
+        return null;
+    }
+
+    /**
+     * 设置基本权限权限缓存
+     * @param list
+     * @return
+     */
+    public Boolean setBasicPermission(List<ChangeWmsPerVO> list){
+        long result = redisClientCluster.setnx(RedisPrefixConstant.PERMISSION_REDIS_BASIC_CACHE,JSONObject.toJSONString(list));
+        if(result > 0 ){
+            redisClientCluster.expire(RedisPrefixConstant.PERMISSION_REDIS_BASIC_CACHE,PermissionConstants.PERMISSION_REDIS_CACHE_TIME);
             return true;
         }
         return false;

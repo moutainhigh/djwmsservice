@@ -16,7 +16,10 @@ import com.djcps.wms.inneruser.service.UserService;
 import com.djcps.wms.role.constant.RoleConstant;
 import com.djcps.wms.role.model.OrgUserRoleBO;
 import com.djcps.wms.role.model.OrgUserRoleVO;
+import com.djcps.wms.role.model.request.WmsRoleInfoPO;
+import com.djcps.wms.role.request.RoleHttpRequest;
 import com.djcps.wms.role.server.OrgRoleHttpServer;
+import com.djcps.wms.role.server.RoleHttpServer;
 import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -48,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private OrgRoleHttpServer orgRoleHttpServer;
+
+    @Autowired
+    private RoleHttpServer roleHttpServer;
 
     Gson gson = new Gson();
 
@@ -268,7 +274,6 @@ public class UserServiceImpl implements UserService {
                                         }
                                         userRelevanceBO.setWarehouseName(warehouseNameSub);
 
-                                        List<GetRoleTypePO> getRoleList = new ArrayList<>();
                                         List<String> roleTypeList = new ArrayList<>();
                                         StringBuffer roleTypeName = new StringBuffer();
                                         //wms的获取角色类型id
@@ -280,16 +285,13 @@ public class UserServiceImpl implements UserService {
                                         RoleTypeBO getRoleTypeBO1 = new RoleTypeBO();
                                         getRoleTypeBO1.setTypeCodeList(roleTypeList);
                                         getRoleTypeBO1.setPartnerId(pageGetUserBO.getPartnerId());
-                                        getRoleList = userServer.roleList(getRoleTypeBO1);
-                                        String getRoleListStr = gson.toJson(getRoleList);
-                                        List<String> quchongList = new ArrayList<>();
-                                        List<GetRoleTypePO> getRoleTypePOList = gson.fromJson(getRoleListStr, new TypeToken<ArrayList<GetRoleTypePO>>() {
-                                        }.getType());
-                                        if (!ObjectUtils.isEmpty(getRoleTypePOList)) {
-                                            getRoleTypePOList.stream().forEach(getRoleTypePO -> {
-                                                if (!quchongList.contains(getRoleTypePO.getRoleTypeCode())) {
-                                                    quchongList.add(getRoleTypePO.getRoleTypeCode());
-                                                    roleTypeName.append(getRoleTypePO.getRoleTypeName() + ",");
+                                        List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO1);
+                                        List<String> distinctList = new ArrayList<>();
+                                        if (!ObjectUtils.isEmpty(roleInfoPOList)) {
+                                            roleInfoPOList.stream().forEach(roleInfoPO -> {
+                                                if (!distinctList.contains(roleInfoPO.getRoleTypeCode())) {
+                                                    distinctList.add(roleInfoPO.getRoleTypeCode());
+                                                    roleTypeName.append(roleInfoPO.getRoleTypeName() + ",");
                                                 }
                                             });
                                         }
@@ -402,16 +404,14 @@ public class UserServiceImpl implements UserService {
                     RoleTypeBO getRoleTypeBO1 = new RoleTypeBO();
                     getRoleTypeBO1.setList(roleTypeList);
                     getRoleTypeBO1.setPartnerId(wmssaveUserBO.getPartnerId());
-                    List<GetRoleTypePO> getRoleList = userServer.roleList(getRoleTypeBO1);
-                    String getRoleListStr = gson.toJson(getRoleList);
+                    List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO1);
                     List<String> distinctList = new ArrayList<>();
-                    List<GetRoleTypePO> getRoleTypePOList = JSONObject.parseArray(getRoleListStr, GetRoleTypePO.class);
-                    if (!ObjectUtils.isEmpty(getRoleTypePOList)) {
-                        getRoleTypePOList.stream().forEach(getRoleTypePO -> {
+                    if (!ObjectUtils.isEmpty(roleInfoPOList)) {
+                        roleInfoPOList.stream().forEach(roleInfoPO -> {
                             //角色类型去重
-                            if (!distinctList.contains(getRoleTypePO.getRoleTypeCode())) {
-                                distinctList.add(getRoleTypePO.getRoleTypeCode());
-                                roleTypeCode.append(getRoleTypePO.getRoleTypeCode() + ",");
+                            if (!distinctList.contains(roleInfoPO.getRoleTypeCode())) {
+                                distinctList.add(roleInfoPO.getRoleTypeCode());
+                                roleTypeCode.append(roleInfoPO.getRoleTypeCode() + ",");
                             }
                         });
                     }
@@ -476,7 +476,6 @@ public class UserServiceImpl implements UserService {
      * @date 2018/4/19 10:02
      **/
     public Boolean updateUserRelevance(WmsSaveUserBO wmssaveUserBO, SaveUserBO saveUserBO) {
-        List<GetRoleTypePO> getRoleList = new ArrayList<>();
         List<String> roleTypeList = new ArrayList<>();
         //StringBuffer roleTypeName=new StringBuffer();
         StringBuffer roleTypeCode = new StringBuffer();
@@ -489,16 +488,14 @@ public class UserServiceImpl implements UserService {
         RoleTypeBO getRoleTypeBO1 = new RoleTypeBO();
         getRoleTypeBO1.setList(roleTypeList);
         getRoleTypeBO1.setPartnerId(wmssaveUserBO.getPartnerId());
-        getRoleList = userServer.roleList(getRoleTypeBO1);
-        String getRoleListStr = gson.toJson(getRoleList);
+        List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO1);
 
-        List<GetRoleTypePO> getRoleTypePOList = JSONObject.parseArray(getRoleListStr, GetRoleTypePO.class);
-        List<String> quchongList = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(getRoleTypePOList)) {
-            getRoleTypePOList.stream().forEach(getRoleTypePO -> {
-                if (!quchongList.contains(getRoleTypePO.getRoleTypeCode())) {
-                    quchongList.add(getRoleTypePO.getRoleTypeCode());
-                    roleTypeCode.append(getRoleTypePO.getRoleTypeCode() + ",");
+        List<String> distinctList = new ArrayList<>();
+        if (!ObjectUtils.isEmpty(roleInfoPOList)) {
+            roleInfoPOList.stream().forEach(roleInfoPO -> {
+                if (!distinctList.contains(roleInfoPO.getRoleTypeCode())) {
+                    distinctList.add(roleInfoPO.getRoleTypeCode());
+                    roleTypeCode.append(roleInfoPO.getRoleTypeCode() + ",");
                 }
             });
         }
@@ -670,11 +667,11 @@ public class UserServiceImpl implements UserService {
         RoleTypeBO getRoleTypeBO = new RoleTypeBO();
         getRoleTypeBO.setPartnerId(roleTypeBO.getPartnerId());
         //TODO 获取全部角色列表
-        List<GetRoleTypePO> getRoleTypePOList = userServer.roleList(getRoleTypeBO);
-        if (ObjectUtils.isEmpty(getRoleTypePOList)) {
+        List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO);
+        if (ObjectUtils.isEmpty(roleInfoPOList)) {
             return MsgTemplate.failureMsg(UserMsgEnum.ROLETYPE_NULL);
         }
-        List<GetRoleTypePO> getRoleList = new ArrayList<>();
+        List<WmsRoleInfoPO> getRoleList = new ArrayList<>();
         //TODO 有用户id，获取某用户的角色信息
         if (!StringUtils.isEmpty(roleTypeBO.getUserId())) {
             OrgUserRoleBO orgUserRoleBO = new OrgUserRoleBO() {{
@@ -694,13 +691,13 @@ public class UserServiceImpl implements UserService {
                     setList(ids);
                     setPartnerId(roleTypeBO.getPartnerId());
                 }};
-                getRoleList = userServer.roleList(getRoleTypeBO1);
+                getRoleList = roleHttpServer.listRole(getRoleTypeBO1);
             }
 
         }
         //组织好的角色信息
         UserRoleListBO userRoleListBO = new UserRoleListBO();
-        userRoleListBO.setAllRoleList(getRoleTypePOList);
+        userRoleListBO.setAllRoleList(roleInfoPOList);
         if (!ObjectUtils.isEmpty(getRoleList)) {
             userRoleListBO.setPersonRoleList(getRoleList);
         }

@@ -171,13 +171,15 @@ public class StockServiceImpl implements StockService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
         // 根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> orderList = null;
-        if (!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            orderList = orderInfo.getOrderList();
-        } else {
-            orderList = orderInfo.getSplitOrderList();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
+        if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+            orderList.addAll(orderInfo.getOrderList());
         }
-            for (WarehouseOrderDetailPO info : orderList) {
+        if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+            orderList.addAll(orderInfo.getSplitOrderList());
+        }
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+            for (WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 // 处理数据
                 param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 param.setRelativeName(info.getProductName());
@@ -528,15 +530,16 @@ public class StockServiceImpl implements StockService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
         // 根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if (!ObjectUtils.isEmpty(OrderList)) {
-            for (WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if (!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for (WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 // 处理数据
                 param.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 param.setRelativeName(info.getProductName());

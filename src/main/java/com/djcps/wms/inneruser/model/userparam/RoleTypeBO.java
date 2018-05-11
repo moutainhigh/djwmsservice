@@ -35,7 +35,6 @@ public class RoleTypeBO {
      */
     private List<String> list;
 
-
     /**
      * 角色类型id集合
      */

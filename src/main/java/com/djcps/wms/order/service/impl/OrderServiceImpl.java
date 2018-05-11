@@ -214,6 +214,10 @@ public class OrderServiceImpl implements OrderService {
 			baseVO.setTotal(paperResultData.getTotalSize());
 			return MsgTemplate.successMsg(baseVO);
 		}else{
+			BaseVO vo = new BaseVO();
+			vo.setResult(null);
+			vo.setTotal(0);
+			onlinePaperResult.setData(vo);
 			return MsgTemplate.customMsg(onlinePaperResult);
 		}
 	}

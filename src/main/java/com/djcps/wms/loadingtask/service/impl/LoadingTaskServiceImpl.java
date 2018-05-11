@@ -360,6 +360,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				BeanUtils.copyProperties(param, updateOrderBO);
             				updateOrderBO.setKeyArea(updateOrderBO.getPartnerArea());
             				updateOrderBO.setOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+            				updateOrderBO.setSplitStatus(1);
+            				
             				UpdateSplitOrderBO firstSpiltOrder = new UpdateSplitOrderBO();
             				UpdateSplitOrderBO secondSpiltOrder = new UpdateSplitOrderBO();
             				List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
@@ -372,6 +374,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				firstSpiltOrder.setIsException(0);
             				firstSpiltOrder.setIsProduce(0);
             				firstSpiltOrder.setIsStored(0);
+            				
             				secondSpiltOrder.setOrderId(param.getOrderId());
             				secondSpiltOrder.setSubOrderId(param.getTwiceOrderid());
             				secondSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_24));
@@ -705,15 +708,16 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 if(info.getOrderId().equals(param.getOrderId())) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
@@ -750,15 +754,16 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(param.getPartnerArea());

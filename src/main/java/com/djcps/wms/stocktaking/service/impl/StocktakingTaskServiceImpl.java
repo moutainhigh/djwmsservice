@@ -800,17 +800,22 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
       orderIdsBO.setPartnerArea(param.getPartnerArea());
     //根据订单编号获取订单信息
       BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-      if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-      orderInfo.getOrderList().addAll(orderInfo.getSplitOrderList());
+      List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
+      if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+          orderList.addAll(orderInfo.getOrderList());
       }
+      if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
+          orderList.addAll(orderInfo.getSplitOrderList());
+      }
+      List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
       //遍历页面传输订单号
       for(SaveStocktakingOrderInfoBO info : param.getSaveStocktaking()) {
-          if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
+          if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
               //遍历从订单服务查寻对应订单信息
-          for(WarehouseOrderDetailPO orderList : orderInfo.getOrderList()) {
-              if(info.getOrderId().equals(orderList.getChildOrderId())) {
+          for(WarehouseOrderDetailPO orderInfoList : joinOrderParamInfo) {
+              if(info.getOrderId().equals(orderInfoList.getOrderId())) {
                   //计算操作面积
-                  double area = operationRecordServer.getVolume(Double.parseDouble(orderList.getMaterialLength()), Double.parseDouble(orderList.getMaterialWidth()), info.getTakeStockAmount());
+                  double area = operationRecordServer.getVolume(Double.parseDouble(orderInfoList.getMaterialLength()), Double.parseDouble(orderInfoList.getMaterialWidth()), info.getTakeStockAmount());
                   areaSum = areaSum +area;
               }
           }
@@ -841,19 +846,20 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
       orderIdsBO.setPartnerArea(param.getPartnerArea());
     //根据订单编号获取订单信息
       BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-      List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+      List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
       if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-          OrderList.addAll(orderInfo.getOrderList());
+          orderList.addAll(orderInfo.getOrderList());
       }
       if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-          OrderList.addAll(orderInfo.getSplitOrderList());
+          orderList.addAll(orderInfo.getSplitOrderList());
       }
+      List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
       //遍历页面传输订单号
       for(SaveStocktakingOrderInfoBO info : param.getSaveStocktaking()) {
-          if(!ObjectUtils.isEmpty(OrderList)) {
+          if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
               //遍历从订单服务查寻对应订单信息
-          for(WarehouseOrderDetailPO orderList : OrderList) {
-              if(info.getOrderId().equals(orderList.getChildOrderId())) {
+          for(WarehouseOrderDetailPO orderInfoList : joinOrderParamInfo) {
+              if(info.getOrderId().equals(orderInfoList.getOrderId())) {
                   OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                   orderOperationRecordPO.setPartnerId(partnerInfoBO.getPartnerId());
                   orderOperationRecordPO.setPartnerArea(partnerInfoBO.getPartnerArea());
@@ -862,12 +868,12 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                 //订单类型后面判断TODO
                   orderOperationRecordPO.setOrderType("2");
                 //处理数据
-                  orderOperationRecordPO.setRelativeName(orderList.getProductName());
+                  orderOperationRecordPO.setRelativeName(orderInfoList.getProductName());
                   orderOperationRecordPO.setRelativeId(info.getOrderId());
                   orderOperationRecordPO.setAmount(info.getTakeStockAmount().toString());
-                  orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(orderList.getFluteType()));
+                  orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(orderInfoList.getFluteType()));
                   //计算操作面积
-                  double area = operationRecordServer.getVolume(Double.parseDouble(orderList.getMaterialLength()), Double.parseDouble(orderList.getMaterialWidth()), info.getTakeStockAmount());
+                  double area = operationRecordServer.getVolume(Double.parseDouble(orderInfoList.getMaterialLength()), Double.parseDouble(orderInfoList.getMaterialWidth()), info.getTakeStockAmount());
                   orderOperationRecordPO.setArea(String.valueOf(area));
                   list.add(orderOperationRecordPO);
               }

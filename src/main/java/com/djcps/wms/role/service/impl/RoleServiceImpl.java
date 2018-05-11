@@ -31,6 +31,7 @@ import java.util.Map;
  **/
 @Service
 public class RoleServiceImpl implements RoleService {
+
     @Autowired
     private RoleHttpServer roleHttpServer;
 
@@ -50,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
         roleListBO.setCompanyID(roleListBO.getPartnerId());
         OrgRoleInfoBO orgRoleInfoBO = new OrgRoleInfoBO();
         // 从wms服务获取角色关联信息
-        RoleInfoResultPO wmsRoleInfo = roleHttpServer.roleList(roleListBO);
+        RoleInfoResultVO wmsRoleInfo = roleHttpServer.pageRole(roleListBO);
         if (!ObjectUtils.isEmpty(wmsRoleInfo.getResult())) {
             BeanUtils.copyProperties(roleListBO, orgRoleInfoBO);
             for (WmsRoleInfoPO roleId : wmsRoleInfo.getResult()) {
