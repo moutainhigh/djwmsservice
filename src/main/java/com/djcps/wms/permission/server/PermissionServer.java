@@ -161,7 +161,7 @@ public class PermissionServer {
         String data = JSONObject.toJSONString(result.getData());
         List<GetOnePermissionPO> list = JSONObject.parseArray(data, GetOnePermissionPO.class);
         //规范返回字段
-        if (ObjectUtils.isEmpty(list)) {
+        if (!ObjectUtils.isEmpty(list)) {
             List listChange = list.stream().map(x -> new ChangeOnePerVO() {{
                 setTitle(x.getPtitle());
                 setDescribe(x.getPdes());
