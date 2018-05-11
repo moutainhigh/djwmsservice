@@ -22,8 +22,9 @@ public enum StockMsgEnum implements MsgInterface {
 	 */
 	SAVE_AMOUNT_ERROE(2, "入库数量有误请重新核对"),
 	
-	SPLIT_ORDER_NOT_STOC(3, "已拆分的子单不允许进行入库操作")
-	;
+	SPLIT_ORDER_NOT_STOC(3, "已拆分的子单不允许进行入库操作"),
+	
+	ADD_STOCK_WAREHOUSE_ERROR(4,"请选择和订单类型相同的仓库");
 
     private int code;
     

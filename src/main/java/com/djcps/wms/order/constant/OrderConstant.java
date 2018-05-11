@@ -13,6 +13,11 @@ public class OrderConstant {
 	 */
 	public static final String ONLINE_PAPERBOARD_ORDER ="GR";
 	
+	/**
+	 * 线上纸板订单前缀
+	 */
+	public static final String ONLINE_PAPERBOARD_ORDER_CGR ="CGR";
+	
     /**
      * 线下纸板订单前缀
      */

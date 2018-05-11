@@ -71,9 +71,14 @@ public class WarehouseOrderDetailPO implements Serializable{
 	 */
 	private String materialName;
 	/**
-	 * 楞型
+	 * 楞型(线上纸板订单取来的楞型是中文,线下纸板和纸箱取来的是数字)
 	 */
 	private String fluteType;
+	
+	/**
+	 * 楞型的转换字符串
+	 */
+	private String fluteTypeString;
 	/**
 	 * 只数(库存信息中会订单数量用的是amount字段,统一都用orderAmount表示订单数量)
 	 */
@@ -1053,35 +1058,44 @@ public class WarehouseOrderDetailPO implements Serializable{
 		this.materiaFid = materiaFid;
 	}
 
+	public String getFluteTypeString() {
+		return fluteTypeString;
+	}
+
+	public void setFluteTypeString(String fluteTypeString) {
+		this.fluteTypeString = fluteTypeString;
+	}
+
 	@Override
 	public String toString() {
 		return "WarehouseOrderDetailPO [fdblflag=" + fdblflag + ", unit=" + unit + ", keyArea=" + keyArea
 				+ ", partnerId=" + partnerId + ", childOrderId=" + childOrderId + ", orderStatus=" + orderStatus
 				+ ", orderTime=" + orderTime + ", payTime=" + payTime + ", deliveryTime=" + deliveryTime
 				+ ", productName=" + productName + ", materiaFid=" + materiaFid + ", materialName=" + materialName
-				+ ", fluteType=" + fluteType + ", amountPiece=" + amountPiece + ", series=" + series + ", boxModel="
-				+ boxModel + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", boxHeight=" + boxHeight
-				+ ", materialLength=" + materialLength + ", materialWidth=" + materialWidth + ", staveType=" + staveType
-				+ ", hline=" + hline + ", vline=" + vline + ", newVline=" + newVline + ", hlineFormula=" + hlineFormula
-				+ ", vlineFormula=" + vlineFormula + ", productArea=" + productArea + ", unitPrice=" + unitPrice
-				+ ", amountPrice=" + amountPrice + ", codeProvince=" + codeProvince + ", partnerName=" + partnerName
-				+ ", customerName=" + customerName + ", consignee=" + consignee + ", contactWay=" + contactWay
-				+ ", addressDetail=" + addressDetail + ", urgencyOrder=" + urgencyOrder + ", excpStatus=" + excpStatus
-				+ ", goKeyArea=" + goKeyArea + ", marktingplanId=" + marktingplanId + ", userId=" + userId
-				+ ", productionNo=" + productionNo + ", splitOrder=" + splitOrder + ", puserName=" + puserName
-				+ ", cuserName=" + cuserName + ", lnglat=" + lnglat + ", materialSize=" + materialSize
-				+ ", productSize=" + productSize + ", addressDetailProvince=" + addressDetailProvince + ", subOrderId="
-				+ subOrderId + ", subNumber=" + subNumber + ", subStatus=" + subStatus + ", subAddress=" + subAddress
-				+ ", outStock=" + outStock + ", inStock=" + inStock + ", isException=" + isException + ", isStored="
-				+ isStored + ", isProduce=" + isProduce + ", orderId=" + orderId + ", amountSaved=" + amountSaved
-				+ ", orderAmount=" + orderAmount + ", remark=" + remark + ", instockAmount=" + instockAmount
-				+ ", areaList=" + areaList + ", waybillId=" + waybillId + ", deliveryId=" + deliveryId
-				+ ", plateNumber=" + plateNumber + ", deliveryIdStatus=" + deliveryIdStatus + ", sequence=" + sequence
-				+ ", pickerId=" + pickerId + ", pickerName=" + pickerName + ", loadingPersonId=" + loadingPersonId
-				+ ", loadingPersonName=" + loadingPersonName + ", deliveryAmount=" + deliveryAmount + ", warehouseId="
-				+ warehouseId + ", warehouseName=" + warehouseName + ", warehouseAreaId=" + warehouseAreaId
-				+ ", warehouseAreaName=" + warehouseAreaName + ", warehouseLocId=" + warehouseLocId
-				+ ", warehouseLocName=" + warehouseLocName + ", allocationId=" + allocationId + "]";
+				+ ", fluteType=" + fluteType + ", fluteTypeString=" + fluteTypeString + ", amountPiece=" + amountPiece
+				+ ", series=" + series + ", boxModel=" + boxModel + ", boxLength=" + boxLength + ", boxWidth="
+				+ boxWidth + ", boxHeight=" + boxHeight + ", materialLength=" + materialLength + ", materialWidth="
+				+ materialWidth + ", staveType=" + staveType + ", hline=" + hline + ", vline=" + vline + ", newVline="
+				+ newVline + ", hlineFormula=" + hlineFormula + ", vlineFormula=" + vlineFormula + ", productArea="
+				+ productArea + ", unitPrice=" + unitPrice + ", amountPrice=" + amountPrice + ", codeProvince="
+				+ codeProvince + ", partnerName=" + partnerName + ", customerName=" + customerName + ", consignee="
+				+ consignee + ", contactWay=" + contactWay + ", addressDetail=" + addressDetail + ", urgencyOrder="
+				+ urgencyOrder + ", excpStatus=" + excpStatus + ", goKeyArea=" + goKeyArea + ", marktingplanId="
+				+ marktingplanId + ", userId=" + userId + ", productionNo=" + productionNo + ", splitOrder="
+				+ splitOrder + ", puserName=" + puserName + ", cuserName=" + cuserName + ", lnglat=" + lnglat
+				+ ", materialSize=" + materialSize + ", productSize=" + productSize + ", addressDetailProvince="
+				+ addressDetailProvince + ", subOrderId=" + subOrderId + ", subNumber=" + subNumber + ", subStatus="
+				+ subStatus + ", subAddress=" + subAddress + ", outStock=" + outStock + ", inStock=" + inStock
+				+ ", isException=" + isException + ", isStored=" + isStored + ", isProduce=" + isProduce + ", orderId="
+				+ orderId + ", amountSaved=" + amountSaved + ", orderAmount=" + orderAmount + ", remark=" + remark
+				+ ", instockAmount=" + instockAmount + ", areaList=" + areaList + ", waybillId=" + waybillId
+				+ ", deliveryId=" + deliveryId + ", plateNumber=" + plateNumber + ", deliveryIdStatus="
+				+ deliveryIdStatus + ", sequence=" + sequence + ", pickerId=" + pickerId + ", pickerName=" + pickerName
+				+ ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
+				+ ", deliveryAmount=" + deliveryAmount + ", warehouseId=" + warehouseId + ", warehouseName="
+				+ warehouseName + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+				+ ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", allocationId="
+				+ allocationId + "]";
 	}
 	
 }

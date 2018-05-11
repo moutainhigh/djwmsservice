@@ -37,6 +37,7 @@ import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
+import com.djcps.wms.order.constant.OrderConstant;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
@@ -211,8 +212,21 @@ public class StockServiceImpl implements StockService {
         BulitTypePO bulitTypePO = haveMap.get(param.getWarehouseId());
         if (bulitTypePO == null) {
             return MsgTemplate.failureMsg(SysMsgEnum.WAREHOUSE_ERROR);
+        }else{
+        	String type = bulitTypePO.getType();
+        	if(param.getOrderId().indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1 
+        			|| param.getOrderId().indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER_CGR)!=-1
+        			|| param.getOrderId().indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1){
+        		if(!type.equals(AppConstant.PAPERBOARD_WAREHOUSE)){
+        			return MsgTemplate.failureMsg(StockMsgEnum.ADD_STOCK_WAREHOUSE_ERROR);
+        		}
+            }else if(param.getOrderId().indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
+            	if(!type.equals(AppConstant.CARTON_WAREHOUSE)){
+        			return MsgTemplate.failureMsg(StockMsgEnum.ADD_STOCK_WAREHOUSE_ERROR);
+        		}
+            }
         }
-
+        
         if (param.getOrderId().indexOf("-") == -1) {
             // 判断该订单是否是拆单的子单,是拆单的子单不允许入库
             BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
@@ -268,9 +282,9 @@ public class StockServiceImpl implements StockService {
                     // 小于表示部分入库
                     orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
                     // 多次部分入库的情况下要累计拆单数量字段的值
-                    splitOrder.setSubNumber(saveAmount + trueAmount);
-                    splitOrder.setInStock(saveAmount + trueAmount);
                 }
+                splitOrder.setSubNumber(saveAmount + trueAmount);
+                splitOrder.setInStock(saveAmount + trueAmount);
             } else {
                 if (saveAmount > orderAmount) {
                     return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
@@ -281,11 +295,12 @@ public class StockServiceImpl implements StockService {
                     // 小于表示部分入库
                     orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
                     // 多次部分入库的情况下要累计拆单数量字段的值
-                    splitOrder.setSubNumber(saveAmount);
-                    splitOrder.setInStock(saveAmount);
                 }
+                splitOrder.setSubNumber(saveAmount);
+                splitOrder.setInStock(saveAmount);
             }
             param.setId(UUID.randomUUID().toString());
+            param.setIsSplit(0);
         } else {
             // 拆单入库
             orderIdBO = new OrderIdBO();
@@ -300,8 +315,13 @@ public class StockServiceImpl implements StockService {
                 // 小于表示部分入库
                 orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
             }
-            result = stockServer.getInventoryFidByOrderId(param);
+        	//根据订单号和合作方id获取拆单库存的fid
+        	OrderIdBO fidOrderIdBO = new OrderIdBO();
+        	fidOrderIdBO.setOrderId(param.getOrderId().substring(0, param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER)));
+        	fidOrderIdBO.setPartnerId(param.getPartnerId());
+            result = stockServer.getInventoryFidByOrderId(fidOrderIdBO);
             param.setId((String) result.getData());
+            param.setIsSplit(2);
         }
         // 入库
         result = stockServer.addStock(param);
@@ -339,6 +359,7 @@ public class StockServiceImpl implements StockService {
                 OrderIdBO order = new OrderIdBO();
                 order.setOrderId(sonOrderId);
                 order.setKeyArea(param.getPartnerArea());
+                splitOrderList.add(order);
                 result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
                 List<WarehouseOrderDetailPO> orderDetail = null;
                 Map<String, List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(
