@@ -46,6 +46,7 @@
       	<!-- 董毅锴线下纸板订单服务 -->
       	<property name="offlinePaperboardServer" value="http://172.16.0.31:8080/" />
     	<!-- org服务 -->  
+      	<!-- <property name="orgServer" value="http://192.168.2.24/DJOR/" /> -->
       	<property name="orgServer" value="http://192.168.23.4/DJOR/" />
     </bean>
  
