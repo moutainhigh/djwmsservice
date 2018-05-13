@@ -221,7 +221,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             .filter(amount -> info.getOrderId().equals(map.get(amount.getOrderId())))
                             .collect(Collectors.toList());
                     info.setLoadingAmount(loadingAmount.get(0).getLoadingAmount());
-                    
+                    info.setRealDeliveryAmount(loadingAmount.get(0).getRealDeliveryAmount());
                 });
                 confirmPO.setOrderInfo(newOrderInfo);
             }
@@ -708,15 +708,16 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 if(info.getOrderId().equals(param.getOrderId())) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
@@ -753,15 +754,16 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(param.getPartnerArea());

@@ -417,15 +417,16 @@ public class DeliveryServiceImpl implements DeliveryService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
@@ -439,7 +440,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 orderOperationRecordPO.setRelativeName(info.getProductName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
+                orderOperationRecordPO.setRelativeId(info.getOrderId());
                 orderOperationRecordPO.setAmount(param.getRealDeliveryAmount().toString());
               //计算操作面积
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getRealDeliveryAmount());

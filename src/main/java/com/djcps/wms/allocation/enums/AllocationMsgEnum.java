@@ -58,7 +58,7 @@ public enum AllocationMsgEnum implements MsgInterface {
     
     NO_HAVING_ORDER_ALLOCATION(17,"当前无订单参与配货!!!"),
     
-    SPLIT_ORDER_PRODUCE_STORED_ERROR(18,"已参与生产补单的订单和分线执行的订单无法拆分!!!");
+    SPLIT_ORDER_PRODUCE_STORED_ERROR(18,"已参与生产补单的订单或分线执行的订单无法拆分!!!");
 
     private int code;
     

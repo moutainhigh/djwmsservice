@@ -152,7 +152,7 @@ public class StockServer {
         return verifyHttpResult(http);
 	}
 	
-	public HttpResult getInventoryFidByOrderId(AddStockBO param) {
+	public HttpResult getInventoryFidByOrderId(OrderIdBO param) {
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);

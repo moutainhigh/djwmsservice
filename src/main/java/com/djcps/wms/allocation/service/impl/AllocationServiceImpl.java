@@ -1994,9 +1994,9 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> splitOrder(UpdateOrderBO param) {
-		String orderId = param.getDeleteOrdeIdList().get(0);
+		String deleteOrderId = param.getDeleteOrdeIdList().get(0);
 		BatchOrderIdListBO batch = new BatchOrderIdListBO();
-		List<String> orderIdList = Arrays.asList(orderId);
+		List<String> orderIdList = Arrays.asList(deleteOrderId);
 		batch.setKeyArea(param.getPartnerArea());
 		batch.setOrderIds(orderIdList);
 		//根据订单号获取订单详情
@@ -2032,7 +2032,7 @@ public class AllocationServiceImpl implements AllocationService {
 			SelectAreaByOrderIdBO select  = new SelectAreaByOrderIdBO();
 			BeanUtils.copyProperties(param, select);
 			OrderIdBO order = new OrderIdBO();
-			order.setOrderId(param.getOrderId());
+			order.setOrderId(deleteOrderId);
 			select.setOrderIds(Arrays.asList(order));
 			List<WarehouseOrderDetailPO> orderStockInfo = orderServer.getOrderStockInfo(select);
 			WarehouseOrderDetailPO orderDetail = orderStockInfo.get(0);
@@ -2061,6 +2061,17 @@ public class AllocationServiceImpl implements AllocationService {
 				//处理wms的异常订单表,将其修改为正常订单
 				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
+				param.setOrderStatus(OrderStatusTypeEnum.NO_STOCK.getValue());
+				
+				//并且假如是部分入库拆单的情况下,修改冗余表的订单状态,改成待入库
+				String deleteOrder = param.getDeleteOrdeIdList().get(0);
+				List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
+				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
+				update.setStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
+				update.setOrderId(param.getOrderId());
+				update.setPartnerId(param.getPartnerId());
+				updateList.add(update);
+				allocationServer.batchUpdateOrderRedun(updateList);
 			}else if(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue().equals(String.valueOf(orderStatus))){
 				//已入库订单只需要判断,两个拆单的拆单数量之后等于订单数量
 				if(!orderAmount.equals(firstSpiltOrder.getSubNumber()+secondSpiltOrder.getSubNumber())){
@@ -2068,58 +2079,12 @@ public class AllocationServiceImpl implements AllocationService {
 				}
 				firstSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
 				secondSpiltOrder.setSubStatus(Integer.valueOf(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue()));
+				param.setOrderStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 			}else{
 				return MsgTemplate.failureMsg(AllocationMsgEnum.NOT_ALLOW_SPLIT_ORDER);
 			}
 			
-			//获取真正的子单需要的订单状态
-			
-			String updateOrderId = param.getOrderId();
-			if(updateOrderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1){
-				updateOrderId = updateOrderId.substring(0, updateOrderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
-			}
-			List<String> orderIds = Arrays.asList(updateOrderId);
-			BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
-			batchOrderIdListBO.setOrderIds(orderIds);
-			batchOrderIdListBO.setKeyArea(param.getPartnerArea());
-			HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(batch);
-			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
-			List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
-	        if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())){
-	        	joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
-	        }
-	        if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getSplitOrderList())){
-	        	joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList());
-	        }
-	        List<OrderIdBO> orderIdBOList = new ArrayList<>();
-	        Map<String,WarehouseOrderDetailPO> orderDetailMap = new HashMap<>(16);
-	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
-	        	OrderIdBO orderIdBO = new OrderIdBO();
-	        	orderIdBO.setOrderId(warehouseOrderDetailPO.getOrderId());
-	        	orderIdBO.setKeyArea(param.getPartnerArea());
-	        	orderIdBOList.add(orderIdBO);
-	        	orderDetailMap.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
-			}
-	        
-	        String newOrderStatus = null;
-	        HttpResult splitOrderResult  = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
-	        Map<String,List<WarehouseOrderDetailPO>> detailMap = dataFormatGson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
-	        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
-	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
-	        	if(!ObjectUtils.isEmpty(detailValueList)){
-	        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
-		        		int otherOrderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus().intValue();
-		        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
-		        		//假如拆单状态小于子单状态则把状态赋值给子单
-		        		if(splitOrderStatus<otherOrderStatus){
-		        			newOrderStatus = String.valueOf(splitOrderStatus);
-		        		}
-		        	}
-	        	}
-	        }
-			
 			//组织oms需要的拆单数据
-	        param.setOrderStatus(newOrderStatus==null?String.valueOf(orderStatus):newOrderStatus);
 			param.setKeyArea(param.getPartnerArea());
 			param.setSplitStatus(1);
 			List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
@@ -2144,21 +2109,53 @@ public class AllocationServiceImpl implements AllocationService {
 				param.setSecondSpiltOrder(null);
 			}
 			result = allocationServer.splitOrder(param);
-			
-			//并且假如是部分入库的情况下,修改冗余表的订单状态,改成待入库
-			String deleteOrder = param.getDeleteOrdeIdList().get(0);
-			if(deleteOrder.indexOf(LoadingTaskConstant.SUBSTRING_ORDER)==-1){
-				List<UpdateOrderRedundantBO> updateList = new ArrayList<>();
-				UpdateOrderRedundantBO update = new UpdateOrderRedundantBO();
-				update.setStatus(Integer.valueOf(OrderStatusTypeEnum.NO_STOCK.getValue()));
-				update.setOrderId(deleteOrder);
-				update.setPartnerId(param.getPartnerId());
-				updateList.add(update);
-				result = allocationServer.batchUpdateOrderRedun(updateList);
-			}
 			if(result.isSuccess()){
 				//调用oms的拆单接口
 				result = orderServer.splitOrder(param);
+				if(result.isSuccess()){
+					//获取真正的子单需要的订单状态
+					String updateOrderId = param.getOrderId();
+					List<String> orderIds = Arrays.asList(updateOrderId);
+					BatchOrderIdListBO batchOrderIdListBO = new BatchOrderIdListBO();
+					batchOrderIdListBO.setOrderIds(orderIds);
+					batchOrderIdListBO.setKeyArea(param.getPartnerArea());
+					HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(batchOrderIdListBO);
+					BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+					List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
+					List<OrderIdBO> orderIdBOList = new ArrayList<>();
+					OrderIdBO orderIdBO = new OrderIdBO();
+		        	orderIdBO.setOrderId(updateOrderId);
+		        	orderIdBO.setKeyArea(param.getPartnerArea());
+		        	orderIdBOList.add(orderIdBO);
+					
+					String newOrderStatus = null;
+			        HttpResult splitOrderResult  = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
+			        Map<String,List<WarehouseOrderDetailPO>> detailMap = dataFormatGson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
+			        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
+			        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
+		        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
+			        		int otherOrderStatus = joinOrderParamInfo.get(0).getOrderStatus().intValue();
+			        		int splitOrderStatus = orderDetailPO.getSubStatus().intValue();
+			        		//假如拆单状态小于子单状态则把状态赋值给子单
+			        		if(splitOrderStatus<otherOrderStatus){
+			        			newOrderStatus = String.valueOf(splitOrderStatus);
+			        		}
+			        	}
+			        }
+			        if(!StringUtils.isEmpty(newOrderStatus)){
+			        	List<UpdateOrderBO> updateList = new ArrayList<>();
+	 	        		UpdateOrderBO update = new UpdateOrderBO();
+		  	        	update.setOrderId(param.getOrderId());
+		  	        	update.setOrderStatus(String.valueOf(newOrderStatus));
+		  	        	update.setKeyArea(param.getPartnerArea());
+		  	        	updateList.add(update);
+				        result = orderServer.updateOrderInfo(updateList);
+				        if(!result.isSuccess()){
+				        	LOGGER.error("拆分订单,修改订单状态为最小值的订单状态失败!!!");
+				        	return MsgTemplate.failureMsg("拆分订单,修改订单状态为最小值的订单状态失败!!!");
+				        }
+			        }
+				}
 			}
 			return MsgTemplate.customMsg(result);
 		}else{
@@ -2254,30 +2251,16 @@ public class AllocationServiceImpl implements AllocationService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getOrderList()) {
-                OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
-                orderOperationRecordPO.setPartnerId(param.getPartnerId());
-                orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
-                orderOperationRecordPO.setOperator(param.getOperator());
-                orderOperationRecordPO.setOperatorId(param.getOperatorId());
-              //订单类型后面判断TODO
-                orderOperationRecordPO.setOrderType("2");
-                //处理数据
-                orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getProductName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
-              //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getAmountPiece());
-                orderOperationRecordPO.setArea(String.valueOf(area));
-                list.add(orderOperationRecordPO);
-                
-                }
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            for(WarehouseOrderDetailPO info : orderInfo.getSplitOrderList()) {
+            orderList.addAll(orderInfo.getSplitOrderList());
+        }
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
@@ -2288,31 +2271,16 @@ public class AllocationServiceImpl implements AllocationService {
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 orderOperationRecordPO.setRelativeName(info.getProductName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
+                orderOperationRecordPO.setRelativeId(info.getOrderId());
+                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
               //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getAmountPiece());
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
                 orderOperationRecordPO.setArea(String.valueOf(area));
                 list.add(orderOperationRecordPO);
                 
                 }
         }
-       /* if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
-                //处理数据
-                orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
-                orderOperationRecordPO.setRelativeName(info.getPartnerName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
-              //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getAmountPiece());
-                orderOperationRecordPO.setArea(String.valueOf(area));
-                list.add(orderOperationRecordPO);
-                
-                }
-               
-            }*/
-           
+
         return list;
 	}
 
@@ -2331,15 +2299,16 @@ public class AllocationServiceImpl implements AllocationService {
         orderIdsBO.setPartnerArea(param.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(param.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(param.getPartnerArea());
@@ -2350,17 +2319,17 @@ public class AllocationServiceImpl implements AllocationService {
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 orderOperationRecordPO.setRelativeName(info.getProductName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
+                orderOperationRecordPO.setRelativeId(info.getOrderId());
+                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
                 for(SequenceBO ordersInfo :param.getOrderIds()) {
-                    if(info.getChildOrderId().equals(ordersInfo.getOrderId())) {
+                    if(info.getOrderId().equals(ordersInfo.getOrderId())) {
                         orderOperationRecordPO.setWarehouseId(ordersInfo.getWarehouseId());
                         orderOperationRecordPO.setWarehouseAreaId(ordersInfo.getWarehouseAreaId());
                         orderOperationRecordPO.setWarehouseLocId(ordersInfo.getWarehouseLocId());
                     }
                 }
               //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getAmountPiece());
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
                 orderOperationRecordPO.setArea(String.valueOf(area));
                 list.add(orderOperationRecordPO);
             }
@@ -2385,15 +2354,16 @@ public class AllocationServiceImpl implements AllocationService {
         orderIdsBO.setPartnerArea(partnerInfoBean.getPartnerArea());
       //根据订单编号获取订单信息
         BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
-        List<WarehouseOrderDetailPO> OrderList = new ArrayList<WarehouseOrderDetailPO>();
+        List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
-            OrderList.addAll(orderInfo.getOrderList());
+            orderList.addAll(orderInfo.getOrderList());
         }
         if(!ObjectUtils.isEmpty(orderInfo.getSplitOrderList())) {
-            OrderList.addAll(orderInfo.getSplitOrderList());
+            orderList.addAll(orderInfo.getSplitOrderList());
         }
-        if(!ObjectUtils.isEmpty(OrderList)) {
-            for(WarehouseOrderDetailPO info : OrderList) {
+        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+        if(!ObjectUtils.isEmpty(joinOrderParamInfo)) {
+            for(WarehouseOrderDetailPO info : joinOrderParamInfo) {
                 OrderOperationRecordPO orderOperationRecordPO = new OrderOperationRecordPO();
                 orderOperationRecordPO.setPartnerId(partnerInfoBean.getPartnerId());
                 orderOperationRecordPO.setPartnerArea(partnerInfoBean.getPartnerArea());
@@ -2404,10 +2374,10 @@ public class AllocationServiceImpl implements AllocationService {
                 //处理数据
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 orderOperationRecordPO.setRelativeName(info.getProductName());
-                orderOperationRecordPO.setRelativeId(info.getChildOrderId());
-                orderOperationRecordPO.setAmount(info.getAmountPiece().toString());
+                orderOperationRecordPO.setRelativeId(info.getOrderId());
+                orderOperationRecordPO.setAmount(info.getOrderAmount().toString());
               //计算操作面积
-                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getAmountPiece());
+                double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), info.getOrderAmount());
                 orderOperationRecordPO.setArea(String.valueOf(area));
                 list.add(orderOperationRecordPO);
             }

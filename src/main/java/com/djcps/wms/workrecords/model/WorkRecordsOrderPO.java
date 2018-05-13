@@ -32,7 +32,6 @@ public class WorkRecordsOrderPO {
      */
     private String event;
 
-
     /**
      * 产品名称
      */
@@ -82,6 +81,31 @@ public class WorkRecordsOrderPO {
      * 单位
      */
     private String unit;
+    /**
+     * 下料规格
+     */
+    private String materialSize;
+
+    /**
+     * 产品规格
+     */
+    private String productSize;
+
+    public String getMaterialSize() {
+        return materialSize;
+    }
+
+    public String getProductSize() {
+        return productSize;
+    }
+
+    public void setMaterialSize(String materialSize) {
+        this.materialSize = materialSize;
+    }
+
+    public void setProductSize(String productSize) {
+        this.productSize = productSize;
+    }
 
     public String getWarehouseId() {
         return warehouseId;
@@ -205,22 +229,12 @@ public class WorkRecordsOrderPO {
 
     @Override
     public String toString() {
-        return "WorkRecordsOrderPO{" +
-                "warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", orderId='" + orderId + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", event='" + event + '\'' +
-                ", productName='" + productName + '\'' +
-                ", materialName='" + materialName + '\'' +
-                ", materialLength='" + materialLength + '\'' +
-                ", materialWidth='" + materialWidth + '\'' +
-                ", fluteType='" + fluteType + '\'' +
-                ", boxHeight='" + boxHeight + '\'' +
-                ", boxLength='" + boxLength + '\'' +
-                ", boxWidth='" + boxWidth + '\'' +
-                ", orderAmount=" + orderAmount +
-                ", unit='" + unit + '\'' +
-                '}';
+        return "WorkRecordsOrderPO [warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", orderId="
+                + orderId + ", createTime=" + createTime + ", event=" + event + ", productName=" + productName
+                + ", materialName=" + materialName + ", materialLength=" + materialLength + ", materialWidth="
+                + materialWidth + ", fluteType=" + fluteType + ", boxHeight=" + boxHeight + ", boxLength=" + boxLength
+                + ", boxWidth=" + boxWidth + ", orderAmount=" + orderAmount + ", unit=" + unit + ", materialSize="
+                + materialSize + ", productSize=" + productSize + "]";
     }
+
 }

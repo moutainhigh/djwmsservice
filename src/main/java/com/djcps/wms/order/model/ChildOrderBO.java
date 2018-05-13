@@ -635,6 +635,7 @@ public class ChildOrderBO {
 	public void setMateriaFid(String materiaFid) {
 		this.materiaFid = materiaFid;
 	}
+	
 	@Override
 	public String toString() {
 		return "ChildOrderBO [fdblflag=" + fdblflag + ", unit=" + unit + ", orderId=" + orderId + ", keyArea=" + keyArea
