@@ -376,7 +376,13 @@ public class StockServiceImpl implements StockService {
                 updateSplitOrder.setKeyArea(param.getPartnerArea());
                 updateSplitOrder.setSubOrderId(orderId);
                 updateSplitOrder.setSubStatus(Integer.valueOf(list.get(0).getStatus()));
-                updateSplitOrder.setInStock(saveAmount);
+                List<WarehouseOrderDetailPO> orderDetail = orderServer.getOrderStockInfo(selectAreaByOrderId);
+                if(!ObjectUtils.isEmpty(orderDetail)){
+                	Integer trueAmount = orderDetail.get(0).getAmountSaved();
+                	updateSplitOrder.setInStock(trueAmount);
+                }else{
+                	updateSplitOrder.setInStock(saveAmount);
+                }
                 updateSplitOrderList.add(updateSplitOrder);
                 result = orderServer.updateSplitOrderInfo(updateSplitOrderList);
                 if (!result.isSuccess()) {

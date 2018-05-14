@@ -297,7 +297,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         }
             Integer loadingAmount = param.getLoadingAmount();
             Integer orderAmount = param.getOrderAmount();
-            //if (!orderAmount.equals(loadingAmount)) {
             if(!param.getRealDeliveryAmount().equals(loadingAmount)) {
                     // 全部退库
                     if (loadingAmount == 0) {
@@ -339,22 +338,6 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
                         HttpResult result = loadingTaskServer.loading(param);
                         if (result.isSuccess()) {
-//                        	List<String> orderIdList = new ArrayList<>();
-//                        	orderIdList.add(param.getOnceOrderid());
-//                        	orderIdList.add(param.getTwiceOrderid());
-//                        	
-//                        	List<OrderIdBO> orderIdBOList = new ArrayList<>();
-//                        	//-1更新订单状态
-//                        	OrderIdBO firstOrder = new OrderIdBO();
-//                        	firstOrder.setOrderId(param.getOnceOrderid());
-//                        	firstOrder.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_25);
-//            				orderIdBOList.add(firstOrder);
-//                        	//-2更新订单状态
-//                        	OrderIdBO secondOrder = new OrderIdBO();
-//                        	secondOrder.setOrderId(param.getTwiceOrderid());
-//                        	secondOrder.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
-//            				orderIdBOList.add(secondOrder);
-            				
             				//OMS订单拆分组织参数
             				UpdateOrderBO updateOrderBO = new UpdateOrderBO();
             				BeanUtils.copyProperties(param, updateOrderBO);
@@ -388,16 +371,11 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				splitOrders.add(secondSpiltOrder);
             				updateOrderBO.setSplitOrders(splitOrders);
             				HttpResult updateResult  = orderServer.splitOrder(updateOrderBO);
-//                        	HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
                         	if(!updateResult.isSuccess()){
                                 LOGGER.error("装车,部分退库,修改订单状态失败!!!");
                                 return MsgTemplate.customMsg(updateResult);
                             }
                         	return MsgTemplate.customMsg(result);
-//                        	Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea());
-//                            if(compareOrderStatus==false){
-//                              return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
-//                            }
                         } else {
                             
                             return MsgTemplate.customMsg(result);
@@ -583,7 +561,22 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 if (!insertResult.isSuccess()) {
                     return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
                 }
-                return MsgTemplate.customMsg(insertResult);
+                //组织修改oms出库数量代码
+                List<UpdateSplitOrderBO> updateSplitOrderList = new ArrayList<>();
+                for (ChildOrderBO childOrderBO : newChildOrderList) {
+                	//组织修改oms出库数量代码
+                	UpdateSplitOrderBO updateSplitOrder = new UpdateSplitOrderBO();
+                    updateSplitOrder.setKeyArea(param.getPartnerArea());
+                    updateSplitOrder.setSubOrderId(childOrderBO.getOrderId());
+                    updateSplitOrder.setOutStock(childOrderBO.getOrderAmount());
+                    updateSplitOrderList.add(updateSplitOrder);
+				}
+                HttpResult updateSplitResult = orderServer.updateSplitOrderInfo(updateSplitOrderList);
+                if (!updateSplitResult.isSuccess()) {
+                    LOGGER.error("拆单入库,修改出库数量失败!!!");
+                    return MsgTemplate.failureMsg("拆单入库,修改出库数量失败!!!");
+                }
+                return MsgTemplate.customMsg(updateSplitResult);
             }else{
             	return MsgTemplate.failureMsg(LoadingTaskEnum.OUTORDER_FAIL);
             }
