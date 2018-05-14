@@ -17,7 +17,7 @@ public class GsonUtils {
     /**
      * gson 转换静态类
      */
-    public static Gson gsonNotNulL = new GsonBuilder().create(); 
+    public static Gson gsonNotNull = new GsonBuilder().create(); 
     
     /**
      * gson 转换静态类

@@ -100,6 +100,8 @@ public class StockServiceImpl implements StockService {
     private Gson gson = GsonUtils.gson;
 
     private Gson dataFormatGson = GsonUtils.dataFormatGson;
+    
+    private Gson gsonNotNull = GsonUtils.gsonNotNull;
 
     @Override
     public Map<String, Object> getRecommendLoca(RecommendLocaBO param) {
@@ -170,14 +172,8 @@ public class StockServiceImpl implements StockService {
         orderIds.add(param.getOrderId());
         orderIdsBO.setChildOrderIds(orderIds);
         orderIdsBO.setPartnerArea(param.getPartnerArea());
-        
-        BatchOrderIdListBO batch = new BatchOrderIdListBO();
-		batch.setKeyArea(param.getPartnerArea());
-		batch.setOrderIds(orderIds);
-		HttpResult httpResult =  orderServer.getOrderDeatilByIdList(batch);
-		BatchOrderDetailListPO orderInfo = dataFormatGson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
         // 根据订单编号获取订单信息
-//        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        BatchOrderDetailListPO orderInfo = orderServer.getOrderOrSplitOrder(orderIdsBO);
         List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
         if(!ObjectUtils.isEmpty(orderInfo.getOrderList())) {
             orderList.addAll(orderInfo.getOrderList());
@@ -243,7 +239,7 @@ public class StockServiceImpl implements StockService {
             HttpResult orderResult = orderServer.getOrderDeatilByIdList(batchOrderIdListBO);
             if (!ObjectUtils.isEmpty(orderResult.getData())) {
                 BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson
-                        .fromJson(gson.toJson(orderResult.getData()), BatchOrderDetailListPO.class);
+                        .fromJson(gsonNotNull.toJson(orderResult.getData()), BatchOrderDetailListPO.class);
                 List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
                 Integer splitOrder = orderServer.joinOrderParamInfo(orderList).get(0).getSplitOrder();
                 if (splitOrder == 1) {
