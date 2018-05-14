@@ -30,7 +30,8 @@ public enum LoadingTaskEnum implements MsgInterface {
 	 */
 	OUTORDER_FAIL(6,"生成出库单失败"),
 	
-	NO_DEAL_ORDER(7, "部分订单未进行装车,无法完成装车")
+	NO_DEAL_ORDER(7, "部分订单未进行装车,无法完成装车"),
+	LOADINGAMOUNT_ERROR(8,"装车数量大于提货数量请重新输入")
 	;
 	
 	 private int code;

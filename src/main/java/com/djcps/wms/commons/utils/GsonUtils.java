@@ -12,7 +12,7 @@ public class GsonUtils {
     /**
      * gson 转换静态类
      */
-    public static Gson gson = new GsonBuilder().serializeNulls().create();
+    public static Gson gson = new GsonBuilder().create();
     
      
     /**

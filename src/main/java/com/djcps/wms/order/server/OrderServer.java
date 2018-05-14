@@ -571,7 +571,8 @@ public class OrderServer {
 		HttpResult httpResult = getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = null;
 		if(!ObjectUtils.isEmpty(httpResult.getData())){
-			batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
+		    String json = gson.toJson(httpResult.getData());
+			batchOrderDetailListPO = dataFormatGson.fromJson(json,BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo =joinOrderParamInfo(orderList);
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
