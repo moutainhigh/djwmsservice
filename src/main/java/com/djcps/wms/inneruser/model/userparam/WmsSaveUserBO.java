@@ -4,8 +4,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * wms专用的用户信息保存参数
- * @author:wzy
- * @date:2018/4/18
+ * @author wzy
+ * @date 2018/4/18
  **/
 public class WmsSaveUserBO {
 

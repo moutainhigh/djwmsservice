@@ -24,7 +24,7 @@ public interface LoadingTaskService {
     /**
      * 获取装车员列表
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/20
      * @param param
      * @return
@@ -34,7 +34,7 @@ public interface LoadingTaskService {
     /**
      * 移除装车员
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/20
      * @param param
      * @return
@@ -44,7 +44,7 @@ public interface LoadingTaskService {
     /**
      * 装车员界面确认
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/20
      * @param param
      * @return
@@ -54,7 +54,7 @@ public interface LoadingTaskService {
     /**
      * 装车
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param param
      * @return
@@ -64,7 +64,7 @@ public interface LoadingTaskService {
     /**
      * 追加订单
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param param
      * @return
@@ -74,7 +74,7 @@ public interface LoadingTaskService {
     /**
      * 驳回申请
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param param
      * @return
@@ -84,7 +84,7 @@ public interface LoadingTaskService {
     /**
      * 追加订单申请列表web
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param param
      * @return
@@ -94,7 +94,7 @@ public interface LoadingTaskService {
     /**
      * 完成装车
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param param
      * @return

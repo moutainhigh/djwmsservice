@@ -13,7 +13,7 @@ public enum InnerUserMsgEnum implements MsgInterface{
      * 错误代码
      */
 
-    TOEKN_NULL(810001,"token 未发现");
+    TOKEN_NULL(810001,"token 未发现");
 
     private int code;
 
@@ -26,11 +26,11 @@ public enum InnerUserMsgEnum implements MsgInterface{
 
     @Override
     public int getCode() {
-        return 0;
+        return code;
     }
 
     @Override
     public String getMsg() {
-        return null;
+        return msg;
     }
 }

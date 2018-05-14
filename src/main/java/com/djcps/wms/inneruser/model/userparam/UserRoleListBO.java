@@ -6,8 +6,8 @@ import java.util.List;
 
 /**
  * 用户角色类型和所有角色类型返回类
- * @author:wzy
- * @date:2018/4/18
+ * @author wzy
+ * @date 2018/4/18
  **/
 public class UserRoleListBO {
     /**

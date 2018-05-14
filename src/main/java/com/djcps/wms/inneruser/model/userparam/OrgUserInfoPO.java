@@ -2,8 +2,8 @@ package com.djcps.wms.inneruser.model.userparam;
 
 /**
  * 从ORG获取带u开头的用户信息
- * @author:wzy
- * @date:2018/4/12
+ * @author wzy
+ * @date 2018/4/12
  **/
 public class OrgUserInfoPO {
 

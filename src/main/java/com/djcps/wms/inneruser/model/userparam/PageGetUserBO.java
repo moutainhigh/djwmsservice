@@ -4,8 +4,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 条件获取用户列表
- * @author:wzy
- * @date:2018/4/13
+ * @author wzy
+ * @date 2018/4/13
  **/
 public class PageGetUserBO {
     /**

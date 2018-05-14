@@ -68,7 +68,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:26
      */
     @Override
@@ -85,7 +85,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:26
      */
     @Override
@@ -113,7 +113,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:28
      */
     @Override
@@ -130,7 +130,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:29
      */
     @Override
@@ -219,7 +219,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  13:18
      */
     @Override
@@ -244,7 +244,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  13:10
      */
     @Override
@@ -291,7 +291,7 @@ public class DeliveryServiceImpl implements DeliveryService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  13:09
      */
     @Override
@@ -372,7 +372,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
     /**
      * 删除提货订单信息
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/13
      * @param param
      * @return

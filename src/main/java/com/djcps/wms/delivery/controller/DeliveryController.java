@@ -48,7 +48,7 @@ public class DeliveryController {
     /**
      * 获取提货单列表
      * 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31 08:35
      * @param json
      * @return
@@ -79,7 +79,7 @@ public class DeliveryController {
     /**yes
      * 获取提货单订单列表
      * 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31 08:35
      * @param json
      * @return
@@ -110,7 +110,7 @@ public class DeliveryController {
     /**
      * 打印
      * 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31 08:35
      * @param json
      * @return
@@ -140,7 +140,7 @@ public class DeliveryController {
     /**yes
      * 完成单条提货订单
      * 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1 14:15
      * @param json
      * @param userInfoVO
@@ -175,7 +175,7 @@ public class DeliveryController {
     /**yes
      * 获取提货信息以及订单信息 -PDA
      * 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1 14:15
      * @param json
      * @return
@@ -208,7 +208,7 @@ public class DeliveryController {
     /**
      * 获取订单信息 -PDA
      * yes
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1 14:15
      * @param json
      * @param userInfoVO

@@ -2,8 +2,8 @@ package com.djcps.wms.inneruser.constant;
 
 /**
  * 用户模块常量类
- * @author:wzy
- * @date:2018/4/23
+ * @author wzy
+ * @date 2018/4/23
  **/
 public class UserConstant {
 

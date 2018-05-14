@@ -2,8 +2,8 @@ package com.djcps.wms.inneruser.model.userparam;
 
 /**
  * 保存用户信息
- * @author:wzy
- * @date:2018/4/16
+ * @author wzy
+ * @date 2018/4/16
  **/
 public class SaveUserBO {
 

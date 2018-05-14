@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validation;
 import java.util.Map;
@@ -46,27 +47,27 @@ public class InnerUserController {
 
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(InnerUserController.class);
 
-    @Autowired
+    @Resource
     private InnerUserService innerUserService;
 
-    @Autowired
+    @Resource
     private PermissionService permissionService;
-    @Autowired
+    @Resource
     private UserService userService;
 
-    @RequestMapping(name = "test", value = "/test", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(name = "test", value = "/test", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> login(@RequestBody(required = false) String json,
-            @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
+                                     @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
         return MsgTemplate.successMsg(operatorInfoBO);
     }
 
     /**
      * APP登录页面
-     * 
+     *
      * @param json
      * @return
      */
-    @RequestMapping(name = "APP登录页面", value = "/login", method = { RequestMethod.POST })
+    @RequestMapping(name = "APP登录页面", value = "/login", method = {RequestMethod.POST})
     public Map<String, Object> login(@RequestBody(required = false) String json) {
         try {
 
@@ -77,8 +78,7 @@ public class InnerUserController {
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(toComplex());
             if (ret.isSuccess()) {
-                Map<String, Object> result = innerUserService.loginTokenWithApp(innerUserLoginBO);
-                return result;
+                return innerUserService.loginTokenWithApp(innerUserLoginBO);
             }
         } catch (Exception e) {
             LOGGER.error("app登录异常：{} ", e.getMessage());
@@ -89,11 +89,11 @@ public class InnerUserController {
 
     /**
      * APP登录页面-手机验证码
-     * 
+     *
      * @param json
      * @return
      */
-    @RequestMapping(name = "APP登录页面-手机验证码", value = "/loginWithPhone", method = { RequestMethod.POST })
+    @RequestMapping(name = "APP登录页面-手机验证码", value = "/loginWithPhone", method = {RequestMethod.POST})
     public Map<String, Object> loginWithPhone(@RequestBody(required = false) String json) {
         try {
             InnerUserLoginPhoneBO param = gson.fromJson(json, InnerUserLoginPhoneBO.class);
@@ -103,8 +103,7 @@ public class InnerUserController {
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(toComplex());
             if (ret.isSuccess()) {
-                Map<String, Object> result = innerUserService.loginTokenWithPhone(param);
-                return result;
+                return innerUserService.loginTokenWithPhone(param);
             }
         } catch (Exception e) {
             LOGGER.error("app登录异常：{} ", e.getMessage());
@@ -115,11 +114,11 @@ public class InnerUserController {
 
     /**
      * 发送登录手机验证码
-     * 
-     * @param json
+     *
+     * @param json String
      * @return
      */
-    @RequestMapping(name = "发送手机验证码", value = "/sendLoginCode", method = { RequestMethod.POST, RequestMethod.GET })
+    @RequestMapping(name = "发送手机验证码", value = "/sendLoginCode", method = {RequestMethod.POST, RequestMethod.GET})
     public Map<String, Object> sendLoginCode(@RequestBody(required = false) String json) {
         try {
             InnerUserLoginPhoneBO param = gson.fromJson(json, InnerUserLoginPhoneBO.class);
@@ -129,8 +128,7 @@ public class InnerUserController {
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(toComplex());
             if (ret.isSuccess()) {
-                Map<String, Object> result = innerUserService.sendLoginCode(param);
-                return result;
+                return innerUserService.sendLoginCode(param);
             }
         } catch (Exception e) {
             LOGGER.error("app登录异常：{} ", e.getMessage());
@@ -141,12 +139,11 @@ public class InnerUserController {
 
     /**
      * 该接口用于获取用户信息
-     * 
-     * @param token
-     *            token
+     *
+     * @param token String
      * @return json数据 ，包含用户信息
      */
-    @RequestMapping(name = "该接口用于获取用户信息", value = "/info", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(name = "该接口用于获取用户信息", value = "/info", method = {RequestMethod.GET, RequestMethod.POST})
     @AddLog(module = "内部用户", value = "该接口用于获取用户信息")
     public Map<String, Object> getInfo(@InnerUserToken String token) {
         UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(token);
@@ -155,15 +152,15 @@ public class InnerUserController {
 
     /**
      * 该接口用于修改密码
-     * 
-     * @param json
-     * @param token
-     * @return
+     *
+     * @param json String
+     * @param token String
+     * @return http
      */
-    @RequestMapping(name = "该接口用于修改密码", value = "/changePassword", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(name = "该接口用于修改密码", value = "/changePassword", method = {RequestMethod.GET, RequestMethod.POST})
     @AddLog(module = "内部用户", value = "该接口用于修改密码")
     public Map<String, Object> changeUserPassword(@RequestBody(required = false) String json,
-            @InnerUserToken String token) {
+                                                  @InnerUserToken String token) {
         try {
             InnerUserChangePasswordBO innerUserChangePasswordBO = gson.fromJson(json, InnerUserChangePasswordBO.class);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -186,11 +183,11 @@ public class InnerUserController {
 
     /**
      * 该接口用于不同系统切换间交换token 需求中不予支持切换系统 代码予以保留，以供以后有需要支持可能
-     * 
+     *
      * @return json格式的数据 ，包含返回跳转的url
      */
-    @RequestMapping(name = "该接口用于不同系统切换间交换token", value = "/switchSys", method = { RequestMethod.GET,
-            RequestMethod.POST })
+    @RequestMapping(name = "该接口用于不同系统切换间交换token", value = "/switchSys", method = {RequestMethod.GET,
+            RequestMethod.POST})
     public Map<String, Object> switchSys(@RequestBody(required = false) String json, @InnerUserToken String token) {
         try {
             UserSwitchSysBO userSwitchSysBO = gson.fromJson(json, UserSwitchSysBO.class);
@@ -214,7 +211,7 @@ public class InnerUserController {
 
     /**
      * 将一次性Token转换为固定Token 由于Oncetoken传递数据格式由内部统一用户服务传递
-     * 
+     *
      * @return json格式的数据 ，包含返回跳转的url
      */
     @RequestMapping(name = "将一次性Token转换为固定Token", value = "/handleOnceToken", method = RequestMethod.POST)
@@ -228,19 +225,19 @@ public class InnerUserController {
                     if (StringUtils.isNotBlank(userExchangeTokenVO.getToken())) {
                         if (innerUserService.setUserCookie(userExchangeTokenVO.getToken(), response)) {
                             UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVO.getToken());
-                            if(!ObjectUtils.isEmpty(userInfoVO)) {
-                            // 更新登陆次数以及时间
-                            UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
-                            updateUserStatusBO.setUserId(userInfoVO.getId());
-                            updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
-                            updateUserStatusBO.setLoginCount(" ");
-                            Map<String, Object> result = userService.updateUserStatus(updateUserStatusBO);
+                            if (!ObjectUtils.isEmpty(userInfoVO)) {
+                                // 更新登陆次数以及时间
+                                UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
+                                updateUserStatusBO.setUserId(userInfoVO.getId());
+                                updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
+                                updateUserStatusBO.setLoginCount(" ");
+                                userService.updateUserStatus(updateUserStatusBO);
                             }
                             return MsgTemplate.successMsg(userInfoVO);
                         }
                     }
                 }
-                return MsgTemplate.failureMsg(InnerUserMsgEnum.TOEKN_NULL);
+                return MsgTemplate.failureMsg(InnerUserMsgEnum.TOKEN_NULL);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -251,20 +248,19 @@ public class InnerUserController {
 
     /**
      * 用户登出系统
-     * 
-     * @param token
-     *            the token
+     *
+     * @param token the token
      * @return map
      */
     @RequestMapping(name = "用户登出系统", value = "/logout")
     public Map<String, Object> logout(@InnerUserToken String token, HttpServletResponse response,
-            @InnerUser UserInfoVO userInfoVO) {
+                                      @InnerUser UserInfoVO userInfoVO) {
         Boolean isSuccess = innerUserService.logout(token);
         // 无论是否成功退出内部统一登录系统，本系统内直接可以退出
         if (isSuccess) {
             CookiesUtil.setCookie(response, ParamsConfig.INNER_USER_COOKIE_NAME, "", 0);
             UserLogoutVO userLogoutVO = new UserLogoutVO(ParamsConfig.INNER_USER_LOGIN_URL);
-            if(!ObjectUtils.isEmpty(userInfoVO)){
+            if (!ObjectUtils.isEmpty(userInfoVO)) {
                 permissionService.delUserRedisPermission(userInfoVO.getId());
             }
             return MsgTemplate.successMsg(userLogoutVO);

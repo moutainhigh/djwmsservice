@@ -2,8 +2,8 @@ package com.djcps.wms.inneruser.model.userparam;
 
 /**
  * 仓库对应类
- * @author:wzy
- * @date:2018/4/20
+ * @author wzy
+ * @date 2018/4/20
  **/
 public class WarehouseListPO {
     private String  warehouseId;

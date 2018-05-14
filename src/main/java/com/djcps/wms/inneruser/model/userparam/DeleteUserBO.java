@@ -4,8 +4,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 删除用户关联信息参数类
- * @author:wzy
- * @date:2018/4/13
+ * @author wzy
+ * @date 2018/4/13
  **/
 public class DeleteUserBO {
 

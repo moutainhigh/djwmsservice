@@ -4,8 +4,8 @@ import java.util.List;
 
 /**
  *wms用户关联信息参数
- * @author:wzy
- * @date:2018/4/12
+ * @author wzy
+ * @date 2018/4/12
  **/
 public class UserRelevanceBO {
 

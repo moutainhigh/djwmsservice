@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
+import javax.annotation.Resource;
+
 import static com.djcps.wms.commons.utils.GsonUtils.gson;
 import static com.djcps.wms.commons.utils.HttpResultUtils.*;
 
@@ -32,15 +34,15 @@ public class InnerUserServer {
 
     private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(InnerUserServer.class);
 
-    @Autowired
+    @Resource
     private InnerUserRequest innerUserRequest;
 
     /**
      * 获取用户code
      *
-     * @param userName
-     * @return
-     * @autuor Chengw
+     * @param userName String
+     * @return String
+     * @author Chengw
      * @since 2017/12/4 14:46
      */
     public String getUserCode(String userName) {
@@ -66,9 +68,9 @@ public class InnerUserServer {
     /**
      * App方式登录
      *
-     * @param innerUserLoginBO
-     * @return
-     * @autuor Chengw
+     * @param innerUserLoginBO InnerUserLoginBO
+     * @return HttpResult
+     * @author Chengw
      * @since 2017/12/4 15:11
      */
     public HttpResult loginTokenWithApp(InnerUserLoginBO innerUserLoginBO) {
@@ -78,21 +80,20 @@ public class InnerUserServer {
     }
     /**
      * 获取用户token
-     * @param result
-     * @return
+     * @param result HttpResult
+     * @return HttpResult
      */
     public String getUserToken(HttpResult result) {
         String json = gson.toJson(result.getData());
         UserTokenVO userTokenVO = gson.fromJson(json, UserTokenVO.class);
-        String token = userTokenVO.getToken();
-        return token;
+        return userTokenVO.getToken();
     }
     /**
      * 手机验证码登录
      *
-     * @param innerUserLoginPhoneBO
-     * @return
-     * @autuor Chengw
+     * @param innerUserLoginPhoneBO InnerUserLoginPhoneBO
+     * @return HttpResult
+     * @author Chengw
      * @since 2017/12/20 09:12
      */
     public HttpResult loginTokenWithPhone(InnerUserLoginPhoneBO innerUserLoginPhoneBO) {
@@ -104,9 +105,9 @@ public class InnerUserServer {
     /**
      * 不同系统之间交换token
      *
-     * @param userSwitchSysBO
-     * @return
-     * @autuor Chengw
+     * @param userSwitchSysBO UserSwitchSysBO
+     * @return UserLogoutVO
+     * @author Chengw
      * @since 2017/12/4 15:10
      */
     public UserLogoutVO swap(UserSwitchSysBO userSwitchSysBO) {
@@ -119,8 +120,7 @@ public class InnerUserServer {
                     HttpResult baseResult = gson.fromJson(body, HttpResult.class);
                     if (baseResult.isSuccess()) {
                         String json = gson.toJson(baseResult.getData());
-                        UserLogoutVO userLogoutVO = gson.fromJson(json, UserLogoutVO.class);
-                        return userLogoutVO;
+                        return gson.fromJson(json, UserLogoutVO.class);
                     }
                 }
             } catch (Exception e) {
@@ -134,9 +134,9 @@ public class InnerUserServer {
     /**
      * 用户登出系统
      *
-     * @param token
-     * @return
-     * @autuor Chengw
+     * @param token String
+     * @return Boolean
+     * @author Chengw
      * @since 2017/12/4 15:24
      */
     public Boolean logout(String token) {
@@ -161,8 +161,8 @@ public class InnerUserServer {
     /**
      * 置换token,、将临时的转换为固定token
      *
-     * @param onceToken
-     * @return
+     * @param onceToken String
+     * @return String
      */
     public String exchangeToken(final String onceToken) {
         HTTPResponse httpResponse = innerUserRequest.getExchangetoken(onceToken);
@@ -188,10 +188,10 @@ public class InnerUserServer {
     /**
      * 修改内部用户密码
      *
-     * @param userId
-     * @param oldPassword
-     * @param newPassword
-     * @return
+     * @param userId String
+     * @param oldPassword String
+     * @param newPassword String
+     * @return Boolean
      */
     public Boolean changeUserPassword(String userId, String oldPassword, String newPassword) {
         try {
@@ -210,9 +210,9 @@ public class InnerUserServer {
     /**
      * 发送登录手机验证码
      *
-     * @param phone
-     * @return
-     * @autuor Chengw
+     * @param phone String
+     * @return Boolean
+     * @author Chengw
      * @since 2017/12/20 09:16
      */
     public Boolean sendLoginCode(String phone) {

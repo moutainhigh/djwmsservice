@@ -4,8 +4,8 @@ import java.util.List;
 
 /**
  * 获取所属部门列表参数类
- * @author:wzy
- * @date:2018/4/23
+ * @author wzy
+ * @date 2018/4/23
  **/
 public class GetWarehouseListBO {
     private List<String> list;

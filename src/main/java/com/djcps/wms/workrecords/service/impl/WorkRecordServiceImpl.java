@@ -85,7 +85,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
      * @param param
      * @author py
      * @create :2018/4/18
-     * @autuor Chengw
+     * @author Chengw
      * @update 2018/4/23  13:09
      */
 
@@ -115,7 +115,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
      * @param param
      * @author py
      * @create :2018/4/18
-     * @autuor Chengw
+     * @author Chengw
      * @update 2018/4/23  13:09
      */
 
