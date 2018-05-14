@@ -296,7 +296,6 @@ public class StockServiceImpl implements StockService {
                 } else {
                     // 小于表示部分入库
                     orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
-                    // 多次部分入库的情况下要累计拆单数量字段的值
                 }
                 splitOrder.setSubNumber(saveAmount);
                 splitOrder.setInStock(saveAmount);
@@ -305,17 +304,33 @@ public class StockServiceImpl implements StockService {
             param.setIsSplit(0);
         } else {
             // 拆单入库
-            orderIdBO = new OrderIdBO();
             orderIdBO.setOrderId(orderId);
             list.add(orderIdBO);
-            if (saveAmount > orderAmount) {
-                return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
-            } else if (saveAmount.equals(orderAmount)) {
-                // 相等表示已入库修改订单状态
-                orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+            selectAreaByOrderId.setOrderIds(list);
+            // 解析在库信息
+            List<WarehouseOrderDetailPO> orderDetail = orderServer.getOrderStockInfo(selectAreaByOrderId);
+            // 修改订单状态需要的参数
+            if (!ObjectUtils.isEmpty(orderDetail)) {
+                Integer trueAmount = orderDetail.get(0).getAmountSaved();
+                if (trueAmount + saveAmount > orderAmount) {
+                    return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
+                } else if (trueAmount + saveAmount == orderAmount) {
+                    // 相等表示已入库修改订单状态
+                    orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+                } else {
+                    // 小于表示部分入库
+                    orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+                }
             } else {
-                // 小于表示部分入库
-                orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+                if (saveAmount > orderAmount) {
+                    return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
+                } else if (saveAmount.equals(orderAmount)) {
+                    // 相等表示已入库修改订单状态
+                    orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+                } else {
+                    // 小于表示部分入库
+                    orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+                }
             }
         	//根据订单号和合作方id获取拆单库存的fid
         	OrderIdBO fidOrderIdBO = new OrderIdBO();
