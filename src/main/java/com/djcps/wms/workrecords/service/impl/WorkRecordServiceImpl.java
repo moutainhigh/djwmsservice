@@ -231,7 +231,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                 List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
                 if (!childOrderList.isEmpty()) {
                     ChildOrderBO childOrderBO = childOrderList.stream()
-                            .filter(b -> b.getChildOrderId().equals(workRecordsOrderPO.getOrderId())).findFirst()
+                            .filter(b -> b.getOrderId().equals(workRecordsOrderPO.getOrderId())).findFirst()
                             .orElse(null);
                     if (!ObjectUtils.isEmpty(childOrderBO)) {
                         workRecordsOrderPO.setMaterialName(childOrderBO.getMaterialName());
