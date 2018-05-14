@@ -4,14 +4,15 @@ import java.io.Serializable;
 
 /**
  * 公共操作返回类
+ *
  * @author Chengw
- * @create 2018/4/24 16:08.
- * @since 1.0.0
+ * @version 1.0.0
+ * @since 2018/4/24 16:08.
  */
 public class BasePO implements Serializable {
 
     /**
-     *合作方id
+     * 合作方id
      */
     private String partnerId;
 

@@ -27,7 +27,7 @@ public class InnerUserResolver implements HandlerMethodArgumentResolver{
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        //返回设置注解
+        // 返回设置注解
         return methodParameter.hasParameterAnnotation(InnerUser.class);
     }
 

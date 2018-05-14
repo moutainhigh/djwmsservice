@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author Chengw
- * @create 2018/3/26 09:32.
- * @since 1.0.0
+ * @since 2018/3/26 09:32.
  */
 @Aspect
 @Component
@@ -35,20 +35,19 @@ public class HttpAspect {
     }
 
     /**
-     * AOP执行的方法
      *
-     * @param pjp
-     * @return
-     * @throws Throwable
+     * @param pjp ProceedingJoinPoint
+     * @return Object
      */
     @Around("execution(* com.djcps.wms.*.controller.*.*(..))")
     public Object logPrint(ProceedingJoinPoint pjp) throws Throwable {
         Object proceed = pjp.proceed();
         Object[] params = pjp.getArgs();
 
-        String json = "";
+        String json = null;
         if(params.length>0){
-            json = JSONObject.toJSONString(Arrays.asList(params).stream().filter(
+            List<Object> list = Arrays.asList(params);
+            json = JSONObject.toJSONString(list.stream().filter(
                     a -> !(a instanceof HttpServletRequest || a instanceof HttpServletResponse)
             ).collect(Collectors.toList()));
         }
