@@ -115,8 +115,21 @@ public class AddStockBO extends BaseAddBO implements Serializable {
      * 产品名称
      */
     private String productName;
+    
+    /**
+     * 拆分标记
+     */
+    private Integer isSplit;
+    
+    public Integer getIsSplit() {
+		return isSplit;
+	}
 
-    public String getProductName() {
+	public void setIsSplit(Integer isSplit) {
+		this.isSplit = isSplit;
+	}
+
+	public String getProductName() {
         return productName;
     }
 
@@ -276,15 +289,16 @@ public class AddStockBO extends BaseAddBO implements Serializable {
         this.fluteType = fluteType;
     }
 
-    @Override
-    public String toString() {
-        return "AddStockBO [id=" + id + ", orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave
-                + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark
-                + ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
-                + ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", recommendAreaId="
-                + recommendAreaId + ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord
-                + ", relativeName=" + relativeName + ", orderType=" + orderType + ", fluteType=" + fluteType + ", area="
-                + area + ", abnomalAmount=" + abnomalAmount + ", productName=" + productName + "]";
-    }
+	@Override
+	public String toString() {
+		return "AddStockBO [id=" + id + ", orderId=" + orderId + ", amount=" + amount + ", amountSave=" + amountSave
+				+ ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName + ", remark=" + remark
+				+ ", warehouseAreaId=" + warehouseAreaId + ", warehouseAreaName=" + warehouseAreaName
+				+ ", warehouseLocId=" + warehouseLocId + ", warehouseLocName=" + warehouseLocName + ", recommendAreaId="
+				+ recommendAreaId + ", recommendAreaName=" + recommendAreaName + ", operationRecord=" + operationRecord
+				+ ", relativeName=" + relativeName + ", orderType=" + orderType + ", fluteType=" + fluteType + ", area="
+				+ area + ", abnomalAmount=" + abnomalAmount + ", productName=" + productName + ", isSplit=" + isSplit
+				+ "]";
+	}
 
 }

@@ -241,8 +241,13 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                         workRecordsOrderPO.setBoxWidth(StringUtils.toString(childOrderBO.getBoxWidth()));
                         workRecordsOrderPO.setBoxLength(StringUtils.toString(childOrderBO.getBoxLength()));
                         workRecordsOrderPO.setFluteType(childOrderBO.getFluteType());
-                        workRecordsOrderPO.setOrderAmount(childOrderBO.getAmount());
+                        workRecordsOrderPO.setOrderAmount(childOrderBO.getAmountPiece());
                         workRecordsOrderPO.setUnit(childOrderBO.getUnit());
+                        workRecordsOrderPO.setProductName(childOrderBO.getProductName());
+                        workRecordsOrderPO.setProductSize(new StringBuffer().append(childOrderBO.getBoxLength()).append("*").append(childOrderBO.getBoxWidth())
+                                .append("*").append(childOrderBO.getBoxHeight()).toString());
+                        workRecordsOrderPO.setMaterialSize(new StringBuffer().append(childOrderBO.getMaterialLength()).append("*")
+                                .append(childOrderBO.getMaterialWidth()).toString());
                     }
                 }
                 return MsgTemplate.successMsg(workRecordsOrderPO);
