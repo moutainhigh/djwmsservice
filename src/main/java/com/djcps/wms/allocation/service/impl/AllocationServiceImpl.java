@@ -2095,7 +2095,6 @@ public class AllocationServiceImpl implements AllocationService {
 			firstSpiltOrder.setIsStored(0);
 			
 			secondSpiltOrder.setKeyArea(param.getPartnerArea());
-			secondSpiltOrder.setInStock(secondSpiltOrder.getSubNumber());
 			secondSpiltOrder.setIsException(0);
 			secondSpiltOrder.setIsProduce(0);
 			secondSpiltOrder.setIsStored(0);
