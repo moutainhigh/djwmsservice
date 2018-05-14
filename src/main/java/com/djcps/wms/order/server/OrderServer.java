@@ -60,6 +60,8 @@ public class OrderServer {
 	
 	private Gson dataFormatGson = GsonUtils.dataFormatGson;
 	
+	private Gson gsonNotNull = GsonUtils.gsonNotNull;
+	
 	@Autowired
 	private StockServer stockServer;
 	
@@ -278,7 +280,7 @@ public class OrderServer {
 			batch.setOrderIds(orderIds);
 			batch.setKeyArea(partnerArea);
 			HttpResult orderDeatilByIdList = getOrderDeatilByIdList(batch);
-			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
 	        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo = joinOrderParamInfo(orderList);
 	        List<OrderIdBO> orderIdBOList = new ArrayList<>();
@@ -291,7 +293,7 @@ public class OrderServer {
 	        	orderDetailMap.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
 			}
 	        HttpResult splitOrderResult  = getSplitOrderDeatilByIdList(orderIdBOList);
-	        Map<String,List<WarehouseOrderDetailPO>> detailMap = dataFormatGson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
+	        Map<String,List<WarehouseOrderDetailPO>> detailMap = dataFormatGson.fromJson(gsonNotNull.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
 	        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
 	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
 	        	if(!ObjectUtils.isEmpty(detailValueList)){
@@ -553,7 +555,7 @@ public class OrderServer {
 		HttpResult httpResult = getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = null;
 		if(!ObjectUtils.isEmpty(httpResult.getData())){
-			batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
+			batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
 		}
 		return  batchOrderDetailListPO;
 	}
@@ -571,8 +573,7 @@ public class OrderServer {
 		HttpResult httpResult = getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = null;
 		if(!ObjectUtils.isEmpty(httpResult.getData())){
-		    String json = gson.toJson(httpResult.getData());
-			batchOrderDetailListPO = dataFormatGson.fromJson(json,BatchOrderDetailListPO.class);
+			batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo =joinOrderParamInfo(orderList);
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {

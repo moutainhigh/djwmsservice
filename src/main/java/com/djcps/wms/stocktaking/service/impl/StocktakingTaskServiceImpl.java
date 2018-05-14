@@ -75,7 +75,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
 
     private Gson gson = GsonUtils.gson;
 
-    private Gson dataFormatGson = GsonUtils.gson;
+    private Gson dataFormatGson = GsonUtils.dataFormatGson;
 
     /**
      * 新增全盘
