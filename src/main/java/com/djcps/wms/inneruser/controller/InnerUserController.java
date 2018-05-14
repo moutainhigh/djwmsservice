@@ -5,6 +5,7 @@ import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.aop.inneruser.annotation.InnerUserToken;
 import com.djcps.wms.commons.aop.inneruser.annotation.OperatorAnnotation;
 import com.djcps.wms.commons.aop.log.AddLog;
@@ -257,7 +258,7 @@ public class InnerUserController {
      */
     @RequestMapping(name = "用户登出系统", value = "/logout")
     public Map<String, Object> logout(@InnerUserToken String token, HttpServletResponse response,
-            @InnerUserToken UserInfoVO userInfoVO) {
+            @InnerUser UserInfoVO userInfoVO) {
         Boolean isSuccess = innerUserService.logout(token);
         // 无论是否成功退出内部统一登录系统，本系统内直接可以退出
         if (isSuccess) {

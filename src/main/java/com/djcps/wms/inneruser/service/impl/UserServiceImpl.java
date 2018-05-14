@@ -13,6 +13,7 @@ import com.djcps.wms.inneruser.enums.UserMsgEnum;
 import com.djcps.wms.inneruser.model.userparam.*;
 import com.djcps.wms.inneruser.server.UserServer;
 import com.djcps.wms.inneruser.service.UserService;
+import com.djcps.wms.permission.redis.PermissionRedisDao;
 import com.djcps.wms.role.constant.RoleConstant;
 import com.djcps.wms.role.model.OrgUserRoleBO;
 import com.djcps.wms.role.model.OrgUserRoleVO;
@@ -54,6 +55,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleHttpServer roleHttpServer;
+    
+    @Autowired
+    private PermissionRedisDao permissionRedisDao;
 
     Gson gson = new Gson();
 
@@ -459,6 +463,8 @@ public class UserServiceImpl implements UserService {
             if (flag) {
                 // 修改WMS用户关联信息
                 if (updateUserRelevance(wmssaveUserBO, saveUserBO)) {
+                    //用户信息修改,情况权限redis缓存信息
+                    permissionRedisDao.delPermission(saveUserBO.getId());
                     return MsgTemplate.successMsg();
                 }
             }
