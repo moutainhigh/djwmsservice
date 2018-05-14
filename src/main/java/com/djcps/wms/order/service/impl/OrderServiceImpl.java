@@ -42,7 +42,9 @@ public class OrderServiceImpl implements OrderService {
 	
 	private Gson gson = GsonUtils.gson;
 	
-	private Gson dataFormatGson = GsonUtils.gson;
+	private Gson dataFormatGson = GsonUtils.dataFormatGson;
+	
+	private Gson gsonNotNull = GsonUtils.gsonNotNull;
 
 	@Autowired
 	private OrderServer orderServer;
@@ -77,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setKeyArea(param.getPartnerArea());
 		splitOrderList.add(order);
 		HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(param);
-		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
 	    List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	    List<WarehouseOrderDetailPO> newSplitOrderList = batchOrderDetailListPO.getSplitOrderList();
 	    List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
@@ -117,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
 		HttpResult result = orderServer.getSplitOrderDeatilByIdList(splitOrderList);
 		if(!ObjectUtils.isEmpty(result.getData())){
 			List<WarehouseOrderDetailPO> orderDetail = null;
-			Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+			Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gsonNotNull.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
 			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
 				orderDetail = entry.getValue();
 			}
@@ -131,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 		HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(param);
-		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
 	    List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	    List<WarehouseOrderDetailPO> newSplitOrderList = batchOrderDetailListPO.getSplitOrderList();
 	    List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
@@ -171,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
 	 */
 	private Map<String, Object> getOrderDetailInfoAndStockInfo(HttpResult onlinePaperResult,String partnerId){
 		if(!ObjectUtils.isEmpty(onlinePaperResult.getData())){
-			PaperboardResultDataPO paperResultData = dataFormatGson.fromJson(gson.toJson(onlinePaperResult.getData()), PaperboardResultDataPO.class);
+			PaperboardResultDataPO paperResultData = dataFormatGson.fromJson(gsonNotNull.toJson(onlinePaperResult.getData()), PaperboardResultDataPO.class);
 			//根据订单号获取在库信息
 			SelectAreaByOrderIdBO selectAreaByOrderId = new SelectAreaByOrderIdBO();
 			selectAreaByOrderId.setPartnerId(partnerId);

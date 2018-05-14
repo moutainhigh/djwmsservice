@@ -13,7 +13,6 @@ import com.djcps.wms.inneruser.model.result.UserLogoutVO;
 import com.djcps.wms.inneruser.model.result.UserTokenVO;
 import com.djcps.wms.inneruser.request.InnerUserRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;

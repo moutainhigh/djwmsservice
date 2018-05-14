@@ -121,7 +121,9 @@ public class AllocationServiceImpl implements AllocationService {
 	
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AllocationServiceImpl.class);	
 	
-	private Gson gson = new Gson();
+	private Gson gson = GsonUtils.gson;
+	
+	private Gson gsonNotNull = GsonUtils.gsonNotNull;
 	
 	private Gson dataFormatGson = GsonUtils.dataFormatGson;
 	
@@ -252,7 +254,7 @@ public class AllocationServiceImpl implements AllocationService {
 				batchOrder.setOrderIds(childOrderIds);
 				//根据订单号批量查询订单详情信息
 				HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-				BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
+				BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 				List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 				
 				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
@@ -297,7 +299,7 @@ public class AllocationServiceImpl implements AllocationService {
 				batchOrder.setOrderIds(redundantOrderList);
 				//根据订单号批量查询订单详情信息
 				HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-				BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
+				BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 				List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
 				for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
@@ -502,7 +504,7 @@ public class AllocationServiceImpl implements AllocationService {
 		batchOrderIdList.setKeyArea(param.getPartnerArea());
 		batchOrderIdList.setOrderIds(orderIds);
 		HttpResult orderResult =  orderServer.getOrderDeatilByIdList(batchOrderIdList);
-	    BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+	    BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
         List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
         List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
         if(!ObjectUtils.isEmpty(sonOrderList)){
@@ -673,7 +675,7 @@ public class AllocationServiceImpl implements AllocationService {
 			if(!ObjectUtils.isEmpty(orderIdBOList)){
 				//根据订单号批量查询拆单信息
 				HttpResult splitOrderResult = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
-				Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+				Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gsonNotNull.toJson(splitOrderResult.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
 				for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
 					List<WarehouseOrderDetailPO> value = entry.getValue();
 					Iterator<WarehouseOrderDetailPO> iterator = value.iterator();
@@ -730,7 +732,7 @@ public class AllocationServiceImpl implements AllocationService {
 	        batchOrder.setOrderIds(redundantOrderList);
 	        //根据订单号批量查询订单详情信息
 	        result = orderServer.getOrderDeatilByIdList(batchOrder);
-	        BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(result.getData()),BatchOrderDetailListPO.class);
+	        BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(result.getData()),BatchOrderDetailListPO.class);
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
 				map.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
@@ -875,7 +877,7 @@ public class AllocationServiceImpl implements AllocationService {
 	        batchOrder.setOrderIds(orderIdsList);
 	        //根据订单号批量查询订单详情信息
 	        HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-	        BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
+	        BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 	        
 	        if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())){
 	        	List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
@@ -1058,7 +1060,7 @@ public class AllocationServiceImpl implements AllocationService {
 		batchOrder.setKeyArea(param.getPartnerArea());
 		batchOrder.setOrderIds(orderIdsList);
 		HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
+		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 		List<WarehouseOrderDetailPO> detailList = batchOrderDetailListPO.getOrderList();
 		List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
 		if(!ObjectUtils.isEmpty(detailList)){
@@ -1156,7 +1158,7 @@ public class AllocationServiceImpl implements AllocationService {
 		batchOrder.setKeyArea(param.getPartnerArea());
 		batchOrder.setOrderIds(orderIdsList);
 		HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
+		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 		List<WarehouseOrderDetailPO> detailList = batchOrderDetailListPO.getOrderList();
 		List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailListPO.getSplitOrderList();
 		List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
@@ -1324,7 +1326,7 @@ public class AllocationServiceImpl implements AllocationService {
 		batch.setOrderIds(orderIdsList);
 		batch.setKeyArea(base.getPartnerArea());
 		HttpResult orderResult = orderServer.getOrderDeatilByIdList(batch);
-		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
 		
 		List<WarehouseOrderDetailPO> orderList =null;
 		if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())){
@@ -1706,7 +1708,7 @@ public class AllocationServiceImpl implements AllocationService {
 				batchOrderIdList.setKeyArea(param.getPartnerArea());
 				batchOrderIdList.setOrderIds(orderIds);
 				HttpResult orderResult =  orderServer.getOrderDeatilByIdList(batchOrderIdList);
-			    BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+			    BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
 		        List<WarehouseOrderDetailPO> sonOrderList = batchOrderDetailListPO.getOrderList();
 		        List<WarehouseOrderDetailPO> joinOrderParamInfo = null;
 		        if(!ObjectUtils.isEmpty(sonOrderList)){
@@ -1848,7 +1850,7 @@ public class AllocationServiceImpl implements AllocationService {
 				//根据订单号批量查询订单详情信息
 				if(batchOrder!=null){
 					HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
-			        BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
+			        BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 			        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 			        List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
 					for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
@@ -2005,7 +2007,7 @@ public class AllocationServiceImpl implements AllocationService {
 			UpdateSplitOrderBO firstSpiltOrder = param.getFirstSpiltOrder();
 			UpdateSplitOrderBO secondSpiltOrder = param.getSecondSpiltOrder();
 			
-			BatchOrderDetailListPO batchOrder = dataFormatGson.fromJson(gson.toJson(result.getData()),BatchOrderDetailListPO.class);
+			BatchOrderDetailListPO batchOrder = dataFormatGson.fromJson(gsonNotNull.toJson(result.getData()),BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = batchOrder.getOrderList();
 			WarehouseOrderDetailPO warehouseOrder = null;
 			Integer orderStatus = null;
@@ -2095,7 +2097,6 @@ public class AllocationServiceImpl implements AllocationService {
 			firstSpiltOrder.setIsStored(0);
 			
 			secondSpiltOrder.setKeyArea(param.getPartnerArea());
-			secondSpiltOrder.setInStock(secondSpiltOrder.getSubNumber());
 			secondSpiltOrder.setIsException(0);
 			secondSpiltOrder.setIsProduce(0);
 			secondSpiltOrder.setIsStored(0);
@@ -2120,7 +2121,7 @@ public class AllocationServiceImpl implements AllocationService {
 					batchOrderIdListBO.setOrderIds(orderIds);
 					batchOrderIdListBO.setKeyArea(param.getPartnerArea());
 					HttpResult orderDeatilByIdList = orderServer.getOrderDeatilByIdList(batchOrderIdListBO);
-					BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gson.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
+					BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderDeatilByIdList.getData()),BatchOrderDetailListPO.class);
 					List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
 					List<OrderIdBO> orderIdBOList = new ArrayList<>();
 					OrderIdBO orderIdBO = new OrderIdBO();
@@ -2130,7 +2131,7 @@ public class AllocationServiceImpl implements AllocationService {
 					
 					String newOrderStatus = null;
 			        HttpResult splitOrderResult  = orderServer.getSplitOrderDeatilByIdList(orderIdBOList);
-			        Map<String,List<WarehouseOrderDetailPO>> detailMap = dataFormatGson.fromJson(gson.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
+			        Map<String,List<WarehouseOrderDetailPO>> detailMap = dataFormatGson.fromJson(gsonNotNull.toJson(splitOrderResult.getData()), new TypeToken<Map<String,List<WarehouseOrderDetailPO>>>(){}.getType());
 			        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
 			        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
 		        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
@@ -2174,7 +2175,7 @@ public class AllocationServiceImpl implements AllocationService {
 		List<OrderIdBO> orderIdBOList = new ArrayList<OrderIdBO>();
 		Map<String,WarehouseOrderDetailPO> queryOrderMap = new HashMap<>(16);
 		if(!ObjectUtils.isEmpty(result.getData())){
-			Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gson.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
+			Map<String,List<WarehouseOrderDetailPO>> orderMap = dataFormatGson.fromJson(gsonNotNull.toJson(result.getData()), new TypeToken<Map<String, List<WarehouseOrderDetailPO>>>() {}.getType());
 			for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry:orderMap.entrySet()){
 				if(!ObjectUtils.isEmpty(entry.getValue())){
 					orderDetail = orderServer.joinOrderParamInfo(entry.getValue());

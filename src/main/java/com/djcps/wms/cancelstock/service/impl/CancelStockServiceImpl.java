@@ -58,6 +58,10 @@ public class CancelStockServiceImpl implements CancelStockService {
 	
 	private Gson gson = GsonUtils.gson;
 	
+	private Gson dataFormatGson = GsonUtils.dataFormatGson;
+	
+	private Gson gsonNotNull = GsonUtils.gsonNotNull;
+	
 	@Autowired
 	private CancelStockServer cancelStockServer;
 
@@ -81,7 +85,7 @@ public class CancelStockServiceImpl implements CancelStockService {
 		if(ObjectUtils.isEmpty(orderResult.getData())){
 			return MsgTemplate.failureMsg(CancelStockMsgEnum.ORDER_IS_NULL);
 		}else{
-			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 			if(!ObjectUtils.isEmpty(orderList)){
 				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
@@ -176,7 +180,7 @@ public class CancelStockServiceImpl implements CancelStockService {
 		HttpResult orderDeatilResult = orderServer.getOrderDeatilByIdList(batchOrder);
 		List<CancalOrderAttributePO> orderAttributeList = new ArrayList<>();
 		if(!ObjectUtils.isEmpty(orderDeatilResult.getData())){
-			BatchOrderDetailListPO batchOrderDetailListPO = gson.fromJson(gson.toJson(orderDeatilResult.getData()),BatchOrderDetailListPO.class);
+			BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderDeatilResult.getData()),BatchOrderDetailListPO.class);
 	        List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	        if(!ObjectUtils.isEmpty(orderList)){
 	        	List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
