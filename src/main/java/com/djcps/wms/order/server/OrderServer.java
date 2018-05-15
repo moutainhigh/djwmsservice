@@ -39,6 +39,7 @@ import com.djcps.wms.order.request.WmsForOrderHttpRequest;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.server.StockServer;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import rpc.plugin.http.HTTPResponse;
@@ -358,7 +359,9 @@ public class OrderServer {
 	
 	public HttpResult getOrderDeatilByIdList(BatchOrderIdListBO param) {
 		List<String> orderIdList = param.getOrderIds();
-		String orderId = orderIdList.get(0);
+		    String orderId = orderIdList.get(0);
+		
+		
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
@@ -370,6 +373,7 @@ public class OrderServer {
         }else if(orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
         	http = offinePaperboardRequest.getOfflineBoxOrderByIdList(rb);
         }
+		
         //校验请求是否成功
         return updateOMSCode(http);
 	}
@@ -573,7 +577,14 @@ public class OrderServer {
 		BatchOrderDetailListPO batchOrderDetailListPO = null;
 		if(!ObjectUtils.isEmpty(httpResult.getData())){
 			batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
-			List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
+			List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
+	        if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())) {
+	            orderList.addAll(batchOrderDetailListPO.getOrderList());
+	        }
+	        if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getSplitOrderList())) {
+	            orderList.addAll(batchOrderDetailListPO.getSplitOrderList());
+	        }
+			//List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
 	        List<WarehouseOrderDetailPO> joinOrderParamInfo =joinOrderParamInfo(orderList);
 	        for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
 	        	ChildOrderBO child = new ChildOrderBO();
