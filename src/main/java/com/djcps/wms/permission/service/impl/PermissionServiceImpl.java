@@ -188,7 +188,7 @@ public class PermissionServiceImpl implements PermissionService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/4/23  15:11
      */
     @Override
@@ -273,7 +273,7 @@ public class PermissionServiceImpl implements PermissionService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/4/23  15:11
      */
     @Override

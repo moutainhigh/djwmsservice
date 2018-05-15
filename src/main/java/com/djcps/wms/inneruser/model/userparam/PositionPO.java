@@ -2,8 +2,8 @@ package com.djcps.wms.inneruser.model.userparam;
 
 /**
  * org获取职位对应PO
- * @author:wzy
- * @date:2018/4/20
+ * @author wzy
+ * @date 2018/4/20
  **/
 public class PositionPO {
 

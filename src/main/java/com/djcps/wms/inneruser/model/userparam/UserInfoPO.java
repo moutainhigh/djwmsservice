@@ -4,8 +4,8 @@ import java.util.List;
 
 /**
  * 用户信息标准参数
- * @author:wzy
- * @date:2018/4/18
+ * @author wzy
+ * @date 2018/4/18
  **/
 public class UserInfoPO {
     /**

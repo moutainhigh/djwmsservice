@@ -76,7 +76,7 @@ public interface DjorForPermissionHttpRequest {
 
 	/**
 	 * 根据用户id获取用户所有权限列表
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/23  14:27
 	 * @param map
 	 * @return

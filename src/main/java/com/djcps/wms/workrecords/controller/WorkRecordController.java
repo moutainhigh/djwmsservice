@@ -149,7 +149,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取pda端工作记录(入库、退库、移库)
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  16:32
 	 * @param json
 	 * @return
@@ -177,7 +177,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取pda装车的工作记录 
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  16:32
 	 * @param json
 	 * @return
@@ -205,7 +205,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取pda提货的工作记录
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  16:32
 	 * @param json
 	 * @return
@@ -233,7 +233,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取pda盘点的工作记录
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  16:31
 	 * @param json
 	 * @return
@@ -261,7 +261,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取pda运单明细 
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  16:31
 	 * @param json
 	 * @return
@@ -289,7 +289,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取pda提货单明细
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  16:31
 	 * @param json
 	 * @return
@@ -317,7 +317,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取pda盘点单明细 
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  16:31
 	 * @param json
 	 * @return
@@ -345,7 +345,7 @@ public class WorkRecordController {
 
 	/**
 	 * 获取操作订单信息
-	 * @autuor Chengw
+	 * @author Chengw
 	 * @since 2018/4/25  18:42
 	 * @param json
 	 * @return

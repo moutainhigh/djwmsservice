@@ -11,12 +11,12 @@ import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.permission.service.PermissionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -29,25 +29,24 @@ import java.util.Map;
  * 权限拦截器
  *
  * @author Chengw
- * @create 2018/4/23 20:38.
- * @since 1.0.0
+ * @version 1.0.0
+ * @since 2018/4/23 20:38.
  */
 public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
 
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(WmsPermissionInterceptor.class);
 
-    @Autowired
+    @Resource
     private InnerUserService innerUserService;
 
-    @Autowired
+    @Resource
     private PermissionService permissionService;
-
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws Exception {
         ContentCachingRequestWrapper requestWrapper =
-                new ContentCachingRequestWrapper((HttpServletRequest) request);
+                new ContentCachingRequestWrapper(request);
         String url = request.getRequestURI();
         LOGGER.info("---访问URL:" + url + ",请求方式:" + request.getMethod());
         String contextPath = request.getContextPath();
@@ -79,8 +78,9 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
     /**
      * 获取参数集
      *
-     * @param request
-     * @return
+     * @param request HttpServletRequest
+     * @param url String
+     * @return Map
      */
     private Map<String, String[]> getParams(HttpServletRequest request, String url) {
         Map<String, String[]> params = new HashMap<>(request.getParameterMap());
@@ -103,19 +103,19 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
         return params;
     }
 
-    private String getPostBodyContent(HttpServletRequest request){
+    private String getPostBodyContent(HttpServletRequest request) {
         try {
             BufferedReader br = request.getReader();
             StringBuilder json = new StringBuilder();
-            String str = null;
+            String str;
             br.mark(1048576);
             while ((str = br.readLine()) != null) {
                 json.append(str);
             }
             br.reset();
             return json.toString();
-        }catch (IOException e){
-            LOGGER.error("{}",e.getMessage());
+        } catch (IOException e) {
+            LOGGER.error("{}", e.getMessage());
         }
         return null;
     }
@@ -124,10 +124,10 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
     /**
      * 校验是否拥有权限
      *
-     * @param userId
-     * @param url
-     * @param params
-     * @return
+     * @param userId String
+     * @param url String
+     * @param params Map
+     * @return Boolean
      */
     private Boolean isExist(String userId, String url, Map<String, String[]> params) {
         Boolean notInterface = permissionService.notExistSystemPermission(userId, url);
@@ -135,8 +135,7 @@ public class WmsPermissionInterceptor extends HandlerInterceptorAdapter {
         if (notInterface) {
             return true;
         }
-        Boolean result = permissionService.checkPermission(userId, url, params);
-        return result;
+        return permissionService.checkPermission(userId, url, params);
     }
 
     /**

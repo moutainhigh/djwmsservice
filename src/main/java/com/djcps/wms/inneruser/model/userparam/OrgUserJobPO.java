@@ -2,10 +2,10 @@ package com.djcps.wms.inneruser.model.userparam;
 
 /**
  * 从org获取公司职务信息
- * @author:wzy
- * @date:2018/4/16
+ * @author wzy
+ * @date 2018/4/16
  **/
-public class OrgUjobPO {
+public class OrgUserJobPO {
 
     /**
      * 职务名称
@@ -35,7 +35,7 @@ public class OrgUjobPO {
 
     @Override
     public String toString() {
-        return "OrgUjobPO{" +
+        return "OrgUserJobPO{" +
                 "ujob_name='" + ujob_name + '\'' +
                 ", id='" + id + '\'' +
                 '}';

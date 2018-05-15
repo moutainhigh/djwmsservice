@@ -21,5 +21,4 @@
     <task:executor id="asyncExecutor" pool-size="20" queue-capacity="10"/>
     <!--线程池-->
     <task:scheduler id="myScheduler" pool-size="10"/>
-
 </beans>

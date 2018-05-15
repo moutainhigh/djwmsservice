@@ -2,8 +2,8 @@ package com.djcps.wms.inneruser.model.userparam;
 
 /**
  * 从org获取的公司部门信息
- * @author:wzy
- * @date:2018/4/13
+ * @author wzy
+ * @date 2018/4/13
  **/
 public class OrgDepartmentPO {
 

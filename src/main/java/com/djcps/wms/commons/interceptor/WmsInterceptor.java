@@ -51,9 +51,6 @@ public class WmsInterceptor extends HandlerInterceptorAdapter{
 	@Autowired
 	private InnerUserService innerUserService;
 
-	@Autowired
-    private PermissionService permissionService;
-
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 							 Object handler) throws Exception {

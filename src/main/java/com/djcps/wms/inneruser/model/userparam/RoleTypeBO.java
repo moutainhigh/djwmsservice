@@ -4,8 +4,8 @@ import java.util.List;
 
 /**
  * 获取角色信息参数
- * @author:wzy
- * @date:2018/4/16
+ * @author wzy
+ * @date 2018/4/16
  **/
 public class RoleTypeBO {
 

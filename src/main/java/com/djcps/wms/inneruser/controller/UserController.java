@@ -30,8 +30,8 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 用户管理
- * @author:wzy
- * @date:2018/4/12
+ * @author wzy
+ * @date 2018/4/12
  **/
 @RestController
 @RequestMapping("/user")
@@ -45,7 +45,9 @@ public class UserController {
     /**
      * 查看用户信息
      * @author  wzy
-     * @param json
+     * @param json String
+     * @param request HttpServletRequest
+     * @param operatorInfoBO OperatorInfoBO
      * @return http
      * @date  2018/4/12 15:21
      **/
@@ -193,9 +195,8 @@ public class UserController {
 
     @AddLog(value ="获取公司所有部门",module = "用户管理")
     @RequestMapping(name="获取公司所有部门",value = "/getAllDepartment", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getAllDepartment(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+    public Map<String, Object> getAllDepartment(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             GetDepartmentBO getDepartmentBO=gson.fromJson(json, GetDepartmentBO.class);
             BeanUtils.copyProperties(operatorInfoBO,getDepartmentBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -216,9 +217,8 @@ public class UserController {
 
     @AddLog(value ="获取公司所有职务",module = "用户管理")
     @RequestMapping(name="获取公司所有职务",value = "/getJob", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getJob(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+    public Map<String, Object> getJob(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             GetJobBO getJobBO = gson.fromJson(json, GetJobBO.class);
             BeanUtils.copyProperties(operatorInfoBO,getJobBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -239,9 +239,8 @@ public class UserController {
 
     @AddLog(value ="获取公司所有职位",module = "用户管理")
     @RequestMapping(name="获取公司所有职位",value = "/getPosition", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getPosition(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+    public Map<String, Object> getPosition(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             OrgGetPositionBO orgGetPositionBO=gson.fromJson(json, OrgGetPositionBO.class);
             BeanUtils.copyProperties(operatorInfoBO,orgGetPositionBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -263,7 +262,9 @@ public class UserController {
     /**
      * 获取用户部门职位和所有部门职位职务信息
      * @author  wzy
-     * @param json
+     * @param json String
+     * @param request HttpServletRequest
+     * @param operatorInfoBO OperatorInfoBO
      * @return map
      * @date  2018/4/17 10:45
      **/
@@ -295,7 +296,9 @@ public class UserController {
     /**
      * 获取角色列表，根据id获取或者获取全部
      * @author  wzy
-     * @param json
+     * @param json String
+     * @param request HttpServletRequest
+     * @param operatorInfoBO OperatorInfoBO
      * @return  map
      * @date  2018/4/17 9:41
      **/

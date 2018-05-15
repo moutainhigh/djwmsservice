@@ -27,7 +27,7 @@ public interface WmsForDeliveryHttpRequest {
 
     /**
      * 获取提货订单列表 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:29
      * @param json
      * @return
@@ -39,7 +39,7 @@ public interface WmsForDeliveryHttpRequest {
 
     /**
      * 获取提货单列表
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:32
      * @param json
      * @return
@@ -50,7 +50,7 @@ public interface WmsForDeliveryHttpRequest {
 
     /**
      * 增加提货单打印次数 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:32
      * @param json
      * @return
@@ -61,7 +61,7 @@ public interface WmsForDeliveryHttpRequest {
 
     /**
      * PDA获取提货任务订单列表 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  11:15
      * @param json
      * @return
@@ -72,7 +72,7 @@ public interface WmsForDeliveryHttpRequest {
 
     /**
      * PDA获取提货任务订单详情 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  10:17
      * @param json
      * @return
@@ -84,7 +84,7 @@ public interface WmsForDeliveryHttpRequest {
 
     /**
      * PDA获取提货任务信息 
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  10:17
      * @param json
      * @return
@@ -94,7 +94,7 @@ public interface WmsForDeliveryHttpRequest {
     HTTPResponse getDeliveryForPDA(@Body RequestBody json);
     /**
      * 删除提货订单信息 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/13 
      * @param json
      * @return

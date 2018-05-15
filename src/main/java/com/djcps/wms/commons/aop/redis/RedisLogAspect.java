@@ -12,8 +12,7 @@ import java.util.Arrays;
 
 /**
  * 
- * @ClassName: LogAspect
- * @Description: TODO
+ * LogAspect
  * @author 叶千阁
  * @date 2017年12月22日 上午10:58:31
  */
@@ -26,9 +25,8 @@ public class RedisLogAspect {
     /**
      * AOP执行的方法
      * 
-     * @param pjp
-     * @return
-     * @throws Throwable
+     * @param pjp ProceedingJoinPoint
+     * @return Object
      */
     @Around("execution(* com.djcps.wms.*.redis.*.*(..))")
     public Object logPrint(ProceedingJoinPoint pjp) throws Throwable {

@@ -10,8 +10,8 @@ import rpc.plugin.http.RPCClientFields;
 
 /**
  * WMS用户管理request请求
- * @author:wzy
- * @date:2018/4/13
+ * @author wzy
+ * @date 2018/4/13
  **/
 @RPCClientFields(urlfield = "WMS_SERVER", urlbean = ParamsConfig.class)
 public interface WmsForUserRequest {
@@ -19,7 +19,7 @@ public interface WmsForUserRequest {
     /**
      * 修改用户工作状态等信息
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return HTTPResponse
      * @date  2018/4/13 9:31
      **/
@@ -30,7 +30,7 @@ public interface WmsForUserRequest {
     /**
      * 获取单条用户关联信息
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return HTTPResponse
      * @date  2018/4/13 10:18
      **/
@@ -41,7 +41,7 @@ public interface WmsForUserRequest {
     /**
      * WMS删除用户关联系信息
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return http
      * @date  2018/4/13 14:51
      **/
@@ -52,7 +52,7 @@ public interface WmsForUserRequest {
     /**
      * WMS条件获取用户相关信息分页
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return http
      * @date  2018/4/13 14:53
      **/
@@ -63,7 +63,7 @@ public interface WmsForUserRequest {
     /**
      * WMS新增用户关联信息
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return http
      * @date  2018/4/16 10:11
      **/
@@ -74,7 +74,7 @@ public interface WmsForUserRequest {
     /**
      * WMS新增用户关联仓库信息
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return http
      * @date  2018/4/16 11:03
      **/
@@ -86,7 +86,7 @@ public interface WmsForUserRequest {
     /**
      * WMS新增用户关联仓库信息
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return http
      * @date  2018/4/16 11:03
      **/
@@ -97,7 +97,7 @@ public interface WmsForUserRequest {
     /**
      * 获取用户关联仓库
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return  http
      * @date  2018/4/17 11:03
      **/
@@ -108,7 +108,7 @@ public interface WmsForUserRequest {
     /**
      * 批量获取用户关联仓库
      * @author  wzy
-     * @param json
+     * @param json RequestBody
      * @return  http
      * @date  2018/4/17 11:03
      **/

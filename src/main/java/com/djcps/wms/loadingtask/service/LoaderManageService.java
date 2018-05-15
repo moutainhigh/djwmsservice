@@ -17,7 +17,7 @@ public interface LoaderManageService {
     /**
      * 修改装车员
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/20
      * @param param
      * @return
@@ -26,7 +26,7 @@ public interface LoaderManageService {
     /**
      * 删除装车员
      *
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/20
      * @param param
      * @return
@@ -35,7 +35,7 @@ public interface LoaderManageService {
     /**
      * 新增装车员
      *
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/20
      * @param param
      * @return
@@ -44,7 +44,7 @@ public interface LoaderManageService {
     /**
      * 获取装车员列表
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/20
      * @param param
      * @return

@@ -61,7 +61,7 @@ public interface OrgRoleHttpRequest {
      *
      * @param map
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/5/8  15:15
      */
     @GET("getRole.org")

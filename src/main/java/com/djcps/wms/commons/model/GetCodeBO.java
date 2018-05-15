@@ -6,14 +6,10 @@ import org.hibernate.validator.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * @title 获取编码
+ * 获取编码
  * @author  wzy
- * @create  2017/12/20 16:46
- **/
-/**
- * @title 获取仓库库区库位编码对象
- * @author  wzy
- * @create  2017/12/20 17:17
+ * @since  2017/12/20 16:46
+ *
  **/
 public class GetCodeBO extends BaseAddBO implements Serializable {
     private static final long serialVersionUID = -5482024471175235674L;

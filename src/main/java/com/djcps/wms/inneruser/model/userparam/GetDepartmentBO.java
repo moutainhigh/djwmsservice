@@ -4,8 +4,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * 获取所有部门参数类
- * @author:wzy
- * @date:2018/4/18
+ * @author wzy
+ * @date 2018/4/18
  **/
 public class GetDepartmentBO {
 

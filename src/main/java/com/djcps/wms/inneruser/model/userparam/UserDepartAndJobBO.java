@@ -4,8 +4,8 @@ import java.util.List;
 
 /**
  * 用户部门职位职务组合返回
- * @author:wzy
- * @date:2018/4/17
+ * @author wzy
+ * @date 2018/4/17
  **/
 public class UserDepartAndJobBO {
 

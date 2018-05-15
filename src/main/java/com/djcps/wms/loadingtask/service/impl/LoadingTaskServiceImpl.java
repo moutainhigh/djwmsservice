@@ -321,9 +321,9 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                             Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea(),param.getPartnerId());
                             if(compareOrderStatus==false){
                               return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
-                            }
-                        } else {
-                            return MsgTemplate.customMsg(result);
+                            } else {
+                            	return MsgTemplate.customMsg(result);
+                        	}
                         }
                     } else {
                         param.setOnceOrderid(
