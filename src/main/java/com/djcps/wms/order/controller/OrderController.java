@@ -93,7 +93,7 @@ public class OrderController {
 	 * @author:zdx
 	 * @date:2018年5月10日
 	 */
-	@RequestMapping(name="根据订单号获取订单",value = "/getPdaOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="pda根据订单号获取订单",value = "/getPdaOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getPdaOrderByOrderId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			LOGGER.debug("json : " + json);
