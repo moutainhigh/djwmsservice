@@ -7,13 +7,10 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
-import com.djcps.wms.inneruser.model.param.InnerUserChangePasswordBO;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginBO;
-import com.djcps.wms.inneruser.model.param.InnerUserLoginPhoneBO;
-import com.djcps.wms.inneruser.model.param.UserSwitchSysBO;
+import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
-import com.djcps.wms.inneruser.model.userparam.UpdateUserStatusBO;
+import com.djcps.wms.inneruser.model.param.UpdateUserBO;
 import com.djcps.wms.inneruser.redis.InnerUserRedisDao;
 import com.djcps.wms.inneruser.server.InnerUserServer;
 import com.djcps.wms.inneruser.server.UserServer;
@@ -64,11 +61,11 @@ public class InnerUserServiceImpl implements InnerUserService {
                 UserInfoVO userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
                 if(!ObjectUtils.isEmpty(userInfoVO)){
                     // 更新登陆次数以及时间
-                    UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
-                    updateUserStatusBO.setUserId(userInfoVO.getId());
-                    updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
-                    updateUserStatusBO.setLoginCount("");
-                    userServer.updateUserStatus(updateUserStatusBO);
+                    UpdateUserBO updateUserBO = new UpdateUserBO();
+                    updateUserBO.setUserId(userInfoVO.getId());
+                    updateUserBO.setPartnerId(userInfoVO.getUcompany());
+                    updateUserBO.setLoginCount("");
+                    userServer.updateUserStatus(updateUserBO);
                 }
             } catch (Exception e) {
                 LOGGER.error("内部用户信息 {}", e.getMessage());

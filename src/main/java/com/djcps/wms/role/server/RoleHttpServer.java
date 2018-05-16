@@ -7,8 +7,7 @@ import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseBO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 
-import com.djcps.wms.inneruser.model.userparam.GetRoleTypePO;
-import com.djcps.wms.inneruser.model.userparam.RoleTypeBO;
+import com.djcps.wms.inneruser.model.param.RoleTypeBO;
 import com.djcps.wms.role.model.DeleteBO;
 import com.djcps.wms.role.model.RoleListBO;
 import com.djcps.wms.role.model.SaveRoleBO;
@@ -156,8 +155,7 @@ public class RoleHttpServer {
         if (http.isSuccessful()) {
             result = gson.fromJson(http.getBodyString(), HttpResult.class);
             String data = gson.toJson(result.getData());
-            list = new ArrayList<>();
-            list = JSONArray.parseArray(data, GetUserStatusPO.class);
+            list =  JSONArray.parseArray(data, GetUserStatusPO.class);
         }
         if (result == null) {
             LOGGER.error("Http请求出错,HttpResult结果为null");

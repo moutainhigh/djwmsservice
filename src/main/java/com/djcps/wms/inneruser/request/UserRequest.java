@@ -107,4 +107,12 @@ public interface UserRequest {
     @POST("updateUserManage.org")
     HTTPResponse updateUserManage(@FieldMap Map<String, Object> map);
 
+    /**
+     * org 根据角色id获取其底下的员工
+     * @param map
+     * @return
+     */
+    @GET("getUserNextManListByRoleId.org")
+    HTTPResponse listUserByRoleId(@QueryMap Map<String, Object> map);
+
 }

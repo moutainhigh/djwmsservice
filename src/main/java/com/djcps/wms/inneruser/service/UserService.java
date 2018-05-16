@@ -1,6 +1,6 @@
 package com.djcps.wms.inneruser.service;
 
-import com.djcps.wms.inneruser.model.userparam.*;
+import com.djcps.wms.inneruser.model.param.*;
 
 import java.util.Map;
 
@@ -40,12 +40,12 @@ public interface UserService {
 
     /**
      * 修改用户工作状态和仓库等信息
-     * @param updateUserStatusBO UpdateUserStatusBO
+     * @param updateUserBO UpdateUserBO
      * @return Map<String,Object>
      * @author wzy
      * @date 2018/4/13
      **/
-    Map<String,Object> updateUserStatus(UpdateUserStatusBO updateUserStatusBO);
+    Map<String,Object> updateUserStatus(UpdateUserBO updateUserBO);
 
     /**
      * 删除用户关联信息
@@ -68,11 +68,11 @@ public interface UserService {
     /**
      * 分页获取用户列表
      * @author  wzy
-     * @param pageGetUserBO PageGetUserBO
+     * @param pageUserInfoBO PageUserInfoBO
      * @return Map<String,Object>
      * @date  2018/4/13 15:20
      **/
-    Map<String,Object> pageGetUserRelevance(PageGetUserBO pageGetUserBO);
+    Map<String,Object> pageGetUserRelevance(PageUserInfoBO pageUserInfoBO);
 
     /**
      * 保存用户信息新增/修改
@@ -104,11 +104,11 @@ public interface UserService {
     /**
      * 获取公司所有职位信息
      * @author  wzy
-     * @param orgGetPositionBO OrgGetPositionBO
+     * @param orgPositionBO OrgPositionBO
      * @return Map<String,Object>
      * @date  2018/4/17 9:38
      **/
-    Map<String,Object> getPosition(OrgGetPositionBO orgGetPositionBO);
+    Map<String,Object> getPosition(OrgPositionBO orgPositionBO);
 
     /**
      * 获取个人部门职位信息和全部信息
@@ -136,4 +136,13 @@ public interface UserService {
      * @date  2018/4/17 11:09
      **/
     Map<String,Object> getUserWarehouse(DeleteUserBO getUserWarehouse);
+
+    /**
+     * 根据角色类型获取用户信息
+     * @author Chengw
+     * @since 2018/5/15  10:04
+     * @param userInfoBO 参数类
+     * @return Map
+     */
+    Map<String,Object> listUserByType(UserInfoBO userInfoBO);
 }
