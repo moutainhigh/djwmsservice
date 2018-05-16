@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.server;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.utils.HttpResultUtils;
-import com.djcps.wms.inneruser.model.userparam.*;
+import com.djcps.wms.inneruser.model.param.*;
+import com.djcps.wms.inneruser.model.result.*;
 import com.djcps.wms.inneruser.request.UserRequest;
 import com.djcps.wms.inneruser.request.WmsForUserRequest;
 import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
@@ -21,6 +23,7 @@ import rpc.plugin.http.HTTPResponse;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 用户管理
@@ -117,7 +120,7 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/13 10:32
      **/
-    public UserRelevanceBO getUserRelevance(DeleteUserBO deleteUserBO) {
+    public UserRelevancePO getUserRelevance(DeleteUserBO deleteUserBO) {
         String paramJson = gson.toJson(deleteUserBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.getUserRelevance(requestBody);
@@ -125,7 +128,7 @@ public class UserServer {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
-                return gson.fromJson(data, UserRelevanceBO.class);
+                return gson.fromJson(data, UserRelevancePO.class);
             }
         }
         return null;
@@ -134,13 +137,13 @@ public class UserServer {
     /**
      * wms修改用户工作状态等信息
      *
-     * @param updateUserStatusBO UpdateUserStatusBO
+     * @param updateUserBO UpdateUserBO
      * @return HTTPResponse
      * @author wzy
      * @date 2018/4/13 9:31
      **/
-    public HttpResult updateUserStatus(UpdateUserStatusBO updateUserStatusBO) {
-        String paramJson = gson.toJson(updateUserStatusBO);
+    public HttpResult updateUserStatus(UpdateUserBO updateUserBO) {
+        String paramJson = gson.toJson(updateUserBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.updateUserStatus(requestBody);
         return HttpResultUtils.returnResult(httpResponse);
@@ -209,17 +212,39 @@ public class UserServer {
     /**
      * WMS条件获取用户列表
      *
-     * @param pageGetUserBO PageGetUserBO
+     * @param pageUserInfoBO PageUserInfoBO
      * @return OrderResult
      * @author wzy
      * @date 2018/4/13 15:17
      **/
-    public OrderResult pageGetUserRelevance(PageGetUserBO pageGetUserBO) {
-        String paramJson = gson.toJson(pageGetUserBO);
+    public OrderResult pageGetUserRelevance(PageUserInfoBO pageUserInfoBO) {
+        String paramJson = gson.toJson(pageUserInfoBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.pageGetUserRelevance(requestBody);
         if (httpResponse.isSuccessful()) {
             return gson.fromJson(httpResponse.getBodyString(), OrderResult.class);
+        }
+        return null;
+    }
+
+    /**
+     * 根据角色类型 获取用户信息
+     * @param userInfoBO
+     * @return
+     */
+    public List<UserRelevancePO> listUserByRoleCode(UserInfoBO userInfoBO) {
+        String json = JSONObject.toJSONString(userInfoBO);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        HTTPResponse httpResponse = wmsForUserRequest.listUserByRoleCode(requestBody);
+        if (httpResponse.isSuccessful()) {
+            HttpResult result = HttpResultUtils.returnResult(httpResponse);
+            if(!ObjectUtils.isEmpty(result)){
+                if(result.isSuccess()){
+                    String data = JSONObject.toJSONString(result.getData());
+                    List<UserRelevancePO> userList = JSONObject.parseArray(data,UserRelevancePO.class);
+                    return userList;
+                }
+            }
         }
         return null;
     }
@@ -232,7 +257,7 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/12 14:39
      **/
-    public List<OrgDepartmentPO> getDepartment(OrgGetDepartmentBO orgGetDepartmentBO) {
+    public List<DepartmentVO> getDepartment(OrgGetDepartmentBO orgGetDepartmentBO) {
         String json = gson.toJson(orgGetDepartmentBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getDepartList(map);
@@ -240,7 +265,11 @@ public class UserServer {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
-                return JSONArray.parseArray(data, OrgDepartmentPO.class);
+                List<OrgDepartmentPO> orgDepartmentPOList = JSONArray.parseArray(data, OrgDepartmentPO.class);
+                return orgDepartmentPOList.stream().map(x -> new DepartmentVO() {{
+                    setDepartmentId(x.getId());
+                    setDepartmentName(x.getOname());
+                }}).collect(Collectors.toList());
             }
         }
         return null;
@@ -254,7 +283,7 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/17 9:25
      **/
-    public List<OrgUserJobPO> getUserJob(OrgGetDepartmentBO orgGetDepartmentBO) {
+    public List<JobVO> getUserJob(OrgGetDepartmentBO orgGetDepartmentBO) {
         String json = gson.toJson(orgGetDepartmentBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getUjob(map);
@@ -262,21 +291,30 @@ public class UserServer {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
-                return JSONArray.parseArray(data, OrgUserJobPO.class);
+                List<OrgUserJobPO> orgUserJobPOList = JSONArray.parseArray(data, OrgUserJobPO.class);
+                return orgUserJobPOList.stream().map(x -> new JobVO() {{
+                    setJobId(x.getId());
+                    setJobName(x.getUjob_name());
+                }}).collect(Collectors.toList());
             }
         }
         return null;
     }
 
-    public List<OrgPositionPO> getPosition(OrgGetPositionBO orgGetPositionBO) {
-        String json = gson.toJson(orgGetPositionBO);
+    public List<PositionVO> getPosition(OrgPositionBO orgPositionBO) {
+        String json = gson.toJson(orgPositionBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.queryPosition(map);
         if (httpResponse.isSuccessful()) {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
-                return JSONArray.parseArray(data, OrgPositionPO.class);
+                List<OrgPositionPO> orgPositionPOList = JSONArray.parseArray(data, OrgPositionPO.class);
+                return orgPositionPOList.stream().map(x -> new PositionVO() {{
+                    setPositionId(x.getId());
+                    setPositionName(x.getUposition_name());
+                }}).collect(Collectors.toList());
+
             }
         }
         return null;
@@ -365,4 +403,35 @@ public class UserServer {
         }
         return null;
     }
+
+    /**
+     * @param orgUserRoleBO
+     * @return
+     */
+    public List<OrgUserInfoVO> listUserByRoleId(OrgUserRoleBO orgUserRoleBO) {
+        String json = JSONObject.toJSONString(orgUserRoleBO);
+        Map<String, Object> map = gson.fromJson(json, Map.class);
+        HTTPResponse httpResponse = userRequest.listUserByRoleId(map);
+        HttpResult httpResult = HttpResultUtils.returnResult(httpResponse);
+        if (!ObjectUtils.isEmpty(httpResult)) {
+            if (httpResult.isSuccess()) {
+                String data = gson.toJson(httpResult.getData());
+                List<OrgUserInfoByRoleIdPO> orgUserInfoPOList = JSONArray.parseArray(data, OrgUserInfoByRoleIdPO.class);
+                return orgUserInfoPOList.stream().map(x -> new OrgUserInfoVO() {{
+                    setId(x.getId());
+                    setUserName(x.getUname());
+                    setDepartment(x.getUfdepartment());
+                    setUserImage(x.getUimage());
+                    setUserPhone(x.getUphone());
+                    setDepartmentName(x.getUfdepartment());
+                    setWholeSpell(x.getUwholespell());
+                    setJob(x.getUjob());
+                    setFirstSpell(x.getUfirstspell());
+                    setPosition(x.getUposition());
+                }}).collect(Collectors.toList());
+            }
+        }
+        return null;
+    }
+
 }

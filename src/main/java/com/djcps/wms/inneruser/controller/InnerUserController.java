@@ -19,12 +19,11 @@ import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
-import com.djcps.wms.inneruser.model.userparam.UpdateUserStatusBO;
+import com.djcps.wms.inneruser.model.param.UpdateUserBO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.inneruser.service.UserService;
 import com.djcps.wms.permission.service.PermissionService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -227,11 +226,11 @@ public class InnerUserController {
                             UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVO.getToken());
                             if (!ObjectUtils.isEmpty(userInfoVO)) {
                                 // 更新登陆次数以及时间
-                                UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
-                                updateUserStatusBO.setUserId(userInfoVO.getId());
-                                updateUserStatusBO.setPartnerId(userInfoVO.getUcompany());
-                                updateUserStatusBO.setLoginCount(" ");
-                                userService.updateUserStatus(updateUserStatusBO);
+                                UpdateUserBO updateUserBO = new UpdateUserBO();
+                                updateUserBO.setUserId(userInfoVO.getId());
+                                updateUserBO.setPartnerId(userInfoVO.getUcompany());
+                                updateUserBO.setLoginCount(" ");
+                                userService.updateUserStatus(updateUserBO);
                             }
                             return MsgTemplate.successMsg(userInfoVO);
                         }

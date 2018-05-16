@@ -115,4 +115,14 @@ public interface WmsForUserRequest {
     @Headers("content-type:application/json")
     @POST("user/getUserWarehouseList.do")
     HTTPResponse getUserWarehouseList(@Body RequestBody json);
+
+    /**
+     * 根据角色类型 获取用户信息
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("user/listUserByRoleCode.do")
+    HTTPResponse listUserByRoleCode(@Body RequestBody json);
+
 }
