@@ -2007,6 +2007,11 @@ public class AllocationServiceImpl implements AllocationService {
 			UpdateSplitOrderBO firstSpiltOrder = param.getFirstSpiltOrder();
 			UpdateSplitOrderBO secondSpiltOrder = param.getSecondSpiltOrder();
 			
+			//判断订单的订单类型
+	        String switchOrderTypeToString = com.djcps.wms.commons.utils.StringUtils.switchOrderTypeToString(param.getOrderId());
+	        firstSpiltOrder.setOrderType(switchOrderTypeToString);
+	        secondSpiltOrder.setOrderType(switchOrderTypeToString);
+			
 			BatchOrderDetailListPO batchOrder = dataFormatGson.fromJson(gsonNotNull.toJson(result.getData()),BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = batchOrder.getOrderList();
 			WarehouseOrderDetailPO warehouseOrder = null;

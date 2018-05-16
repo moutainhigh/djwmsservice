@@ -359,9 +359,7 @@ public class OrderServer {
 	
 	public HttpResult getOrderDeatilByIdList(BatchOrderIdListBO param) {
 		List<String> orderIdList = param.getOrderIds();
-		    String orderId = orderIdList.get(0);
-		
-		
+		String orderId = orderIdList.get(0);
 		//将请求参数转化为requestbody格式
         String json = gson.toJson(param);
         okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);

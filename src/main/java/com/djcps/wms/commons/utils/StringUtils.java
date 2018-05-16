@@ -1,6 +1,9 @@
 package com.djcps.wms.commons.utils;
 
 import com.djcps.wms.commons.enums.FluteTypeEnum;
+import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
+import com.djcps.wms.order.constant.OrderConstant;
+
 import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
@@ -107,5 +110,25 @@ public class StringUtils {
         }
     	return newFluteType;
     }
-
+    
+    /**
+     * 匹配订单类型
+     * @param orderType
+     * @return
+     * @author:zdx
+     * @date:2018年5月15日
+     */
+    public static String switchOrderTypeToString(String orderType){
+    	if(orderType.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1){
+    		return OrderConstant.ONLINE_PAPERBOARD_ORDER_TYPE;
+    	}else if(orderType.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER_CGR)!=-1){
+    		return OrderConstant.ONLINE_PAPERBOARD_ORDER_TYPE;
+    	}else if(orderType.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1){
+    		return OrderConstant.OFFLINE_PAPERBOARD_ORDER_TYPE;
+    	}else if(orderType.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
+    		return OrderConstant.OFFLINE_BOX_ORDER_TYPE;
+    	}else{
+    		return null;
+    	}
+    }
 }
