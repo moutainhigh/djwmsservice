@@ -362,7 +362,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
         if (!childOrderBOList.isEmpty()) {
             locationOrderInfoBOList.stream().forEach(locationOrder -> {
                 Optional optional = childOrderBOList.stream()
-                        .filter(b -> b.getChildOrderId().equals(locationOrder.getOrderId())).findFirst();
+                        .filter(b -> b.getOrderId().equals(locationOrder.getOrderId())).findFirst();
                 if (optional.isPresent()) {
                     ChildOrderBO childOrderBO = (ChildOrderBO) optional.get();
                     StocktakingTaskfBO stocktakingTaskBO = new StocktakingTaskfBO();

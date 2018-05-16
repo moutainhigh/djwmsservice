@@ -40,7 +40,14 @@ public class AbnormalConstant {
 	public static final String ABNORMAL_UPDATE_2 = "2";
 	public static final String ABNORMAL_UPDATE_3 = "3";
 	public static final String ABNORMAL_UPDATE_4 = "4";
-
+	
+	/**
+	 * 异常环节 1：入库 2：盘点 3：提货
+	 */
+	public static final Integer ABNORMAL_LINK_1 = 1;
+	public static final Integer ABNORMAL_LINK_2 = 2;
+	public static final Integer ABNORMAL_LINK_3 = 3;
+	
 	public static void setAbnormalErrorReason(String abnormalErrorReason) {
 		ABNORMAL_ERROR_REASON = abnormalErrorReason;
 	}

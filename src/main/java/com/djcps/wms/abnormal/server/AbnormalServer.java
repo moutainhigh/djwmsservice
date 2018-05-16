@@ -2,6 +2,7 @@ package com.djcps.wms.abnormal.server;
 
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.abnormal.constant.AbnormalConstant;
 import com.djcps.wms.abnormal.model.*;
 import com.djcps.wms.abnormal.request.AbnormalServerHttpRequest;
 import com.djcps.wms.commons.httpclient.HttpResult;
@@ -10,8 +11,10 @@ import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,8 @@ public class AbnormalServer {
 	private static final DjcpsLogger LOGGER  = DjcpsLoggerFactory.getLogger(AbnormalServer.class);	
 	
 	private Gson gson = GsonUtils.gson;
+	
+	private Gson gsonNotNull = GsonUtils.gsonNotNull;
 	
 	@Autowired
 	private AbnormalServerHttpRequest abnormalServerHttpRequest;
@@ -102,6 +107,18 @@ public class AbnormalServer {
 			updateSplitList.add(updateSplit);
 		}
 		return orderServer.updateSplitOrderInfo(updateSplitList);
+	}
+	
+	public Boolean isChooseAddAbnormal(AddAbnormal addAbnormal) {
+		OrderIdListBO orderList = new OrderIdListBO();
+		orderList.setPartnerId(addAbnormal.getPartnerId());
+		orderList.setList(Arrays.asList(addAbnormal.getOrderId()));
+		HttpResult result = getOrderByOrderIdList(orderList);
+		List<AbnormalOrderPO> abnormalOrderPOList = gsonNotNull.fromJson(gsonNotNull.toJson(result.getData()), new TypeToken<ArrayList<AbnormalOrderPO>>(){}.getType());
+		if(abnormalOrderPOList.get(0).getResult().equals(AbnormalConstant.ABNORMAL_UPDATE_3)){
+			return false;
+		}
+		return true;
 	}
 	
 	/**

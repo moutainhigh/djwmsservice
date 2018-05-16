@@ -1,4 +1,4 @@
-package com.djcps.wms.order.request;
+	package com.djcps.wms.order.request;
 
 import com.djcps.wms.commons.config.ParamsConfig;
 
@@ -50,7 +50,7 @@ public interface OffinePaperboardRequest {
 	 * @date:2018年5月9日
 	 */
 	@Headers("content-type:application/json")
-	@POST("offline/updateOfflineOrderStatus")
+	@POST("offline/updateOfflineOrderStatus.do")
 	public HTTPResponse updateOrderInfo(@Body RequestBody rb);
 
 	/**
@@ -61,7 +61,7 @@ public interface OffinePaperboardRequest {
 	 * @date:2018年5月9日
 	 */
 	@Headers("content-type:application/json")
-	@POST("offline/updateSplitOrderInfo")
+	@POST("offline/updateSplitOrderInfo.do")
 	public HTTPResponse updateSplitOrderInfo(@Body RequestBody rb);
 
 
@@ -73,7 +73,7 @@ public interface OffinePaperboardRequest {
 	 * @date:2018年5月9日
 	 */
 	@Headers("content-type:application/json")
-	@POST("offline/updateSplitOrderStatus")
+	@POST("offline/updateSplitOrderStatus.do")
 	public HTTPResponse splitOrder(@Body RequestBody rb);
 
 	/**
@@ -84,7 +84,7 @@ public interface OffinePaperboardRequest {
 	 * @date:2018年5月9日
 	 */
 	@Headers("content-type:application/json")
-	@POST("offline/orderCardboardInfoByIds")
+	@POST("offline/orderCardboardInfoByIds.do")
 	public HTTPResponse getOfflinePaperboardByIdList(@Body RequestBody rb);
 	
 	/**
@@ -95,7 +95,7 @@ public interface OffinePaperboardRequest {
 	 * @date:2018年5月9日
 	 */
 	@Headers("content-type:application/json")
-	@POST("offline/orderCartonInfoByIds")
+	@POST("offline/orderCartonInfoByIds.do")
 	public HTTPResponse getOfflineBoxOrderByIdList(@Body RequestBody rb);
 
 	/**
@@ -106,7 +106,7 @@ public interface OffinePaperboardRequest {
 	 * @date:2018年5月9日
 	 */
 	@Headers("content-type:application/json")
-	@POST("offline/loadSplitOrderByBoxOrderIds")
+	@POST("offline/loadSplitOrderByBoxOrderIds.do")
 	public HTTPResponse getSplitOrderDeatilByI(@Body RequestBody rb);
 	
 }

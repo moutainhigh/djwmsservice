@@ -28,4 +28,19 @@ public class OrderConstant {
      */
     public static final String OFFLINE_BOX_ORDER ="OCT";
     
+    /**
+     * 线上纸板订单类型
+     */
+    public static final String ONLINE_PAPERBOARD_ORDER_TYPE ="1";
+    
+    /**
+     * 线下纸板订单类型
+     */
+    public static final String OFFLINE_PAPERBOARD_ORDER_TYPE ="2";
+    
+    /**
+     * 线下纸箱订单类型
+     */
+    public static final String OFFLINE_BOX_ORDER_TYPE ="3";
+    
 }

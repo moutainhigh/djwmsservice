@@ -52,7 +52,6 @@ public class UpdateOrderBO extends PartnerInfoBO implements Serializable{
     @NotNull
     private UpdateSplitOrderBO secondSpiltOrder;
 
-    
 	public List<String> getDeleteOrdeIdList() {
 		return deleteOrdeIdList;
 	}
@@ -107,5 +106,4 @@ public class UpdateOrderBO extends PartnerInfoBO implements Serializable{
 				+ ", splitStatus=" + splitStatus + ", deleteOrdeIdList=" + deleteOrdeIdList + ", splitOrders="
 				+ splitOrders + ", firstSpiltOrder=" + firstSpiltOrder + ", secondSpiltOrder=" + secondSpiltOrder + "]";
 	}
-	
 }

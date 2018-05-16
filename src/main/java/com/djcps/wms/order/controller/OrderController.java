@@ -93,7 +93,7 @@ public class OrderController {
 	 * @author:zdx
 	 * @date:2018年5月10日
 	 */
-	@RequestMapping(name="根据订单号获取订单",value = "/getPdaOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(name="pda根据订单号获取订单",value = "/getPdaOrderByOrderId", method = RequestMethod.POST, produces = "application/json")
 	public Map<String, Object> getPdaOrderByOrderId(@RequestBody(required = false) String json, HttpServletRequest request) {
 		try {
 			LOGGER.debug("json : " + json);
@@ -171,7 +171,7 @@ public class OrderController {
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			param.setKeyArea(param.getPartnerArea());
-			if(param.getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+			if(String.valueOf(param.getOrderStatus()).equals(OrderStatusTypeEnum.All_STATUS.getValue())){
 				List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
 						OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 				param.setAllOrderStatus(allOrderStatus);
@@ -200,7 +200,7 @@ public class OrderController {
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			param.setKeyArea(param.getPartnerArea());
-			if(param.getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+			if(String.valueOf(param.getOrderStatus()).equals(OrderStatusTypeEnum.All_STATUS.getValue())){
 				List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
 						OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 				param.setAllOrderStatus(allOrderStatus);

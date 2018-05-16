@@ -36,6 +36,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.constant.OrderConstant;
 import com.djcps.wms.order.model.OrderIdBO;
@@ -265,6 +266,11 @@ public class StockServiceImpl implements StockService {
         OrderIdBO orderIdBO = new OrderIdBO();
         UpdateSplitOrderBO splitOrder = new UpdateSplitOrderBO();
         List<OrderIdBO> list = new ArrayList<OrderIdBO>();
+        
+        //判断订单的订单类型
+        String switchOrderTypeToString = StringUtils.switchOrderTypeToString(param.getOrderId());
+        param.setOrderType(switchOrderTypeToString);
+        
         // 正常子单入库
         if (orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER) == -1) {
             orderIdBO.setOrderId(orderId);
@@ -447,6 +453,7 @@ public class StockServiceImpl implements StockService {
                         orderRedundant.setPaymentTime(sd.format(onlinePaperboardPO.getPayTime()));
                     }
                     orderRedundant.setStatus(onlinePaperboardPO.getOrderStatus());
+                    orderRedundant.setProductName(onlinePaperboardPO.getProductName());
                     orderRedundant.setIsSplit(
                     		param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1?2:0);
                     // 插入冗余数据订单数据
