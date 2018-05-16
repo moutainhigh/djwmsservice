@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -26,7 +27,7 @@ public class UserServiceTest extends BaseTest {
     @Test
     public void listUserByType() {
         Map<String,Object> result = userService.listUserByType(new UserInfoBO(){{
-            setTypeCode("01");
+            setRoleTypeCode(Arrays.asList("01"));
             setPartnerId("400");
         }});
 

@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.util.List;
+
 /**
  *
  * @author Chengw
@@ -11,19 +13,19 @@ public class UserInfoBO {
     /**
      * 类型代码
      */
-    private String typeCode;
+    private List<String> roleTypeCode;
 
     /**
      * 公司id
      */
     private String partnerId;
 
-    public String getTypeCode() {
-        return typeCode;
+    public List<String> getRoleTypeCode() {
+        return roleTypeCode;
     }
 
-    public void setTypeCode(String typeCode) {
-        typeCode = typeCode;
+    public void setRoleTypeCode(List<String> roleTypeCode) {
+        this.roleTypeCode = roleTypeCode;
     }
 
     public String getPartnerId() {
@@ -37,7 +39,7 @@ public class UserInfoBO {
     @Override
     public String toString() {
         return "UserInfoBO{" +
-                "typeCode='" + typeCode + '\'' +
+                "roleTypeCode='" + roleTypeCode + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 '}';
     }

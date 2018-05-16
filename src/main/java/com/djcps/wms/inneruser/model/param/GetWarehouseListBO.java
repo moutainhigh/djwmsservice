@@ -3,11 +3,12 @@ package com.djcps.wms.inneruser.model.param;
 import java.util.List;
 
 /**
- * 获取所属部门列表参数类
+ * 获取所属仓库 参数类
  * @author wzy
  * @date 2018/4/23
  **/
 public class GetWarehouseListBO {
+
     private List<String> list;
 
     private String partnerId;

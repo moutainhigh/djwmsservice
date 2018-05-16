@@ -120,7 +120,7 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/13 10:32
      **/
-    public UserRelevanceBO getUserRelevance(DeleteUserBO deleteUserBO) {
+    public UserRelevancePO getUserRelevance(DeleteUserBO deleteUserBO) {
         String paramJson = gson.toJson(deleteUserBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.getUserRelevance(requestBody);
@@ -128,7 +128,7 @@ public class UserServer {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
-                return gson.fromJson(data, UserRelevanceBO.class);
+                return gson.fromJson(data, UserRelevancePO.class);
             }
         }
         return null;
@@ -223,6 +223,28 @@ public class UserServer {
         HTTPResponse httpResponse = wmsForUserRequest.pageGetUserRelevance(requestBody);
         if (httpResponse.isSuccessful()) {
             return gson.fromJson(httpResponse.getBodyString(), OrderResult.class);
+        }
+        return null;
+    }
+
+    /**
+     * 根据角色类型 获取用户信息
+     * @param userInfoBO
+     * @return
+     */
+    public List<UserRelevancePO> listUserByRoleCode(UserInfoBO userInfoBO) {
+        String json = JSONObject.toJSONString(userInfoBO);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        HTTPResponse httpResponse = wmsForUserRequest.listUserByRoleCode(requestBody);
+        if (httpResponse.isSuccessful()) {
+            HttpResult result = HttpResultUtils.returnResult(httpResponse);
+            if(!ObjectUtils.isEmpty(result)){
+                if(result.isSuccess()){
+                    String data = JSONObject.toJSONString(result.getData());
+                    List<UserRelevancePO> userList = JSONObject.parseArray(data,UserRelevancePO.class);
+                    return userList;
+                }
+            }
         }
         return null;
     }

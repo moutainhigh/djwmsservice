@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 用户模块逻辑层
@@ -136,7 +135,7 @@ public class UserServiceImpl implements UserService {
      **/
     @Override
     public Map<String, Object> getUserRelevance(DeleteUserBO deleteUserBO) {
-        UserRelevanceBO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
+        UserRelevancePO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
         if (ObjectUtils.isEmpty(userRelevanceBO)) {
             return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIST);
         }
@@ -187,7 +186,7 @@ public class UserServiceImpl implements UserService {
             setPartnerId(orgDeleteUserBO.getPartnerId());
         }};
         orgDeleteUserBO.setId(orgDeleteUserBO.getUserId());
-        UserRelevanceBO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
+        UserRelevancePO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
         if (!ObjectUtils.isEmpty(userRelevanceBO)) {
             //不在忙碌状态,可以删除
             int status = userRelevanceBO.getWorkStatus();
@@ -380,7 +379,7 @@ public class UserServiceImpl implements UserService {
                 DeleteUserBO deleteUserBO = new DeleteUserBO();
                 deleteUserBO.setPartnerId(wmsSaveUserBO.getPartnerId());
                 deleteUserBO.setUserId(wmsSaveUserBO.getUserId());
-                UserRelevanceBO relevanceBO = userServer.getUserRelevance(deleteUserBO);
+                UserRelevancePO relevanceBO = userServer.getUserRelevance(deleteUserBO);
                 //用户不存在，新增用户关联信息
                 if (ObjectUtils.isEmpty(relevanceBO)) {
                     //获取角色类型id
@@ -653,44 +652,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> listUserByType(UserInfoBO userInfoBO) {
-        RoleTypeBO roleTypeBO = new RoleTypeBO(){{
-            setRoleTypeCode(userInfoBO.getTypeCode());
-            setPartnerId(userInfoBO.getPartnerId());
-        }};
-        List<WmsRoleInfoPO> roleList = roleHttpServer.listRole(roleTypeBO);
-        List<OrgUserInfoVO>  userInfoPOList = listUser(roleList,userInfoBO.getPartnerId());
-        return MsgTemplate.successMsg(userInfoPOList);
+        List<UserRelevancePO> userRelevancePOList = userServer.listUserByRoleCode(userInfoBO);
+        return MsgTemplate.successMsg(userRelevancePOList);
     }
 
 
-    /***
-     * 将查询到的用户信息 统计到一个集合中
-     * @param roleList
-     * @return
-     */
-    private List<OrgUserInfoVO> listUser(List<WmsRoleInfoPO> roleList,String companyId){
-        if (!ObjectUtils.isEmpty(roleList)){
-            List<OrgUserInfoVO> userInfoPOList = new ArrayList<>();
-            roleList.forEach(x -> {
-                List<OrgUserInfoVO> userInfoList = userServer.listUserByRoleId(new com.djcps.wms.inneruser.model.param.OrgUserRoleBO(){{
-                    setRoleId(x.getRoleId());
-                    setBusiness(AppConstant.WMS);
-                    setCompanyID(companyId);
-                    setIp("");
-                    setOperator("-1");
-                }});
-                if(!ObjectUtils.isEmpty(userInfoList)){
-                    userInfoList.forEach(u -> {
-                        Boolean match = userInfoPOList.stream().noneMatch(o -> o.getId().equals(u.getId()));
-                        if(match){
-                            userInfoPOList.add(u);
-                        }
-                    });
-
-                }
-            });
-            return userInfoPOList;
-        }
-        return null;
-    }
 }
