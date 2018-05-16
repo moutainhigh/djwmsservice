@@ -44,8 +44,8 @@ public class OutOrderServiceImpl implements OutOrderService{
 		HttpResult result = outOrderServer.getOrderIdsByOutOrderId(param);
 		//获取出库单号字符串
 		OrderIdsBO orderIdsBO = null;
-		List<OrderDetailBO> childOrderList = new ArrayList<>();
-		List<OrderDetailBO> splitChildOrderList = new ArrayList<>();
+		List<WarehouseOrderDetailPO> childOrderList = new ArrayList<>();
+		List<WarehouseOrderDetailPO> splitChildOrderList = new ArrayList<>();
 		if(!ObjectUtils.isEmpty(result.getData())){
 			String childOrderIdStr = result.getData().toString();
 			String[] childOrderIds = childOrderIdStr.split(",");
@@ -59,7 +59,7 @@ public class OutOrderServiceImpl implements OutOrderService{
 			if(!ObjectUtils.isEmpty(orderList)){
 				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
 				for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
-					OrderDetailBO child = new OrderDetailBO();
+				    WarehouseOrderDetailPO child = new WarehouseOrderDetailPO();
 					BeanUtils.copyProperties(warehouseOrderDetailPO, child);
 					childOrderList.add(child);
 				}
@@ -69,7 +69,7 @@ public class OutOrderServiceImpl implements OutOrderService{
 			if(!ObjectUtils.isEmpty(splitOrderList)){
 				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
 				for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
-					OrderDetailBO child = new OrderDetailBO();
+				    WarehouseOrderDetailPO child = new WarehouseOrderDetailPO();
 					BeanUtils.copyProperties(warehouseOrderDetailPO, child);
 					splitChildOrderList.add(child);
 				}
@@ -78,7 +78,7 @@ public class OutOrderServiceImpl implements OutOrderService{
 			return MsgTemplate.failureMsg(OutOrderEnums.GET_ORDER_ID_FAIL);
 		}
 		
-		List<OrderDetailBO> orderDetailList = new ArrayList<OrderDetailBO>();
+		List<WarehouseOrderDetailPO> orderDetailList = new ArrayList<WarehouseOrderDetailPO>();
 		
 		if(!ObjectUtils.isEmpty(childOrderList)){
 			orderDetailList.addAll(childOrderList);
@@ -91,9 +91,13 @@ public class OutOrderServiceImpl implements OutOrderService{
 		BigDecimal totalPrice = new BigDecimal(0.00);
 		Integer totalAmount = 0;
 		if(!ObjectUtils.isEmpty(orderDetailList)){
-			for(OrderDetailBO orderDetail:orderDetailList){
+			for(WarehouseOrderDetailPO orderDetail:orderDetailList){
 				totalPrice = totalPrice.add(orderDetail.getAmountPrice());
-				totalAmount += orderDetail.getAmountPiece();
+				if(!ObjectUtils.isEmpty(orderDetail.getAmountPiece())){
+				    totalAmount += orderDetail.getAmountPiece();
+				    continue;
+				}
+				totalAmount += orderDetail.getSubNumber();
 			}
 			OrderDetailInfoVO orderDetailVO = new OrderDetailInfoVO();
 			orderDetailVO.setOrderDetails(orderDetailList);
