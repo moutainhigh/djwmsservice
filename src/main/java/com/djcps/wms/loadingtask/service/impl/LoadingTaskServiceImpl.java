@@ -554,7 +554,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             
             if(!ObjectUtils.isEmpty(newChildOrderList)){
             	 // 获取客户信息
-                List<CustomerBO> customers = getCustomers(childOrderList);
+                List<CustomerBO> customers = getCustomers(newChildOrderList);
                 // 获取出库单信息
                 List<OutOrderInfoBO> outOrderInfos = getOutOrderInfos(customers, param, getOrderById);
                 HttpResult insertResult = loadingTaskServer.insertOutOrder(outOrderInfos);

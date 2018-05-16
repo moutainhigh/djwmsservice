@@ -463,7 +463,7 @@ public class AllocationServiceImpl implements AllocationService {
 			String loadingTableId = asJsonObject.get("loadingTableId").getAsString();
 			String loadingTableName = asJsonObject.get("loadingTableName").getAsString();
 			JsonElement jsonElement = asJsonObject.get("pickerId");
-			if(jsonElement==null){
+			if(jsonElement.isJsonNull() || jsonElement == null){
 				param.setPickerId(param.getPickerId());
 			}else{
 				//删除同时确认配货锁
