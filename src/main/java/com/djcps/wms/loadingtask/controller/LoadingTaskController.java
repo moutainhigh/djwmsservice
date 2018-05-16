@@ -18,11 +18,13 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
@@ -319,12 +321,10 @@ public class LoadingTaskController {
      * @date:2018年4月4日
      */
     @RequestMapping(name = "根据用户登录id获取装车台id", value = "/getLoadingTableIdByUserId", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getLoadingTableIdByUserId(@RequestBody(required = false) String json, HttpServletRequest request) {
+    public Map<String, Object> getLoadingTableIdByUserId(@RequestBody(required = false) String json, HttpServletRequest request,@InnerUser UserInfoVO userInfoVO) {
         try {
             LOGGER.debug("json : " + json);
-            //伪代码
-            PartnerInfoBO partnerInfoBO = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            return loadingTaskService.getLoadingTableIdByUserId(partnerInfoBO);
+            return loadingTaskService.getLoadingTableIdByUserId(userInfoVO);
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error(e.getMessage());

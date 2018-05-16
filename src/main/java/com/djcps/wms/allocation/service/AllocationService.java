@@ -233,16 +233,6 @@ public interface AllocationService {
 	 */
 	Map<String, Object> getPicker(BaseAddBO param);
 
-
-	/**
-	 * 获取装车员
-	 * @return
-	 * @author:zdx
-	 * @date:2018年2月4日
-	 */
-	Map<String, Object> getLoadingPerson();
-
-
 	/**
 	 * 装车优化再次确认配货
 	 * @param param

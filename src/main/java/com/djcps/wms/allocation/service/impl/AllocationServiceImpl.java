@@ -81,6 +81,9 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.redis.RedisClient;
 import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.commons.utils.RedisUtil;
+import com.djcps.wms.inneruser.model.param.UserInfoBO;
+import com.djcps.wms.inneruser.model.result.UserRelevancePO;
+import com.djcps.wms.inneruser.server.UserServer;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
@@ -98,6 +101,8 @@ import com.djcps.wms.push.model.PushMsgBO;
 import com.djcps.wms.push.mq.producer.AppProducer;
 import com.djcps.wms.record.model.OrderOperationRecordPO;
 import com.djcps.wms.record.server.OperationRecordServer;
+import com.djcps.wms.role.enums.RoleEnum;
+import com.djcps.wms.role.enums.RoleTypeEnum;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -146,6 +151,8 @@ public class AllocationServiceImpl implements AllocationService {
 	private AbnormalServer abnormalServer;
 	@Autowired
 	private OperationRecordServer operationRecordServer;
+	@Autowired
+	private UserServer userServer;
 	
 	@Override
 	public Map<String, Object> getOrderType(BaseBO baseBO){
@@ -1411,20 +1418,11 @@ public class AllocationServiceImpl implements AllocationService {
 
 	@Override
 	public Map<String, Object> getPicker(BaseAddBO param) {
-		PickerPO picker2 = new PickerPO(param.getOperatorId(),param.getOperator(),"15157780633","空闲");
-		PickerPO picker3 = new PickerPO("81","Admin","1000000","空闲");
-		List<PickerPO> list = new ArrayList<>();
-		list.add(picker2);
-		list.add(picker3);
-		return MsgTemplate.successMsg(list);
-	}
-
-	@Override
-	public Map<String, Object> getLoadingPerson() {
-		LoadingPersonPO picker1 = new LoadingPersonPO("1000933","郑天伟","15157780633","空闲");
-		List<LoadingPersonPO> list = new ArrayList<>();
-		list.add(picker1);
-		return MsgTemplate.successMsg(list);
+		UserInfoBO userInfoBO = new UserInfoBO();
+		userInfoBO.setRoleTypeCode(Arrays.asList(RoleTypeEnum.ROLE_TYPE_3.getValue()));
+		userInfoBO.setPartnerId(param.getPartnerId());
+		List<UserRelevancePO> userRelevancePOList = userServer.listUserByRoleCode(userInfoBO);
+        return MsgTemplate.successMsg(userRelevancePOList);
 	}
 
 	@Override

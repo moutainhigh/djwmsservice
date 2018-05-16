@@ -10,6 +10,7 @@ import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.NumberServerHttpRequest;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
@@ -253,8 +254,8 @@ public class LoadingTaskServer {
     	
     }
 
-    public HttpResult getLoadingTableIdByUserId(PartnerInfoBO params) {
-        String json = gson.toJson(params);
+    public HttpResult getLoadingTableIdByUserId(UserInfoVO userInfoVO) {
+        String json = gson.toJson(userInfoVO);
         RequestBody rb = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         HTTPResponse response = wmsForLoadingTaskHttpRequest.getLoadingTableIdByUserId(rb);
         HttpResult result = returnResult(response);

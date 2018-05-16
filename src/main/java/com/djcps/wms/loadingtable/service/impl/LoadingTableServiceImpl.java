@@ -1,6 +1,7 @@
 package com.djcps.wms.loadingtable.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,9 @@ import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.inneruser.model.param.UserInfoBO;
+import com.djcps.wms.inneruser.model.result.UserRelevancePO;
+import com.djcps.wms.inneruser.server.UserServer;
 import com.djcps.wms.loadingtable.model.AddLoadingTableBO;
 import com.djcps.wms.loadingtable.model.DeleteLoadingTableBO;
 import com.djcps.wms.loadingtable.model.GetUserListBO;
@@ -24,6 +28,7 @@ import com.djcps.wms.loadingtable.model.UpdateLoadingTableBO;
 import com.djcps.wms.loadingtable.model.UserPO;
 import com.djcps.wms.loadingtable.server.LoadingTableServer;
 import com.djcps.wms.loadingtable.service.LoadingTableService;
+import com.djcps.wms.role.enums.RoleTypeEnum;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -43,6 +48,8 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 	
 	@Autowired
 	private LoadingTableServer loadingTableServer;
+	@Autowired
+	private UserServer userServer;
 
 	@Override
 	public Map<String, Object> add(AddLoadingTableBO loadingTable) {
@@ -68,16 +75,10 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 		BaseVO baseVO = null;
 		if(!ObjectUtils.isEmpty(result.getData())){
 			baseVO = gson.fromJson(gson.toJson(result.getData()), BaseVO.class);
-			if(!ObjectUtils.isEmpty(baseVO.getResult())){
-				List<LoadingTablePO> loadingTableList = gson.fromJson(gson.toJson(baseVO.getResult()), new TypeToken<ArrayList<LoadingTablePO>>(){}.getType());
-				//组织假数据,取要权限好了去or取
-				for (LoadingTablePO loadingTablePO : loadingTableList) {
-					loadingTablePO.setBindingUserName("假数据,请先点击更换账号绑定账户,才会生效");
-				}
-				baseVO.setResult(loadingTableList);
-			}
 		}else{
 			baseVO = new BaseVO();
+			baseVO.setResult(null);
+			baseVO.setTotal(0);
 		}
 		return MsgTemplate.successMsg(baseVO);
 	}
@@ -114,21 +115,11 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 
 	@Override
 	public Map<String, Object> getUserList(GetUserListBO param) {
-		//假数据到最后还是需要删除
-		List<UserPO> list = new ArrayList<>();
-		UserPO user = new UserPO();
-		user.setBindingUserName(param.getOperator());
-		user.setBindingUserId(param.getOperatorId());
-		UserPO user2 = new UserPO();
-		user2.setBindingUserName("Admin");
-		user2.setBindingUserId("81");
-		UserPO user3 = new UserPO();
-		user3.setBindingUserName("鄭傑");
-		user3.setBindingUserId("977");
-		list.add(user);
-		list.add(user2);
-		list.add(user3);
-		return  MsgTemplate.successMsg(list);
+		UserInfoBO userInfoBO = new UserInfoBO();
+		userInfoBO.setRoleTypeCode(Arrays.asList(RoleTypeEnum.ROLE_TYPE_7.getValue()));
+		userInfoBO.setPartnerId(param.getPartnerId());
+		List<UserRelevancePO> userRelevancePOList = userServer.listUserByRoleCode(userInfoBO);
+        return MsgTemplate.successMsg(userRelevancePOList);
 	}
 
 }

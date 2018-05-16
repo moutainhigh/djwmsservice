@@ -112,8 +112,21 @@ public class DeliveryOrderDetailPO {
      * 库位提货信息
      */
     private List<OrderDeliveryPO> warehouseLocs;
+    
+    /**
+     * 是否备货 1有  0无
+     */
+    private Integer isStored;
+    
+    public Integer getIsStored() {
+		return isStored;
+	}
 
-    public String getOrderId() {
+	public void setIsStored(Integer isStored) {
+		this.isStored = isStored;
+	}
+
+	public String getOrderId() {
         return orderId;
     }
 
@@ -281,30 +294,15 @@ public class DeliveryOrderDetailPO {
         this.boxWidth = boxWidth;
     }
 
-    @Override
-    public String toString() {
-        return "DeliveryOrderDetailPO{" +
-                "orderId='" + orderId + '\'' +
-                ", deliveryId='" + deliveryId + '\'' +
-                ", deliveryIdEffect=" + deliveryIdEffect +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", productName='" + productName + '\'' +
-                ", materialName='" + materialName + '\'' +
-                ", materialLength='" + materialLength + '\'' +
-                ", materialWidth='" + materialWidth + '\'' +
-                ", fluteType='" + fluteType + '\'' +
-                ", boxHeight='" + boxHeight + '\'' +
-                ", boxLength='" + boxLength + '\'' +
-                ", boxWidth='" + boxWidth + '\'' +
-                ", sequence=" + sequence +
-                ", orderAmount=" + orderAmount +
-                ", deliveryAmount=" + deliveryAmount +
-                ", realDeliveryAmount=" + realDeliveryAmount +
-                ", unit='" + unit + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", warehouseLocs=" + warehouseLocs +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "DeliveryOrderDetailPO [orderId=" + orderId + ", deliveryId=" + deliveryId + ", deliveryIdEffect="
+				+ deliveryIdEffect + ", warehouseId=" + warehouseId + ", warehouseName=" + warehouseName
+				+ ", productName=" + productName + ", materialName=" + materialName + ", materialLength="
+				+ materialLength + ", materialWidth=" + materialWidth + ", fluteType=" + fluteType + ", boxHeight="
+				+ boxHeight + ", boxLength=" + boxLength + ", boxWidth=" + boxWidth + ", sequence=" + sequence
+				+ ", orderAmount=" + orderAmount + ", deliveryAmount=" + deliveryAmount + ", realDeliveryAmount="
+				+ realDeliveryAmount + ", unit=" + unit + ", createTime=" + createTime + ", updateTime=" + updateTime
+				+ ", warehouseLocs=" + warehouseLocs + ", isStored=" + isStored + "]";
+	}
 }
