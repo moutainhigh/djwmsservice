@@ -28,8 +28,16 @@ public class PermissionRedisDao {
      * @param userId
      * @return
      */
+    public List<UserPermissionVO> getPermissionTree(String userId){
+        String data = redisClientCluster.get(RedisPrefixConstant.PERMISSION_TREE_REDIS_CACHE + userId);
+        if(StringUtils.isNotBlank(data)){
+            return JSONObject.parseArray(data,UserPermissionVO.class);
+        }
+        return null;
+    }
+
     public List<UserPermissionVO> getPermission(String userId){
-        String data = redisClientCluster.get(RedisPrefixConstant.PERMISSION_REDIS_CACHE + userId);
+        String data = redisClientCluster.get(RedisPrefixConstant.PERMISSION_LIST_REDIS_CACHE + userId);
         if(StringUtils.isNotBlank(data)){
             return JSONObject.parseArray(data,UserPermissionVO.class);
         }
@@ -42,10 +50,25 @@ public class PermissionRedisDao {
      * @param userId
      * @return
      */
-    public Boolean setPermission( String userId,List<UserPermissionVO> list){
-        long result = redisClientCluster.setnx(RedisPrefixConstant.PERMISSION_REDIS_CACHE + userId,JSONObject.toJSONString(list));
+    public Boolean setPermissionTree( String userId,List<UserPermissionVO> list){
+        long result = redisClientCluster.setnx(RedisPrefixConstant.PERMISSION_TREE_REDIS_CACHE + userId,JSONObject.toJSONString(list));
         if(result > 0 ){
-            redisClientCluster.expire(RedisPrefixConstant.PERMISSION_REDIS_CACHE + userId,PermissionConstants.PERMISSION_REDIS_CACHE_TIME);
+            redisClientCluster.expire(RedisPrefixConstant.PERMISSION_TREE_REDIS_CACHE + userId,PermissionConstants.PERMISSION_REDIS_CACHE_TIME);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 设置用户权限缓存
+     * @param list
+     * @param userId
+     * @return
+     */
+    public Boolean setPermission( String userId,List<UserPermissionVO> list){
+        long result = redisClientCluster.setnx(RedisPrefixConstant.PERMISSION_LIST_REDIS_CACHE + userId,JSONObject.toJSONString(list));
+        if(result > 0 ){
+            redisClientCluster.expire(RedisPrefixConstant.PERMISSION_LIST_REDIS_CACHE + userId,PermissionConstants.PERMISSION_REDIS_CACHE_TIME);
             return true;
         }
         return false;
@@ -57,7 +80,20 @@ public class PermissionRedisDao {
      * @return
      */
     public Boolean delPermission(String userId){
-        long result = redisClientCluster.del(RedisPrefixConstant.PERMISSION_REDIS_CACHE + userId);
+        long result = redisClientCluster.del(RedisPrefixConstant.PERMISSION_TREE_REDIS_CACHE + userId);
+        if(result > 0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 删除用户权限数据项
+     * @param userId
+     * @return
+     */
+    public Boolean delPermissionTree(String userId){
+        long result = redisClientCluster.del(RedisPrefixConstant.PERMISSION_TREE_REDIS_CACHE + userId);
         if(result > 0){
             return true;
         }

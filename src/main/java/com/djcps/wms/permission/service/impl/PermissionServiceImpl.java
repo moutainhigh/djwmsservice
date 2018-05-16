@@ -194,11 +194,11 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public Map<String, Object> getUserPermission(UserPermissionBO param) {
         try {
-            List<UserPermissionVO> userPermissionVOList = permissionRedisDao.getPermission(param.getId());
+            List<UserPermissionVO> userPermissionVOList = permissionRedisDao.getPermissionTree(param.getId());
             if (ObjectUtils.isEmpty(userPermissionVOList)) {
                 userPermissionVOList = permissionServer.getUserPermission(param);
                 // 设置权限缓存
-				permissionRedisDao.setPermission(param.getId(),userPermissionVOList);
+				permissionRedisDao.setPermissionTree(param.getId(),userPermissionVOList);
             }
             return MsgTemplate.successMsg(userPermissionVOList);
         } catch (Exception e) {
@@ -216,12 +216,9 @@ public class PermissionServiceImpl implements PermissionService {
             param.setIp("");
             param.setBusiness(AppConstant.WMS);
             List<UserPermissionVO> basicPermissionList = permissionServer.listBasicPermission(param);
-            Optional optional = basicPermissionList.stream().filter(x ->
+            return basicPermissionList.stream().noneMatch(x ->
                     x.getInterfaceName().split(AppConstant.W).clone()[0].equals(url)
-            ).findFirst();
-            if (optional.isPresent()) {
-                return false;
-            }
+            );
         }catch (Exception e){
             LOGGER.error("permission : {}",e.getMessage());
         }
@@ -238,7 +235,7 @@ public class PermissionServiceImpl implements PermissionService {
             param.setBusiness(AppConstant.WMS);
             param.setOperator(userId);
             List<UserPermissionVO> list = listUserPermission(param);
-            Optional optional = list.stream().filter(x -> {
+            return list.stream().anyMatch(x -> {
                 String[] str = x.getInterfaceName().split(AppConstant.W).clone();
                 if (str[0].equals(url)) {
                     LOGGER.info("permission: {} : {}", str[0], str[0].equals(url));
@@ -257,10 +254,7 @@ public class PermissionServiceImpl implements PermissionService {
                     return true;
                 }
                 return false;
-            }).findFirst();
-            if (optional.isPresent()) {
-                return true;
-            }
+            });
         }catch (Exception e){
             LOGGER.error("permission : {}",e.getMessage());
         }
@@ -282,6 +276,7 @@ public class PermissionServiceImpl implements PermissionService {
             List<UserPermissionVO> userPermissionVOList = permissionRedisDao.getPermission(param.getId());
             if (ObjectUtils.isEmpty(userPermissionVOList)) {
                 userPermissionVOList = permissionServer.listUserPermission(param);
+                permissionRedisDao.setPermission(param.getId(),userPermissionVOList);
             }
             return userPermissionVOList;
         } catch (Exception e) {
@@ -290,9 +285,11 @@ public class PermissionServiceImpl implements PermissionService {
         return null;
     }
 
+
     @Override
     public void delUserRedisPermission(String userId) {
         permissionRedisDao.delPermission(userId);
+        permissionRedisDao.delPermissionTree(userId);
     }
 
 
