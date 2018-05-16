@@ -171,7 +171,7 @@ public class OrderController {
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			param.setKeyArea(param.getPartnerArea());
-			if(param.getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+			if(String.valueOf(param.getOrderStatus()).equals(OrderStatusTypeEnum.All_STATUS.getValue())){
 				List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
 						OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 				param.setAllOrderStatus(allOrderStatus);
@@ -200,7 +200,7 @@ public class OrderController {
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
 			param.setKeyArea(param.getPartnerArea());
-			if(param.getOrderStatus().equals(OrderStatusTypeEnum.All_STATUS.getValue())){
+			if(String.valueOf(param.getOrderStatus()).equals(OrderStatusTypeEnum.All_STATUS.getValue())){
 				List<String> allOrderStatus = Arrays.asList(OrderStatusTypeEnum.NO_STOCK.getValue(),OrderStatusTypeEnum.LESS_ADD_STOCK.getValue(),
 						OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
 				param.setAllOrderStatus(allOrderStatus);

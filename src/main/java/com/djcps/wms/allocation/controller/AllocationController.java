@@ -337,8 +337,6 @@ public class AllocationController {
 		try {
 			LOGGER.debug("json : " + json);
 			List<AddAllocationOrderBO> param = gson.fromJson(json, new TypeToken<ArrayList<AddAllocationOrderBO>>(){}.getType());
-			long start = System.currentTimeMillis();
-			System.err.println(System.currentTimeMillis());
 			for (AddAllocationOrderBO addAllocationOrderBO : param) {
 				PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 				BeanUtils.copyProperties(partnerInfoBean,param);
