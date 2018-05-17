@@ -140,6 +140,42 @@ public class OrderOperationRecordPO extends BaseBO implements Serializable {
      * 更新时间搜索条件 end
      */
     private String updateTimeEnd;
+    /**
+     * 仓库名称
+     */
+    private String warehouseName;
+    /**
+     * 库区名称
+     */
+    private String warehouseAreaName;
+    /**
+     * 库位名称
+     */
+    private String warehouseLocName;
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public String getWarehouseAreaName() {
+        return warehouseAreaName;
+    }
+
+    public String getWarehouseLocName() {
+        return warehouseLocName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public void setWarehouseAreaName(String warehouseAreaName) {
+        this.warehouseAreaName = warehouseAreaName;
+    }
+
+    public void setWarehouseLocName(String warehouseLocName) {
+        this.warehouseLocName = warehouseLocName;
+    }
 
     public String getId() {
         return id;
@@ -318,7 +354,8 @@ public class OrderOperationRecordPO extends BaseBO implements Serializable {
                 + ", warehouseLocId=" + warehouseLocId + ", area=" + area + ", amount=" + amount + ", event=" + event
                 + ", createTime=" + createTime + ", updateTime=" + updateTime + ", createTimeStart=" + createTimeStart
                 + ", createTimeEnd=" + createTimeEnd + ", updateTimeStart=" + updateTimeStart + ", updateTimeEnd="
-                + updateTimeEnd + "]";
+                + updateTimeEnd + ", warehouseName=" + warehouseName + ", warehouseAreaName=" + warehouseAreaName
+                + ", warehouseLocName=" + warehouseLocName + "]";
     }
 
 }

@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
 
-
 /**
  * 提货
  * 
@@ -44,7 +43,7 @@ public class DeliveryController {
     private DeliveryService deliveryService;
 
     private Gson gson = GsonUtils.gson;
-    
+
     /**
      * 获取提货单列表
      * 
@@ -54,12 +53,12 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(name = "提货单列表", value = "/list", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> list(@RequestBody(required = false) String json,HttpServletRequest request) {
+    public Map<String, Object> list(@RequestBody(required = false) String json, HttpServletRequest request) {
         try {
             LOGGER.debug("json : " + json);
             ListDeliveryBO param = gson.fromJson(json, ListDeliveryBO.class);
             PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-			BeanUtils.copyProperties(partnerInfoBean,param);
+            BeanUtils.copyProperties(partnerInfoBean, param);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(param,
                             new HibernateSupportedValidator<ListDeliveryBO>()
@@ -76,8 +75,8 @@ public class DeliveryController {
         }
     }
 
-    /**yes
-     * 获取提货单订单列表
+    /**
+     * yes 获取提货单订单列表
      * 
      * @autuor Chengw
      * @since 2018/1/31 08:35
@@ -85,7 +84,7 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(name = "提货单订单列表", value = "/listOrder", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> listOrder(@RequestBody(required = false) String json,@InnerUser UserInfoVO userInfoVO) {
+    public Map<String, Object> listOrder(@RequestBody(required = false) String json, @InnerUser UserInfoVO userInfoVO) {
         try {
             LOGGER.debug("json : " + json);
             ListDeliveryOrderBO param = gson.fromJson(json, ListDeliveryOrderBO.class);
@@ -116,7 +115,7 @@ public class DeliveryController {
      * @return
      */
     @RequestMapping(name = "打印", value = "/print", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> print(@RequestBody(required = false) String json,@InnerUser UserInfoVO userInfoVO) {
+    public Map<String, Object> print(@RequestBody(required = false) String json, @InnerUser UserInfoVO userInfoVO) {
         try {
             LOGGER.debug("json : " + json);
             PrintDeliveryBO param = gson.fromJson(json, PrintDeliveryBO.class);
@@ -137,8 +136,8 @@ public class DeliveryController {
         }
     }
 
-    /**yes
-     * 完成单条提货订单
+    /**
+     * yes 完成单条提货订单
      * 
      * @autuor Chengw
      * @since 2018/2/1 14:15
@@ -172,8 +171,8 @@ public class DeliveryController {
         }
     }
 
-    /**yes
-     * 获取提货信息以及订单信息 -PDA
+    /**
+     * yes 获取提货信息以及订单信息 -PDA
      * 
      * @autuor Chengw
      * @since 2018/2/1 14:15
@@ -206,8 +205,8 @@ public class DeliveryController {
     }
 
     /**
-     * 获取订单信息 -PDA
-     * yes
+     * 获取订单信息 -PDA yes
+     * 
      * @autuor Chengw
      * @since 2018/2/1 14:15
      * @param json
@@ -239,8 +238,8 @@ public class DeliveryController {
     }
 
     /**
-     * 获取订单信息
-     * yes
+     * 获取订单信息 yes
+     * 
      * @param json
      * @return
      */
@@ -268,8 +267,8 @@ public class DeliveryController {
         }
     }
 
-    /**yes
-     * 设置提货单的确认状态为未确认
+    /**
+     * yes 设置提货单的确认状态为未确认
      * 
      * @param json
      * @return

@@ -435,6 +435,9 @@ public class DeliveryServiceImpl implements DeliveryService {
                 orderOperationRecordPO.setWarehouseId(param.getWarehouseId());
                 orderOperationRecordPO.setWarehouseAreaId(param.getWarehouseAreaId());
                 orderOperationRecordPO.setWarehouseLocId(param.getWarehouseLocId());
+                orderOperationRecordPO.setWarehouseName(param.getWarehouseName());
+                orderOperationRecordPO.setWarehouseAreaName(param.getWarehouseAreaName());
+                orderOperationRecordPO.setWarehouseLocName(param.getWarehouseLocName());
               //订单类型后面判断TODO
                 orderOperationRecordPO.setOrderType("2");
                 //处理数据
