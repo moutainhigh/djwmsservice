@@ -297,25 +297,51 @@ public class OrderServer {
 	        for(Map.Entry<String, List<WarehouseOrderDetailPO>> entry : detailMap.entrySet()){
 	        	List<WarehouseOrderDetailPO> detailValueList = entry.getValue();
 	        	if(!ObjectUtils.isEmpty(detailValueList)){
-	        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
-		        		Integer orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus();
-		        		String splitOrderStatus = String.valueOf(orderDetailPO.getSubStatus());
-		        		
-		        		if(splitOrderStatus.equals(OrderStatusTypeEnum.NO_STOCK) || splitOrderStatus.equals(OrderStatusTypeEnum.LESS_ADD_STOCK) 
-		        				|| splitOrderStatus.equals(OrderStatusTypeEnum.ALL_ADD_STOCK)|| splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION)
-		        				||splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_DELIVERY) || splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_LOADING) 
-		        				|| splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_GOTO) ){
-		        			
-			        		//假如拆单状态小于子单状态则把状态赋值给子单
-			        		if(Integer.valueOf(splitOrderStatus).intValue()<orderStatus.intValue()){
-			        			//一个开关代表需要进行修改
-			        			flag = true;
-			        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(orderDetailPO.getSubStatus());
-			        			//这里暂时拿这个字段拿来用只是为了判断orderStatus进行了修改需要进行update操作
-			        			orderDetailMap.get(orderDetailPO.getOrderId()).setAmountPiece(666);
-			        		}
-		        		}
-		        	}
+//	        		for(WarehouseOrderDetailPO orderDetailPO:detailValueList){
+//		        		Integer orderStatus = orderDetailMap.get(orderDetailPO.getOrderId()).getOrderStatus();
+//		        		String splitOrderStatus = String.valueOf(orderDetailPO.getSubStatus());
+//		        		
+//		        		if(splitOrderStatus.equals(OrderStatusTypeEnum.NO_STOCK) || splitOrderStatus.equals(OrderStatusTypeEnum.LESS_ADD_STOCK) 
+//		        				|| splitOrderStatus.equals(OrderStatusTypeEnum.ALL_ADD_STOCK)|| splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_ALLOCATION)
+//		        				||splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_DELIVERY) || splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_LOADING) 
+//		        				|| splitOrderStatus.equals(OrderStatusTypeEnum.ORDER_ALREADY_GOTO) ){
+//		        			
+//			        		//假如拆单状态小于子单状态则把状态赋值给子单
+//			        		if(Integer.valueOf(splitOrderStatus).intValue()<orderStatus.intValue()){
+//			        			//一个开关代表需要进行修改
+//			        			flag = true;
+//			        			orderDetailMap.get(orderDetailPO.getOrderId()).setOrderStatus(orderDetailPO.getSubStatus());
+//			        			//这里暂时拿这个字段拿来用只是为了判断orderStatus进行了修改需要进行update操作
+//			        			orderDetailMap.get(orderDetailPO.getOrderId()).setAmountPiece(666);
+//			        		}
+//		        		}
+//		        	}
+//	        		
+	        		//选择排序的优化
+	                for(int i = 0; i < detailValueList.size() - 1; i++) {// 做第i趟排序
+	                    int k = i;
+	                    for(int j = k + 1; j < detailValueList.size(); j++){// 选最小的记录
+	                        if(detailValueList.get(j).getSubStatus().intValue() < detailValueList.get(k).getSubStatus().intValue()){ 
+	                            k = j; //记下目前找到的最小值所在的位置
+	                        }
+	                    }
+	                    //在内层循环结束，也就是找到本轮循环的最小的数以后，再进行交换
+	                    if(i != k){  //交换a[i]和a[k]
+	                    	WarehouseOrderDetailPO orderDetail = detailValueList.get(i);
+	                        detailValueList.set(i, detailValueList.get(k));
+	                        detailValueList.set(k,orderDetail);
+	                    }    
+	                }
+	                //遍历完成之后detailValueList第一个就是拆单状态最小的那个值
+	                Integer orderStatus = orderDetailMap.get(detailValueList.get(0).getOrderId()).getOrderStatus();
+	                Integer splitOrderStatus = detailValueList.get(0).getSubStatus();
+	                if(!orderStatus.equals(splitOrderStatus)){
+	                	//一个开关代表需要进行修改
+	        			flag = true;
+	        			//这里暂时拿这个字段拿来用只是为了判断orderStatus进行了修改需要进行update操作
+	        			orderDetailMap.get(detailValueList.get(0).getOrderId()).setAmountPiece(666);
+	        			orderDetailMap.get(detailValueList.get(0).getOrderId()).setOrderStatus(splitOrderStatus);
+	                }
 	        	}
 	        	
 	        }

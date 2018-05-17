@@ -263,13 +263,14 @@ public class AllocationServiceImpl implements AllocationService {
 				HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
 				BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 				List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
-				
-				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
-				for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
-					WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getOrderId());
-					if(!ObjectUtils.isEmpty(warehouseDetail)){
-						//将订单详情信息和在库信息数据进行拼接
-						BeanUtils.copyProperties(orderDetail, warehouseDetail,"areaList","amountSaved","instockAmount","remark","warehouseId","warehouseName");
+				if(!ObjectUtils.isEmpty(orderList)){
+					List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+					for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
+						WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getOrderId());
+						if(!ObjectUtils.isEmpty(warehouseDetail)){
+							//将订单详情信息和在库信息数据进行拼接
+							BeanUtils.copyProperties(orderDetail, warehouseDetail,"areaList","amountSaved","instockAmount","remark","warehouseId","warehouseName");
+						}
 					}
 				}
 			}
@@ -308,12 +309,14 @@ public class AllocationServiceImpl implements AllocationService {
 				HttpResult batchOrderResult = orderServer.getOrderDeatilByIdList(batchOrder);
 				BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(batchOrderResult.getData()),BatchOrderDetailListPO.class);
 				List<WarehouseOrderDetailPO> orderList = batchOrderDetailListPO.getOrderList();
-				List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
-				for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
-					WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getOrderId());
-					if(!ObjectUtils.isEmpty(warehouseDetail)){
-						//将订单详情信息和在库信息数据进行拼接
-						BeanUtils.copyProperties(orderDetail, warehouseDetail,"areaList","amountSaved","instockAmount","remark");
+				if(!ObjectUtils.isEmpty(orderList)){
+					List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+					for (WarehouseOrderDetailPO orderDetail : joinOrderParamInfo) {
+						WarehouseOrderDetailPO warehouseDetail = map.get(orderDetail.getOrderId());
+						if(!ObjectUtils.isEmpty(warehouseDetail)){
+							//将订单详情信息和在库信息数据进行拼接
+							BeanUtils.copyProperties(orderDetail, warehouseDetail,"areaList","amountSaved","instockAmount","remark");
+						}
 					}
 				}
 			}
