@@ -1331,6 +1331,10 @@ public class AllocationServiceImpl implements AllocationService {
 			orderIdBO.setOrderId(orderId);
 			orderIdBOList.add(orderIdBO);
 		}
+//		OrderIdsBO param = new OrderIdsBO();
+//		param.setChildOrderIds(orderIdsList);
+//		result = orderServer.getOrderByOrderIds(param);
+		
 		BatchOrderIdListBO batch = new BatchOrderIdListBO();
 		batch.setOrderIds(orderIdsList);
 		batch.setKeyArea(base.getPartnerArea());
