@@ -354,4 +354,16 @@ public interface WmsForStocktakingTaskHttpRequest {
     @Headers("content-type:application/json")
     @POST("takeStock/noSendOrderInfo.do")
     HTTPResponse noSendOrderInfo(@Body RequestBody json);
+    
+    /**
+     * 更新盘点任务状态以及下发时间
+     *
+     * @param json
+     * @return
+     * @author wyb
+     * @create 2018/5/16
+     **/
+    @Headers("content-type:application/json")
+    @POST("takeStock/updateIssueTimeAndTaskStatus.do")
+    HTTPResponse updateIssueTimeAndTaskStatus(@Body RequestBody json);
 }

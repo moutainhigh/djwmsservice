@@ -209,7 +209,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
     @Override
     public Map<String, Object> updatePdaStatus(UpdateStocktakingTaskBO updateStocktakingTaskBO) {
         updateStocktakingTaskBO.setPdaStatus(StocktakingTaskConstant.PDASTATUS_1);
-        HttpResult result = stocktakingTaskServer.updateTaskState(updateStocktakingTaskBO);
+        HttpResult result = stocktakingTaskServer.updateIssueTimeAndTaskStatus(updateStocktakingTaskBO);
         // TODO 调用下发推送
         // PushExtraFieldBO pushExtraFieldBO = new PushExtraFieldBO();
         // pushExtraFieldBO.setUserId(param.getPickerId());
@@ -1086,67 +1086,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
             orderIdListBO.setList(orderidList);
             // 查询是否有异常订单
             HttpResult orderResult = abnormalServer.getOrderByOrderIdList(orderIdListBO);
-            // TODO 已存在异常订单执行更新和插入
-            if (!ObjectUtils.isEmpty(orderResult.getData())) {
-                String data = gson.toJson(orderResult.getData());
-                List<AbnormalOrderPO> abnormalOrderPOList = JSONArray.parseArray(data, AbnormalOrderPO.class);
-                abnormalOrderPOList.stream().filter(abnormalOrderPO -> !ObjectUtils.isEmpty(abnormalOrderPO))
-                        .forEach(abnormalOrderPO -> {
-                            collectList.stream().forEach(allAbnormalOrder -> {
-                                // 更新异常订单
-                                if (abnormalOrderPO.getOrderId().equals(allAbnormalOrder.getOrderId())) {
-                                    StringBuffer reson = new StringBuffer();
-                                    Integer surplusOrderAmount = 0;
-                                    if (allAbnormalOrder.getDifferenceValue() > 0) {
-                                        surplusOrderAmount = allAbnormalOrder.getDifferenceValue();
-                                        reson.append(AbnormalConstant.ABNORMAL_ERROR_MORE).append(surplusOrderAmount);
-                                    } else {
-                                        surplusOrderAmount = -allAbnormalOrder.getDifferenceValue();
-                                        reson.append(AbnormalConstant.ABNORMAL_ERROR_REASON).append(surplusOrderAmount);
-                                    }
-                                    UpdateAbnormalBO updateOrderBO = new UpdateAbnormalBO();
-                                    BeanUtils.copyProperties(allAbnormalOrder, updateOrderBO, "remark", "status");
-                                    updateOrderBO.setOrderId(allAbnormalOrder.getOrderId());
-                                    updateOrderBO.setAbnomalAmount("" + surplusOrderAmount + "");
-                                    updateOrderBO.setReason(reson.toString());
-                                    updateOrderBO.setSubmiter(allAbnormalOrder.getOperator());
-                                    updateOrderBO.setResult(null);
-                                    updateOrderBO.setRemark(null);
-                                    updateOrderBO.setSubmitTime(
-                                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-                                    updateOrderBO.setStatus(0);
-                                    HttpResult abnormalResult = abnormalServer.updateAbnormal(updateOrderBO);
-                                }
-                                // 插入异常订单
-                                else {
-                                    StringBuffer reson = new StringBuffer();
-                                    Integer surplusOrderAmount = 0;
-                                    if (allAbnormalOrder.getDifferenceValue() > 0) {
-                                        surplusOrderAmount = allAbnormalOrder.getDifferenceValue();
-                                        reson.append(AbnormalConstant.ABNORMAL_ERROR_MORE).append(surplusOrderAmount);
-                                    } else {
-                                        surplusOrderAmount = -allAbnormalOrder.getDifferenceValue();
-                                        reson.append(AbnormalConstant.ABNORMAL_ERROR_REASON).append(surplusOrderAmount);
-                                    }
-                                    // 直接插入异常订单数据
-                                    AddAbnormal addAbnormal = new AddAbnormal();
-                                    BeanUtils.copyProperties(allAbnormalOrder, addAbnormal, "remark");
-                                    addAbnormal.setLink(AbnormalConstant.ABNORMAL_LINK_ADD_STOCKTAKING);
-                                    addAbnormal.setReason(reson.toString());
-                                    addAbnormal.setAbnomalAmount(surplusOrderAmount);
-                                    addAbnormal.setCustomerName(allAbnormalOrder.getCustomerName());
-                                    addAbnormal.setProductName(allAbnormalOrder.getProductName());
-                                    addAbnormal.setIsSplit(0);
-                                    addAbnormal.setAmount(allAbnormalOrder.getOrderAmount());
-                                    HttpResult addResult = abnormalServer.addAbnormal(addAbnormal);
-                                    // 将异常的订单号存入list
-                                    orderIdList.add(addAbnormal.getOrderId());
-                                }
-                            });
-                        });
-            }
             // TODO 不存在异常订单信息全部执行插入
-            else {
                 collectList.stream().forEach(s -> {
                     StringBuffer reson = new StringBuffer();
                     Integer surplusOrderAmount = 0;
@@ -1172,7 +1112,7 @@ public class StocktakingTaskServiceImpl implements StocktakingTaskService {
                     orderIdList.add(addAbnormal.getOrderId());
                 });
             }
-        }
+       
         HttpResult saveresult = stocktakingTaskServer.completeStocktakingTask(saveStocktakingOrderInfoBOList);
         if (saveresult.isSuccess()) {
             if (!ObjectUtils.isEmpty(orderIdList)) {

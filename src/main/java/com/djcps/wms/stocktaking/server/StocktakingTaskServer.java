@@ -475,7 +475,20 @@ public class StocktakingTaskServer {
         //校验请求是否成功
         return verifyHttpResult(http);
     }
-
+    /**
+     * 更新盘点任务状态以及下发时间
+     * @author  wyb
+     * @param
+     * @return
+     * @create  2018/5/16
+     **/
+    public HttpResult updateIssueTimeAndTaskStatus(UpdateStocktakingTaskBO updateStocktakingTaskBO){
+        String json = gson.toJson(updateStocktakingTaskBO);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        HTTPResponse http =stocktakingTaskHttpRequest.updateIssueTimeAndTaskStatus(rb) ;
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
     /**
      *验证
      * @author  wzy

@@ -168,6 +168,7 @@ public class StockServiceImpl implements StockService {
      * @param param
      */
     public void addStockOperationRecord(AddStockBO param) {
+        param.setOrderType("2");
         OrderIdsBO orderIdsBO = new OrderIdsBO();
         List<String> orderIds = new ArrayList<>();
         orderIds.add(param.getOrderId());

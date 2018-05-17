@@ -358,23 +358,28 @@ public class OrderServer {
 	}
 	
 	public HttpResult getOrderDeatilByIdList(BatchOrderIdListBO param) {
-		List<String> orderIdList = param.getOrderIds();
-		String orderId = orderIdList.get(0);
-		//将请求参数转化为requestbody格式
-        String json = gson.toJson(param);
-        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
-        HTTPResponse http = null;
-		if(orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER)!=-1 || orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER_CGR)!=-1){
-			http = onlinePaperboardRequest.getOnlinePaperboardByIdList(rb);
-        }else if(orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER)!=-1){
-        	http = offinePaperboardRequest.getOfflinePaperboardByIdList(rb);
-        }else if(orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER)!=-1){
-        	http = offinePaperboardRequest.getOfflineBoxOrderByIdList(rb);
+        List<String> orderIdList = param.getOrderIds();
+        if (!ObjectUtils.isEmpty(orderIdList)) {
+            String orderId = orderIdList.get(0);
+            // 将请求参数转化为requestbody格式
+            String json = gson.toJson(param);
+            okhttp3.RequestBody rb = okhttp3.RequestBody
+                    .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+            HTTPResponse http = null;
+            if (orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER) != -1
+                    || orderId.indexOf(OrderConstant.ONLINE_PAPERBOARD_ORDER_CGR) != -1) {
+                http = onlinePaperboardRequest.getOnlinePaperboardByIdList(rb);
+            } else if (orderId.indexOf(OrderConstant.OFFLINE_PAPERBOARD_ORDER) != -1) {
+                http = offinePaperboardRequest.getOfflinePaperboardByIdList(rb);
+            } else if (orderId.indexOf(OrderConstant.OFFLINE_BOX_ORDER) != -1) {
+                http = offinePaperboardRequest.getOfflineBoxOrderByIdList(rb);
+            }
+
+            // 校验请求是否成功
+            return updateOMSCode(http);
         }
-		
-        //校验请求是否成功
-        return updateOMSCode(http);
-	}
+        return null;
+    }
 	
 	/**
 	 * 根据订单号获取拆单信息,支持批量
@@ -573,6 +578,9 @@ public class OrderServer {
 		batch.setOrderIds(param.getChildOrderIds());
 		HttpResult httpResult = getOrderDeatilByIdList(batch);
 		BatchOrderDetailListPO batchOrderDetailListPO = null;
+		if(ObjectUtils.isEmpty(httpResult)) {
+            return null;
+        }
 		if(!ObjectUtils.isEmpty(httpResult.getData())){
 			batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(httpResult.getData()),BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = new ArrayList<WarehouseOrderDetailPO>();
