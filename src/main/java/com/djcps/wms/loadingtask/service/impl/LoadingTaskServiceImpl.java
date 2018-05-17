@@ -30,6 +30,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.loadingtask.enums.LoadingTaskEnum;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
@@ -682,9 +683,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     }
 
     @Override
-    public Map<String, Object> getLoadingTableIdByUserId(PartnerInfoBO partnerInfoBO) {
-        // 伪代码
-        HttpResult result = loadingTaskServer.getLoadingTableIdByUserId(partnerInfoBO);
+    public Map<String, Object> getLoadingTableIdByUserId(UserInfoVO userInfoVO) {
+        HttpResult result = loadingTaskServer.getLoadingTableIdByUserId(userInfoVO);
         return MsgTemplate.customMsg(result);
     }
 	

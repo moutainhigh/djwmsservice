@@ -82,7 +82,6 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
     /**
      * 提货员联系方式
      */
-    @NotBlank
     private String pickerPhone;
     /**
      * 车牌号
@@ -98,17 +97,14 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
     /**
      * 装车员id
      */
-    @NotBlank
     private String loadingPersonId;
     /**
      * 装车员名称
      */
-    @NotBlank
     private String loadingPersonName;
     /**
      * 装车员联系方式
      */
-    @NotBlank
     private String loadingPersonPhone;
 
     /**
@@ -129,8 +125,8 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
      * 仓库编号
      */
     private String warehouseId;
-
-    public String getWarehouseId() {
+    
+	public String getWarehouseId() {
         return warehouseId;
     }
 
@@ -298,16 +294,16 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
         this.loadingPersonName = loadingPersonName;
     }
 
-    @Override
-    public String toString() {
-        return "VerifyAllocationBO [orderIds=" + orderIds + ", allocationId=" + allocationId + ", allocationIdEffect="
-                + allocationIdEffect + ", allocationIdEffectTime=" + allocationIdEffectTime + ", waybillId=" + waybillId
-                + ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingTableId="
-                + loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
-                + pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
-                + deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
-                + ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime
-                + ", driverName=" + driverName + ", list=" + list + ", warehouseId=" + warehouseId + "]";
-    }
+	@Override
+	public String toString() {
+		return "VerifyAllocationBO [orderIds=" + orderIds + ", allocationId=" + allocationId + ", allocationIdEffect="
+				+ allocationIdEffect + ", allocationIdEffectTime=" + allocationIdEffectTime + ", waybillId=" + waybillId
+				+ ", waybillIdCreateTime=" + waybillIdCreateTime + ", deliveryId=" + deliveryId + ", loadingTableId="
+				+ loadingTableId + ", loadingTableName=" + loadingTableName + ", pickerId=" + pickerId + ", pickerName="
+				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
+				+ deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
+				+ ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime
+				+ ", driverName=" + driverName + ", list=" + list + ", warehouseId=" + warehouseId + "]";
+	}
 
 }
