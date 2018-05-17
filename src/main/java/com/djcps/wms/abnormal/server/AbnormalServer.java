@@ -19,6 +19,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
+
 import rpc.plugin.http.HTTPResponse;
 
 /**
@@ -114,9 +116,11 @@ public class AbnormalServer {
 		orderList.setPartnerId(addAbnormal.getPartnerId());
 		orderList.setList(Arrays.asList(addAbnormal.getOrderId()));
 		HttpResult result = getOrderByOrderIdList(orderList);
-		List<AbnormalOrderPO> abnormalOrderPOList = gsonNotNull.fromJson(gsonNotNull.toJson(result.getData()), new TypeToken<ArrayList<AbnormalOrderPO>>(){}.getType());
-		if(abnormalOrderPOList.get(0).getResult().equals(AbnormalConstant.ABNORMAL_UPDATE_3)){
-			return false;
+		if(!ObjectUtils.isEmpty(result.getData())) {
+		    List<AbnormalOrderPO> abnormalOrderPOList = gsonNotNull.fromJson(gsonNotNull.toJson(result.getData()), new TypeToken<ArrayList<AbnormalOrderPO>>(){}.getType());
+	        if(abnormalOrderPOList.get(0).getResult().equals(AbnormalConstant.ABNORMAL_UPDATE_3)){
+	            return false;
+	        } 
 		}
 		return true;
 	}

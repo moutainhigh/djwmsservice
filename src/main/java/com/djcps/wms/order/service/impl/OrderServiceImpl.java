@@ -111,6 +111,11 @@ public class OrderServiceImpl implements OrderService {
 			return MsgTemplate.successMsg(joinOrderParamInfo.get(0));
 		}
 	}
+	/**
+	 * 判断该订单是否为移库所对应仓库的订单
+	 * @param param
+	 * @return
+	 */
 	public boolean getorderInfoList(BatchOrderIdListBO param) {
 	    GetorderInfoListBO getorderInfoListBO = new GetorderInfoListBO();
 	    getorderInfoListBO.setList(param.getOrderIds());
@@ -125,6 +130,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 	@Override 
 	public Map<String, Object> getPdaOrderByOrderId(BatchOrderIdListBO param) {
+	    //判断该订单是否为移库所对应仓库的订单
 	    if(OperationTypeConstant.REMOVE_WAREHOUSE.equals(param.getOperationType())) {
 	        boolean bool = getorderInfoList(param);
 	        if(!bool) {

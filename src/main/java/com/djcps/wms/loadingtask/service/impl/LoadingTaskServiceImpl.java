@@ -486,8 +486,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
     @Override
     public Map<String, Object> finishLoading(FinishLoadingBO param) {
         FinishLoadingPO result = loadingTaskServer.finishLoading(param);
-        System.out.println(result.getLoadingTaskPO());
-        System.out.println(param);
+        
         if (ObjectUtils.isEmpty(result.getLoadingTaskPO())) {
             return MsgTemplate.failureMsg(LoadingTaskEnum.NOT_DEAL);
         }
