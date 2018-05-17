@@ -157,8 +157,20 @@ public class DeliveryOrderPO {
      */
     private List<OrderDeliveryPO> warehouseLocs;
 
+    /**
+     * 是否备货 1有  0无
+     */
+    private Integer isStored;
+    
+    public Integer getIsStored() {
+		return isStored;
+	}
 
-    public String getOrderId() {
+	public void setIsStored(Integer isStored) {
+		this.isStored = isStored;
+	}
+
+	public String getOrderId() {
         return orderId;
     }
 
@@ -437,7 +449,7 @@ public class DeliveryOrderPO {
 				+ ", updateTime=" + updateTime + ", boxHeight=" + boxHeight + ", boxLength=" + boxLength + ", boxWidth="
 				+ boxWidth + ", materialLength=" + materialLength + ", materialWidth=" + materialWidth
 				+ ", deliveryTime=" + deliveryTime + ", fluteType=" + fluteType + ", warehouseLocs=" + warehouseLocs
-				+ "]";
+				+ ", isStored=" + isStored + "]";
 	}
     
 }

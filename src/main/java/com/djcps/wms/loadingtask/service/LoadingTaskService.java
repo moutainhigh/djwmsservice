@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
 import com.djcps.wms.loadingtask.model.AdditionalOrderBO;
 import com.djcps.wms.loadingtask.model.ConfirmBO;
@@ -108,5 +109,5 @@ public interface LoadingTaskService {
 	 * @author:zdx
 	 * @date:2018年4月4日
 	 */
-	Map<String, Object> getLoadingTableIdByUserId(PartnerInfoBO partnerInfoBO);
+	Map<String, Object> getLoadingTableIdByUserId(UserInfoVO userInfoVO);
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 
+import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.base.BaseAddBO;
 import com.djcps.wms.commons.base.BaseBO;
 import org.springframework.beans.BeanUtils;
@@ -42,6 +43,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
@@ -756,31 +758,7 @@ public class AllocationController {
 			BaseAddBO param = new BaseAddBO();
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,param);
-//			CancelAllocationBO param = gson.fromJson(json, CancelAllocationBO.class);
-//			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
-//			BeanUtils.copyProperties(partnerInfoBean,param);
-//			//数据校验
-//			ComplexResult ret = FluentValidator.checkAll().failFast()
-//					.on(param,
-//							new HibernateSupportedValidator<CancelAllocationBO>()
-//							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-//					.doValidate().result(ResultCollectors.toComplex());
-//			if (!ret.isSuccess()) {
-//				return MsgTemplate.failureMsg(ret);
-//			}
 			return allocationService.getPicker(param);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error(e.getMessage());
-			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
-		}
-	}
-	
-	@RequestMapping(name="获取装车员信息",value = "/getLoadingPerson", method = RequestMethod.POST, produces = "application/json")
-	public Map<String, Object> getLoadingPerson(@RequestBody(required = false) String json, HttpServletRequest request) {
-		try {
-			LOGGER.debug("json : " + json);
-			return allocationService.getLoadingPerson();
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

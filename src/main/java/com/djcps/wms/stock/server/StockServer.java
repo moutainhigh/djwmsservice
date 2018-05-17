@@ -2,8 +2,6 @@ package com.djcps.wms.stock.server;
 
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -18,6 +16,7 @@ import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.stock.dao.StockDao;
 import com.djcps.wms.stock.model.AddStockBO;
+import com.djcps.wms.stock.model.GetorderInfoListBO;
 import com.djcps.wms.stock.model.MapLocationPO;
 import com.djcps.wms.stock.model.MoveStockBO;
 import com.djcps.wms.stock.model.RecommendLocaBO;
@@ -25,7 +24,6 @@ import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
 import com.djcps.wms.stock.model.SelectSavedStockAmountBO;
 import com.djcps.wms.stock.request.WmsForStockHttpRequest;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -161,7 +159,20 @@ public class StockServer {
         //校验请求是否成功
         return verifyHttpResult(http);
 	}
-	
+	/**
+	 * 根据条件批量获取订单信息
+	 * @author wyb
+	 *
+	 */
+	public HttpResult getOrderInfoList(GetorderInfoListBO param) {
+        //将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+        //调用借口获取信息
+        HTTPResponse http = wmsForStockHttpRequest.getOrderInfoList(rb);
+        //校验请求是否成功
+        return verifyHttpResult(http);
+    }
 	/**
 	 * @title:校验HTTPResponse结果是否成功
 	 * @description:
