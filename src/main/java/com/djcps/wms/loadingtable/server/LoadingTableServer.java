@@ -123,6 +123,16 @@ public class LoadingTableServer {
         return returnResult(http);
     }
 
+	public HttpResult deleteBindingUserId(UpdateLoadingTableBO param) {
+		//将请求参数转化为requestbody格式
+        String json = gson.toJson(param);
+        okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json);
+        //调用借口获取信息
+        HTTPResponse http = loadingTableHttpRequest.deleteBindingUserId(rb);
+        //校验请求是否成功
+        return returnResult(http);
+	}
+    
     /**
      * @title 获取随机编号
      * @author wzy

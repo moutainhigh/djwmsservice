@@ -105,5 +105,16 @@ public interface WmsForLoadingTableHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("loadingTable/disable.do")
 	public HTTPResponse disable(@Body RequestBody json);
+	
+	/**
+	 * 装车台账号解除绑定
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月17日
+	 */
+	@Headers("content-type:application/json")
+	@POST("loadingTable/deleteBindingUserId.do")
+	public HTTPResponse deleteBindingUserId(@Body RequestBody rb);
 
 }

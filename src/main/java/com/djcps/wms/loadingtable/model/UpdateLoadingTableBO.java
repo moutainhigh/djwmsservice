@@ -2,6 +2,8 @@ package com.djcps.wms.loadingtable.model;
 
 import java.io.Serializable;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import com.djcps.wms.commons.base.BaseAddBO;
 
 /**
@@ -18,6 +20,7 @@ public class UpdateLoadingTableBO extends BaseAddBO implements Serializable{
 	/**
 	 * 唯一标识字段
 	 */
+	@NotBlank
 	private String id;
 	/**
 	 * 装车台名称

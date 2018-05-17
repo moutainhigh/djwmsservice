@@ -117,5 +117,14 @@ public interface LoadingTableService {
 	 * @date:2018年3月22日
 	 */
 	Map<String, Object> getUserList(GetUserListBO param);
+
+	/**
+	 * 装车台账号解除绑定
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月17日
+	 */
+	Map<String, Object> deleteBindingUserId(UpdateLoadingTableBO param);
 	
 }

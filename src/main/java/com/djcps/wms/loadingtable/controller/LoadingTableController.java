@@ -7,6 +7,7 @@ import javax.validation.Validation;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -103,13 +104,23 @@ public class LoadingTableController {
 			UpdateLoadingTableBO loadingTable  = gson.fromJson(json, UpdateLoadingTableBO.class);
 			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
 			BeanUtils.copyProperties(partnerInfoBean,loadingTable);
-			ComplexResult ret = FluentValidator.checkAll().failFast()
-					.on(loadingTable,
-							new HibernateSupportedValidator<UpdateLoadingTableBO>()
-							.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
-					.on(loadingTable.getName().length(),
-							new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
-					.doValidate().result(ResultCollectors.toComplex());
+			ComplexResult ret = null;
+			if(!StringUtils.isEmpty(loadingTable.getName())){
+				ret = FluentValidator.checkAll().failFast()
+						.on(loadingTable,
+								new HibernateSupportedValidator<UpdateLoadingTableBO>()
+								.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+						.on(loadingTable.getName().length(),
+								new ValidateNotNullInteger(SysMsgEnum.LENGTH_BEYOND,10))
+						.doValidate().result(ResultCollectors.toComplex());
+			}else{
+				ret = FluentValidator.checkAll().failFast()
+						.on(loadingTable,
+								new HibernateSupportedValidator<UpdateLoadingTableBO>()
+								.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+						.doValidate().result(ResultCollectors.toComplex());
+			}
+			
 			if (!ret.isSuccess()) {
 				return MsgTemplate.failureMsg(ret);
 			}
@@ -337,6 +348,29 @@ public class LoadingTableController {
 				return MsgTemplate.failureMsg(ret);
 			}
 			return loadingTableService.getUserList(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+	
+	@RequestMapping(name="装车台账号解除绑定",value = "/deleteBindingUserId", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> deleteBindingUserId(@RequestBody(required = false) String json, HttpServletRequest request) {
+		try {
+			LOGGER.debug("json : " + json);
+			UpdateLoadingTableBO param  = gson.fromJson(json, UpdateLoadingTableBO.class);
+			PartnerInfoBO partnerInfoBean = (PartnerInfoBO) request.getAttribute("partnerInfo");
+			BeanUtils.copyProperties(partnerInfoBean,param);
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<UpdateLoadingTableBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return loadingTableService.deleteBindingUserId(param);
 		} catch (Exception e) {
 			e.printStackTrace();
 			LOGGER.error(e.getMessage());

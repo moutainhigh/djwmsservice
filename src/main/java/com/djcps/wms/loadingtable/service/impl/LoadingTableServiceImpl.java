@@ -122,4 +122,10 @@ public class LoadingTableServiceImpl implements LoadingTableService {
         return MsgTemplate.successMsg(userRelevancePOList);
 	}
 
+	@Override
+	public Map<String, Object> deleteBindingUserId(UpdateLoadingTableBO param) {
+		HttpResult result=loadingTableServer.deleteBindingUserId(param);
+		return  MsgTemplate.customMsg(result);
+	}
+
 }
