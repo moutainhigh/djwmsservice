@@ -12,7 +12,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.model.OperatorInfoBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
-import com.djcps.wms.inneruser.model.userparam.*;
+import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 
 /**
  * 用户管理
- * @author:wzy
- * @date:2018/4/12
+ * @author wzy
+ * @date 2018/4/12
  **/
 @RestController
 @RequestMapping("/user")
@@ -45,7 +45,9 @@ public class UserController {
     /**
      * 查看用户信息
      * @author  wzy
-     * @param json
+     * @param json String
+     * @param request HttpServletRequest
+     * @param operatorInfoBO OperatorInfoBO
      * @return http
      * @date  2018/4/12 15:21
      **/
@@ -103,18 +105,18 @@ public class UserController {
     public Map<String, Object> updateUserStatus(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO) {
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            UpdateUserStatusBO updateUserStatusBO = gson.fromJson(json, UpdateUserStatusBO.class);
-            updateUserStatusBO.setPartnerId(partnerInfoBo.getPartnerId());
-            BeanUtils.copyProperties(operatorInfoBO,updateUserStatusBO);
+            UpdateUserBO updateUserBO = gson.fromJson(json, UpdateUserBO.class);
+            updateUserBO.setPartnerId(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, updateUserBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(updateUserStatusBO,
-                            new HibernateSupportedValidator<UpdateUserStatusBO>()
+                    .on(updateUserBO,
+                            new HibernateSupportedValidator<UpdateUserBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return userService.updateUserStatus(updateUserStatusBO);
+            return userService.updateUserStatus(updateUserBO);
         } catch (Exception e) {
             LOGGER.error("修改用户关联信息异常：{} ", e.getMessage());
             e.printStackTrace();
@@ -151,21 +153,21 @@ public class UserController {
     public Map<String, Object> pageGetUserRelevance(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO) {
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            PageGetUserBO pageGetUserBO = new PageGetUserBO();
+            PageUserInfoBO pageUserInfoBO = new PageUserInfoBO();
             if(!ObjectUtils.isEmpty(json)){
-                pageGetUserBO=gson.fromJson(json, PageGetUserBO.class);
+                pageUserInfoBO =gson.fromJson(json, PageUserInfoBO.class);
             }
-            BeanUtils.copyProperties(operatorInfoBO,pageGetUserBO);
-            pageGetUserBO.setPartnerId(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, pageUserInfoBO);
+            pageUserInfoBO.setPartnerId(partnerInfoBo.getPartnerId());
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(pageGetUserBO,
-                            new HibernateSupportedValidator<PageGetUserBO>()
+                    .on(pageUserInfoBO,
+                            new HibernateSupportedValidator<PageUserInfoBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return userService.pageGetUserRelevance(pageGetUserBO);
+            return userService.pageGetUserRelevance(pageUserInfoBO);
         } catch (Exception e) {
             LOGGER.error("分页获取用户列表异常：{} ", e.getMessage());
             e.printStackTrace();
@@ -193,9 +195,8 @@ public class UserController {
 
     @AddLog(value ="获取公司所有部门",module = "用户管理")
     @RequestMapping(name="获取公司所有部门",value = "/getAllDepartment", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getAllDepartment(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+    public Map<String, Object> getAllDepartment(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             GetDepartmentBO getDepartmentBO=gson.fromJson(json, GetDepartmentBO.class);
             BeanUtils.copyProperties(operatorInfoBO,getDepartmentBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -216,9 +217,8 @@ public class UserController {
 
     @AddLog(value ="获取公司所有职务",module = "用户管理")
     @RequestMapping(name="获取公司所有职务",value = "/getJob", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getJob(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+    public Map<String, Object> getJob(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             GetJobBO getJobBO = gson.fromJson(json, GetJobBO.class);
             BeanUtils.copyProperties(operatorInfoBO,getJobBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
@@ -239,20 +239,19 @@ public class UserController {
 
     @AddLog(value ="获取公司所有职位",module = "用户管理")
     @RequestMapping(name="获取公司所有职位",value = "/getPosition", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> getPosition(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
+    public Map<String, Object> getPosition(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            OrgGetPositionBO orgGetPositionBO=gson.fromJson(json, OrgGetPositionBO.class);
-            BeanUtils.copyProperties(operatorInfoBO,orgGetPositionBO);
+            OrgPositionBO orgPositionBO =gson.fromJson(json, OrgPositionBO.class);
+            BeanUtils.copyProperties(operatorInfoBO, orgPositionBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(orgGetPositionBO,
-                            new HibernateSupportedValidator<OrgGetPositionBO>()
+                    .on(orgPositionBO,
+                            new HibernateSupportedValidator<OrgPositionBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return userService.getPosition(orgGetPositionBO);
+            return userService.getPosition(orgPositionBO);
         } catch (Exception e) {
             LOGGER.error("获取公司所有职位异常：{} ", e.getMessage());
             e.printStackTrace();
@@ -263,7 +262,9 @@ public class UserController {
     /**
      * 获取用户部门职位和所有部门职位职务信息
      * @author  wzy
-     * @param json
+     * @param json String
+     * @param request HttpServletRequest
+     * @param operatorInfoBO OperatorInfoBO
      * @return map
      * @date  2018/4/17 10:45
      **/
@@ -295,7 +296,9 @@ public class UserController {
     /**
      * 获取角色列表，根据id获取或者获取全部
      * @author  wzy
-     * @param json
+     * @param json String
+     * @param request HttpServletRequest
+     * @param operatorInfoBO OperatorInfoBO
      * @return  map
      * @date  2018/4/17 9:41
      **/

@@ -17,10 +17,10 @@ public interface InnerUserRequest {
 
     /**
      * APP登录接口
-     * @param username
-     * @param password
-     * @param appname
-     * @return
+     * @param username String
+     * @param password String
+     * @param appname String
+     * @return  HTTPResponse
      */
     @FormUrlEncoded
     @POST("applogin.do")
@@ -30,9 +30,9 @@ public interface InnerUserRequest {
 
     /**
      * APP手机验证码登录
-     * @param phone
-     * @param phoneCode
-     * @param appname
+     * @param phone String
+     * @param phoneCode Integer
+     * @param appname String
      * @return
      */
     @FormUrlEncoded
@@ -43,8 +43,8 @@ public interface InnerUserRequest {
 
     /**
      * 置换固定Token
-     * @param onceToken
-     * @return
+     * @param onceToken String
+     * @return HTTPResponse
      */
     @FormUrlEncoded
     @POST("exchangetoken.do")
@@ -53,7 +53,7 @@ public interface InnerUserRequest {
     /**
      * 退出登录
      * @param  token
-     * @return
+     * @return HTTPResponse
      */
     @FormUrlEncoded
     @POST("logout.do")
@@ -61,9 +61,9 @@ public interface InnerUserRequest {
 
     /**
      * 系统登录切换
-     * @param  token
-     * @param appname
-     * @return
+     * @param  token String
+     * @param appname String
+     * @return HTTPResponse
      */
     @FormUrlEncoded
     @POST("tokenlogin.do")
@@ -71,10 +71,10 @@ public interface InnerUserRequest {
 
     /**
      * 修改密码
-     * @param userid
-     * @param oldpassword
-     * @param newpassword
-     * @return
+     * @param userid String
+     * @param oldpassword String
+     * @param newpassword String
+     * @return HTTPResponse
      */
     @FormUrlEncoded
     @POST("modifypassword.do")
@@ -84,8 +84,8 @@ public interface InnerUserRequest {
 
     /**
      * 获取用户code
-     * @param username
-     * @return
+     * @param username String
+     * @return HTTPResponse
      */
     @FormUrlEncoded
     @POST("getcode.do")
@@ -93,8 +93,8 @@ public interface InnerUserRequest {
 
     /**
      * 发送登录手机验证码
-     * @param phone
-     * @return
+     * @param phone String
+     * @return HTTPResponse
      */
     @FormUrlEncoded
     @POST("sendLoginCode.do")

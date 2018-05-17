@@ -8,16 +8,16 @@ import rpc.plugin.http.RPCClientFields;
 import java.util.Map;
 
 /**
- * 用户管理ORGrequest请求
- * @author:wzy
- * @date:2018/4/12
+ * 用户管理ORG request请求
+ * @author wzy
+ * @date 2018/4/12
  **/
 @RPCClientFields(urlfield = "ORG_SERVER", urlbean = ParamsConfig.class)
 public interface UserRequest {
     /**
      * org根据批量用户id获取其用户基本信息(删除用户也可查询出来)
      * @author  wzy
-     * @param map
+     * @param map Map
      * @return http
      * @date  2018/4/12 11:26
      **/
@@ -27,7 +27,7 @@ public interface UserRequest {
     /**
      * org获取该用户的信息(包括角色组织用户全部信息)
      * @author  wzy
-     * @param map
+     * @param map Map
      * @return http
      * @date  2018/4/12 14:36
      **/
@@ -37,7 +37,7 @@ public interface UserRequest {
     /**
      * org打开/禁用用户
      * @author  wzy
-     * @param map
+     * @param map Map
      * @return http
      * @date  2018/4/13 13:31
      **/
@@ -48,7 +48,7 @@ public interface UserRequest {
     /**
      * org获取公司所有的部门和职务
      * @author  wzy
-     * @param map
+     * @param map Map
      * @return HTTPResponse
      * @date  2018/4/13 19:47
      **/
@@ -58,7 +58,7 @@ public interface UserRequest {
     /**
      * 获取公司部门列表
      * @author  wzy
-     * @param map
+     * @param map Map
      * @return HTTPResponse
      * @date  2018/4/16 17:22
      **/
@@ -68,7 +68,7 @@ public interface UserRequest {
     /**
      *获取公司职务列表
      * @author  wzy
-     * @param map
+     * @param map Map
      * @return http
      * @date  2018/4/16 17:25
      **/
@@ -78,7 +78,7 @@ public interface UserRequest {
    /**
     * 获取公司职位列表
     * @author  wzy
-    * @param map
+    * @param map Map
     * @return http
     * @date  2018/4/17 9:30
     **/
@@ -88,7 +88,7 @@ public interface UserRequest {
     /**
      * org新增用户信息
      * @author  wzy
-     * @param map
+     * @param map Map
      * @return HTTPResponse
      * @date  2018/4/13 20:01
      **/
@@ -99,12 +99,20 @@ public interface UserRequest {
    /**
     * org修改保存用户信息
     * @author  wzy
-    * @param map
+    * @param map Map
     * @return http
     * @date  2018/4/16 9:46
     **/
     @FormUrlEncoded
     @POST("updateUserManage.org")
     HTTPResponse updateUserManage(@FieldMap Map<String, Object> map);
+
+    /**
+     * org 根据角色id获取其底下的员工
+     * @param map
+     * @return
+     */
+    @GET("getUserNextManListByRoleId.org")
+    HTTPResponse listUserByRoleId(@QueryMap Map<String, Object> map);
 
 }

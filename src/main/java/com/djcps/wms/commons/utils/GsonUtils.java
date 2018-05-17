@@ -12,12 +12,12 @@ public class GsonUtils {
     /**
      * gson 转换静态类
      */
-    public static Gson gson = new GsonBuilder().create();
+    public static Gson gson = new GsonBuilder().serializeNulls().create();
     
     /**
      * gson 转换静态类
      */
-    public static Gson gsonNotNull = new GsonBuilder().create(); 
+    public static Gson gsonNotNull = new GsonBuilder().create();
     
     /**
      * gson 转换静态类

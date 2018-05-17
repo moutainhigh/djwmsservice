@@ -16,12 +16,12 @@ import com.djcps.wms.permission.constants.PermissionConstants;
 import com.djcps.wms.permission.model.bo.*;
 import com.djcps.wms.permission.service.PermissionService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
@@ -37,16 +37,18 @@ import static com.djcps.wms.commons.utils.GsonUtils.gson;
 @RestController
 @RequestMapping("/permission")
 public class PersmissionController {
-    @Autowired
-    private PermissionService permissionService;
 
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(PersmissionController.class);
+
+    @Resource
+    private PermissionService permissionService;
 
     /**
      * 得到组合权限列表
      *
-     * @param json
-     * @return
+     * @param json String
+     * @param operatorInfoBO OperatorInfoBO
+     * @return map
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public Map<String, Object> getPermissionAll(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
@@ -72,8 +74,9 @@ public class PersmissionController {
     /**
      * 得到wms权限
      *
-     * @param json
-     * @return
+     * @param json String
+     * @param operatorInfoBO OperatorInfoBO
+     * @return map
      */
     @RequestMapping(value = "/getWmsPermission", method = RequestMethod.POST)
     public Map<String, Object> getWmsPermission(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
@@ -101,13 +104,13 @@ public class PersmissionController {
     /**
      * 新增权限包
      *
-     * @param json
-     * @return
+     * @param json String
+     * @param operatorInfoBO OperatorInfoBO
+     * @return map
      */
     @RequestMapping(value = "/insertWmsPermission", method = RequestMethod.POST)
-    public Map<String, Object> insertWmsPermission(@RequestBody(required = false) String json, HttpServletRequest request, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
+    public Map<String, Object> insertWmsPermission(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
         try {
-            PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             LOGGER.debug("json:" + json);
             UpdatePermissionBO updatePermissionBO = gson.fromJson(json, UpdatePermissionBO.class);
             updatePermissionBO.setUserId(operatorInfoBO.getOperator());
@@ -131,8 +134,10 @@ public class PersmissionController {
     /**
      * 删除权限包
      *
-     * @param json
-     * @return
+     * @param json String
+     * @param request HttpServletRequest
+     * @param operatorInfoBO OperatorInfoBO
+     * @return map
      */
     @RequestMapping(value = "/deletePermission", method = RequestMethod.POST)
     public Map<String, Object> deletePermission(@RequestBody(required = false) String json, HttpServletRequest request, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
@@ -163,8 +168,9 @@ public class PersmissionController {
     /**
      * 根据组合权限id和公司id，获取获取组合权限信息
      *
-     * @param json
-     * @return
+     * @param json String
+     * @param operatorInfoBO OperatorInfoBO
+     * @return map
      */
     @RequestMapping(value = "/getPermissionChoose", method = RequestMethod.POST)
     public Map<String, Object> getPermissionList(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
@@ -190,8 +196,8 @@ public class PersmissionController {
     /**
      * 修改权限包
      *
-     * @param json
-     * @return
+     * @param json String
+     * @return map
      */
     @RequestMapping(value = "/updateWmsPermission", method = RequestMethod.POST)
     public Map<String, Object> updateWmsPermission(@RequestBody(required = false) String json, HttpServletRequest request, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {
@@ -220,9 +226,9 @@ public class PersmissionController {
     /**
      * 获取用户权限数据项
      *
-     * @param json
-     * @param operatorInfoBO
-     * @return
+     * @param json String
+     * @param operatorInfoBO OperatorInfoBO
+     * @return map
      */
     @RequestMapping(name = "获取用户权限数据项", value = "/userPermission", method = RequestMethod.POST)
     public Map<String, Object> userPermissionForPda(@RequestBody(required = false) String json, @OperatorAnnotation OperatorInfoBO operatorInfoBO) {

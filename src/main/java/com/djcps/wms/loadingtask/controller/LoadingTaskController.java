@@ -54,7 +54,7 @@ public class LoadingTaskController {
     /**
      * 装车员列表
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/19
      * @param request
      * @param json
@@ -87,7 +87,7 @@ public class LoadingTaskController {
     /**
      * 更新装车员状态并获取装车任务列表
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/19
      * @param request
      * @param json
@@ -120,7 +120,7 @@ public class LoadingTaskController {
     /**
      * 移除装车员
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/19
      * @param request
      * @param json
@@ -153,7 +153,7 @@ public class LoadingTaskController {
     /**
      * 装车
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/19
      * @param request
      * @param json
@@ -185,7 +185,7 @@ public class LoadingTaskController {
     /**
      * 完成装车
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param request
      * @param json
@@ -217,7 +217,7 @@ public class LoadingTaskController {
     /**
      * 追加订单FOR PDA
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param request
      * @param json
@@ -249,7 +249,7 @@ public class LoadingTaskController {
     /**
      * 驳回申请web
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param request
      * @param json
@@ -281,7 +281,7 @@ public class LoadingTaskController {
     /**
      * 追加订单申请列表web
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/21
      * @param request
      * @param json

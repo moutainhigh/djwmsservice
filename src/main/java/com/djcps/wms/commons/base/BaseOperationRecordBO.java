@@ -1,9 +1,8 @@
 package com.djcps.wms.commons.base;
 /**
  * 生成操作记录所需订单相关字段
- * @company:djwms
- * @author:wyb
- * @date:2018年5月3日
+ * @author wyb
+ * @since 2018年5月3日
  */
 public class BaseOperationRecordBO extends BaseAddBO {
     /**

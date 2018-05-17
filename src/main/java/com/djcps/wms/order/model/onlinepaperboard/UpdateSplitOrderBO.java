@@ -52,8 +52,21 @@ public class UpdateSplitOrderBO {
      * 区域拆分键
      */
     private String keyArea;
+    
+    /**
+     * 订单类型
+     */
+    private String orderType;
 
-    public String getSubOrderId() {
+    public String getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
+
+	public String getSubOrderId() {
         return subOrderId;
     }
 
@@ -140,4 +153,13 @@ public class UpdateSplitOrderBO {
     public void setKeyArea(String keyArea) {
         this.keyArea = keyArea;
     }
+
+	@Override
+	public String toString() {
+		return "UpdateSplitOrderBO [subOrderId=" + subOrderId + ", orderId=" + orderId + ", subNumber=" + subNumber
+				+ ", subStatus=" + subStatus + ", subAddress=" + subAddress + ", outStock=" + outStock + ", inStock="
+				+ inStock + ", isException=" + isException + ", isStored=" + isStored + ", isProduce=" + isProduce
+				+ ", keyArea=" + keyArea + ", orderType=" + orderType + "]";
+	}
+    
 }

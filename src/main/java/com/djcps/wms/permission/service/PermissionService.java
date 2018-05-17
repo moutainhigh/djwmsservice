@@ -67,7 +67,7 @@ public interface PermissionService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/4/23  20:33
      */
     Map<String, Object> getUserPermission(UserPermissionBO param);
@@ -77,7 +77,7 @@ public interface PermissionService {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/4/23  20:34
      */
     List<UserPermissionVO> listUserPermission(UserPermissionBO param);

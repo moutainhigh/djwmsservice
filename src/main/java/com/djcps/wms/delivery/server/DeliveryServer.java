@@ -34,7 +34,7 @@ public class DeliveryServer {
     
     /**
      * 获取提货单列表
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:32
      * @param param
      * @return
@@ -47,7 +47,7 @@ public class DeliveryServer {
     }
     /**
      * PDA获取提货任务订单列表
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  11:15
      * @param param
      * @return
@@ -61,7 +61,7 @@ public class DeliveryServer {
 
     /**
      * 获取提货订单列表
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/1/31  09:29
      * @param param
      * @return
@@ -78,7 +78,7 @@ public class DeliveryServer {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  11:26
      */
     public HttpResult addPrintCount(PrintDeliveryBO param) {
@@ -93,7 +93,7 @@ public class DeliveryServer {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  11:26
      */
     public HttpResult completeOrder(SaveDeliveryBO param) {
@@ -107,7 +107,7 @@ public class DeliveryServer {
      * PDA获取提货任务订单详情
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  11:26
      */
     public HttpResult getOrderDetail(DeliveryOrderDetailBO param) {
@@ -122,7 +122,7 @@ public class DeliveryServer {
      *
      * @param param
      * @return
-     * @autuor Chengw
+     * @author Chengw
      * @since 2018/2/1  11:26
      */
     public HttpResult getDeliveryForPDA(DeliveryOrderBO param) {
@@ -136,7 +136,7 @@ public class DeliveryServer {
      *
      * @param param
      * @return
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/13
      */
     public HttpResult updateDeliveryEffect(UpdateDeliveryEffectBO param) {

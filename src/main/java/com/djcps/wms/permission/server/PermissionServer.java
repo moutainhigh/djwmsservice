@@ -5,7 +5,6 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.httpclient.OtherHttpResult;
-import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.permission.constants.PermissionConstants;
 import com.djcps.wms.permission.model.bo.*;
 import com.djcps.wms.permission.model.po.GetOnePermissionPO;
@@ -15,13 +14,11 @@ import com.djcps.wms.permission.model.vo.ChangeOnePerVO;
 import com.djcps.wms.permission.model.vo.ChangeWmsPerVO;
 import com.djcps.wms.permission.model.vo.UserPermissionVO;
 import com.djcps.wms.permission.request.DjorForPermissionHttpRequest;
-import com.google.gson.reflect.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import rpc.plugin.http.HTTPResponse;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,19 +35,19 @@ public class PermissionServer {
 
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(PermissionServer.class);
 
-    @Autowired
+    @Resource
     private DjorForPermissionHttpRequest djorForPermissionHttpRequest;
 
 
     /**
      * 得到组合权限包
      *
-     * @param param
-     * @return
+     * @param param GetPermissionBO
+     * @return OtherHttpResult
      */
     public OtherHttpResult getPermissionList(GetPermissionBO param) {
         String json = gson.toJson(param);
-        LOGGER.debug("---http请求参数转化成json---:" + json);
+        LOGGER.debug("---http请求参数转化成json---: {}",json);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse http = djorForPermissionHttpRequest.getPermissionList(map);
         return verifyOtherHttpResult(http);
@@ -59,8 +56,8 @@ public class PermissionServer {
     /**
      * 得到wms权限
      *
-     * @param param
-     * @return
+     * @param param WmsPermissionBO
+     * @return List<ChangeWmsPerVO>
      */
     public List<ChangeWmsPerVO> getWmsPermission(WmsPermissionBO param) {
         String json = gson.toJson(param);
@@ -73,7 +70,7 @@ public class PermissionServer {
             List<GetWmsPerPO> listUser = JSONObject.parseArray(data, GetWmsPerPO.class);
             //规范返回字段
             if (!ObjectUtils.isEmpty(listUser)) {
-                List listUserChange = listUser.stream().map(x -> new ChangeWmsPerVO() {{
+                List<ChangeWmsPerVO> listUserChange = listUser.stream().map(x -> new ChangeWmsPerVO() {{
                     setId(x.getId());
                     setTitle(x.getPtitle());
                     setLayer(x.getPolayer());
@@ -93,8 +90,8 @@ public class PermissionServer {
     /**
      * 新增权限
      *
-     * @param param
-     * @return
+     * @param param InsertOrUpdatePermissionBO
+     * @return HttpResult
      */
     public HttpResult insertPermission(InsertOrUpdatePermissionBO param) {
         String json = gson.toJson(param);
@@ -107,8 +104,8 @@ public class PermissionServer {
     /**
      * 修改权限
      *
-     * @param param
-     * @return
+     * @param param InsertOrUpdatePermissionBO
+     * @return HttpResult
      */
     public HttpResult updatePermission(InsertOrUpdatePermissionBO param) {
         String json = gson.toJson(param);
@@ -121,8 +118,8 @@ public class PermissionServer {
     /**
      * 删除权限
      *
-     * @param param
-     * @return
+     * @param param DeletePerParamBO
+     * @return HttpResult
      */
     public HttpResult deletePermission(DeletePerParamBO param) {
         String json = gson.toJson(param);
@@ -160,9 +157,9 @@ public class PermissionServer {
         HttpResult result = returnHttpResult(http);
         String data = JSONObject.toJSONString(result.getData());
         List<GetOnePermissionPO> list = JSONObject.parseArray(data, GetOnePermissionPO.class);
-        //规范返回字段
+        // 规范返回字段
         if (!ObjectUtils.isEmpty(list)) {
-            List listChange = list.stream().map(x -> new ChangeOnePerVO() {{
+            return list.stream().map(x -> new ChangeOnePerVO() {{
                 setTitle(x.getPtitle());
                 setDescribe(x.getPdes());
                 setCompanyId(x.getPcompany());
@@ -175,7 +172,6 @@ public class PermissionServer {
                 setCreateTime(x.getCreate_time());
                 setUpdateTime(x.getUpdate_time());
             }}).collect(Collectors.toList());
-            return listChange;
         }
         return null;
     }
@@ -183,8 +179,8 @@ public class PermissionServer {
     /**
      * 得到wms基本权限项
      *
-     * @param param
-     * @return
+     * @param param BaseOrgBO
+     * @return List<UserPermissionVO>
      */
     public List<UserPermissionVO> listBasicPermission(BaseOrgBO param) {
         String json = gson.toJson(param);
@@ -192,17 +188,16 @@ public class PermissionServer {
         HTTPResponse http = djorForPermissionHttpRequest.getWmsPermission(map);
         HttpResult result = returnHttpResult(http);
         String data = JSONObject.toJSONString(result.getData());
-        List<UserPermissionPO> userPermissionPOList = gson.fromJson(data, new TypeToken<List<UserPermissionPO>>() {
-        }.getType());
+        List<UserPermissionPO> userPermissionPOList = JSONObject.parseArray(data, UserPermissionPO.class);
         return toUserPermissionVO(userPermissionPOList);
     }
 
     /**
      * 获取用户拥有的所有权限
      *
-     * @param param
-     * @return
-     * @watch business default: 30
+     * @param param UserPermissionBO
+     * @return List<UserPermissionVO>
+     * @serialData business default: 30
      */
     public List<UserPermissionVO> getUserPermission(UserPermissionBO param) {
         param.setpBusiness(PermissionConstants.BUSINESS_ID);
@@ -219,22 +214,14 @@ public class PermissionServer {
     /**
      * 用户权限root权限组合
      *
-     * @param param
-     * @return
+     * @param param List<UserPermissionVO>
+     * @return List<UserPermissionVO>
      */
     private List<UserPermissionVO> getUserRootPermission(List<UserPermissionVO> param) {
-        List<UserPermissionVO> rootPermissionList = param.stream().filter(u -> {
-            if (param.stream().filter(
-                    x -> u.getFather().equals(x.getId()))
-                    .count() == 0) {
-                return true;
-            }
-            return false;
-        }).collect(Collectors.toList());
+        List<UserPermissionVO> rootPermissionList = param.stream().filter(u -> param.stream().noneMatch(
+                x -> u.getFather().equals(x.getId()))).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(rootPermissionList)) {
-            rootPermissionList.stream().forEach(u -> {
-                u.setChildren(userPermissionToTree(param, u.getId()));
-            });
+            rootPermissionList.forEach(u -> u.setChildren(userPermissionToTree(param, u.getId())));
             return rootPermissionList;
         }
         return param;
@@ -243,9 +230,9 @@ public class PermissionServer {
     /**
      * 获取数据权限项
      *
-     * @param param
-     * @return
-     * @autuor Chengw
+     * @param param UserPermissionBO
+     * @return List<UserPermissionVO>
+     * @author Chengw
      * @since 2018/4/23  20:47
      */
     public List<UserPermissionVO> listUserPermission(UserPermissionBO param) {
@@ -262,11 +249,11 @@ public class PermissionServer {
     /**
      * 转换实体类
      *
-     * @param userPermissionPOList
-     * @return
+     * @param userPermissionPOList List<UserPermissionPO>
+     * @return List<UserPermissionVO>
      */
     private List<UserPermissionVO> toUserPermissionVO(List<UserPermissionPO> userPermissionPOList) {
-        List<UserPermissionVO> userPermissionVOList = userPermissionPOList.stream().map(u -> new UserPermissionVO() {{
+        return userPermissionPOList.stream().map(u -> new UserPermissionVO() {{
             setId(u.getId());
             setTitle(u.getPtitle());
             setBusiness(u.getPbusiness());
@@ -277,43 +264,32 @@ public class PermissionServer {
             setHtmlId(u.getPhtmlid());
             setType(u.getPtype());
         }}).collect(Collectors.toList());
-        return userPermissionVOList;
     }
 
     /**
      * 将权限项递归生成树
      *
-     * @param param
-     * @param rootId
-     * @return
+     * @param param  List<UserPermissionVO>
+     * @param rootId String
+     * @return List<UserPermissionVO>
      */
     private List<UserPermissionVO> userPermissionToTree(List<UserPermissionVO> param, String rootId) {
         List<UserPermissionVO> result = param.stream().filter(u -> rootId.equals(u.getFather())).collect(Collectors.toList());
-        result.stream().forEach(u -> {
-            u.setChildren(userPermissionToTree(param, u.getId()));
-        });
+        result.forEach(u -> u.setChildren(userPermissionToTree(param, u.getId())));
         return result;
     }
 
     /**
      * 获取基本权限项数据
      *
-     * @param param
-     * @return
+     * @param param List<ChangeWmsPerVO>
+     * @return List<ChangeWmsPerVO>
      */
     private List<ChangeWmsPerVO> getBasicRootPermission(List<ChangeWmsPerVO> param) {
-        List<ChangeWmsPerVO> rootPermissionList = param.stream().filter(u -> {
-            if (param.stream().filter(
-                    x -> u.getFatherId().equals(x.getId()))
-                    .count() == 0) {
-                return true;
-            }
-            return false;
-        }).collect(Collectors.toList());
+        List<ChangeWmsPerVO> rootPermissionList = param.stream().filter(u -> param.stream().noneMatch(
+                x -> u.getFatherId().equals(x.getId()))).collect(Collectors.toList());
         if (!ObjectUtils.isEmpty(rootPermissionList)) {
-            rootPermissionList.stream().forEach(u -> {
-                u.setChildren(basicPermissionToTree(param, u.getId()));
-            });
+            rootPermissionList.forEach(u -> u.setChildren(basicPermissionToTree(param, u.getId())));
             return rootPermissionList;
         }
         return param;
@@ -322,15 +298,13 @@ public class PermissionServer {
     /**
      * 将权限项递归生成树
      *
-     * @param param
-     * @param rootId
-     * @return
+     * @param param  List<ChangeWmsPerVO>
+     * @param rootId String
+     * @return List<ChangeWmsPerVO>
      */
     private List<ChangeWmsPerVO> basicPermissionToTree(List<ChangeWmsPerVO> param, String rootId) {
         List<ChangeWmsPerVO> result = param.stream().filter(u -> rootId.equals(u.getFatherId())).collect(Collectors.toList());
-        result.stream().forEach(u -> {
-            u.setChildren(basicPermissionToTree(param, u.getId()));
-        });
+        result.forEach(u -> u.setChildren(basicPermissionToTree(param, u.getId())));
         return result;
     }
 

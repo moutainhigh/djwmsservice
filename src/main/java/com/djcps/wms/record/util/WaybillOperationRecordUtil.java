@@ -35,4 +35,8 @@ public class WaybillOperationRecordUtil {
         return "完成全部装车操作";
     }  
     
+    public static String getFinishLoadingEvent(String... loadingPersons){
+        //loadingPersons : 张三,李四,王五
+        return "完成全部装车操作。装车人员:" + loadingPersons;
+    }  
 }

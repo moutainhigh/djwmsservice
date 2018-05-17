@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
 
+
 /**
  * 提货
  * 
@@ -75,8 +76,8 @@ public class DeliveryController {
         }
     }
 
-    /**
-     * yes 获取提货单订单列表
+    /**yes
+     * 获取提货单订单列表
      * 
      * @autuor Chengw
      * @since 2018/1/31 08:35
@@ -136,8 +137,8 @@ public class DeliveryController {
         }
     }
 
-    /**
-     * yes 完成单条提货订单
+    /**yes
+     * 完成单条提货订单
      * 
      * @autuor Chengw
      * @since 2018/2/1 14:15
@@ -171,8 +172,8 @@ public class DeliveryController {
         }
     }
 
-    /**
-     * yes 获取提货信息以及订单信息 -PDA
+    /**yes
+     * 获取提货信息以及订单信息 -PDA
      * 
      * @autuor Chengw
      * @since 2018/2/1 14:15
@@ -205,8 +206,8 @@ public class DeliveryController {
     }
 
     /**
-     * 获取订单信息 -PDA yes
-     * 
+     * 获取订单信息 -PDA
+     * yes
      * @autuor Chengw
      * @since 2018/2/1 14:15
      * @param json
@@ -238,8 +239,8 @@ public class DeliveryController {
     }
 
     /**
-     * 获取订单信息 yes
-     * 
+     * 获取订单信息
+     * yes
      * @param json
      * @return
      */
@@ -267,8 +268,8 @@ public class DeliveryController {
         }
     }
 
-    /**
-     * yes 设置提货单的确认状态为未确认
+    /**yes
+     * 设置提货单的确认状态为未确认
      * 
      * @param json
      * @return

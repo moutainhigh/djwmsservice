@@ -463,7 +463,7 @@ public class AllocationServiceImpl implements AllocationService {
 			String loadingTableId = asJsonObject.get("loadingTableId").getAsString();
 			String loadingTableName = asJsonObject.get("loadingTableName").getAsString();
 			JsonElement jsonElement = asJsonObject.get("pickerId");
-			if(jsonElement==null){
+			if(jsonElement.isJsonNull() || jsonElement == null){
 				param.setPickerId(param.getPickerId());
 			}else{
 				//删除同时确认配货锁
@@ -2006,6 +2006,11 @@ public class AllocationServiceImpl implements AllocationService {
 		if(!ObjectUtils.isEmpty(result.getData())){
 			UpdateSplitOrderBO firstSpiltOrder = param.getFirstSpiltOrder();
 			UpdateSplitOrderBO secondSpiltOrder = param.getSecondSpiltOrder();
+			
+			//判断订单的订单类型
+	        String switchOrderTypeToString = com.djcps.wms.commons.utils.StringUtils.switchOrderTypeToString(param.getOrderId());
+	        firstSpiltOrder.setOrderType(switchOrderTypeToString);
+	        secondSpiltOrder.setOrderType(switchOrderTypeToString);
 			
 			BatchOrderDetailListPO batchOrder = dataFormatGson.fromJson(gsonNotNull.toJson(result.getData()),BatchOrderDetailListPO.class);
 			List<WarehouseOrderDetailPO> orderList = batchOrder.getOrderList();

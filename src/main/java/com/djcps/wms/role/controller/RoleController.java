@@ -47,7 +47,7 @@ public class RoleController {
     /**
      * 角色列表
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/4/13
      * @param request
      * @param json
@@ -80,7 +80,7 @@ public class RoleController {
     /**
      * 更新角色信息
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/4/13
      * @param request
      * @param json
@@ -113,7 +113,7 @@ public class RoleController {
     /**
      * 获取角色
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/4/13
      * @param request
      * @param json
@@ -134,7 +134,7 @@ public class RoleController {
     /**
      * 删除角色信息
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/4/13
      * @param request
      * @param json
@@ -167,7 +167,7 @@ public class RoleController {
     /**
      * 保存角色信息
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/4/13
      * @param request
      * @param json

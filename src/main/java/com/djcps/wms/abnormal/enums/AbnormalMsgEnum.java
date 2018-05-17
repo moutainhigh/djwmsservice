@@ -16,7 +16,12 @@ public enum AbnormalMsgEnum implements MsgInterface {
     /**
      * OMS处修改订单异常状态标志失败!!!
      */
-    STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR(1,"OMS处修改订单异常状态标志失败!!!");
+    STOCK_UPDATE_SPLIT_ORDER_STATUS_ERROR(1,"OMS处修改订单异常状态标志失败!!!"),
+    
+    /**
+     *作废的处理方式只能针对盘点异常订单!!! 
+     */
+    STOCK_TAKING_RESULT_EROOR(2,"作废的处理方式只能针对盘点异常订单!!!");
 
     private int code;
     

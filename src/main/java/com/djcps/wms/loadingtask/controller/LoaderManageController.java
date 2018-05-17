@@ -48,7 +48,7 @@ public class LoaderManageController {
     /**
      * 装车员列表
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/19
      * @param request
      * @param json
@@ -80,7 +80,7 @@ public class LoaderManageController {
     /**
      * 修改装车员信息
      * @TODO
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/19
      * @param request
      * @param json
@@ -119,7 +119,7 @@ public class LoaderManageController {
     /**
      * 删除装车员信息
      * 
-     * @autuor  wyb
+     * @author  wyb
      * @since 2018/3/19
      * @param request
      * @param json
@@ -151,7 +151,7 @@ public class LoaderManageController {
     /**
      * 新增装车员信息
      * 
-     * @autuor wyb
+     * @author wyb
      * @since 2018/3/19
      * @param request
      * @param json

@@ -47,6 +47,9 @@ public class RequestMappingListener implements ApplicationListener<ContextRefres
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		String  rootName= "Root WebApplicationContext";
+		if(ObjectUtils.isEmpty(contextRefreshedEvent.getApplicationContext().getParent())){
+			return;
+		}
 		String displayName = contextRefreshedEvent.getApplicationContext().getParent().getDisplayName();
 		logger.info("------我的父容器为------:"+displayName);
 		logger.info("------容器初始化开始------");

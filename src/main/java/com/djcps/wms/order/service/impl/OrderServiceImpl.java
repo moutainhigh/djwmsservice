@@ -196,7 +196,7 @@ public class OrderServiceImpl implements OrderService {
 					orderStockInfoPOMap.put(orderStockInfoPO.getOrderId(), orderStockInfoPO);
 				}
 				for (WarehouseOrderDetailPO onlinePaperboardPO : onlinePaperboardPOList) {
-					WarehouseOrderDetailPO orderStockInfoPO = orderStockInfoPOMap.get(onlinePaperboardPO.getChildOrderId());
+					WarehouseOrderDetailPO orderStockInfoPO = orderStockInfoPOMap.get(onlinePaperboardPO.getOrderId());
 					if(orderStockInfoPO!=null){
 						onlinePaperboardPO.setAmountSaved(orderStockInfoPO.getAmountSaved());
 						onlinePaperboardPO.setWarehouseId(orderStockInfoPO.getWarehouseId());

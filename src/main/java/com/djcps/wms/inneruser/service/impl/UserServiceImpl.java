@@ -10,7 +10,8 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.inneruser.constant.UserConstant;
 import com.djcps.wms.inneruser.enums.UserMsgEnum;
-import com.djcps.wms.inneruser.model.userparam.*;
+import com.djcps.wms.inneruser.model.param.*;
+import com.djcps.wms.inneruser.model.result.*;
 import com.djcps.wms.inneruser.server.UserServer;
 import com.djcps.wms.inneruser.service.UserService;
 import com.djcps.wms.permission.redis.PermissionRedisDao;
@@ -18,78 +19,75 @@ import com.djcps.wms.role.constant.RoleConstant;
 import com.djcps.wms.role.model.OrgUserRoleBO;
 import com.djcps.wms.role.model.OrgUserRoleVO;
 import com.djcps.wms.role.model.request.WmsRoleInfoPO;
-import com.djcps.wms.role.request.RoleHttpRequest;
 import com.djcps.wms.role.server.OrgRoleHttpServer;
 import com.djcps.wms.role.server.RoleHttpServer;
 import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 用户模块逻辑层
  *
- * @author:wzy
- * @date:2018/4/20
+ * @author wzy
+ * @date 2018/4/20
  **/
 @Service
 public class UserServiceImpl implements UserService {
 
     private static DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(UserServiceImpl.class);
 
-    @Autowired
+    @Resource
     private UserServer userServer;
 
-    @Autowired
+    @Resource
     private OrgRoleHttpServer orgRoleHttpServer;
 
-    @Autowired
+    @Resource
     private RoleHttpServer roleHttpServer;
-    
-    @Autowired
+
+    @Resource
     private PermissionRedisDao permissionRedisDao;
 
-    Gson gson = new Gson();
+    private Gson gson = new Gson();
 
     /**
      * org根据用户批量id获取用户信息列表
      *
-     * @param orgGetUserInfo
+     * @param orgGetUserInfo BatchOrgUserInfoBO
      * @return map
      * @author wzy
      * @date 2018/4/12 14:53
      **/
     @Override
     public Map<String, Object> getUserList(BatchOrgUserInfoBO orgGetUserInfo) {
-        //TODO 批量从org获取用户信息
+        // 批量从org获取用户信息
         List<OrgUserInfoPO> list = userServer.getUserListByOrg(orgGetUserInfo);
-        return null;
+        return MsgTemplate.successMsg(list);
     }
 
 
     /**
      * 从org获取一个用户的所有信息
      *
-     * @param orgGetUserInfo
+     * @param orgGetUserInfo GetOrgUserInfoBO
      * @return map
      * @author wzy
      * @date 2018/4/12 14:53
      **/
     @Override
     public Map<String, Object> getUser(GetOrgUserInfoBO orgGetUserInfo) {
-        //org获取用户信息
+        // org获取用户信息
         OrgUserInfoPO orgUserInfoPO = userServer.getUserByOrg(orgGetUserInfo);
-        //wms获取用户仓库信息
+        // wms获取用户仓库信息
         DeleteUserBO deleteUserBO = new DeleteUserBO();
         BeanUtils.copyProperties(orgGetUserInfo, deleteUserBO);
         List<String> warehouseIdList = userServer.getUserWarehouse(deleteUserBO);
@@ -124,22 +122,22 @@ public class UserServiceImpl implements UserService {
         if (!ObjectUtils.isEmpty(userInfoPO)) {
             return MsgTemplate.successMsg(userInfoPO);
         }
-        return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIET);
+        return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIST);
     }
 
     /**
      * wms获取单条用户关联信息
      *
-     * @param deleteUserBO
+     * @param deleteUserBO DeleteUserBO
      * @return map
      * @author wzy
      * @date 2018/4/13 10:23
      **/
     @Override
     public Map<String, Object> getUserRelevance(DeleteUserBO deleteUserBO) {
-        UserRelevanceBO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
+        UserRelevancePO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
         if (ObjectUtils.isEmpty(userRelevanceBO)) {
-            return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIET);
+            return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIST);
         }
         return MsgTemplate.successMsg(userRelevanceBO);
     }
@@ -147,22 +145,22 @@ public class UserServiceImpl implements UserService {
     /**
      * wms修改用户工作状态和仓库等信息
      *
-     * @param updateUserStatusBO
+     * @param updateUserBO UpdateUserBO
      * @return map
      * @author wzy
      * @date 2018/4/13 9:40
      **/
     @Override
-    public Map<String, Object> updateUserStatus(UpdateUserStatusBO updateUserStatusBO) {
-        HttpResult result = userServer.updateUserStatus(updateUserStatusBO);
+    public Map<String, Object> updateUserStatus(UpdateUserBO updateUserBO) {
+        HttpResult result = userServer.updateUserStatus(updateUserBO);
         return MsgTemplate.customMsg(result);
     }
 
     /**
      * wms删除用户关联信息
      *
-     * @param deleteUserBO
-     * @return map
+     * @param deleteUserBO DeleteUserBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/13 11:16
      **/
@@ -175,29 +173,29 @@ public class UserServiceImpl implements UserService {
     /**
      * 删除用户信息，包括org
      *
-     * @param
-     * @return
+     * @param orgDeleteUserBO OrgDeleteUserBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/13 11:22
      **/
     @Override
     public Map<String, Object> deleteUser(OrgDeleteUserBO orgDeleteUserBO) {
-        //TODO 获取用户关联信息，判断是否在工作中
+        // 获取用户关联信息，判断是否在工作中
         DeleteUserBO deleteUserBO = new DeleteUserBO() {{
             setUserId(orgDeleteUserBO.getUserId());
             setPartnerId(orgDeleteUserBO.getPartnerId());
         }};
         orgDeleteUserBO.setId(orgDeleteUserBO.getUserId());
-        UserRelevanceBO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
+        UserRelevancePO userRelevanceBO = userServer.getUserRelevance(deleteUserBO);
         if (!ObjectUtils.isEmpty(userRelevanceBO)) {
             //不在忙碌状态,可以删除
             int status = userRelevanceBO.getWorkStatus();
             if (!UserConstant.BUSY.equals(status)) {
-                //TODO org禁用用户
+                // org禁用用户
                 orgDeleteUserBO.setStatus(UserConstant.ORG_DEL);
                 Boolean delOpenUser = userServer.updateCloseOpenUser(orgDeleteUserBO);
                 if (delOpenUser) {
-                    //TODO 删除用户关联信息
+                    // 删除用户关联信息
                     HttpResult delResult = userServer.deleteUserRelevance(deleteUserBO);
                     if (delResult.isSuccess()) {
                         return MsgTemplate.successMsg();
@@ -207,7 +205,7 @@ public class UserServiceImpl implements UserService {
             }
             return MsgTemplate.failureMsg(UserMsgEnum.USER_BUSY);
         }
-        return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIET);
+        return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIST);
 
     }
 
@@ -215,105 +213,97 @@ public class UserServiceImpl implements UserService {
     /**
      * 分页获取用户列表
      *
-     * @param pageGetUserBO
-     * @return map
+     * @param pageUserInfoBO PageUserInfoBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/13 15:20
      **/
     @Override
-    public Map<String, Object> pageGetUserRelevance(PageGetUserBO pageGetUserBO) {
-        //获取WMS缓存的用户列表
-        pageGetUserBO.setRoleType(pageGetUserBO.getRoleTypeCode());
-        OrderResult userRelevanceResult = userServer.pageGetUserRelevance(pageGetUserBO);
+    public Map<String, Object> pageGetUserRelevance(PageUserInfoBO pageUserInfoBO) {
+        // 获取WMS缓存的用户列表
+        pageUserInfoBO.setRoleType(pageUserInfoBO.getRoleTypeCode());
+        OrderResult userRelevanceResult = userServer.pageGetUserRelevance(pageUserInfoBO);
         if (userRelevanceResult.isSuccess()) {
             if (!ObjectUtils.isEmpty(userRelevanceResult.getData())) {
-                //根据用户id去org获取用户信息
+                // 根据用户id去org获取用户信息
                 if (!ObjectUtils.isEmpty(userRelevanceResult.getData().getResult())) {
                     String userResult = gson.toJson(userRelevanceResult.getData().getResult());
-                    //查出的用户信息列表
+                    // 查出的用户信息列表
                     List<UserRelevanceBO> userRelevancePOList = JSONObject.parseArray(userResult, UserRelevanceBO.class);
                     if (!ObjectUtils.isEmpty(userRelevancePOList)) {
                         BatchOrgUserInfoBO batchOrgUserInfoBO = new BatchOrgUserInfoBO();
-                        BeanUtils.copyProperties(pageGetUserBO, batchOrgUserInfoBO);
+                        BeanUtils.copyProperties(pageUserInfoBO, batchOrgUserInfoBO);
                         StringBuffer ids = new StringBuffer();
-                        //拼接用户id
-                        userRelevancePOList.stream().forEach(userRelevanceBO -> {
-                            ids.append(userRelevanceBO.getUserId() + ",");
-                        });
+                        // 拼接用户id
+                        userRelevancePOList.forEach(userRelevanceBO -> ids.append(userRelevanceBO.getUserId()).append(","));
                         batchOrgUserInfoBO.setUserids(ids.toString());
 
-                        //TODO 从org获取用户数据
+                        // 从org获取用户数据
                         List<OrgUserInfoPO> orgUserInfoPOS = userServer.getUserListByOrg(batchOrgUserInfoBO);
                         if (!ObjectUtils.isEmpty(orgUserInfoPOS)) {
-                            userRelevancePOList.stream().forEach(userRelevanceBO -> {
-                                orgUserInfoPOS.stream().forEach(orgUserInfoPO -> {
-                                    if (userRelevanceBO.getUserId().equals(orgUserInfoPO.getId())) {
-                                        //赋值
-                                        userRelevanceBO.setDepartment(orgUserInfoPO.getUfdepartment());
-                                        userRelevanceBO.setContactWay(orgUserInfoPO.getUphone());
-                                        //获取所属仓库参数
-                                        StringBuffer warehouseNameStr = new StringBuffer();
-                                        GetWarehouseListBO listBOList = new GetWarehouseListBO();
-                                        listBOList.setPartnerId(pageGetUserBO.getPartnerId());
-                                        //拆分仓库id字符串
-                                        String warehouses = userRelevanceBO.getWarehouseId();
-                                        if (!StringUtils.isEmpty(warehouses)) {
+                            userRelevancePOList.forEach(userRelevanceBO -> orgUserInfoPOS.forEach(orgUserInfoPO -> {
+                                if (userRelevanceBO.getUserId().equals(orgUserInfoPO.getId())) {
+                                    //赋值
+                                    userRelevanceBO.setDepartment(orgUserInfoPO.getUfdepartment());
+                                    userRelevanceBO.setContactWay(orgUserInfoPO.getUphone());
+                                    //获取所属仓库参数
+                                    StringBuffer warehouseNameStr = new StringBuffer();
+                                    GetWarehouseListBO listBOList = new GetWarehouseListBO();
+                                    listBOList.setPartnerId(pageUserInfoBO.getPartnerId());
+                                    //拆分仓库id字符串
+                                    String warehouses = userRelevanceBO.getWarehouseId();
+                                    if (!StringUtils.isEmpty(warehouses)) {
 
-                                            //分割出来的字符数组
-                                            String[] warehouse = warehouses.split(",");
-                                            List<String> warehouseList = Arrays.asList(warehouse);
-                                            AddUserWarehouseBO addUserWarehouseBO = null;
-                                            listBOList.setList(warehouseList);
-                                            List<WarehouseListPO> warehouseListPOList = userServer.getUserWarehouseList(listBOList);
-                                            if (!ObjectUtils.isEmpty(warehouseListPOList)) {
-                                                warehouseListPOList.stream().forEach(warehouseListPO -> {
-                                                    warehouseNameStr.append(warehouseListPO.getWarehouseName() + ",");
-                                                });
-                                            }
-                                        }
-                                        String warehouseNameSub = null;
-                                        if (!ObjectUtils.isEmpty(warehouseNameStr)) {
-                                            warehouseNameSub = warehouseNameStr.toString();
-                                            warehouseNameSub = warehouseNameSub.substring(0, warehouseNameSub.length() - 1);
-                                        }
-                                        userRelevanceBO.setWarehouseName(warehouseNameSub);
-
-                                        List<String> roleTypeList = new ArrayList<>();
-                                        StringBuffer roleTypeName = new StringBuffer();
-                                        //wms的获取角色类型id
-                                        String roleTypes = userRelevanceBO.getRoleType();
                                         //分割出来的字符数组
-                                        String[] roleType = roleTypes.split(",");
-                                        roleTypeList = Arrays.asList(roleType);
-                                        //获取角色类型id
-                                        RoleTypeBO getRoleTypeBO1 = new RoleTypeBO();
-                                        getRoleTypeBO1.setTypeCodeList(roleTypeList);
-                                        getRoleTypeBO1.setPartnerId(pageGetUserBO.getPartnerId());
-                                        List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO1);
-                                        List<String> distinctList = new ArrayList<>();
-                                        if (!ObjectUtils.isEmpty(roleInfoPOList)) {
-                                            roleInfoPOList.stream().forEach(roleInfoPO -> {
-                                                if (!distinctList.contains(roleInfoPO.getRoleTypeCode())) {
-                                                    distinctList.add(roleInfoPO.getRoleTypeCode());
-                                                    roleTypeName.append(roleInfoPO.getRoleTypeName() + ",");
-                                                }
-                                            });
+                                        String[] warehouse = warehouses.split(",");
+                                        List<String> warehouseList = Arrays.asList(warehouse);
+                                        listBOList.setList(warehouseList);
+                                        List<WarehouseListPO> warehouseListPOList = userServer.getUserWarehouseList(listBOList);
+                                        if (!ObjectUtils.isEmpty(warehouseListPOList)) {
+                                            warehouseListPOList.forEach(warehouseListPO -> warehouseNameStr.append(warehouseListPO.getWarehouseName()).append(","));
                                         }
-                                        //去掉最后一个逗号
-                                        String roleTypeSub = null;
-                                        if (!ObjectUtils.isEmpty(roleTypeName)) {
-                                            roleTypeSub = roleTypeName.toString();
-                                            roleTypeSub = roleTypeSub.substring(0, roleTypeSub.length() - 1);
-                                        }
-                                        userRelevanceBO.setRoleType(roleTypeSub);
                                     }
-                                });
-                            });
-                            //返回数据
+                                    String warehouseNameSub = null;
+                                    if (!ObjectUtils.isEmpty(warehouseNameStr)) {
+                                        warehouseNameSub = warehouseNameStr.toString();
+                                        warehouseNameSub = warehouseNameSub.substring(0, warehouseNameSub.length() - 1);
+                                    }
+                                    userRelevanceBO.setWarehouseName(warehouseNameSub);
+
+                                    StringBuffer roleTypeName = new StringBuffer();
+                                    // wms的获取角色类型id
+                                    String roleTypes = userRelevanceBO.getRoleType();
+                                    // 分割出来的字符数组
+                                    String[] roleType = roleTypes.split(",");
+                                    List<String> roleTypeList = Arrays.asList(roleType);
+                                    // 获取角色类型id
+                                    RoleTypeBO getRoleTypeBO1 = new RoleTypeBO();
+                                    getRoleTypeBO1.setTypeCodeList(roleTypeList);
+                                    getRoleTypeBO1.setPartnerId(pageUserInfoBO.getPartnerId());
+                                    List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO1);
+                                    List<String> distinctList = new ArrayList<>();
+                                    if (!ObjectUtils.isEmpty(roleInfoPOList)) {
+                                        roleInfoPOList.forEach(roleInfoPO -> {
+                                            if (!distinctList.contains(roleInfoPO.getRoleTypeCode())) {
+                                                distinctList.add(roleInfoPO.getRoleTypeCode());
+                                                roleTypeName.append(roleInfoPO.getRoleTypeName()).append(",");
+                                            }
+                                        });
+                                    }
+                                    // 去掉最后一个逗号
+                                    String roleTypeSub = null;
+                                    if (!ObjectUtils.isEmpty(roleTypeName)) {
+                                        roleTypeSub = roleTypeName.toString();
+                                        roleTypeSub = roleTypeSub.substring(0, roleTypeSub.length() - 1);
+                                    }
+                                    userRelevanceBO.setRoleType(roleTypeSub);
+                                }
+                            }));
+                            // 返回数据
                             userRelevanceResult.getData().setResult(userRelevancePOList);
                             return MsgTemplate.successMsg(userRelevanceResult.getData());
                         } else {
-                            return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIET);
+                            return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIST);
                         }
                     }
                 }
@@ -326,79 +316,72 @@ public class UserServiceImpl implements UserService {
     /**
      * 保存用户信息 包括新增/修改
      *
-     * @param
-     * @return
+     * @param wmsSaveUserBO WmsSaveUserBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/16 11:21
      **/
     @Override
-    public Map<String, Object> saveUser(WmsSaveUserBO wmssaveUserBO) {
+    public Map<String, Object> saveUser(WmsSaveUserBO wmsSaveUserBO) {
         // 参数拷贝
         SaveUserBO saveUserBO = new SaveUserBO();
-        if (!ObjectUtils.isEmpty(wmssaveUserBO)) {
-            List<WmsSaveUserBO> list = new ArrayList<>();
-            list.add(wmssaveUserBO);
-            List saveUserList = list.stream().map(x -> new SaveUserBO() {
+        if (!ObjectUtils.isEmpty(wmsSaveUserBO)) {
+            SaveUserBO saveUserBOOne =  new SaveUserBO() {
                 {
-                    setBusiness(x.getBusiness());
-                    setOperator(x.getOperator());
-                    setIp(x.getIp());
-                    setWarehouseId(x.getWarehouseId());
-                    setUphone(x.getPhone());
-                    setRoleType(x.getRoleType());
-                    setUname(x.getUserName());
-                    setId(x.getUserId());
-                    setFdepartment_id(x.getDepartmentId());
-                    setFdepartment(x.getDepartmentName());
-                    setUposition_name(x.getPositionName());
-                    setUjob(x.getJob());
-                    setUshort_phone(x.getShortPhone());
-                    setUid_card(x.getIdCard());
-                    setUnation(x.getNation());
-                    setUemail(x.getEmail());
-                    setUeducation(x.getEducation());
-                    setUmarital_status(x.getMaritalStatus());
-                    setUpolitical_outlook(x.getPoliticalOutlook());
-                    setUserStatus(x.getUserStatus());
-                    setPositionId(x.getPositionId());
-                    setUinduction(x.getInduction());
-                    setUgraduate_school(x.getGraduatSchool());
-                    setCompanyID(x.getCompanyId());
-                    setRoleids(x.getRoleIds());
-                    setOnlineUserId(x.getOnlineUserId());
-                    setUhome_address(x.getHomeAddress());
-                    setUregistered_residence(x.getRegisteredResidence());
+                    setBusiness(wmsSaveUserBO.getBusiness());
+                    setOperator(wmsSaveUserBO.getOperator());
+                    setIp(wmsSaveUserBO.getIp());
+                    setWarehouseId(wmsSaveUserBO.getWarehouseId());
+                    setUphone(wmsSaveUserBO.getPhone());
+                    setRoleType(wmsSaveUserBO.getRoleType());
+                    setUname(wmsSaveUserBO.getUserName());
+                    setId(wmsSaveUserBO.getUserId());
+                    setFdepartment_id(wmsSaveUserBO.getDepartmentId());
+                    setFdepartment(wmsSaveUserBO.getDepartmentName());
+                    setUposition_name(wmsSaveUserBO.getPositionName());
+                    setUjob(wmsSaveUserBO.getJob());
+                    setUshort_phone(wmsSaveUserBO.getShortPhone());
+                    setUid_card(wmsSaveUserBO.getIdCard());
+                    setUnation(wmsSaveUserBO.getNation());
+                    setUemail(wmsSaveUserBO.getEmail());
+                    setUeducation(wmsSaveUserBO.getEducation());
+                    setUmarital_status(wmsSaveUserBO.getMaritalStatus());
+                    setUpolitical_outlook(wmsSaveUserBO.getPoliticalOutlook());
+                    setUserStatus(wmsSaveUserBO.getUserStatus());
+                    setPositionId(wmsSaveUserBO.getPositionId());
+                    setUinduction(wmsSaveUserBO.getInduction());
+                    setUgraduate_school(wmsSaveUserBO.getGraduatSchool());
+                    setCompanyID(wmsSaveUserBO.getCompanyId());
+                    setRoleids(wmsSaveUserBO.getRoleIds());
+                    setOnlineUserId(wmsSaveUserBO.getOnlineUserId());
+                    setUhome_address(wmsSaveUserBO.getHomeAddress());
+                    setUregistered_residence(wmsSaveUserBO.getRegisteredResidence());
                 }
-            }).collect(Collectors.toList());
-            SaveUserBO saveUserBOOne = (SaveUserBO) saveUserList.get(0);
+            };
             BeanUtils.copyProperties(saveUserBOOne, saveUserBO);
         }
         // 无用户id，表示新增
         if (StringUtils.isEmpty(saveUserBO.getId())) {
             // org新增用户
-            //SaveUserBO orgsaveUserBO=userServer.addPostUserInfo(saveUserBO);
             HttpResult result = userServer.addPostUserInfo(saveUserBO);
             if (ObjectUtils.isEmpty(result)) {
                 return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
             }
-            SaveUserBO orgSaveUserBO = null;
+            SaveUserBO orgSaveUserBO;
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
-                List<SaveUserBO> list = new ArrayList<>();
-                list = JSONArray.parseArray(data, SaveUserBO.class);
+                List<SaveUserBO> list = JSONArray.parseArray(data, SaveUserBO.class);
                 orgSaveUserBO = list.get(0);
             } else {
                 return MsgTemplate.customMsg(result);
             }
             if (!ObjectUtils.isEmpty(orgSaveUserBO)) {
                 DeleteUserBO deleteUserBO = new DeleteUserBO();
-                deleteUserBO.setPartnerId(wmssaveUserBO.getPartnerId());
-                deleteUserBO.setUserId(wmssaveUserBO.getUserId());
-                UserRelevanceBO relevanceBO = userServer.getUserRelevance(deleteUserBO);
+                deleteUserBO.setPartnerId(wmsSaveUserBO.getPartnerId());
+                deleteUserBO.setUserId(wmsSaveUserBO.getUserId());
+                UserRelevancePO relevanceBO = userServer.getUserRelevance(deleteUserBO);
                 //用户不存在，新增用户关联信息
                 if (ObjectUtils.isEmpty(relevanceBO)) {
-                    //StringBuffer roleTypeName=new StringBuffer();
-                    StringBuffer roleTypeCode = new StringBuffer();
                     //获取角色类型id
                     String roleTypes = saveUserBO.getRoleids();
                     //分割出来的字符数组
@@ -407,25 +390,14 @@ public class UserServiceImpl implements UserService {
                     //获取角色类型id
                     RoleTypeBO getRoleTypeBO1 = new RoleTypeBO();
                     getRoleTypeBO1.setList(roleTypeList);
-                    getRoleTypeBO1.setPartnerId(wmssaveUserBO.getPartnerId());
+                    getRoleTypeBO1.setPartnerId(wmsSaveUserBO.getPartnerId());
                     List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO1);
-                    List<String> distinctList = new ArrayList<>();
-                    if (!ObjectUtils.isEmpty(roleInfoPOList)) {
-                        roleInfoPOList.stream().forEach(roleInfoPO -> {
-                            //角色类型去重
-                            if (!distinctList.contains(roleInfoPO.getRoleTypeCode())) {
-                                distinctList.add(roleInfoPO.getRoleTypeCode());
-                                roleTypeCode.append(roleInfoPO.getRoleTypeCode() + ",");
-                            }
-                        });
-                    }
                     UserRelevanceBO userRelevanceBO = new UserRelevanceBO();
                     userRelevanceBO.setUserId(orgSaveUserBO.getId());
                     userRelevanceBO.setWarehouseId(saveUserBO.getWarehouseId());
                     userRelevanceBO.setUserName(saveUserBO.getUname());
-                    // userRelevanceBO.setRoleType(saveUserBO.getRoleids());
-                    userRelevanceBO.setRoleType(roleTypeCode.toString());
-                    userRelevanceBO.setPartnerId(wmssaveUserBO.getPartnerId());
+                    userRelevanceBO.setRoleType(getRoleTypeCode(roleInfoPOList));
+                    userRelevanceBO.setPartnerId(wmsSaveUserBO.getPartnerId());
                     userRelevanceBO.setWorkStatus(UserConstant.FREE);
                     // 新增用户关联信息
                     HttpResult addUserRelevance = userServer.insertUserRelevance(userRelevanceBO);
@@ -434,24 +406,19 @@ public class UserServiceImpl implements UserService {
                             //仓库id字符串
                             String warehouses = userRelevanceBO.getWarehouseId();
                             List<AddUserWarehouseBO> warehouseList = new ArrayList<>();
-                            //分割出来的字符数组
-//                            String[] warehouse = warehouses.split(",");
-                            AddUserWarehouseBO addUserWarehouseBO = null;
-//                            for (int i = 0; i < warehouse.length; i++) {
-                            addUserWarehouseBO = new AddUserWarehouseBO();
+                            AddUserWarehouseBO addUserWarehouseBO = new AddUserWarehouseBO();
                             addUserWarehouseBO.setUserId(userRelevanceBO.getUserId());
                             addUserWarehouseBO.setPartnerId(userRelevanceBO.getPartnerId());
                             addUserWarehouseBO.setWarehouseId(warehouses);
                             warehouseList.add(addUserWarehouseBO);
-//                            }
                             // 新增用户关联仓库
-                            HttpResult addwarehouse = userServer.insertUserWarehouseList(warehouseList);
+                            userServer.insertUserWarehouseList(warehouseList);
                         }
                     }
                     return MsgTemplate.successMsg();
                 } else {
                     //用户已存在，修改用户关联信息
-                    if (updateUserRelevance(wmssaveUserBO, saveUserBO)) {
+                    if (updateUserRelevance(wmsSaveUserBO, saveUserBO)) {
                         return MsgTemplate.successMsg();
                     }
                 }
@@ -462,8 +429,8 @@ public class UserServiceImpl implements UserService {
             Boolean flag = userServer.updateUserManage(saveUserBO);
             if (flag) {
                 // 修改WMS用户关联信息
-                if (updateUserRelevance(wmssaveUserBO, saveUserBO)) {
-                    //用户信息修改,情况权限redis缓存信息
+                if (updateUserRelevance(wmsSaveUserBO, saveUserBO)) {
+                    // 用户信息修改,情况权限redis缓存信息
                     permissionRedisDao.delPermission(saveUserBO.getId());
                     return MsgTemplate.successMsg();
                 }
@@ -476,54 +443,58 @@ public class UserServiceImpl implements UserService {
     /**
      * 修改用户关联信息
      *
-     * @param
-     * @return
+     * @param wmsSaveUserBO WmsSaveUserBO
+     * @param saveUserBO    SaveUserBO
+     * @return Boolean
      * @author wzy
      * @date 2018/4/19 10:02
      **/
-    public Boolean updateUserRelevance(WmsSaveUserBO wmssaveUserBO, SaveUserBO saveUserBO) {
-        List<String> roleTypeList = new ArrayList<>();
-        //StringBuffer roleTypeName=new StringBuffer();
-        StringBuffer roleTypeCode = new StringBuffer();
+    private Boolean updateUserRelevance(WmsSaveUserBO wmsSaveUserBO, SaveUserBO saveUserBO) {
         //获取角色类型id
         String roleTypes = saveUserBO.getRoleids();
         //分割出来的字符数组
         String[] roleType = roleTypes.split(",");
-        roleTypeList = Arrays.asList(roleType);
+        List<String> roleTypeList = Arrays.asList(roleType);
         //获取角色类型id
         RoleTypeBO getRoleTypeBO1 = new RoleTypeBO();
         getRoleTypeBO1.setList(roleTypeList);
-        getRoleTypeBO1.setPartnerId(wmssaveUserBO.getPartnerId());
+        getRoleTypeBO1.setPartnerId(wmsSaveUserBO.getPartnerId());
         List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO1);
 
+
+        // 修改WMS用户关联信息
+        UpdateUserBO updateUserBO = new UpdateUserBO();
+        updateUserBO.setPartnerId(wmsSaveUserBO.getPartnerId());
+        updateUserBO.setUserId(saveUserBO.getId());
+        updateUserBO.setWarehouseId(saveUserBO.getWarehouseId());
+        updateUserBO.setUserName(saveUserBO.getUname());
+        updateUserBO.setRoleType(getRoleTypeCode(roleInfoPOList));
+        HttpResult updateResult = userServer.updateUserStatus(updateUserBO);
+        if (!ObjectUtils.isEmpty(updateResult)) {
+            return updateResult.isSuccess();
+        }
+        return false;
+    }
+
+    private String getRoleTypeCode(List<WmsRoleInfoPO> roleInfoPOList) {
+        StringBuffer roleTypeCode = new StringBuffer();
         List<String> distinctList = new ArrayList<>();
         if (!ObjectUtils.isEmpty(roleInfoPOList)) {
-            roleInfoPOList.stream().forEach(roleInfoPO -> {
+            roleInfoPOList.forEach(roleInfoPO -> {
                 if (!distinctList.contains(roleInfoPO.getRoleTypeCode())) {
                     distinctList.add(roleInfoPO.getRoleTypeCode());
-                    roleTypeCode.append(roleInfoPO.getRoleTypeCode() + ",");
+                    roleTypeCode.append(roleInfoPO.getRoleTypeCode()).append(",");
                 }
             });
         }
-        //TODO 修改WMS用户关联信息
-        UpdateUserStatusBO updateUserStatusBO = new UpdateUserStatusBO();
-        updateUserStatusBO.setPartnerId(wmssaveUserBO.getPartnerId());
-        updateUserStatusBO.setUserId(saveUserBO.getId());
-        updateUserStatusBO.setWarehouseId(saveUserBO.getWarehouseId());
-        updateUserStatusBO.setUserName(saveUserBO.getUname());
-        updateUserStatusBO.setRoleType(roleTypeCode.toString());
-        HttpResult updateResult = userServer.updateUserStatus(updateUserStatusBO);
-        if (updateResult.isSuccess()) {
-            return true;
-        }
-        return false;
+        return roleTypeCode.toString();
     }
 
     /**
      * 获取公司所有部门
      *
-     * @param getDepartmentBO
-     * @return map
+     * @param getDepartmentBO GetDepartmentBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/16 11:43
      **/
@@ -532,22 +503,15 @@ public class UserServiceImpl implements UserService {
         OrgGetDepartmentBO orgGetDepartmentBO = new OrgGetDepartmentBO();
         BeanUtils.copyProperties(getDepartmentBO, orgGetDepartmentBO);
         orgGetDepartmentBO.setCompanyID(getDepartmentBO.getCompanyId());
-        List<OrgDepartmentPO> orgDepartmentBOList = userServer.getDepartment(orgGetDepartmentBO);
-        List<DepartmentPO> departmentPOList = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(orgDepartmentBOList)) {
-            departmentPOList = orgDepartmentBOList.stream().map(x -> new DepartmentPO() {{
-                setDepartmentId(x.getId());
-                setDepartmentName(x.getOname());
-            }}).collect(Collectors.toList());
-        }
-        return MsgTemplate.successMsg(departmentPOList);
+        List<DepartmentVO> departmentVOList = userServer.getDepartment(orgGetDepartmentBO);
+        return MsgTemplate.successMsg(departmentVOList);
     }
 
     /**
      * 获取公司所有职务
      *
-     * @param getJobBO
-     * @return map
+     * @param getJobBO GetJobBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/17 9:40
      **/
@@ -557,43 +521,29 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(getJobBO, orgGetDepartmentBO);
         orgGetDepartmentBO.setCompanyID(getJobBO.getCompanyId());
         orgGetDepartmentBO.setType("");
-        List<OrgUjobPO> orgJobPOList = userServer.getUjob(orgGetDepartmentBO);
-        List<JobPO> jobPOList = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(orgJobPOList)) {
-            jobPOList = orgJobPOList.stream().map(x -> new JobPO() {{
-                setJobId(x.getId());
-                setJobName(x.getUjob_name());
-            }}).collect(Collectors.toList());
-        }
-        return MsgTemplate.successMsg(jobPOList);
+        List<JobVO> jobVOList = userServer.getUserJob(orgGetDepartmentBO);
+        return MsgTemplate.successMsg(jobVOList);
     }
 
     /**
      * 公司所有职位
      *
-     * @param orgGetPositionBO
-     * @return map
+     * @param orgPositionBO OrgPositionBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/17 9:40
      **/
     @Override
-    public Map<String, Object> getPosition(OrgGetPositionBO orgGetPositionBO) {
-        List<OrgPositionPO> orgPositionPOList = userServer.getPosition(orgGetPositionBO);
-        List<PositionPO> positionPOList = new ArrayList<>();
-        if (!ObjectUtils.isEmpty(orgPositionPOList)) {
-            positionPOList = orgPositionPOList.stream().map(x -> new PositionPO() {{
-                setPositionId(x.getId());
-                setPositionName(x.getUposition_name());
-            }}).collect(Collectors.toList());
-        }
-        return MsgTemplate.successMsg(positionPOList);
+    public Map<String, Object> getPosition(OrgPositionBO orgPositionBO) {
+        List<PositionVO> positionVOList = userServer.getPosition(orgPositionBO);
+        return MsgTemplate.successMsg(positionVOList);
     }
 
     /**
      * 获取用户的部门职位信息
      *
-     * @param
-     * @return
+     * @param getOrgUserInfoBO GetOrgUserInfoBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/17 9:59
      **/
@@ -609,62 +559,37 @@ public class UserServiceImpl implements UserService {
             userDepartAndJobBO.setPositionId(orgUserInfoPO.getCmp_user_position__id());
             userDepartAndJobBO.setPositionName(orgUserInfoPO.getUposition_name());
             OrgGetDepartmentBO getDepartmentBO = new OrgGetDepartmentBO();
-            OrgGetPositionBO orgGetPositionBO = new OrgGetPositionBO();
+            OrgPositionBO orgPositionBO = new OrgPositionBO();
             BeanUtils.copyProperties(getOrgUserInfoBO, getDepartmentBO);
-            //getDepartmentBO.setCompanyID(orgUserInfoPO.getCompany_id());
             getDepartmentBO.setCompanyID(orgUserInfoPO.getUcompany_id());
             getDepartmentBO.setType("2");
-            BeanUtils.copyProperties(getOrgUserInfoBO, orgGetPositionBO);
-            orgGetPositionBO.setDepartmentId(orgUserInfoPO.getUdepartment_id());
-            //TODO 获取所有部门列表
-            List<OrgDepartmentPO> orgDepartmentBOList = userServer.getDepartment(getDepartmentBO);
-            List<DepartmentPO> departmentPOList = new ArrayList<>();
-            DepartmentPO departmentPO = null;
-            for (OrgDepartmentPO orgDepartmentPO : orgDepartmentBOList) {
-                departmentPO = new DepartmentPO();
-                departmentPO.setDepartmentId(orgDepartmentPO.getId());
-                departmentPO.setDepartmentName(orgDepartmentPO.getOname());
-                departmentPOList.add(departmentPO);
-            }
-            if (!ObjectUtils.isEmpty(departmentPOList)) {
-                userDepartAndJobBO.setAllDepartmentList(departmentPOList);
+            BeanUtils.copyProperties(getOrgUserInfoBO, orgPositionBO);
+            orgPositionBO.setDepartmentId(orgUserInfoPO.getUdepartment_id());
+            // 获取所有部门列表
+            List<DepartmentVO> departmentVOList = userServer.getDepartment(getDepartmentBO);
+            if (!ObjectUtils.isEmpty(departmentVOList)) {
+                userDepartAndJobBO.setAllDepartmentList(departmentVOList);
             }
             // 获取所有职位列表
-            List<OrgUjobPO> orgUjobPOList = userServer.getUjob(getDepartmentBO);
-            List<JobPO> jobPOList = new ArrayList<>();
-            JobPO jobPO = null;
-            for (OrgUjobPO orgUjobPO : orgUjobPOList) {
-                jobPO = new JobPO();
-                jobPO.setJobId(orgUjobPO.getId());
-                jobPO.setJobName(orgUjobPO.getUjob_name());
-                jobPOList.add(jobPO);
-            }
-            if (!ObjectUtils.isEmpty(jobPOList)) {
-                userDepartAndJobBO.setAllJobList(jobPOList);
+            List<JobVO> jobVOList = userServer.getUserJob(getDepartmentBO);
+            if (!ObjectUtils.isEmpty(jobVOList)) {
+                userDepartAndJobBO.setAllJobList(jobVOList);
             }
             // 获取所有职务列表
-            List<OrgPositionPO> orgPositionPOList = userServer.getPosition(orgGetPositionBO);
-            List<PositionPO> positionPOList = new ArrayList<>();
-            PositionPO positionPO1 = null;
-            for (OrgPositionPO positionPO : orgPositionPOList) {
-                positionPO1 = new PositionPO();
-                positionPO1.setPositionId(positionPO.getId());
-                positionPO1.setPositionName(positionPO.getUposition_name());
-                positionPOList.add(positionPO1);
-            }
-            if (!ObjectUtils.isEmpty(positionPOList)) {
-                userDepartAndJobBO.setAllPositionList(positionPOList);
+            List<PositionVO> positionVOList = userServer.getPosition(orgPositionBO);
+            if (!ObjectUtils.isEmpty(positionVOList)) {
+                userDepartAndJobBO.setAllPositionList(positionVOList);
             }
             return MsgTemplate.successMsg(userDepartAndJobBO);
         }
-        return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIET);
+        return MsgTemplate.failureMsg(UserMsgEnum.USER_NOT_EXIST);
     }
 
     /**
      * 获取角色列表，根据id获取或者获取全部
      *
-     * @param roleTypeBO
-     * @return map
+     * @param roleTypeBO RoleTypeBO
+     * @return Map<String, Object>
      * @author wzy
      * @date 2018/4/16 16:26
      **/
@@ -672,13 +597,13 @@ public class UserServiceImpl implements UserService {
     public Map<String, Object> roleList(RoleTypeBO roleTypeBO) {
         RoleTypeBO getRoleTypeBO = new RoleTypeBO();
         getRoleTypeBO.setPartnerId(roleTypeBO.getPartnerId());
-        //TODO 获取全部角色列表
+        // 获取全部角色列表
         List<WmsRoleInfoPO> roleInfoPOList = roleHttpServer.listRole(getRoleTypeBO);
         if (ObjectUtils.isEmpty(roleInfoPOList)) {
-            return MsgTemplate.failureMsg(UserMsgEnum.ROLETYPE_NULL);
+            return MsgTemplate.failureMsg(UserMsgEnum.ROLE_TYPE_NULL);
         }
         List<WmsRoleInfoPO> getRoleList = new ArrayList<>();
-        //TODO 有用户id，获取某用户的角色信息
+        // 有用户id，获取某用户的角色信息
         if (!StringUtils.isEmpty(roleTypeBO.getUserId())) {
             OrgUserRoleBO orgUserRoleBO = new OrgUserRoleBO() {{
                 setBusiness(AppConstant.WMS);
@@ -690,10 +615,8 @@ public class UserServiceImpl implements UserService {
             List<OrgUserRoleVO> orgUserRolePOList = orgRoleHttpServer.getUserRole(orgUserRoleBO);
             if (!ObjectUtils.isEmpty(orgUserRolePOList)) {
                 List<String> ids = new ArrayList<>();
-                orgUserRolePOList.forEach(u ->{
-                    ids.add(u.getRoleId());
-                });
-                RoleTypeBO getRoleTypeBO1 = new RoleTypeBO(){{
+                orgUserRolePOList.forEach(u -> ids.add(u.getRoleId()));
+                RoleTypeBO getRoleTypeBO1 = new RoleTypeBO() {{
                     setList(ids);
                     setPartnerId(roleTypeBO.getPartnerId());
                 }};
@@ -701,7 +624,7 @@ public class UserServiceImpl implements UserService {
             }
 
         }
-        //组织好的角色信息
+        // 组织好的角色信息
         UserRoleListBO userRoleListBO = new UserRoleListBO();
         userRoleListBO.setAllRoleList(roleInfoPOList);
         if (!ObjectUtils.isEmpty(getRoleList)) {
@@ -713,8 +636,8 @@ public class UserServiceImpl implements UserService {
     /**
      * 获取用户关联仓库信息
      *
-     * @param getUserWarehouse
-     * @return
+     * @param getUserWarehouse DeleteUserBO
+     * @return Map<String ,   Object>
      * @author wzy
      * @date 2018/4/17 11:09
      **/
@@ -726,4 +649,12 @@ public class UserServiceImpl implements UserService {
         }
         return MsgTemplate.successMsg(list);
     }
+
+    @Override
+    public Map<String, Object> listUserByType(UserInfoBO userInfoBO) {
+        List<UserRelevancePO> userRelevancePOList = userServer.listUserByRoleCode(userInfoBO);
+        return MsgTemplate.successMsg(userRelevancePOList);
+    }
+
+
 }

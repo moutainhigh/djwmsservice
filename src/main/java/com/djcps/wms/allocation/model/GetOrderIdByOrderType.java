@@ -19,6 +19,18 @@ public class GetOrderIdByOrderType extends BaseListPartnerIdBO implements Serial
 	 * 订单类型
 	 */
 	private List<String> orderTypeList;
+	
+	/**
+	 * 订单类型
+	 */
+	private String orderType;
+	
+	public String getOrderType() {
+		return orderType;
+	}
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
 	public List<String> getOrderTypeList() {
 		return orderTypeList;
 	}
@@ -27,7 +39,7 @@ public class GetOrderIdByOrderType extends BaseListPartnerIdBO implements Serial
 	}
 	@Override
 	public String toString() {
-		return "GetOrderIdByOrderType [orderTypeList=" + orderTypeList + "]";
+		return "GetOrderIdByOrderType [orderTypeList=" + orderTypeList + ", orderType=" + orderType + "]";
 	}
 	
 }

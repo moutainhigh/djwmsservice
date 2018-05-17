@@ -3,7 +3,7 @@ package com.djcps.wms.commons.httpclient;
 import java.io.Serializable;
 
 /**
- * @author
+ * @author Chengw
  */
 public class HttpResult implements Serializable {
 

@@ -85,7 +85,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
      * @param param
      * @author py
      * @create :2018/4/18
-     * @autuor Chengw
+     * @author Chengw
      * @update 2018/4/23  13:09
      */
 
@@ -115,7 +115,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
      * @param param
      * @author py
      * @create :2018/4/18
-     * @autuor Chengw
+     * @author Chengw
      * @update 2018/4/23  13:09
      */
 
@@ -229,6 +229,7 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                 orderIds.setChildOrderIds(Arrays.asList(workRecordsOrderPO.getOrderId()));
                 orderIds.setPartnerArea(param.getPartnerArea());
                 List<ChildOrderBO> childOrderList = orderServer.getChildOrderList(orderIds);
+                
                 if (!childOrderList.isEmpty()) {
                     ChildOrderBO childOrderBO = childOrderList.stream()
                             .filter(b -> b.getOrderId().equals(workRecordsOrderPO.getOrderId())).findFirst()
@@ -241,9 +242,10 @@ public class WorkRecordServiceImpl implements WorkRecordService {
                         workRecordsOrderPO.setBoxWidth(StringUtils.toString(childOrderBO.getBoxWidth()));
                         workRecordsOrderPO.setBoxLength(StringUtils.toString(childOrderBO.getBoxLength()));
                         workRecordsOrderPO.setFluteType(childOrderBO.getFluteType());
-                        workRecordsOrderPO.setOrderAmount(childOrderBO.getAmountPiece());
+                        workRecordsOrderPO.setOrderAmount(childOrderBO.getOrderAmount());
                         workRecordsOrderPO.setUnit(childOrderBO.getUnit());
                         workRecordsOrderPO.setProductName(childOrderBO.getProductName());
+                        workRecordsOrderPO.setOrderStatus(childOrderBO.getOrderStatus());
                         workRecordsOrderPO.setProductSize(new StringBuffer().append(childOrderBO.getBoxLength()).append("*").append(childOrderBO.getBoxWidth())
                                 .append("*").append(childOrderBO.getBoxHeight()).toString());
                         workRecordsOrderPO.setMaterialSize(new StringBuffer().append(childOrderBO.getMaterialLength()).append("*")

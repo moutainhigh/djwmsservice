@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
@@ -134,7 +135,19 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 	 */
 	private List<String> orderIdList;
 	
+	/**
+	 * 订单类型
+	 */
+	private String orderType;
 	
+	public String getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
+
 	public List<String> getOrderIdList() {
 		return orderIdList;
 	}
@@ -355,7 +368,7 @@ public class GetRedundantByAttributeBO extends BaseListPartnerIdBO implements Se
 				+ ", deliveryCreateTime=" + deliveryCreateTime + ", plateNumber=" + plateNumber + ", flag=" + flag
 				+ ", deliveryCreateStartTime=" + deliveryCreateStartTime + ", deliveryCreateEndTime="
 				+ deliveryCreateEndTime + ", cache=" + cache + ", allocationId=" + allocationId + ", orderIdList="
-				+ orderIdList + "]";
+				+ orderIdList + ", orderType=" + orderType + "]";
 	}
 
 }

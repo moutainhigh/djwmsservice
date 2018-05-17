@@ -36,6 +36,7 @@ import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.commons.utils.StringUtils;
 import com.djcps.wms.loadingtask.constant.LoadingTaskConstant;
 import com.djcps.wms.order.constant.OrderConstant;
 import com.djcps.wms.order.model.OrderIdBO;
@@ -266,6 +267,11 @@ public class StockServiceImpl implements StockService {
         OrderIdBO orderIdBO = new OrderIdBO();
         UpdateSplitOrderBO splitOrder = new UpdateSplitOrderBO();
         List<OrderIdBO> list = new ArrayList<OrderIdBO>();
+        
+        //判断订单的订单类型
+        String switchOrderTypeToString = StringUtils.switchOrderTypeToString(param.getOrderId());
+        param.setOrderType(switchOrderTypeToString);
+        
         // 正常子单入库
         if (orderId.indexOf(LoadingTaskConstant.SUBSTRING_ORDER) == -1) {
             orderIdBO.setOrderId(orderId);
@@ -297,7 +303,6 @@ public class StockServiceImpl implements StockService {
                 } else {
                     // 小于表示部分入库
                     orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
-                    // 多次部分入库的情况下要累计拆单数量字段的值
                 }
                 splitOrder.setSubNumber(saveAmount);
                 splitOrder.setInStock(saveAmount);
@@ -306,17 +311,33 @@ public class StockServiceImpl implements StockService {
             param.setIsSplit(0);
         } else {
             // 拆单入库
-            orderIdBO = new OrderIdBO();
             orderIdBO.setOrderId(orderId);
             list.add(orderIdBO);
-            if (saveAmount > orderAmount) {
-                return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
-            } else if (saveAmount.equals(orderAmount)) {
-                // 相等表示已入库修改订单状态
-                orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+            selectAreaByOrderId.setOrderIds(list);
+            // 解析在库信息
+            List<WarehouseOrderDetailPO> orderDetail = orderServer.getOrderStockInfo(selectAreaByOrderId);
+            // 修改订单状态需要的参数
+            if (!ObjectUtils.isEmpty(orderDetail)) {
+                Integer trueAmount = orderDetail.get(0).getAmountSaved();
+                if (trueAmount + saveAmount > orderAmount) {
+                    return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
+                } else if (trueAmount + saveAmount == orderAmount) {
+                    // 相等表示已入库修改订单状态
+                    orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+                } else {
+                    // 小于表示部分入库
+                    orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+                }
             } else {
-                // 小于表示部分入库
-                orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+                if (saveAmount > orderAmount) {
+                    return MsgTemplate.failureMsg(StockMsgEnum.SAVE_AMOUNT_ERROE);
+                } else if (saveAmount.equals(orderAmount)) {
+                    // 相等表示已入库修改订单状态
+                    orderIdBO.setStatus(OrderStatusTypeEnum.ALL_ADD_STOCK.getValue());
+                } else {
+                    // 小于表示部分入库
+                    orderIdBO.setStatus(OrderStatusTypeEnum.LESS_ADD_STOCK.getValue());
+                }
             }
         	//根据订单号和合作方id获取拆单库存的fid
         	OrderIdBO fidOrderIdBO = new OrderIdBO();
@@ -362,7 +383,13 @@ public class StockServiceImpl implements StockService {
                 updateSplitOrder.setKeyArea(param.getPartnerArea());
                 updateSplitOrder.setSubOrderId(orderId);
                 updateSplitOrder.setSubStatus(Integer.valueOf(list.get(0).getStatus()));
-                updateSplitOrder.setInStock(saveAmount);
+                List<WarehouseOrderDetailPO> orderDetail = orderServer.getOrderStockInfo(selectAreaByOrderId);
+                if(!ObjectUtils.isEmpty(orderDetail)){
+                	Integer trueAmount = orderDetail.get(0).getAmountSaved();
+                	updateSplitOrder.setInStock(trueAmount);
+                }else{
+                	updateSplitOrder.setInStock(saveAmount);
+                }
                 updateSplitOrderList.add(updateSplitOrder);
                 result = orderServer.updateSplitOrderInfo(updateSplitOrderList);
                 if (!result.isSuccess()) {
@@ -427,6 +454,7 @@ public class StockServiceImpl implements StockService {
                         orderRedundant.setPaymentTime(sd.format(onlinePaperboardPO.getPayTime()));
                     }
                     orderRedundant.setStatus(onlinePaperboardPO.getOrderStatus());
+                    orderRedundant.setProductName(onlinePaperboardPO.getProductName());
                     orderRedundant.setIsSplit(
                     		param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER)!=-1?2:0);
                     // 插入冗余数据订单数据
