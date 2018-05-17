@@ -793,28 +793,31 @@ public class AllocationServiceImpl implements AllocationService {
 		String allocationOrder = redisClient.get(RedisPrefixConstant.REDIS_ALLOCATION_ORDER_PREFIX+AllocationConstant.INTELLIGENT_ALLOCATION+allocationId);
 		List<OrderPO> allocationOrderList = gson.fromJson(allocationOrder, new TypeToken<ArrayList<OrderPO>>(){}.getType());
 		Map<String,OrderPO> orderPOMap = new HashMap<>(16);
-		for (OrderPO orderPO : allocationOrderList) {
-			orderPOMap.put(orderPO.getOrderId(), orderPO);
-		}
-		List<String> errrOrderIdList = new ArrayList<>();
-		for (AddAllocationOrderBO addAllocationOrderBO : param) {
-			OrderPO orderPO = orderPOMap.get(addAllocationOrderBO.getOrderId());
-			if(orderPO!=null){
-				errrOrderIdList.add(orderPO.getOrderId());
+		if(!ObjectUtils.isEmpty(allocationOrderList)){
+			for (OrderPO orderPO : allocationOrderList) {
+				orderPOMap.put(orderPO.getOrderId(), orderPO);
 			}
-		}
-		if(!ObjectUtils.isEmpty(errrOrderIdList)){
-			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append("以下订单已参与智能配货,请重新选择:");
-			for(int i =0;i<errrOrderIdList.size();i++){
-				if(i==errrOrderIdList.size()-1){
-					stringBuffer.append(errrOrderIdList.get(i));
-				}else{
-					stringBuffer.append(errrOrderIdList.get(i)).append(",");
+			List<String> errrOrderIdList = new ArrayList<>();
+			for (AddAllocationOrderBO addAllocationOrderBO : param) {
+				OrderPO orderPO = orderPOMap.get(addAllocationOrderBO.getOrderId());
+				if(orderPO!=null){
+					errrOrderIdList.add(orderPO.getOrderId());
 				}
 			}
-			return MsgTemplate.failureMsg(stringBuffer.toString());
+			if(!ObjectUtils.isEmpty(errrOrderIdList)){
+				StringBuffer stringBuffer = new StringBuffer();
+				stringBuffer.append("以下订单已参与智能配货,请重新选择:");
+				for(int i =0;i<errrOrderIdList.size();i++){
+					if(i==errrOrderIdList.size()-1){
+						stringBuffer.append(errrOrderIdList.get(i));
+					}else{
+						stringBuffer.append(errrOrderIdList.get(i)).append(",");
+					}
+				}
+				return MsgTemplate.failureMsg(stringBuffer.toString());
+			}
 		}
+		
 		for (AddAllocationOrderBO addAllocationOrderBO : param) {
 			addAllocationOrderBO.setDeliveryAmount(addAllocationOrderBO.getOrderAmount());
 			addAllocationOrderBO.setDeliveryIdEffect(Integer.valueOf(AllocationConstant.DELIVERY_UNEFFEFT));
@@ -1328,10 +1331,6 @@ public class AllocationServiceImpl implements AllocationService {
 			orderIdBO.setOrderId(orderId);
 			orderIdBOList.add(orderIdBO);
 		}
-		OrderIdsBO param = new OrderIdsBO();
-		param.setChildOrderIds(orderIdsList);
-		result = orderServer.getOrderByOrderIds(param);
-		
 		BatchOrderIdListBO batch = new BatchOrderIdListBO();
 		batch.setOrderIds(orderIdsList);
 		batch.setKeyArea(base.getPartnerArea());
@@ -1365,13 +1364,7 @@ public class AllocationServiceImpl implements AllocationService {
 			//key订单号,value为trueAmount实时在库数量
 			Map<String,Integer> trueAmountMap = new HashMap<>(16);
 			for (WarehouseOrderDetailPO orderDetailPO : stockInfo) {
-				List<WarehouseAreaBO> areaList = orderDetailPO.getAreaList();
-				for (WarehouseAreaBO areaBO : areaList) {
-					List<WarehouseLocationBO> locationList = areaBO.getLocationList();
-					for (WarehouseLocationBO locationBO : locationList) {
-						trueAmountMap.put(orderDetailPO.getOrderId(), locationBO.getTrueAmount());
-					}
-				}
+				trueAmountMap.put(orderDetailPO.getOrderId(), orderDetailPO.getAmountSaved());
 			}
 			
 			//遍历入库订单的在库信息
