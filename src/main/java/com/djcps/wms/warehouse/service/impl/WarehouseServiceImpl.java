@@ -1,14 +1,19 @@
 package com.djcps.wms.warehouse.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.base.BaseVO;
+import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.inneruser.model.param.UserBO;
+import com.djcps.wms.inneruser.model.result.UserRelevancePO;
+import com.djcps.wms.inneruser.server.UserServer;
 import com.djcps.wms.warehouse.enums.WarehouseMsgEnum;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.server.WarehouseServer;
@@ -18,10 +23,13 @@ import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @title:仓库管理业务层
@@ -37,6 +45,9 @@ public class WarehouseServiceImpl implements WarehouseService {
 	
 	@Autowired
 	private WarehouseServer warehouseServer;
+
+	@Resource
+	private UserServer userServer;
 
 	private Gson gson = GsonUtils.gson;
 
@@ -223,5 +234,34 @@ public class WarehouseServiceImpl implements WarehouseService {
 	public Map<String, Object> getWarehouseCode(GetCodeBO getCodeBO) {
 		HttpResult result=warehouseServer.getWarehouseCode(getCodeBO);
 		return MsgTemplate.customMsg(result);
+	}
+
+	@Override
+	public Map<String, Object> getUserWarehouse(UserWarehouseBO userWarehouseBO) {
+		PartnerInfoBO partnerInfoBO = new PartnerInfoBO(){{
+			setPartnerId(userWarehouseBO.getPartnerId());
+		}};
+		HttpResult result = warehouseServer.getAllWarehouseName(partnerInfoBO);
+		if (!ObjectUtils.isEmpty(result)){
+			String data = JSONObject.toJSONString(result.getData());
+			if (!ObjectUtils.isEmpty(data)){
+				List<WarehousePO> warehousePOList = JSONObject.parseArray(data,WarehousePO.class);
+				UserBO userBO = new UserBO() {{
+					setUserId(userWarehouseBO.getUserId());
+					setPartnerId(userWarehouseBO.getPartnerId());
+				}};
+				UserRelevancePO userRelevancePO = userServer.getUserRelevance(userBO);
+				if(!ObjectUtils.isEmpty(userRelevancePO)) {
+					List<String> warehouseIds =  userRelevancePO.getWarehouseIds();
+					if (!ObjectUtils.isEmpty(warehouseIds)) {
+						List<WarehousePO> warehousePOList2 = warehousePOList.stream().filter(u ->
+								warehouseIds.stream().anyMatch(w -> w.equals(u.getId()))).collect(Collectors.toList());
+						return MsgTemplate.successMsg(warehousePOList2);
+					}
+				}
+			}
+			return MsgTemplate.customMsg(result);
+		}
+		return MsgTemplate.failureMsg(SysMsgEnum.OPS_FAILURE);
 	}
 }

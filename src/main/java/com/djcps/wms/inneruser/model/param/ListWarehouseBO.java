@@ -1,5 +1,6 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * @author wzy
  * @date 2018/4/23
  **/
-public class ListWarehouseBO {
+public class ListWarehouseBO implements Serializable {
 
     /**
      * 用户id集合

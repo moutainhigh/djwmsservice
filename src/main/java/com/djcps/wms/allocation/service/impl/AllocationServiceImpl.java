@@ -27,6 +27,7 @@ import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.OrderStatusTypeEnum;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 
+import com.djcps.wms.inneruser.constant.UserConstant;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -1424,6 +1425,7 @@ public class AllocationServiceImpl implements AllocationService {
 		UserInfoBO userInfoBO = new UserInfoBO();
 		userInfoBO.setRoleTypeCode(Arrays.asList(RoleTypeEnum.ROLE_TYPE_3.getValue()));
 		userInfoBO.setPartnerId(param.getPartnerId());
+		userInfoBO.setWorkStatus(UserConstant.FREE);
 		List<UserRelevancePO> userRelevancePOList = userServer.listUserByRoleCode(userInfoBO);
         return MsgTemplate.successMsg(userRelevancePOList);
 	}

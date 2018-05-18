@@ -21,6 +21,11 @@ public class UserInfoBO implements Serializable{
      */
     private String partnerId;
 
+    /**
+     * 工作状态
+     */
+    private Integer workStatus;
+
     public List<String> getRoleTypeCode() {
         return roleTypeCode;
     }
@@ -37,11 +42,20 @@ public class UserInfoBO implements Serializable{
         this.partnerId = partnerId;
     }
 
+    public Integer getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(Integer workStatus) {
+        this.workStatus = workStatus;
+    }
+
     @Override
     public String toString() {
         return "UserInfoBO{" +
-                "roleTypeCode='" + roleTypeCode + '\'' +
+                "roleTypeCode=" + roleTypeCode +
                 ", partnerId='" + partnerId + '\'' +
+                ", workStatus=" + workStatus +
                 '}';
     }
 }

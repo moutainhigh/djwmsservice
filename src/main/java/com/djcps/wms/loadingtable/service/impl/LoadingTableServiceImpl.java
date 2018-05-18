@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.djcps.wms.inneruser.constant.UserConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -118,6 +119,7 @@ public class LoadingTableServiceImpl implements LoadingTableService {
 		UserInfoBO userInfoBO = new UserInfoBO();
 		userInfoBO.setRoleTypeCode(Arrays.asList(RoleTypeEnum.ROLE_TYPE_7.getValue()));
 		userInfoBO.setPartnerId(param.getPartnerId());
+		userInfoBO.setWorkStatus(UserConstant.FREE);
 		List<UserRelevancePO> userRelevancePOList = userServer.listUserByRoleCode(userInfoBO);
         return MsgTemplate.successMsg(userRelevancePOList);
 	}
