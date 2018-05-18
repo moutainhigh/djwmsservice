@@ -7,10 +7,11 @@ import java.util.List;
 
 /**
  * 修改用户信息参数
+ *
  * @author wzy
  * @date 2018/4/13
  **/
-public class UpdateUserBO implements Serializable{
+public class UpdateUserBO implements Serializable {
 
     /**
      * 用户id
@@ -21,26 +22,24 @@ public class UpdateUserBO implements Serializable{
     /**
      * 工作状态 空闲、忙碌、休息中
      */
-    private Integer workStatus ;
+    private Integer workStatus;
 
     private String partnerId;
 
     /**
      * 用户名称
      */
-    private String userName ;
+    private String userName;
 
     /**
      * 最后登录时间
      */
-    private String lastLoginTime ;
+    private String lastLoginTime;
 
     /**
      * 登录次数
      */
-    private Integer loginCount ;
-
-    private String warehouseId;
+    private Integer loginCount;
 
     /**
      * 仓库id集合
@@ -50,7 +49,7 @@ public class UpdateUserBO implements Serializable{
     /**
      * 角色类型
      */
-    private String roleType  ;
+    private String roleType;
 
     public String getRoleType() {
         return roleType;
@@ -58,14 +57,6 @@ public class UpdateUserBO implements Serializable{
 
     public void setRoleType(String roleType) {
         this.roleType = roleType;
-    }
-
-    public String getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
     }
 
     public String getUserName() {
@@ -133,7 +124,6 @@ public class UpdateUserBO implements Serializable{
                 ", userName='" + userName + '\'' +
                 ", lastLoginTime='" + lastLoginTime + '\'' +
                 ", loginCount='" + loginCount + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
                 ", roleType='" + roleType + '\'' +
                 '}';
     }

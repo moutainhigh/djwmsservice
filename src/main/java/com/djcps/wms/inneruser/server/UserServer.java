@@ -188,6 +188,23 @@ public class UserServer {
     }
 
     /**
+     * 更新用户状态
+     * 单独更新用户状态
+     * @param updateUserStatusBO
+     * @return
+     */
+    public Boolean updateWorkStatus(UpdateUserStatusBO updateUserStatusBO){
+        String paramJson = JSONObject.toJSONString(updateUserStatusBO);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForUserRequest.updateUserRelevance(requestBody);
+        HttpResult httpResult = HttpResultUtils.returnResult(httpResponse);
+        if (!ObjectUtils.isEmpty(httpResult)){
+            return httpResult.isSuccess();
+        }
+        return false;
+    }
+
+    /**
      * wms删除用户关联信息
      *
      * @param userBO UserBO
