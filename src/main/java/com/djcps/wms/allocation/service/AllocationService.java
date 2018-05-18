@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.djcps.wms.allocation.model.AddAllocationBO;
 import com.djcps.wms.allocation.model.AddAllocationOrderBO;
+import com.djcps.wms.allocation.model.AddExcellentAllocationBO;
 import com.djcps.wms.allocation.model.AgainVerifyAddOrderBO;
 import com.djcps.wms.allocation.model.AgainVerifyAllocationBO;
 import com.djcps.wms.allocation.model.CancelAllocationBO;
@@ -298,6 +299,16 @@ public interface AllocationService {
 	 * @date:2018年5月3日
 	 */
 	Map<String, Object> getSplitOrderByOrderId(OrderIdBO param);
+
+
+	/**
+	 * 新增手动配货数据
+	 * @param param
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月18日
+	 */
+	Map<String, Object> addUnIntelligentAllocationOrder(AddExcellentAllocationBO param);
 	
 	//Map<String, Object> TmsVehicleQueuingList();
 }

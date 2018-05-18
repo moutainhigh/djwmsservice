@@ -461,7 +461,14 @@ public class AllocationServiceImpl implements AllocationService {
 			return MsgTemplate.failureMsg(AllocationMsgEnum.NO_HAVING_ORDER_ALLOCATION);
 		}
 		//确认配货之前先校验该智能配货结果是否已配货
-		HttpResult existHttpResult = allocationServer.existIntelligentAlloca(param.getAllocationId());
+		HttpResult existHttpResult = null;
+		//0表示智能配货,1表示手动配货
+		if(param.getMark()==0){
+			existHttpResult = allocationServer.existIntelligentAlloca(param.getAllocationId());
+		}else{
+			existHttpResult = allocationServer.existUnIntelligentAlloca(param.getAllocationId());
+			
+		}
 		if(!ObjectUtils.isEmpty(existHttpResult.getData())){
 			String flag = (String)existHttpResult.getData();
 			if(flag.equals(AllocationConstant.ALLOCATION_EFFECT)){
@@ -615,7 +622,6 @@ public class AllocationServiceImpl implements AllocationService {
 		param.setWaybillIdCreateTime(time);
 		param.setDeliveryCreateTime(time);
 		param.setDeliveryIdEffect(AllocationConstant.DELIVERY_EFFEFT);
-		
 		HttpResult result = allocationServer.verifyAllocation(param);
 		if(result.isSuccess()){
 			//冗余表中插入运单号,提货单号和车牌号,并且修改订单状态
@@ -2446,6 +2452,89 @@ public class AllocationServiceImpl implements AllocationService {
            
         }
         return list;
+	}
+
+	@Override
+	public Map<String, Object> addUnIntelligentAllocationOrder(AddExcellentAllocationBO param) {
+		List<WarehouseOrderDetailPO> detailList = param.getOrderList();
+		List<String> strOrderList = new ArrayList<>();
+		List<OrderIdBO> orderIdBOList = new ArrayList<>();
+		Map<String,WarehouseOrderDetailPO> addOrderMap = new HashMap<>(16);
+		for (WarehouseOrderDetailPO warehouseOrderDetailPO : detailList) {
+			strOrderList.add(warehouseOrderDetailPO.getOrderId());
+			addOrderMap.put(warehouseOrderDetailPO.getOrderId(), warehouseOrderDetailPO);
+			
+			OrderIdBO orderIdBO = new OrderIdBO();
+			orderIdBO.setOrderId(warehouseOrderDetailPO.getOrderId());
+			orderIdBOList.add(orderIdBO);
+		}
+		//查询订单详情信息
+		BatchOrderIdListBO batch = new BatchOrderIdListBO();
+		batch.setOrderIds(strOrderList);
+		batch.setKeyArea(param.getPartnerArea());
+		HttpResult orderResult = orderServer.getOrderDeatilByIdList(batch);
+		BatchOrderDetailListPO batchOrderDetailListPO = dataFormatGson.fromJson(gsonNotNull.toJson(orderResult.getData()),BatchOrderDetailListPO.class);
+		List<WarehouseOrderDetailPO> orderList =null;
+		if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getOrderList())){
+			orderList = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getOrderList());
+		}
+		if(!ObjectUtils.isEmpty(batchOrderDetailListPO.getSplitOrderList())){
+			if(!ObjectUtils.isEmpty(orderList)){
+				orderList.addAll(orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList()));
+			}else{
+				orderList = orderServer.joinOrderParamInfo(batchOrderDetailListPO.getSplitOrderList());
+			}
+		}
+		//订单信息赋值
+		String uuid = UUID.randomUUID().toString();
+		for (WarehouseOrderDetailPO orderDetailPO : orderList) {
+			WarehouseOrderDetailPO addOrderDetailValue = addOrderMap.get(orderDetailPO.getOrderId());
+			BeanUtils.copyProperties(orderDetailPO, addOrderDetailValue);
+			addOrderDetailValue.setAddressDetail(orderDetailPO.getAddressDetailProvince());
+			addOrderDetailValue.setAllocationId(uuid);
+		}
+		
+		//查询在库信息
+		SelectAreaByOrderIdBO selectArea = new SelectAreaByOrderIdBO();
+		selectArea.setOrderIds(orderIdBOList);
+		BeanUtils.copyProperties(param, selectArea);
+		List<WarehouseOrderDetailPO> orderStockInfo = orderServer.getOrderStockInfo(selectArea);
+		for (WarehouseOrderDetailPO orderDetailPO : orderStockInfo) {
+			List<WarehouseAreaBO> areaList = orderDetailPO.getAreaList();
+			for (WarehouseAreaBO areaBO : areaList) {
+				List<WarehouseLocationBO> locationList = areaBO.getLocationList();
+				for (WarehouseLocationBO locationBO : locationList) {
+					//赋值仓库信息
+					WarehouseOrderDetailPO addOrderDetailValue = addOrderMap.get(orderDetailPO.getOrderId());
+					addOrderDetailValue.setWarehouseId(orderDetailPO.getWarehouseId());
+					addOrderDetailValue.setWarehouseName(orderDetailPO.getWarehouseName());
+					addOrderDetailValue.setWarehouseAreaId(areaBO.getWarehouseAreaId());
+					addOrderDetailValue.setWarehouseAreaName(areaBO.getWarehouseAreaName());
+					addOrderDetailValue.setWarehouseLocId(locationBO.getWarehouseLocId());
+					addOrderDetailValue.setWarehouseLocName(locationBO.getWarehouseLocName());
+				}
+			}
+		}
+		String deliveryId = null;
+		String waybillId = null;
+		//调取订单服务获取单号并组织成运单号,提货单号
+		HttpResult number = allocationServer.getNumber(2);
+		if(!ObjectUtils.isEmpty(number.getData())){
+			JsonArray numberJsonArray = jsonParser.parse(gson.toJson(number.getData())).getAsJsonObject().get("numbers").getAsJsonArray();
+			deliveryId = new StringBuffer().append(AllocationConstant.DELIVERYID_PREFIX).append(numberJsonArray.get(0).getAsString()).toString();
+			waybillId = new StringBuffer().append(AllocationConstant.WAYBILLID_PREFIX).append(numberJsonArray.get(1).getAsString()).toString();
+		}
+		param.setAllocationId(UUID.randomUUID().toString());
+		param.setDeliveryId(deliveryId);
+		param.setWaybillId(waybillId);
+		//存入智能配货表数据
+		HttpResult result = allocationServer.addUnExcellentAllocation(param);
+		if(result.isSuccess()){
+			//调存入配货订单表接口,存入数据
+			result = allocationServer.addDeliAllocOrder(param.getOrderList());
+		}
+		param.setOrderList(null);
+		return MsgTemplate.successMsg(param);
 	}
 	
     /*@Override

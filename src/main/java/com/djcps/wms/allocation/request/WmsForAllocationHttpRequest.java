@@ -432,6 +432,18 @@ public interface WmsForAllocationHttpRequest {
 	public HTTPResponse existIntelligentAlloca(@Body RequestBody rb);
 
 	/**
+	 * 判断手动配货结果是否已配货
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月18日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/existUnIntelligentAlloca.do")
+	public HTTPResponse existUnIntelligentAlloca(@Body RequestBody rb);
+
+	
+	/**
 	 * 根据关联id获取操作记录信息
 	 * @param rb
 	 * @return
@@ -474,5 +486,16 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/getDeliveAllocOrderByOrderId.do")
 	public HTTPResponse getDeliveAllocOrderByOrderId(@Body RequestBody rb);
+
+	/**
+	 * 新增手动配货表数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月18日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/addUnExcellentAllocation.do")
+	public HTTPResponse addUnExcellentAllocation(@Body RequestBody rb);
 
 }
