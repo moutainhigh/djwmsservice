@@ -2,12 +2,16 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * 修改用户信息参数
+ *
  * @author wzy
  * @date 2018/4/13
  **/
-public class UpdateUserBO {
+public class UpdateUserBO implements Serializable {
 
     /**
      * 用户id
@@ -18,31 +22,34 @@ public class UpdateUserBO {
     /**
      * 工作状态 空闲、忙碌、休息中
      */
-    private Integer workStatus ;
+    private Integer workStatus;
 
     private String partnerId;
 
     /**
      * 用户名称
      */
-    private String userName ;
+    private String userName;
 
     /**
      * 最后登录时间
      */
-    private String lastLoginTime ;
+    private String lastLoginTime;
 
     /**
      * 登录次数
      */
-    private String loginCount ;
+    private Integer loginCount;
 
-    private String warehouseId;
+    /**
+     * 仓库id集合
+     */
+    private List<String> warehouseIds;
 
     /**
      * 角色类型
      */
-    private String roleType  ;
+    private String roleType;
 
     public String getRoleType() {
         return roleType;
@@ -50,14 +57,6 @@ public class UpdateUserBO {
 
     public void setRoleType(String roleType) {
         this.roleType = roleType;
-    }
-
-    public String getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
     }
 
     public String getUserName() {
@@ -76,11 +75,11 @@ public class UpdateUserBO {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public String getLoginCount() {
+    public Integer getLoginCount() {
         return loginCount;
     }
 
-    public void setLoginCount(String loginCount) {
+    public void setLoginCount(Integer loginCount) {
         this.loginCount = loginCount;
     }
 
@@ -108,6 +107,14 @@ public class UpdateUserBO {
         this.partnerId = partnerId;
     }
 
+    public List<String> getWarehouseIds() {
+        return warehouseIds;
+    }
+
+    public void setWarehouseIds(List<String> warehouseIds) {
+        this.warehouseIds = warehouseIds;
+    }
+
     @Override
     public String toString() {
         return "UpdateUserBO{" +
@@ -117,7 +124,6 @@ public class UpdateUserBO {
                 ", userName='" + userName + '\'' +
                 ", lastLoginTime='" + lastLoginTime + '\'' +
                 ", loginCount='" + loginCount + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
                 ", roleType='" + roleType + '\'' +
                 '}';
     }

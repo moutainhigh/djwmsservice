@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
+
 /**
  * 获取公司所有的部门和职务参数类
  * @author wzy
  * @date 2018/4/13
  **/
-public class OrgGetDepartmentBO {
+public class OrgGetDepartmentBO implements Serializable{
 
 
     private String operator;

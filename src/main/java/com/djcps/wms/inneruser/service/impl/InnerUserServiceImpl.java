@@ -7,6 +7,7 @@ import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.CookiesUtil;
+import com.djcps.wms.inneruser.constant.UserConstant;
 import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
@@ -56,23 +57,27 @@ public class InnerUserServiceImpl implements InnerUserService {
         if (baseResult.isSuccess()) {
             // 获取该用户token
             String token = innerUserServer.getUserToken(baseResult);
-            try {
-                //获取用户信息
-                UserInfoVO userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
-                if(!ObjectUtils.isEmpty(userInfoVO)){
-                    // 更新登陆次数以及时间
-                    UpdateUserBO updateUserBO = new UpdateUserBO();
-                    updateUserBO.setUserId(userInfoVO.getId());
-                    updateUserBO.setPartnerId(userInfoVO.getUcompany());
-                    updateUserBO.setLoginCount("");
-                    userServer.updateUserStatus(updateUserBO);
-                }
-            } catch (Exception e) {
-                LOGGER.error("内部用户信息 {}", e.getMessage());
-            }
+            editLoginCount(token);
 
         }
         return MsgTemplate.customMsg(baseResult);
+    }
+
+    private void editLoginCount(String token){
+        try {
+            //获取用户信息
+            UserInfoVO userInfoVO = innerUserRedisDao.getInnerUserInfo(token);
+            if(!ObjectUtils.isEmpty(userInfoVO)){
+                // 更新登陆次数以及时间
+                UpdateUserBO updateUserBO = new UpdateUserBO();
+                updateUserBO.setUserId(userInfoVO.getId());
+                updateUserBO.setPartnerId(userInfoVO.getUcompany());
+                updateUserBO.setLoginCount(UserConstant.LOGIN_COUNT);
+                userServer.updateUserRelevance(updateUserBO);
+            }
+        } catch (Exception e) {
+            LOGGER.error("内部用户信息 {}", e.getMessage());
+        }
     }
 
     /**
@@ -150,6 +155,7 @@ public class InnerUserServiceImpl implements InnerUserService {
         if (StringUtils.isBlank(token)) {
             return onceToken;
         }
+        editLoginCount(token);
         return token;
     }
 

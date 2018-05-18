@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * @author Chengw
  * @version 1.0.0
  * @since 2018/5/15 14:32.
  */
-public class OrgUserInfoVO {
+public class OrgUserInfoVO implements Serializable{
 
     /**
      * id

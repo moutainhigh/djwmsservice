@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
+
 /**
  * 批量获取用户信息(包括已删除的)
  * @author wzy
  * @date 2018/4/12
  **/
-public class BatchOrgUserInfoBO {
+public class BatchOrgUserInfoBO  implements Serializable {
 
     /**
      * 合作方id

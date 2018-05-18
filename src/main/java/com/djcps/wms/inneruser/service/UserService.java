@@ -31,12 +31,12 @@ public interface UserService {
 
     /**
      * wms获取单条用户关联信息
-     * @param deleteUserBO DeleteUserBO
+     * @param userBO UserBO
      * @return map
      * @author wzy
      * @date 2018/4/13
      **/
-    Map<String,Object> getUserRelevance(DeleteUserBO deleteUserBO);
+    Map<String,Object> getUserRelevance(UserBO userBO);
 
     /**
      * 修改用户工作状态和仓库等信息
@@ -45,16 +45,16 @@ public interface UserService {
      * @author wzy
      * @date 2018/4/13
      **/
-    Map<String,Object> updateUserStatus(UpdateUserBO updateUserBO);
+    Map<String,Object> updateUserRelevance(UpdateUserBO updateUserBO);
 
     /**
      * 删除用户关联信息
-     * @param deleteUserBO DeleteUserBO
+     * @param userBO UserBO
      * @return Map<String,Object>
      * @author wzy
      * @date 2018/4/13
      **/
-    Map<String,Object> deleteUserRelevance(DeleteUserBO deleteUserBO);
+    Map<String,Object> deleteUserRelevance(UserBO userBO);
 
     /**
      * 删除用户信息，包括org
@@ -72,7 +72,7 @@ public interface UserService {
      * @return Map<String,Object>
      * @date  2018/4/13 15:20
      **/
-    Map<String,Object> pageGetUserRelevance(PageUserInfoBO pageUserInfoBO);
+    Map<String,Object> pageUserRelevance(PageUserInfoBO pageUserInfoBO);
 
     /**
      * 保存用户信息新增/修改
@@ -131,11 +131,11 @@ public interface UserService {
     /**
      * 获取用户关联仓库信息
      * @author  wzy
-     * @param getUserWarehouse DeleteUserBO
+     * @param getUserWarehouse UserBO
      * @return  Map<String,Object>
      * @date  2018/4/17 11:09
      **/
-    Map<String,Object> getUserWarehouse(DeleteUserBO getUserWarehouse);
+    Map<String,Object> getUserWarehouse(UserBO getUserWarehouse);
 
     /**
      * 根据角色类型获取用户信息

@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 从ORG获取带u开头的用户信息
  * @author wzy
  * @date 2018/4/12
  **/
-public class OrgUserInfoPO {
+public class OrgUserInfoPO implements Serializable{
 
     private String uids;
 

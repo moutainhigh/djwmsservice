@@ -2,12 +2,14 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+
 /**
  * 获取职务参数类
  * @author wzy
  * @date 2018/4/18
  **/
-public class GetJobBO {
+public class GetJobBO  implements Serializable {
     private String operator;
 
 

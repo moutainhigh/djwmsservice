@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
+
 /**
  * 仓库信息列表类
  * @author wzy
  * @date 2018/4/23
  **/
-public class WarehouseAndListBO {
+public class WarehouseAndListBO implements Serializable {
     private String userId;
 
     private String warehouseName;

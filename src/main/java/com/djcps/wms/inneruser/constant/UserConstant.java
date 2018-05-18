@@ -31,4 +31,9 @@ public class UserConstant {
      *org用户状态1禁用
      */
     public static final Integer ORG_DEL = 1;
+
+    /**
+     * 登录次数增量值 默认值 1
+     */
+    public static final Integer LOGIN_COUNT = 1;
 }

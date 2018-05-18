@@ -2,6 +2,7 @@ package com.djcps.wms.inneruser.model.param;
 
 import com.djcps.wms.role.model.request.WmsRoleInfoPO;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  * @author wzy
  * @date 2018/4/18
  **/
-public class UserRoleListBO {
+public class UserRoleListBO implements Serializable{
     /**
      * 当前用户角色类型
      */

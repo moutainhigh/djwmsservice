@@ -2,12 +2,14 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+
 /**
  * 用户修改密码 参数类
  * @author Chengw
  * @since 2017/12/5 15:11.
  */
-public class InnerUserChangePasswordBO {
+public class InnerUserChangePasswordBO  implements Serializable {
 
     private String token;
 

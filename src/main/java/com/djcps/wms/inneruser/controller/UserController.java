@@ -15,13 +15,13 @@ import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.service.UserService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class UserController {
 
     private static final DjcpsLogger LOGGER = DjcpsLoggerFactory.getLogger(UserController.class);
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**
@@ -81,18 +81,18 @@ public class UserController {
     public Map<String, Object> getUserRelevance(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try{
             PartnerInfoBO partnerInfoBo=(PartnerInfoBO) request.getAttribute("partnerInfo");
-            DeleteUserBO deleteUserBO=gson.fromJson(json,DeleteUserBO.class);
-            deleteUserBO.setPartnerId(partnerInfoBo.getPartnerId());
-            BeanUtils.copyProperties(operatorInfoBO,deleteUserBO);
+            UserBO userBO =gson.fromJson(json,UserBO.class);
+            userBO.setPartnerId(partnerInfoBo.getPartnerId());
+            BeanUtils.copyProperties(operatorInfoBO, userBO);
             ComplexResult ret = FluentValidator.checkAll().failFast()
-                    .on(deleteUserBO,
-                            new HibernateSupportedValidator<DeleteUserBO>()
+                    .on(userBO,
+                            new HibernateSupportedValidator<UserBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return userService.getUserRelevance(deleteUserBO);
+            return userService.getUserRelevance(userBO);
         }catch (Exception e){
             LOGGER.error("wms获取单条用户信息异常：{} ",e.getMessage());
             e.printStackTrace();
@@ -100,9 +100,9 @@ public class UserController {
         }
     }
 
-    @AddLog(value ="修改用户工作状态和仓库等信息",module = "用户管理")
-    @RequestMapping(name="修改用户工作状态和仓库等信息",value = "/updateUserStatus", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> updateUserStatus(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO) {
+    @AddLog(value ="修改用户关联信息",module = "用户管理")
+    @RequestMapping(name="修改用户关联信息",value = "/updateUserRelevance", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> updateUserRelevance(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO) {
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             UpdateUserBO updateUserBO = gson.fromJson(json, UpdateUserBO.class);
@@ -116,7 +116,7 @@ public class UserController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return userService.updateUserStatus(updateUserBO);
+            return userService.updateUserRelevance(updateUserBO);
         } catch (Exception e) {
             LOGGER.error("修改用户关联信息异常：{} ", e.getMessage());
             e.printStackTrace();
@@ -149,8 +149,8 @@ public class UserController {
     }
 
     @AddLog(value ="分页获取用户列表",module = "用户管理")
-    @RequestMapping(name="分页获取用户列表",value = "/pageGetUserRelevance", method = RequestMethod.POST, produces = "application/json")
-    public Map<String, Object> pageGetUserRelevance(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO) {
+    @RequestMapping(name="分页获取用户列表",value = "/pageUserRelevance", method = RequestMethod.POST, produces = "application/json")
+    public Map<String, Object> pageUserRelevance(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO) {
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
             PageUserInfoBO pageUserInfoBO = new PageUserInfoBO();
@@ -167,7 +167,7 @@ public class UserController {
             if (!ret.isSuccess()) {
                 return MsgTemplate.failureMsg(ret);
             }
-            return userService.pageGetUserRelevance(pageUserInfoBO);
+            return userService.pageUserRelevance(pageUserInfoBO);
         } catch (Exception e) {
             LOGGER.error("分页获取用户列表异常：{} ", e.getMessage());
             e.printStackTrace();
@@ -276,7 +276,7 @@ public class UserController {
             GetOrgUserInfoBO getOrgUserInfoBO = gson.fromJson(json, GetOrgUserInfoBO.class);
             getOrgUserInfoBO.setOperator(partnerInfoBo.getPartnerId());
             BeanUtils.copyProperties(operatorInfoBO, getOrgUserInfoBO);
-            getOrgUserInfoBO.setPartnerId(operatorInfoBO.getBusiness());
+            getOrgUserInfoBO.setPartnerId(partnerInfoBo.getPartnerId());
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(getOrgUserInfoBO,
                             new HibernateSupportedValidator<GetOrgUserInfoBO>()
@@ -331,12 +331,12 @@ public class UserController {
     public Map<String, Object> getUserWarehouse(@RequestBody(required = false) String json, HttpServletRequest request,@OperatorAnnotation OperatorInfoBO operatorInfoBO){
         try {
             PartnerInfoBO partnerInfoBo = (PartnerInfoBO) request.getAttribute("partnerInfo");
-            DeleteUserBO getUserWarehouse = gson.fromJson(json, DeleteUserBO.class);
+            UserBO getUserWarehouse = gson.fromJson(json, UserBO.class);
             getUserWarehouse.setPartnerId(partnerInfoBo.getPartnerId());
             BeanUtils.copyProperties(operatorInfoBO,getUserWarehouse);
             ComplexResult ret = FluentValidator.checkAll().failFast()
                     .on(getUserWarehouse,
-                            new HibernateSupportedValidator<DeleteUserBO>()
+                            new HibernateSupportedValidator<UserBO>()
                                     .setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
                     .doValidate().result(ResultCollectors.toComplex());
             if (!ret.isSuccess()) {
