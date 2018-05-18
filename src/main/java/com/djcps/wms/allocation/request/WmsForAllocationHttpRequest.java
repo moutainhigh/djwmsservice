@@ -463,5 +463,16 @@ public interface WmsForAllocationHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("allocation/splitOrder.do")
 	public HTTPResponse splitOrder(@Body RequestBody rb);
+	
+	/**
+	 * 根据订单号查询配货表数据
+	 * @param rb
+	 * @return
+	 * @author:zdx
+	 * @date:2018年5月18日
+	 */
+	@Headers("content-type:application/json")
+	@POST("allocation/getDeliveAllocOrderByOrderId.do")
+	public HTTPResponse getDeliveAllocOrderByOrderId(@Body RequestBody rb);
 
 }
