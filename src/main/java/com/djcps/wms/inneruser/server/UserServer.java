@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.base.BaseVO;
 import com.djcps.wms.commons.httpclient.HttpResult;
 import com.djcps.wms.commons.utils.HttpResultUtils;
 import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.model.result.*;
 import com.djcps.wms.inneruser.request.UserRequest;
 import com.djcps.wms.inneruser.request.WmsForUserRequest;
-import com.djcps.wms.stocktaking.model.orderresult.OrderResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.MediaType;
@@ -52,15 +52,16 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/12 14:06
      **/
-    public List<OrgUserInfoPO> getUserListByOrg(BatchOrgUserInfoBO orgGetUserInfo) {
-        String json = gson.toJson(orgGetUserInfo);
+    public List<UserInfoPO> getUserListByOrg(BatchOrgUserInfoBO orgGetUserInfo) {
+        String json = JSONObject.toJSONString(orgGetUserInfo);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getUserInfoList(map);
         if (httpResponse.isSuccessful()) {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {
                 String data = gson.toJson(result.getData());
-                return JSONArray.parseArray(data, OrgUserInfoPO.class);
+                List<OrgUserInfoPO> list = JSONArray.parseArray(data, OrgUserInfoPO.class);
+                return toUserInfo(list);
             }
         }
         return null;
@@ -74,8 +75,8 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/12 14:39
      **/
-    public OrgUserInfoPO getUserByOrg(GetOrgUserInfoBO orgGetUserInfo) {
-        String json = gson.toJson(orgGetUserInfo);
+    public UserInfoPO getUserByOrg(GetOrgUserInfoBO orgGetUserInfo) {
+        String json = JSONObject.toJSONString(orgGetUserInfo);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getUserInfo(map);
         if (httpResponse.isSuccessful()) {
@@ -84,11 +85,48 @@ public class UserServer {
                 String data = gson.toJson(result.getData());
                 List<OrgUserInfoPO> list = JSONArray.parseArray(data, OrgUserInfoPO.class);
                 if (list.size() > 0) {
-                    return list.get(0);
+                    List<UserInfoPO> userInfoList = toUserInfo(list);
+                    return userInfoList.get(0);
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * 转化字段参数
+     *
+     * @param list
+     * @return
+     */
+    private List<UserInfoPO> toUserInfo(List<OrgUserInfoPO> list) {
+        return list.stream().map(orgUserInfoPO -> new UserInfoPO() {{
+            setId(orgUserInfoPO.getId());
+            setCompanyId(orgUserInfoPO.getUcompany_id());
+            setUserName(orgUserInfoPO.getUname());
+            setIdCard(orgUserInfoPO.getUid_card());
+            setBirthday(orgUserInfoPO.getUbirthday());
+            setDepartmentId(orgUserInfoPO.getUfdepartment_id());
+            setDepartmentName(orgUserInfoPO.getUfdepartment());
+            setEducation(orgUserInfoPO.getUeducation());
+            setEmail(orgUserInfoPO.getUemail());
+            setGraduateSchool(orgUserInfoPO.getUgraduate_school());
+            setHomeAddress(orgUserInfoPO.getUhome_address());
+            setInduction(orgUserInfoPO.getUinduction());
+            setJob(orgUserInfoPO.getUjob());
+            setMaritalStatus(orgUserInfoPO.getUmarital_status());
+            setNation(orgUserInfoPO.getUnation());
+            setPhone(orgUserInfoPO.getUphone());
+            setPassword(orgUserInfoPO.getUpassword());
+            setPlaceOrigin(orgUserInfoPO.getUplace_origin());
+            setPoliticalOutlook(orgUserInfoPO.getUpolitical_outlook());
+            setSex(orgUserInfoPO.getUsex());
+            setShortPhone(orgUserInfoPO.getUshort_phone());
+            setPositionId(orgUserInfoPO.getCmp_user_position__id());
+            setPositionName(orgUserInfoPO.getUposition_name());
+            setUserStatus(orgUserInfoPO.getUserstatus());
+            setRegisteredResidence(orgUserInfoPO.getUregistered_residence());
+        }}).collect(Collectors.toList());
     }
 
     /**
@@ -100,7 +138,7 @@ public class UserServer {
      * @date 2018/4/13 13:36
      **/
     public Boolean updateCloseOpenUser(OrgDeleteUserBO orgDeleteUserBO) {
-        String json = gson.toJson(orgDeleteUserBO);
+        String json = JSONObject.toJSONString(orgDeleteUserBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.updateCloseOpenUser(map);
         if (httpResponse.isSuccessful()) {
@@ -115,13 +153,13 @@ public class UserServer {
     /**
      * wms获取单条用户关联信息
      *
-     * @param deleteUserBO DeleteUserBO
+     * @param userBO UserBO
      * @return UserRelevanceBO
      * @author wzy
      * @date 2018/4/13 10:32
      **/
-    public UserRelevancePO getUserRelevance(DeleteUserBO deleteUserBO) {
-        String paramJson = gson.toJson(deleteUserBO);
+    public UserRelevancePO getUserRelevance(UserBO userBO) {
+        String paramJson = JSONObject.toJSONString(userBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.getUserRelevance(requestBody);
         if (httpResponse.isSuccessful()) {
@@ -142,23 +180,23 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/13 9:31
      **/
-    public HttpResult updateUserStatus(UpdateUserBO updateUserBO) {
-        String paramJson = gson.toJson(updateUserBO);
+    public HttpResult updateUserRelevance(UpdateUserBO updateUserBO) {
+        String paramJson = JSONObject.toJSONString(updateUserBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForUserRequest.updateUserStatus(requestBody);
+        HTTPResponse httpResponse = wmsForUserRequest.updateUserRelevance(requestBody);
         return HttpResultUtils.returnResult(httpResponse);
     }
 
     /**
      * wms删除用户关联信息
      *
-     * @param deleteUserBO DeleteUserBO
+     * @param userBO UserBO
      * @return result
      * @author wzy
      * @date 2018/4/13 11:18
      **/
-    public HttpResult deleteUserRelevance(DeleteUserBO deleteUserBO) {
-        String paramJson = gson.toJson(deleteUserBO);
+    public HttpResult deleteUserRelevance(UserBO userBO) {
+        String paramJson = JSONObject.toJSONString(userBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
         HTTPResponse httpResponse = wmsForUserRequest.deleteUserRelevance(requestBody);
         return HttpResultUtils.returnResult(httpResponse);
@@ -172,40 +210,10 @@ public class UserServer {
      * @author wzy
      * @date 2018/4/16 10:15
      **/
-    public HttpResult insertUserRelevance(UserRelevanceBO userRelevanceBO) {
-        String paramJson = gson.toJson(userRelevanceBO);
+    public HttpResult saveUserRelevance(UserRelevanceBO userRelevanceBO) {
+        String paramJson = JSONObject.toJSONString(userRelevanceBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForUserRequest.insertUserRelevance(requestBody);
-        return HttpResultUtils.returnResult(httpResponse);
-    }
-
-    /**
-     * wms新增用户关联仓库信息
-     *
-     * @param userRelevanceBO UserRelevanceBO
-     * @return HttpResult
-     * @author wzy
-     * @date 2018/4/16 11:40
-     **/
-    public HttpResult insertUserWarehouse(UserRelevanceBO userRelevanceBO) {
-        String paramJson = gson.toJson(userRelevanceBO);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForUserRequest.insertUserWarehouse(requestBody);
-        return HttpResultUtils.returnResult(httpResponse);
-    }
-
-    /**
-     * wms批量新增用户关联仓库信息
-     *
-     * @param addUserWarehouseBOList List<AddUserWarehouseBO>
-     * @return HttpResult
-     * @author wzy
-     * @date 2018/4/16 11:40
-     **/
-    public HttpResult insertUserWarehouseList(List<AddUserWarehouseBO> addUserWarehouseBOList) {
-        String paramJson = gson.toJson(addUserWarehouseBOList);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForUserRequest.insertUserWarehouseList(requestBody);
+        HTTPResponse httpResponse = wmsForUserRequest.saveUserRelevance(requestBody);
         return HttpResultUtils.returnResult(httpResponse);
     }
 
@@ -213,22 +221,28 @@ public class UserServer {
      * WMS条件获取用户列表
      *
      * @param pageUserInfoBO PageUserInfoBO
-     * @return OrderResult
+     * @return BaseVO
      * @author wzy
      * @date 2018/4/13 15:17
      **/
-    public OrderResult pageGetUserRelevance(PageUserInfoBO pageUserInfoBO) {
-        String paramJson = gson.toJson(pageUserInfoBO);
+    public BaseVO pageUserRelevance(PageUserInfoBO pageUserInfoBO) {
+        String paramJson = JSONObject.toJSONString(pageUserInfoBO);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForUserRequest.pageGetUserRelevance(requestBody);
+        HTTPResponse httpResponse = wmsForUserRequest.pageUserRelevance(requestBody);
         if (httpResponse.isSuccessful()) {
-            return gson.fromJson(httpResponse.getBodyString(), OrderResult.class);
+            HttpResult httpResult = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
+            if (httpResult.isSuccess()) {
+                String data = JSONObject.toJSONString(httpResult.getData());
+                BaseVO baseVO = gson.fromJson(data,BaseVO.class);
+                return baseVO;
+            }
         }
         return null;
     }
 
     /**
      * 根据角色类型 获取用户信息
+     *
      * @param userInfoBO
      * @return
      */
@@ -238,10 +252,10 @@ public class UserServer {
         HTTPResponse httpResponse = wmsForUserRequest.listUserByRoleCode(requestBody);
         if (httpResponse.isSuccessful()) {
             HttpResult result = HttpResultUtils.returnResult(httpResponse);
-            if(!ObjectUtils.isEmpty(result)){
-                if(result.isSuccess()){
+            if (!ObjectUtils.isEmpty(result)) {
+                if (result.isSuccess()) {
                     String data = JSONObject.toJSONString(result.getData());
-                    List<UserRelevancePO> userList = JSONObject.parseArray(data,UserRelevancePO.class);
+                    List<UserRelevancePO> userList = JSONObject.parseArray(data, UserRelevancePO.class);
                     return userList;
                 }
             }
@@ -258,7 +272,7 @@ public class UserServer {
      * @date 2018/4/12 14:39
      **/
     public List<DepartmentVO> getDepartment(OrgGetDepartmentBO orgGetDepartmentBO) {
-        String json = gson.toJson(orgGetDepartmentBO);
+        String json = JSONObject.toJSONString(orgGetDepartmentBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getDepartList(map);
         if (httpResponse.isSuccessful()) {
@@ -284,7 +298,7 @@ public class UserServer {
      * @date 2018/4/17 9:25
      **/
     public List<JobVO> getUserJob(OrgGetDepartmentBO orgGetDepartmentBO) {
-        String json = gson.toJson(orgGetDepartmentBO);
+        String json = JSONObject.toJSONString(orgGetDepartmentBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.getUjob(map);
         if (httpResponse.isSuccessful()) {
@@ -302,7 +316,7 @@ public class UserServer {
     }
 
     public List<PositionVO> getPosition(OrgPositionBO orgPositionBO) {
-        String json = gson.toJson(orgPositionBO);
+        String json = JSONObject.toJSONString(orgPositionBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.queryPosition(map);
         if (httpResponse.isSuccessful()) {
@@ -330,7 +344,7 @@ public class UserServer {
      * @date 2018/4/16 9:50
      **/
     public Boolean updateUserManage(SaveUserBO saveUserBO) {
-        String json = gson.toJson(saveUserBO);
+        String json = JSONObject.toJSONString(saveUserBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.updateUserManage(map);
         if (httpResponse.isSuccessful()) {
@@ -354,46 +368,24 @@ public class UserServer {
      * @date 2018/4/16 9:58
      **/
     public HttpResult addPostUserInfo(SaveUserBO saveUserBO) {
-        String json = gson.toJson(saveUserBO);
+        String json = JSONObject.toJSONString(saveUserBO);
         Map<String, Object> map = gson.fromJson(json, Map.class);
         HTTPResponse httpResponse = userRequest.addPostUserInfo(map);
         return HttpResultUtils.returnResult(httpResponse);
     }
 
     /**
-     * 获取用户关联仓库信息
-     *
-     * @param getUserWarehouse DeleteUserBO
-     * @return List<String>
-     * @author wzy
-     * @date 2018/4/17 11:08
-     **/
-    public List<String> getUserWarehouse(DeleteUserBO getUserWarehouse) {
-        String paramJson = gson.toJson(getUserWarehouse);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForUserRequest.getUserWarehouse(requestBody);
-        if (httpResponse.isSuccessful()) {
-            HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
-            if (result.isSuccess()) {
-                String json = gson.toJson(result.getData());
-                return JSONArray.parseArray(json, String.class);
-            }
-        }
-        return null;
-    }
-
-    /**
      * 批量获取用户关联仓库信息
      *
-     * @param getWarehouseListBOS GetWarehouseListBO
+     * @param listWarehouseBOS ListWarehouseBO
      * @return List<WarehouseListPO>
      * @author wzy
      * @date 2018/4/17 11:08
      **/
-    public List<WarehouseListPO> getUserWarehouseList(GetWarehouseListBO getWarehouseListBOS) {
-        String paramJson = gson.toJson(getWarehouseListBOS);
+    public List<WarehouseListPO> listUserWarehouse(ListWarehouseBO listWarehouseBOS) {
+        String paramJson = JSONObject.toJSONString(listWarehouseBOS);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
-        HTTPResponse httpResponse = wmsForUserRequest.getUserWarehouseList(requestBody);
+        HTTPResponse httpResponse = wmsForUserRequest.listUserWarehouse(requestBody);
         if (httpResponse.isSuccessful()) {
             HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
             if (result.isSuccess()) {

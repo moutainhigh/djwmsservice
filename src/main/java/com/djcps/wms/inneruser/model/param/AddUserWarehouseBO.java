@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
+
 /**
  * 新增用户仓库信息
  * @author  wzy
@@ -7,7 +9,7 @@ package com.djcps.wms.inneruser.model.param;
  * @return
  * @date  2018/4/16 10:40
  **/
-public class AddUserWarehouseBO {
+public class AddUserWarehouseBO implements Serializable {
     /**
      * 用户id
      */

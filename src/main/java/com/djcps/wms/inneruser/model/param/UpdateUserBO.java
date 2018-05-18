@@ -2,12 +2,15 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * 修改用户信息参数
  * @author wzy
  * @date 2018/4/13
  **/
-public class UpdateUserBO {
+public class UpdateUserBO implements Serializable{
 
     /**
      * 用户id
@@ -35,9 +38,14 @@ public class UpdateUserBO {
     /**
      * 登录次数
      */
-    private String loginCount ;
+    private Integer loginCount ;
 
     private String warehouseId;
+
+    /**
+     * 仓库id集合
+     */
+    private List<String> warehouseIds;
 
     /**
      * 角色类型
@@ -76,11 +84,11 @@ public class UpdateUserBO {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public String getLoginCount() {
+    public Integer getLoginCount() {
         return loginCount;
     }
 
-    public void setLoginCount(String loginCount) {
+    public void setLoginCount(Integer loginCount) {
         this.loginCount = loginCount;
     }
 
@@ -106,6 +114,14 @@ public class UpdateUserBO {
 
     public void setPartnerId(String partnerId) {
         this.partnerId = partnerId;
+    }
+
+    public List<String> getWarehouseIds() {
+        return warehouseIds;
+    }
+
+    public void setWarehouseIds(List<String> warehouseIds) {
+        this.warehouseIds = warehouseIds;
     }
 
     @Override

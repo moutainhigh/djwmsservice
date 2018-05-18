@@ -2,12 +2,14 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+
 /**
  * 删除用户关联信息参数类
  * @author wzy
  * @date 2018/4/13
  **/
-public class DeleteUserBO {
+public class UserBO implements Serializable{
 
     /**
      * 用户id
@@ -38,7 +40,7 @@ public class DeleteUserBO {
 
     @Override
     public String toString() {
-        return "DeleteUserBO{" +
+        return "UserBO{" +
                 "userId='" + userId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 '}';

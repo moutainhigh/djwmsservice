@@ -1,5 +1,7 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 获取的角色信息
  * @author  wzy
@@ -7,7 +9,7 @@ package com.djcps.wms.inneruser.model.result;
  * @return
  * @date  2018/4/16 15:54
  **/
-public class GetRoleTypePO {
+public class GetRoleTypePO implements Serializable{
     /**
      * 角色id
      */

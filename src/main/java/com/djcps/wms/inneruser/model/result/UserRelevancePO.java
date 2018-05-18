@@ -62,7 +62,7 @@ public class UserRelevancePO {
      */
     private String contactWay;
 
-    private String warehouseId;
+    private List<String> warehouseIds;
 
     private String warehouseName;
 
@@ -82,14 +82,6 @@ public class UserRelevancePO {
 
     public void setWarehouseNameList(List<String> warehouseNameList) {
         this.warehouseNameList = warehouseNameList;
-    }
-
-    public String getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
     }
 
     public String getWarehouseName() {
@@ -180,9 +172,17 @@ public class UserRelevancePO {
         this.contactWay = contactWay;
     }
 
+    public List<String> getWarehouseIds() {
+        return warehouseIds;
+    }
+
+    public void setWarehouseIds(List<String> warehouseIds) {
+        this.warehouseIds = warehouseIds;
+    }
+
     @Override
     public String toString() {
-        return "UserRelevanceBO{" +
+        return "UserRelevancePO{" +
                 "userId='" + userId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
                 ", userName='" + userName + '\'' +
@@ -194,7 +194,7 @@ public class UserRelevancePO {
                 ", department='" + department + '\'' +
                 ", warehouse='" + warehouse + '\'' +
                 ", contactWay='" + contactWay + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
+                ", warehouseIds='" + warehouseIds + '\'' +
                 ", warehouseName='" + warehouseName + '\'' +
                 ", warehouseNameList=" + warehouseNameList +
                 '}';

@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 内部用户登录返回类
  * @author Chengw
  * @since 2017/12/4 14:58.
  */
-public class UserLoginVO {
+public class UserLoginVO implements Serializable{
 
     /**
      * token

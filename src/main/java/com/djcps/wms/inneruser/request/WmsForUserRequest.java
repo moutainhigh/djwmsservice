@@ -24,8 +24,8 @@ public interface WmsForUserRequest {
      * @date  2018/4/13 9:31
      **/
     @Headers("content-type:application/json")
-    @POST("user/updateUserStatus.do")
-    HTTPResponse updateUserStatus(@Body RequestBody json);
+    @POST("user/updateUserRelevance.do")
+    HTTPResponse updateUserRelevance(@Body RequestBody json);
 
     /**
      * 获取单条用户关联信息
@@ -57,8 +57,8 @@ public interface WmsForUserRequest {
      * @date  2018/4/13 14:53
      **/
     @Headers("content-type:application/json")
-    @POST("user/pageGetUserRelevance.do")
-    HTTPResponse pageGetUserRelevance(@Body RequestBody json);
+    @POST("user/pageUserRelevance.do")
+    HTTPResponse pageUserRelevance(@Body RequestBody json);
 
     /**
      * WMS新增用户关联信息
@@ -68,42 +68,8 @@ public interface WmsForUserRequest {
      * @date  2018/4/16 10:11
      **/
     @Headers("content-type:application/json")
-    @POST("user/insertUserRelevance.do")
-    HTTPResponse insertUserRelevance(@Body RequestBody json);
-
-    /**
-     * WMS新增用户关联仓库信息
-     * @author  wzy
-     * @param json RequestBody
-     * @return http
-     * @date  2018/4/16 11:03
-     **/
-    @Headers("content-type:application/json")
-    @POST("user/insertUserWarehouse.do")
-    HTTPResponse insertUserWarehouse(@Body RequestBody json);
-
-
-    /**
-     * WMS新增用户关联仓库信息
-     * @author  wzy
-     * @param json RequestBody
-     * @return http
-     * @date  2018/4/16 11:03
-     **/
-    @Headers("content-type:application/json")
-    @POST("user/insertUserWarehouseList.do")
-    HTTPResponse insertUserWarehouseList(@Body RequestBody json);
-
-    /**
-     * 获取用户关联仓库
-     * @author  wzy
-     * @param json RequestBody
-     * @return  http
-     * @date  2018/4/17 11:03
-     **/
-    @Headers("content-type:application/json")
-    @POST("user/getUserWarehouse.do")
-    HTTPResponse getUserWarehouse(@Body RequestBody json);
+    @POST("user/saveUserRelevance.do")
+    HTTPResponse saveUserRelevance(@Body RequestBody json);
 
     /**
      * 批量获取用户关联仓库
@@ -113,8 +79,8 @@ public interface WmsForUserRequest {
      * @date  2018/4/17 11:03
      **/
     @Headers("content-type:application/json")
-    @POST("user/getUserWarehouseList.do")
-    HTTPResponse getUserWarehouseList(@Body RequestBody json);
+    @POST("user/listUserWarehouse.do")
+    HTTPResponse listUserWarehouse(@Body RequestBody json);
 
     /**
      * 根据角色类型 获取用户信息

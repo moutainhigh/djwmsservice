@@ -19,7 +19,6 @@ import com.djcps.wms.inneruser.model.param.*;
 import com.djcps.wms.inneruser.model.result.UserExchangeTokenVO;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.inneruser.model.result.UserLogoutVO;
-import com.djcps.wms.inneruser.model.param.UpdateUserBO;
 import com.djcps.wms.inneruser.service.InnerUserService;
 import com.djcps.wms.inneruser.service.UserService;
 import com.djcps.wms.permission.service.PermissionService;
@@ -224,14 +223,6 @@ public class InnerUserController {
                     if (StringUtils.isNotBlank(userExchangeTokenVO.getToken())) {
                         if (innerUserService.setUserCookie(userExchangeTokenVO.getToken(), response)) {
                             UserInfoVO userInfoVO = innerUserService.getInnerUserInfoFromRedis(userExchangeTokenVO.getToken());
-                            if (!ObjectUtils.isEmpty(userInfoVO)) {
-                                // 更新登陆次数以及时间
-                                UpdateUserBO updateUserBO = new UpdateUserBO();
-                                updateUserBO.setUserId(userInfoVO.getId());
-                                updateUserBO.setPartnerId(userInfoVO.getUcompany());
-                                updateUserBO.setLoginCount(" ");
-                                userService.updateUserStatus(updateUserBO);
-                            }
                             return MsgTemplate.successMsg(userInfoVO);
                         }
                     }

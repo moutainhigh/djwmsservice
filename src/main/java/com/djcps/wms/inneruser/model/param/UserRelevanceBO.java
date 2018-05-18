@@ -1,5 +1,6 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * @author wzy
  * @date 2018/4/12
  **/
-public class UserRelevanceBO {
+public class UserRelevanceBO implements Serializable{
 
     /**
      * 用户id
@@ -47,26 +48,14 @@ public class UserRelevanceBO {
     private String roleId;
 
     /**
-     * 所属部门
-     */
-    private String department;
-
-
-    /**
-     * 所属仓库
-     */
-    private String warehouse;
-
-    /**
      * 联系方式
      */
     private String  contactWay;
 
-    private String warehouseId;
-
-    private String warehouseName;
-
-    private List<String>  warehouseNameList;
+    /**
+     * 所属仓库id集合
+     */
+    private List<String> warehouseIds;
 
     public String getRoleId() {
         return roleId;
@@ -76,29 +65,6 @@ public class UserRelevanceBO {
         this.roleId = roleId;
     }
 
-    public List<String> getWarehouseNameList() {
-        return warehouseNameList;
-    }
-
-    public void setWarehouseNameList(List<String> warehouseNameList) {
-        this.warehouseNameList = warehouseNameList;
-    }
-
-    public String getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
-    }
-
-    public String getWarehouseName() {
-        return warehouseName;
-    }
-
-    public void setWarehouseName(String warehouseName) {
-        this.warehouseName = warehouseName;
-    }
 
     public String getUserId() {
         return userId;
@@ -156,21 +122,6 @@ public class UserRelevanceBO {
         this.roleType = roleType;
     }
 
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public String getWarehouse() {
-        return warehouse;
-    }
-
-    public void setWarehouse(String warehouse) {
-        this.warehouse = warehouse;
-    }
 
     public String getContactWay() {
         return contactWay;
@@ -178,6 +129,14 @@ public class UserRelevanceBO {
 
     public void setContactWay(String contactWay) {
         this.contactWay = contactWay;
+    }
+
+    public List<String> getWarehouseIds() {
+        return warehouseIds;
+    }
+
+    public void setWarehouseIds(List<String> warehouseIds) {
+        this.warehouseIds = warehouseIds;
     }
 
     @Override
@@ -191,12 +150,8 @@ public class UserRelevanceBO {
                 ", loginCount='" + loginCount + '\'' +
                 ", roleType='" + roleType + '\'' +
                 ", roleId='" + roleId + '\'' +
-                ", department='" + department + '\'' +
-                ", warehouse='" + warehouse + '\'' +
                 ", contactWay='" + contactWay + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
-                ", warehouseName='" + warehouseName + '\'' +
-                ", warehouseNameList=" + warehouseNameList +
+                ", warehouseIds=" + warehouseIds +
                 '}';
     }
 }

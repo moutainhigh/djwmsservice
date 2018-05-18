@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 内部用户登出 返回类
  * @author Chengw
  * @since 2017/12/4 15:12.
  */
-public class UserLogoutVO {
+public class UserLogoutVO implements Serializable{
 
     /**
      * url

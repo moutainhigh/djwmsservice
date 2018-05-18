@@ -4,6 +4,7 @@ import com.djcps.wms.inneruser.model.result.DepartmentVO;
 import com.djcps.wms.inneruser.model.result.JobVO;
 import com.djcps.wms.inneruser.model.result.PositionVO;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @author wzy
  * @date 2018/4/17
  **/
-public class UserDepartAndJobBO {
+public class UserDepartAndJobBO implements Serializable{
 
     /**
      * 部门id,udepartment_id
