@@ -335,21 +335,29 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                         List<OrderOperationRecordPO> splitOrder = SplitOrderOperationInfo(param);
                         param.setSplitOrder(splitOrder);
                         // 部分退库
-                        param.setCancelStockAmount(orderAmount - loadingAmount);
+                        param.setCancelStockAmount(param.getRealDeliveryAmount() - loadingAmount);
                         param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
                         HttpResult result = loadingTaskServer.loading(param);
                         if (result.isSuccess()) {
+                           String orderId = null;
+                            if (param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER) > 0) {
+                             // 截取差分订单编号后面的-1或-2
+                                orderId = param.getOrderId().substring(0,
+                                        param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+                            }else {
+                                orderId = param.getOrderId();
+                            }
             				//OMS订单拆分组织参数
             				UpdateOrderBO updateOrderBO = new UpdateOrderBO();
             				BeanUtils.copyProperties(param, updateOrderBO);
             				updateOrderBO.setKeyArea(updateOrderBO.getPartnerArea());
             				updateOrderBO.setOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
             				updateOrderBO.setSplitStatus(1);
-            				
+            				updateOrderBO.setOrderId(orderId);
             				UpdateSplitOrderBO firstSpiltOrder = new UpdateSplitOrderBO();
             				UpdateSplitOrderBO secondSpiltOrder = new UpdateSplitOrderBO();
             				List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
-            				firstSpiltOrder.setOrderId(param.getOrderId());
+            				firstSpiltOrder.setOrderId(orderId);
             				firstSpiltOrder.setSubOrderId(param.getOnceOrderid());
             				firstSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_25));
             				firstSpiltOrder.setSubNumber(loadingAmount);
@@ -359,7 +367,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				firstSpiltOrder.setIsProduce(0);
             				firstSpiltOrder.setIsStored(0);
             				
-            				secondSpiltOrder.setOrderId(param.getOrderId());
+            				secondSpiltOrder.setOrderId(orderId);
             				secondSpiltOrder.setSubOrderId(param.getTwiceOrderid());
             				secondSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_24));
             				secondSpiltOrder.setSubNumber(param.getCancelStockAmount());
@@ -371,6 +379,9 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
             				splitOrders.add(firstSpiltOrder);
             				splitOrders.add(secondSpiltOrder);
             				updateOrderBO.setSplitOrders(splitOrders);
+            				 List<String> deleteOrdeIdList = new ArrayList<>();
+            				 deleteOrdeIdList.add(param.getOrderId());
+            				updateOrderBO.setDeleteOrdeIdList(deleteOrdeIdList);
             				HttpResult updateResult  = orderServer.splitOrder(updateOrderBO);
                         	if(!updateResult.isSuccess()){
                                 LOGGER.error("装车,部分退库,修改订单状态失败!!!");
