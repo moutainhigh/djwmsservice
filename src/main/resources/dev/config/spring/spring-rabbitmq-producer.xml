@@ -42,6 +42,9 @@
                   exclusive="false" auto-declare="true"/>
     <rabbit:queue name="APPLOGOUT" durable="true" auto-delete="false"
                   exclusive="false" auto-declare="true"/>
+    <!-- 插入操作记录队列 -->
+    <rabbit:queue name="message.service.oms.insert.operaterecord.test" durable="true" auto-delete="false"
+                  exclusive="false" auto-declare="true"/>
 
     <!-- 定义direct exchange：交换器,路由器 durable:持久化 auto-delete:当所有绑定队列都不再使用时，是否自动删除该交换机
         绑定queueTest -->
@@ -50,6 +53,13 @@
             <rabbit:binding queue="APPREGISTER" key="queueAppRegisterKey"/>
             <rabbit:binding queue="APPPUSH" key="queueAppPushKey"/>
             <rabbit:binding queue="APPLOGOUT" key="queueAppLogoutKey"/>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+    
+    <!-- 定义OMS服务路由器 -->
+    <rabbit:direct-exchange name="exchangeOMS" durable="true" auto-delete="false" auto-declare="true">
+        <rabbit:bindings>
+            <rabbit:binding queue="message.service.oms.insert.operaterecord.test" key="queueInsertOperateRecordsKey"/>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
