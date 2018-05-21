@@ -1,15 +1,22 @@
 package com.djcps.wms.loadingtask.server;
 
-import org.apache.commons.lang3.StringUtils;
+import static com.djcps.wms.commons.utils.GsonUtils.gson;
+import static com.djcps.wms.commons.utils.HttpResultUtils.returnResult;
+
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.commons.constant.AppConstant;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.request.NumberServerHttpRequest;
+import com.djcps.wms.inneruser.model.param.RoleTypeBO;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.loadingtable.model.GetNumberBO;
 import com.djcps.wms.loadingtask.model.AddOrderApplicationListBO;
@@ -22,18 +29,15 @@ import com.djcps.wms.loadingtask.model.OutOrderInfoBO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
 import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
+import com.djcps.wms.loadingtask.model.result.OrderInventoryPO;
+import com.djcps.wms.loadingtask.model.result.OrderRedundantPO;
+import com.djcps.wms.loadingtask.model.result.PickerPO;
 import com.djcps.wms.loadingtask.request.WmsForLoadingTaskHttpRequest;
 import com.djcps.wms.outorder.request.WmsForOutOrderHttpRequest;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import rpc.plugin.http.HTTPResponse;
-
-import static com.djcps.wms.commons.utils.GsonUtils.gson;
-import static com.djcps.wms.commons.utils.HttpResultUtils.*;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author wyb
@@ -261,5 +265,112 @@ public class LoadingTaskServer {
         HttpResult result = returnResult(response);
         return result;
     }
-
+    /**
+     * 装车
+     * 
+     * @author wyb
+     * @param param
+     * @return
+     * @create 2018/5/19
+     */
+    public HttpResult load(LoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.load(requestBody);
+        return returnResult(httpResponse);
+    }
+    /**
+     * 全部退库
+     * 
+     * @author wyb
+     * @param param
+     * @return
+     * @create 2018/5/19
+     */
+    public HttpResult allAncellingStock(LoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.allAncellingStock(requestBody);
+        return returnResult(httpResponse);
+    }
+    /**
+     * 部分退库
+     * 
+     * @author wyb
+     * @param param
+     * @return
+     * @create 2018/5/19
+     */
+    public HttpResult partAancellingStock(LoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.partAncellingStock(requestBody);
+        return returnResult(httpResponse);
+    }
+    
+    /**
+     * 获取原库存表信息
+     * 
+     * @author wyb
+     * @param param
+     * @return
+     * @create 2018/3/21
+     */
+    public OrderInventoryPO getInventoryInfo(LoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody =RequestBody.create(MediaType.parse("application/json; charset=utf-8"),paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.getInventoryInfo(requestBody);
+        HttpResult httpResult = returnResult(httpResponse);
+        System.out.println(httpResult);
+        OrderInventoryPO result = null;
+        if(httpResponse.isSuccessful()){
+            String http = gson.toJson(httpResult.getData());
+            result = gson.fromJson(http, OrderInventoryPO.class);
+        }
+        if(result == null){
+            LOGGER.error("Http请求出错,HttpResult结果为null");
+        }
+        return result;
+    }
+    
+    
+    
+    public OrderRedundantPO getOrderRedundantInfo(LoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody =RequestBody.create(MediaType.parse("application/json; charset=utf-8"),paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.getOrderRedundantInfo(requestBody);
+        HttpResult httpResult = returnResult(httpResponse);
+        System.out.println(httpResult);
+        OrderRedundantPO result = null;
+        if(httpResponse.isSuccessful()){
+            String http = gson.toJson(httpResult.getData());
+            result = gson.fromJson(http, OrderRedundantPO.class);
+        }
+        if(result == null){
+            LOGGER.error("Http请求出错,HttpResult结果为null");
+        }
+        return result;
+    }
+    /**
+     * 获取提货员信息列表
+     * 
+     * @param json
+     * @return
+     **/
+    public List<PickerPO> getPickerList(LoadingBO param) {
+        String paramJson = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), paramJson);
+        HTTPResponse httpResponse = wmsForLoadingTaskHttpRequest.getPickerList(requestBody);
+        if (httpResponse.isSuccessful()) {
+            HttpResult result = gson.fromJson(httpResponse.getBodyString(), HttpResult.class);
+            if (result.isSuccess()) {
+                String data = gson.toJson(result.getData());
+                if (!ObjectUtils.isEmpty(data)) {
+                    List<PickerPO> wmsRoleInfoPOList = JSONObject.parseArray(data,PickerPO.class);
+                    return wmsRoleInfoPOList;
+                }
+            }
+        }
+        return null;
+    }
 }

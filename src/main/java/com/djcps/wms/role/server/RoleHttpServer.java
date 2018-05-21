@@ -77,7 +77,7 @@ public class RoleHttpServer {
      *
      * @param
      * @return
-     * @author wzy
+     * @author wyb
      * @date 2018/4/16 15:54
      **/
     public List<WmsRoleInfoPO> listRole(RoleTypeBO getRoleTypeBO) {

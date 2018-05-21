@@ -3,6 +3,7 @@ package com.djcps.wms.loadingtask.model;
 import java.util.List;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.loadingtask.model.result.OrderInventoryPO;
 import com.djcps.wms.record.model.OrderOperationRecordPO;
 
 /**
@@ -61,6 +62,16 @@ public class LoadingBO extends BaseAddBO {
      */
     private Integer realDeliveryAmount;
     /**
+     * 在库数量
+     */
+    private Integer amountInStock;
+
+    /**
+     * 出库数量
+     */
+    private Integer amountOutStock;
+
+    /**
      * 订单装车操作记录信息
      */
     private List<OrderOperationRecordPO> list;
@@ -68,6 +79,46 @@ public class LoadingBO extends BaseAddBO {
      * 退库拆单操作记录信息
      */
     private List<OrderOperationRecordPO> splitOrder;
+    /**
+     * 部分退库时插入冗余表数据
+     */
+    private List<OrderRedundantBO> orderRedundantBOList;
+    /**
+     * 部分退库时存入入库表订单信息
+     */
+    private List<OrderInventoryPO> orderInventoryBOList;
+
+    public List<OrderInventoryPO> getOrderInventoryBOList() {
+        return orderInventoryBOList;
+    }
+
+    public void setOrderInventoryBOList(List<OrderInventoryPO> orderInventoryBOList) {
+        this.orderInventoryBOList = orderInventoryBOList;
+    }
+
+    public List<OrderRedundantBO> getOrderRedundantBOList() {
+        return orderRedundantBOList;
+    }
+
+    public void setOrderRedundantBOList(List<OrderRedundantBO> orderRedundantBOList) {
+        this.orderRedundantBOList = orderRedundantBOList;
+    }
+
+    public Integer getAmountInStock() {
+        return amountInStock;
+    }
+
+    public Integer getAmountOutStock() {
+        return amountOutStock;
+    }
+
+    public void setAmountInStock(Integer amountInStock) {
+        this.amountInStock = amountInStock;
+    }
+
+    public void setAmountOutStock(Integer amountOutStock) {
+        this.amountOutStock = amountOutStock;
+    }
 
     public List<OrderOperationRecordPO> getSplitOrder() {
         return splitOrder;
@@ -170,7 +221,10 @@ public class LoadingBO extends BaseAddBO {
         return "LoadingBO [loadingAmount=" + loadingAmount + ", orderAmount=" + orderAmount + ", orderId=" + orderId
                 + ", wayBillId=" + wayBillId + ", status=" + status + ", cancelStockAmount=" + cancelStockAmount
                 + ", cancelType=" + cancelType + ", onceOrderid=" + onceOrderid + ", twiceOrderid=" + twiceOrderid
-                + ", realDeliveryAmount=" + realDeliveryAmount + ", list=" + list + ", splitOrder=" + splitOrder + "]";
+                + ", realDeliveryAmount=" + realDeliveryAmount + ", amountInStock=" + amountInStock
+                + ", amountOutStock=" + amountOutStock + ", list=" + list + ", splitOrder=" + splitOrder
+                + ", orderRedundantBOList=" + orderRedundantBOList + ", orderInventoryBOList=" + orderInventoryBOList
+                + "]";
     }
 
 }

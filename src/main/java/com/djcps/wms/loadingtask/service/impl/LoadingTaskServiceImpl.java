@@ -1,16 +1,16 @@
 package com.djcps.wms.loadingtask.service.impl;
 
+import static com.djcps.wms.commons.msg.MsgTemplate.failureMsg;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +22,11 @@ import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
 import com.djcps.wms.abnormal.model.OrderIdListBO;
 import com.djcps.wms.abnormal.server.AbnormalServer;
-import com.djcps.wms.commons.base.BaseAddBO;
-import com.djcps.wms.commons.constant.AppConstant;
+import com.djcps.wms.cancelstock.model.param.AddCancelStockBO;
+import com.djcps.wms.cancelstock.server.CancelStockServer;
 import com.djcps.wms.commons.enums.FluteTypeEnum1;
 import com.djcps.wms.commons.enums.SysMsgEnum;
 import com.djcps.wms.commons.httpclient.HttpResult;
-import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
 import com.djcps.wms.inneruser.model.result.UserInfoVO;
@@ -42,7 +41,7 @@ import com.djcps.wms.loadingtask.model.GetOrderByWayBillIdPO;
 import com.djcps.wms.loadingtask.model.LoadingBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonBO;
 import com.djcps.wms.loadingtask.model.LoadingPersonIdBO;
-import com.djcps.wms.loadingtask.model.OrderInfoBO;
+import com.djcps.wms.loadingtask.model.OrderRedundantBO;
 import com.djcps.wms.loadingtask.model.OutOrderInfoBO;
 import com.djcps.wms.loadingtask.model.RejectRequestBO;
 import com.djcps.wms.loadingtask.model.RemoveLoadingPersonBO;
@@ -51,7 +50,9 @@ import com.djcps.wms.loadingtask.model.result.ConfirmPO;
 import com.djcps.wms.loadingtask.model.result.FinishLoadingPO;
 import com.djcps.wms.loadingtask.model.result.OrderIdAndLoadingAmountPO;
 import com.djcps.wms.loadingtask.model.result.OrderInfoPO;
+import com.djcps.wms.loadingtask.model.result.OrderInventoryPO;
 import com.djcps.wms.loadingtask.model.result.OrderRedundantPO;
+import com.djcps.wms.loadingtask.model.result.PickerPO;
 import com.djcps.wms.loadingtask.server.LoadingTaskServer;
 import com.djcps.wms.loadingtask.service.LoadingTaskService;
 import com.djcps.wms.order.model.ChildOrderBO;
@@ -59,7 +60,6 @@ import com.djcps.wms.order.model.OrderIdBO;
 import com.djcps.wms.order.model.OrderIdsBO;
 import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 import com.djcps.wms.order.model.onlinepaperboard.BatchOrderDetailListPO;
-import com.djcps.wms.order.model.onlinepaperboard.BatchOrderIdListBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateOrderBO;
 import com.djcps.wms.order.model.onlinepaperboard.UpdateSplitOrderBO;
 import com.djcps.wms.order.server.OrderServer;
@@ -67,8 +67,6 @@ import com.djcps.wms.push.mq.producer.AppProducer;
 import com.djcps.wms.record.model.OrderOperationRecordPO;
 import com.djcps.wms.record.server.OperationRecordServer;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 
 /**
  * 装车实现类
@@ -89,6 +87,8 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
 
     @Autowired
     private AbnormalServer abnormalServer;
+    @Autowired
+    private CancelStockServer cancelStockServer;
     
     @Resource
     private AppProducer appProducer;
@@ -778,7 +778,7 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
                 orderOperationRecordPO.setFluteType(FluteTypeEnum1.getCode(info.getFluteType()));
                 orderOperationRecordPO.setRelativeName(info.getProductName());
                 orderOperationRecordPO.setRelativeId(param.getOrderId());
-                orderOperationRecordPO.setAmount(String.valueOf(param.getOrderAmount()-param.getLoadingAmount()));
+                orderOperationRecordPO.setAmount(String.valueOf(param.getRealDeliveryAmount()-param.getLoadingAmount()));
               //计算操作面积
                 double area = operationRecordServer.getVolume(Double.parseDouble(info.getMaterialLength()), Double.parseDouble(info.getMaterialWidth()), param.getOrderAmount()-param.getLoadingAmount());
                 orderOperationRecordPO.setArea(String.valueOf(area));
@@ -788,4 +788,264 @@ public class LoadingTaskServiceImpl implements LoadingTaskService {
         }
         return list;
 	}
+    /**
+     * 改造装车
+     * @param param
+     * @return
+     */
+    public Map<String, Object> load(LoadingBO param) {
+        //处理操作记录数据
+        List<OrderOperationRecordPO> orderOperationRecordInfo = orderOperationRecordInfo(param);
+        param.setList(orderOperationRecordInfo);
+        List<String> childOrderIds = new ArrayList<String>();
+        childOrderIds.add(param.getOrderId());
+        OrderIdsBO orderIdsBO = new OrderIdsBO();
+        orderIdsBO.setChildOrderIds(childOrderIds);
+        orderIdsBO.setPartnerArea(param.getPartnerArea());
+        
+        List<OrderInfoPO> orderInfo = new ArrayList<>();
+        // 从订单服务获取订单信息
+        BatchOrderDetailListPO batchOrderDetailList = orderServer.getOrderOrSplitOrder(orderIdsBO);
+        List<WarehouseOrderDetailPO> orderList = batchOrderDetailList.getOrderList();
+        if(!ObjectUtils.isEmpty(orderList)){
+            List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(orderList);
+            for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+                OrderInfoPO orderInfoPO = new OrderInfoPO();
+                BeanUtils.copyProperties(warehouseOrderDetailPO, orderInfoPO);
+                orderInfo.add(orderInfoPO);
+            }
+        }else{
+            List<WarehouseOrderDetailPO> splitOrderList = batchOrderDetailList.getSplitOrderList();
+            List<WarehouseOrderDetailPO> joinOrderParamInfo = orderServer.joinOrderParamInfo(splitOrderList);
+            for (WarehouseOrderDetailPO warehouseOrderDetailPO : joinOrderParamInfo) {
+                OrderInfoPO orderInfoPO = new OrderInfoPO();
+                BeanUtils.copyProperties(warehouseOrderDetailPO, orderInfoPO);
+                orderInfo.add(orderInfoPO);
+            }
+        }
+        for (OrderInfoPO orderInfoPO : orderInfo) {
+            if (!orderInfoPO.getOrderStatus().equals(LoadingTaskConstant.ORDERSTATUS_24)) {
+                return MsgTemplate.failureMsg(LoadingTaskEnum.NOTLOADING);
+            }
+        }
+            Integer loadingAmount = param.getLoadingAmount();
+            Integer orderAmount = param.getOrderAmount();
+            if(!param.getRealDeliveryAmount().equals(loadingAmount)) {
+                    // 全部退库
+                    if (loadingAmount == 0) {
+                        param.setCancelStockAmount(orderAmount);
+                        //获取原库存表信息
+                        OrderInventoryPO orderInventoryBO = loadingTaskServer.getInventoryInfo(param);
+                        param.setAmountInStock(
+                                orderInventoryBO.getAmountInStock() + param.getCancelStockAmount());
+                        if ((orderInventoryBO.getAmountOutStock() - param.getCancelStockAmount()) < 0) {
+                            return failureMsg(LoadingTaskEnum.UPDATE_CANCEL_FAIL);
+                        }
+                        param.setAmountOutStock(
+                                orderInventoryBO.getAmountOutStock() - param.getCancelStockAmount());
+                        
+                        int cancelAmount = param.getOrderAmount() - param.getLoadingAmount();
+                        AddCancelStockBO addCancelStockBO = new AddCancelStockBO();
+                        BeanUtils.copyProperties(param, addCancelStockBO);
+                        addCancelStockBO.setCancelAmount(cancelAmount);
+                        addCancelStockBO.setOrder(param.getOrderId());
+                        List<PickerPO> pickerPOList = loadingTaskServer.getPickerList(param);
+                        Optional optional = pickerPOList.stream().findFirst();
+                        if (optional.isPresent()) {
+                            PickerPO pickerPO = (PickerPO) optional.get();
+                            addCancelStockBO.setPickerId(pickerPO.getPickerId());
+                            addCancelStockBO.setPickerName(pickerPO.getPickerName());
+                            if(!ObjectUtils.isEmpty(pickerPO.getPickerPhone())) {
+                                addCancelStockBO.setPickerPhone(pickerPO.getPickerPhone());  
+                            }
+                        }
+                        HttpResult cancelStock  = cancelStockServer.addCancelStock(addCancelStockBO);
+                        
+                        if(cancelStock.isSuccess()) {
+                            HttpResult result = loadingTaskServer.allAncellingStock(param);
+                       
+                        // 更新订单状态
+                        if (result.isSuccess()) {
+                            
+                            
+                            List<String> orderIdList = new ArrayList<>();
+                            orderIdList.add(param.getOrderId());
+                            
+                            List<OrderIdBO> orderIdBOList = new ArrayList<>();
+                            OrderIdBO order = new OrderIdBO();
+                            order.setOrderId(param.getOrderId());
+                            order.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+                            orderIdBOList.add(order);
+                            HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
+                            if(!updateResult.isSuccess()){
+                                LOGGER.error("装车,全部退库环节,修改订单状态失败!!!");
+                                return MsgTemplate.customMsg(updateResult);
+                            }
+                            Boolean compareOrderStatus = orderServer.compareOrderStatus(orderIdList,  param.getPartnerArea(),param.getPartnerId());
+                            if(compareOrderStatus==false){
+                              return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+                            } else {
+                                return MsgTemplate.customMsg(result);
+                            }
+                        }
+                    }
+                        return MsgTemplate.customMsg(cancelStock);
+                    } else {
+                        param.setOnceOrderid(
+                                new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_1).toString());
+                        param.setTwiceOrderid(
+                                new StringBuffer(param.getOrderId()).append(LoadingTaskConstant.BREAK_UP_ORDER_2).toString());
+                        //组合订单拆单操作记录数据
+                        List<OrderOperationRecordPO> splitOrder = SplitOrderOperationInfo(param);
+                        param.setSplitOrder(splitOrder);
+                        // 部分退库
+                        param.setCancelStockAmount(param.getRealDeliveryAmount() - loadingAmount);
+                        param.setCancelType(LoadingTaskConstant.CANCEL_TYPE_2);
+                     // TODO t_cborder_redundant,新增两条子数据
+                        OrderRedundantBO orderRedundantBO = new OrderRedundantBO();
+                        OrderRedundantBO orderRedundantBO2 = new OrderRedundantBO();
+                     // TODO 获取原t_cborder_redundant数据
+                        OrderRedundantPO oldOrder = loadingTaskServer.getOrderRedundantInfo(param);
+                        //组合数据存入冗余表
+                        BeanUtils.copyProperties(oldOrder, orderRedundantBO);
+                        BeanUtils.copyProperties(oldOrder, orderRedundantBO2);
+                        orderRedundantBO.setOrderId(param.getOnceOrderid());
+                        orderRedundantBO.setStatus(LoadingTaskConstant.ORDERTSTATUS_25);
+                        orderRedundantBO.setIsSplit(2);
+                        orderRedundantBO2.setIsSplit(2);
+                        orderRedundantBO2.setOrderId(param.getTwiceOrderid());
+                        orderRedundantBO2.setStatus(LoadingTaskConstant.ORDERSTATUS_24);
+                        List<OrderRedundantBO> orderRedundantBOList = new ArrayList<>();
+                        orderRedundantBOList.add(orderRedundantBO);
+                        orderRedundantBOList.add(orderRedundantBO2);
+                        param.setOrderRedundantBOList(orderRedundantBOList);
+                        //获取原库存表信息
+                        OrderInventoryPO orderInventoryBO = loadingTaskServer.getInventoryInfo(param);
+                        param.setAmountInStock(
+                                orderInventoryBO.getAmountInStock() + param.getCancelStockAmount());
+                        if ((orderInventoryBO.getAmountOutStock()
+                                - param.getCancelStockAmount()) < 0) {
+                            return failureMsg(LoadingTaskEnum.UPDATE_CANCEL_FAIL);
+                        }
+                        param.setAmountOutStock(
+                                orderInventoryBO.getAmountOutStock() - param.getCancelStockAmount());
+                     // TODO 插入t_cborder_inventory表,新增两条子订单
+                        OrderInventoryPO orderInventoryPO = new OrderInventoryPO();
+                        OrderInventoryPO orderInventoryPO2 = new OrderInventoryPO();
+                        List<OrderInventoryPO> orderInventoryBOList = new ArrayList<>();
+                        //获取原库存表信息
+                        OrderInventoryPO oldInventory = loadingTaskServer.getInventoryInfo(param);
+                        //组合入库信息传入服务端保存到入库表
+                        BeanUtils.copyProperties(oldInventory, orderInventoryPO);
+                        BeanUtils.copyProperties(oldInventory, orderInventoryPO2);
+                        orderInventoryPO.setOrderId(param.getOnceOrderid());
+                        orderInventoryPO2.setOrderId(param.getTwiceOrderid());
+                        orderInventoryPO.setIssplit(2);
+                        orderInventoryPO2.setIssplit(2);
+                        orderInventoryPO.setAmount(param.getLoadingAmount());
+                        orderInventoryPO2.setAmount(param.getCancelStockAmount());
+                        orderInventoryBOList.add(orderInventoryPO);
+                        orderInventoryBOList.add(orderInventoryPO2);
+                        param.setOrderInventoryBOList(orderInventoryBOList);
+                        //组合退库信息 存入退库表
+                        int cancelAmount = param.getOrderAmount() - param.getLoadingAmount();
+                        AddCancelStockBO addCancelStockBO = new AddCancelStockBO();
+                        BeanUtils.copyProperties(param, addCancelStockBO);
+                        addCancelStockBO.setCancelAmount(cancelAmount);
+                        addCancelStockBO.setOrder(param.getTwiceOrderid());
+                        List<PickerPO> pickerPOList = loadingTaskServer.getPickerList(param);
+                        Optional optional = pickerPOList.stream().findFirst();
+                        if (optional.isPresent()) {
+                            PickerPO pickerPO = (PickerPO) optional.get();
+                            addCancelStockBO.setPickerId(pickerPO.getPickerId());
+                            addCancelStockBO.setPickerName(pickerPO.getPickerName());
+                            if(!ObjectUtils.isEmpty(pickerPO.getPickerPhone())) {
+                                addCancelStockBO.setPickerPhone(pickerPO.getPickerPhone());  
+                            }
+                            
+                        }
+                        //存入退库表
+                        HttpResult cancelStock  = cancelStockServer.addCancelStock(addCancelStockBO);
+                        if(cancelStock.isSuccess()) {
+                        HttpResult result = loadingTaskServer.partAancellingStock(param);
+                        if (result.isSuccess()) {
+                           String orderId = null;
+                            if (param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER) > 0) {
+                             // 截取差分订单编号后面的-1或-2
+                                orderId = param.getOrderId().substring(0,
+                                        param.getOrderId().indexOf(LoadingTaskConstant.SUBSTRING_ORDER));
+                            }else {
+                                orderId = param.getOrderId();
+                            }
+                            //OMS订单拆分组织参数
+                            UpdateOrderBO updateOrderBO = new UpdateOrderBO();
+                            BeanUtils.copyProperties(param, updateOrderBO);
+                            updateOrderBO.setKeyArea(updateOrderBO.getPartnerArea());
+                            updateOrderBO.setOrderStatus(LoadingTaskConstant.REDUNDANTSTATUS_24);
+                            updateOrderBO.setSplitStatus(1);
+                            updateOrderBO.setOrderId(orderId);
+                            UpdateSplitOrderBO firstSpiltOrder = new UpdateSplitOrderBO();
+                            UpdateSplitOrderBO secondSpiltOrder = new UpdateSplitOrderBO();
+                            List<UpdateSplitOrderBO> splitOrders = new ArrayList<>();
+                            firstSpiltOrder.setOrderId(orderId);
+                            firstSpiltOrder.setSubOrderId(param.getOnceOrderid());
+                            firstSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_25));
+                            firstSpiltOrder.setSubNumber(loadingAmount);
+                            firstSpiltOrder.setKeyArea(param.getPartnerArea());
+                            firstSpiltOrder.setInStock(loadingAmount);
+                            firstSpiltOrder.setIsException(0);
+                            firstSpiltOrder.setIsProduce(0);
+                            firstSpiltOrder.setIsStored(0);
+                            
+                            secondSpiltOrder.setOrderId(orderId);
+                            secondSpiltOrder.setSubOrderId(param.getTwiceOrderid());
+                            secondSpiltOrder.setSubStatus(Integer.valueOf(LoadingTaskConstant.REDUNDANTSTATUS_24));
+                            secondSpiltOrder.setSubNumber(param.getCancelStockAmount());
+                            secondSpiltOrder.setKeyArea(param.getPartnerArea());
+                            secondSpiltOrder.setInStock(param.getCancelStockAmount());
+                            secondSpiltOrder.setIsException(0);
+                            secondSpiltOrder.setIsProduce(0);
+                            secondSpiltOrder.setIsStored(0);
+                            splitOrders.add(firstSpiltOrder);
+                            splitOrders.add(secondSpiltOrder);
+                            updateOrderBO.setSplitOrders(splitOrders);
+                             List<String> deleteOrdeIdList = new ArrayList<>();
+                             deleteOrdeIdList.add(param.getOrderId());
+                            updateOrderBO.setDeleteOrdeIdList(deleteOrdeIdList);
+                            HttpResult updateResult  = orderServer.splitOrder(updateOrderBO);
+                            if(!updateResult.isSuccess()){
+                                LOGGER.error("装车,部分退库,修改订单状态失败!!!");
+                                return MsgTemplate.customMsg(updateResult);
+                            }
+                            return MsgTemplate.customMsg(result);
+                        } else {
+                            
+                            return MsgTemplate.customMsg(result);
+                        }
+                    }
+                        return MsgTemplate.customMsg(cancelStock);
+                    }
+            }
+        HttpResult result = loadingTaskServer.load(param);
+        if (result.isSuccess()) {
+            List<OrderIdBO> orderIdBOList = new ArrayList<>();
+            List<String> orderId = new ArrayList<>();
+            OrderIdBO firstOrder = new OrderIdBO();
+            firstOrder.setOrderId(param.getOrderId());
+            firstOrder.setStatus(LoadingTaskConstant.REDUNDANTSTATUS_25);
+            orderIdBOList.add(firstOrder);
+            orderId.add(param.getOrderId());
+            HttpResult updateResult = orderServer.updateOrderOrSplitOrder(param.getPartnerArea(),orderIdBOList);
+            if(!updateResult.isSuccess()){
+                LOGGER.error("装车,部分退库,修改订单状态失败!!!");
+                return MsgTemplate.customMsg(updateResult);
+            }
+            Boolean compareOrderStatus = orderServer.compareOrderStatus(orderId,param.getPartnerArea(),param.getPartnerId());
+            if(compareOrderStatus==false){
+              return MsgTemplate.failureMsg("------拆单状态比子单状态小,需要修改子单状态,但是修改子订单状态失败!!!------");
+            }
+        }
+        return MsgTemplate.customMsg(result);
+    }
+
 }

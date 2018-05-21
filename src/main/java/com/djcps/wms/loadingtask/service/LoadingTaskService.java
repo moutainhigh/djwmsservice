@@ -110,4 +110,5 @@ public interface LoadingTaskService {
 	 * @date:2018年4月4日
 	 */
 	Map<String, Object> getLoadingTableIdByUserId(UserInfoVO userInfoVO);
+	Map<String, Object> load(LoadingBO param);
 }
