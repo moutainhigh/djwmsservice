@@ -25,9 +25,12 @@ import com.djcps.wms.order.model.onlinepaperboard.PaperboardResultDataPO;
 import com.djcps.wms.order.model.onlinepaperboard.QueryObjectBO;
 import com.djcps.wms.order.server.OrderServer;
 import com.djcps.wms.order.service.OrderService;
+import com.djcps.wms.stock.constant.OperationTypeConstant;
+import com.djcps.wms.stock.enums.StockMsgEnum;
+import com.djcps.wms.stock.model.GetorderInfoListBO;
 import com.djcps.wms.stock.model.SelectAreaByOrderIdBO;
+import com.djcps.wms.stock.server.StockServer;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
@@ -48,7 +51,8 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private OrderServer orderServer;
-	
+	@Autowired
+    private StockServer stockServer;
 	@Override
 	public Map<String, Object> getOnlinePaperboardList(QueryObjectBO param) {
 		HttpResult result = orderServer.getOnlinePaperboardList(param);
@@ -107,9 +111,33 @@ public class OrderServiceImpl implements OrderService {
 			return MsgTemplate.successMsg(joinOrderParamInfo.get(0));
 		}
 	}
-	
+	/**
+	 * 判断该订单是否为移库所对应仓库的订单
+	 * @param param
+	 * @return
+	 */
+	public boolean getorderInfoList(BatchOrderIdListBO param) {
+	    GetorderInfoListBO getorderInfoListBO = new GetorderInfoListBO();
+	    getorderInfoListBO.setList(param.getOrderIds());
+	    getorderInfoListBO.setPartnerId(param.getPartnerId());
+	    getorderInfoListBO.setWarehouseId(param.getWarehouseId());
+	    HttpResult result = stockServer.getOrderInfoList(getorderInfoListBO);
+	    if(ObjectUtils.isEmpty(result.getData())) {
+	        return false;
+	    }else {
+	        return true;
+	    }
+	}
 	@Override 
 	public Map<String, Object> getPdaOrderByOrderId(BatchOrderIdListBO param) {
+	    //判断该订单是否为移库所对应仓库的订单
+	    if(OperationTypeConstant.REMOVE_WAREHOUSE.equals(param.getOperationType())) {
+	        boolean bool = getorderInfoList(param);
+	        if(!bool) {
+	            return MsgTemplate.failureMsg(StockMsgEnum.NOT_REMOVE);
+	        }
+	    }
+	    
 		//判断扫面或者网页端传来的订单号是否为拆分,是的话则需要进行查询另外订单
 		List<OrderIdBO> splitOrderList = new ArrayList<>();
 		OrderIdBO order = new OrderIdBO();

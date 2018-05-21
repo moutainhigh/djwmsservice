@@ -16,14 +16,8 @@
         <!-- 服务 -->
         <!-- 统一消息推送服务-->
         <property name="messageServer" value="http://192.168.10.200/djmsgpushserver/" />
-        <!--  wms服务端 -->     
-	<!--   <property  name="wmsServer" value="http://192.168.2.73:9900/djwmsserver/" /> -->
-      <!-- 	<property name="wmsServer" value="http://192.168.2.73:9900/djwmsserver/" /> -->
-     	 <!-- <property name="wmsServer" value="http://192.168.2.71:8080/djwmsserver/"/>  -->
-      	<property name="wmsServer" value="http://192.168.2.74:8082/djwmsserver/"/>
-      <!-- 	<property name="wmsServer" value="http://localhost:9900/djwmsserver/"/> -->
-       <!--  <property name="wmsServer" value="http://192.168.2.76:8081/djwmsserver/"/> -->
-     	 <!-- <property name="wmsServer" value="http://192.168.2.111:8080/djwmsserver/" /> -->
+        <!-- wms服务端 -->     
+	    <property  name="wmsServer" value="http://192.168.2.73:9900/djwmsserver/" />
      	<!-- 编号服务 --> 
         <property name="numberServer" value="http://192.168.10.200:80/djnumserver/"/>
         <!-- 地址服务 --> 
@@ -33,13 +27,9 @@
         <!-- 高德地图Web服务 -->
         <property name="mapServer" value="http://restapi.amap.com/v3/" />
         <!-- 订单服务 -->
-		<!-- <property name="orderServer" value="http://192.168.2.73:8080/djorder/" />  -->
-        <property name="orderServer" value="http://192.168.2.74:8080/djorder/" />
-        <!-- <property name="orderServer" value="http://192.168.10.200/djorderserver/" /> -->
+		<property name="orderServer" value="http://192.168.2.73:8080/djorder/" /> 
         <!-- 郑天伟临时修改订单服务 -->
-      <!--   <property name="updateOrderServer" value="http://192.168.2.74:8080/djorder/" /> -->
-		<!-- <property name="updateOrderServer" value="http://192.168.2.73:8080/djorder/" /> -->
-      	<property name="updateOrderServer" value="http://192.168.2.74:8080/djorder/" />
+		<property name="updateOrderServer" value="http://192.168.2.73:8080/djorder/" />
       	<!-- 姬明博线上纸板订单服务 -->
       	<property name="onlinePaperboardServer" value="http://172.16.0.33:8081/" />
       	<!-- 董毅锴线下纸板订单服务 -->

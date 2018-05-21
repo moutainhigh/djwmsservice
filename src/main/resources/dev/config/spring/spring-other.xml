@@ -14,11 +14,11 @@
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
         <constructor-arg ref="httpClientFactory"/>
     </bean>
-    
     <!-- task任务扫描注解-->
     <task:annotation-driven scheduler="myScheduler" executor="asyncExecutor"/>
     <!--线程池-->
     <task:executor id="asyncExecutor" pool-size="20" queue-capacity="10"/>
     <!--线程池-->
     <task:scheduler id="myScheduler" pool-size="10"/>
+    
 </beans>

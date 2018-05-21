@@ -61,4 +61,5 @@ public interface CancelStockServerHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("cancelStock/getCancelStockByPickerId.do")
 	public HTTPResponse getCancelStockByPickerId(@Body RequestBody rb);
+
 }

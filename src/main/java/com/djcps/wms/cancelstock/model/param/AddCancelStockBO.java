@@ -27,7 +27,7 @@ public class AddCancelStockBO extends BaseAddBO implements Serializable{
 	/**
 	 * 退库数量
 	 */
-	@NotBlank
+	@NotNull
 	private Integer cancelAmount;
 	/**
 	 * 提货人id(提货人即退库人)
@@ -42,12 +42,10 @@ public class AddCancelStockBO extends BaseAddBO implements Serializable{
 	/**
 	 * 提货员联系方式
 	 */
-	@NotBlank
 	private String pickerPhone;
 	/**
 	 * 任务状态(0未完成;1完成)
 	 */
-	@NotNull
 	private Integer status;
 	
 	public String getOrder() {

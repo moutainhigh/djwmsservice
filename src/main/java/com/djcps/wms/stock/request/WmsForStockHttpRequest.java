@@ -94,4 +94,14 @@ public interface WmsForStockHttpRequest {
 	@Headers("content-type:application/json")
 	@POST("entry/getInventoryFidByOrderId.do")
 	HTTPResponse getInventoryFidByOrderId(@Body RequestBody rb);
+	   /**
+     * 根据条件批量获取订单信息
+     * @param rb
+     * @return
+     * @author:wyb
+     * @date:2018年5月17日
+     */
+	@Headers("content-type:application/json")
+    @POST("entry/getOrderInfoList.do")
+    HTTPResponse getOrderInfoList(@Body RequestBody rb);
 }

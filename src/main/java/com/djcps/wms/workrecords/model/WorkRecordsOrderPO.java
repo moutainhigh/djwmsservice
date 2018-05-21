@@ -90,6 +90,18 @@ public class WorkRecordsOrderPO {
      * 产品规格
      */
     private String productSize;
+    /**
+     * 订单状态
+     */
+    private Integer orderStatus;
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
     public String getMaterialSize() {
         return materialSize;
@@ -234,7 +246,7 @@ public class WorkRecordsOrderPO {
                 + ", materialName=" + materialName + ", materialLength=" + materialLength + ", materialWidth="
                 + materialWidth + ", fluteType=" + fluteType + ", boxHeight=" + boxHeight + ", boxLength=" + boxLength
                 + ", boxWidth=" + boxWidth + ", orderAmount=" + orderAmount + ", unit=" + unit + ", materialSize="
-                + materialSize + ", productSize=" + productSize + "]";
+                + materialSize + ", productSize=" + productSize + ", orderStatus=" + orderStatus + "]";
     }
 
 }

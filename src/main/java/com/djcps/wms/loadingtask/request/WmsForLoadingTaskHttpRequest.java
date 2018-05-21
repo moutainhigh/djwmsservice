@@ -123,4 +123,57 @@ public interface WmsForLoadingTaskHttpRequest {
     @Headers("content-type:application/json")
     @POST("loadingtask/getLoadingTableIdByUserId.do")
 	HTTPResponse getLoadingTableIdByUserId(@Body RequestBody rb);
+    /**
+     * 装车
+     * 
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("loadingtask/loading.do")
+    HTTPResponse load(@Body RequestBody json);
+    /**
+     * 全部退库
+     * 
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("loadingtask/allAncellingStock.do")
+    HTTPResponse allAncellingStock(@Body RequestBody json);
+    /**
+     * 部分退库
+     * 
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("loadingtask/partAncellingStock.do")
+    HTTPResponse partAncellingStock(@Body RequestBody json);
+    /**
+     * 获取原库存表信息
+     * 
+     * @param json
+     * @return
+     **/
+    @Headers("content-type:application/json")
+    @POST("loadingtask/getInventoryInfo.do")
+    HTTPResponse getInventoryInfo(@Body RequestBody json);
+    /**
+     * 获取提货员信息列表
+     * 
+     * @param json
+     * @return
+     **/
+    @Headers("content-type:application/json")
+    @POST("loadingtask/getPickerList.do")
+    HTTPResponse getPickerList(@Body RequestBody json);
+    /**
+     * 获取订单冗余表信息
+     * @param json
+     * @return
+     */
+    @Headers("content-type:application/json")
+    @POST("loadingtask/getOrderRedundantInfo.do")
+    HTTPResponse getOrderRedundantInfo(@Body RequestBody json);
 }
