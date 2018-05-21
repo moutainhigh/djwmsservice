@@ -374,6 +374,15 @@ public class AllocationServer {
 		return verifyHttpResult(http);
 	}
 	
+	public HttpResult addUnExcellentAllocation(AddExcellentAllocationBO param) {
+		//将请求参数转化为requestbody格式
+		String json = gson.toJson(param);
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.addUnExcellentAllocation(rb);
+		return verifyHttpResult(http);
+	}
+	
 	public HttpResult managerMoveOrder(MoveOrderPO param) {
 		//将请求参数转化为requestbody格式
 		String json = gson.toJson(param);
@@ -425,6 +434,15 @@ public class AllocationServer {
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息
 		HTTPResponse http = allocationHttpRequest.existIntelligentAlloca(rb);
+		return verifyHttpResult(http);
+	}
+	
+	public HttpResult existUnIntelligentAlloca(String allocationId) {
+		//将请求参数转化为requestbody格式
+		String json = "{\"allocationId\":"+allocationId+"}";
+		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
+		//调用借口获取信息
+		HTTPResponse http = allocationHttpRequest.existUnIntelligentAlloca(rb);
 		return verifyHttpResult(http);
 	}
 	

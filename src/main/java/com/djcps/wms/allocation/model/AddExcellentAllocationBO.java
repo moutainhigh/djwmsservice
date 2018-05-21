@@ -3,10 +3,12 @@ package com.djcps.wms.allocation.model;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.djcps.wms.commons.base.BaseAddBO;
+import com.djcps.wms.order.model.WarehouseOrderDetailPO;
 
 /**
  * 新增智能配货
@@ -21,12 +23,10 @@ public class AddExcellentAllocationBO extends BaseAddBO implements Serializable{
 	/**
 	 * 智能配货id
 	 */
-	@NotBlank
 	private String allocationId;
 	/**
 	 * 提货单
 	 */
-	@NotBlank
 	private String deliveryId;
 	/**
 	 * 车辆id
@@ -36,6 +36,17 @@ public class AddExcellentAllocationBO extends BaseAddBO implements Serializable{
 	
 	private String waybillId;
 	
+	/**
+	 * 订单详情信息
+	 */
+	private List<WarehouseOrderDetailPO> orderList;
+	
+	public List<WarehouseOrderDetailPO> getOrderList() {
+		return orderList;
+	}
+	public void setOrderList(List<WarehouseOrderDetailPO> orderList) {
+		this.orderList = orderList;
+	}
 	public String getWaybillId() {
 		return waybillId;
 	}
@@ -63,7 +74,7 @@ public class AddExcellentAllocationBO extends BaseAddBO implements Serializable{
 	@Override
 	public String toString() {
 		return "AddExcellentAllocationBO [allocationId=" + allocationId + ", deliveryId=" + deliveryId + ", carId="
-				+ carId + "]";
+				+ carId + ", waybillId=" + waybillId + ", orderList=" + orderList + "]";
 	}
 	
 }
