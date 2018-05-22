@@ -6,6 +6,7 @@ import com.baidu.unbiz.fluentvalidator.ResultCollectors;
 import com.baidu.unbiz.fluentvalidator.jsr303.HibernateSupportedValidator;
 import com.djcps.log.DjcpsLogger;
 import com.djcps.log.DjcpsLoggerFactory;
+import com.djcps.wms.commons.aop.inneruser.annotation.InnerUser;
 import com.djcps.wms.commons.base.BaseListBO;
 import com.djcps.wms.commons.base.BaseListPartnerIdBO;
 import com.djcps.wms.commons.enums.SysMsgEnum;
@@ -15,6 +16,8 @@ import com.djcps.wms.commons.model.GetCodeBO;
 import com.djcps.wms.commons.model.PartnerInfoBO;
 import com.djcps.wms.commons.msg.MsgTemplate;
 import com.djcps.wms.commons.utils.GsonUtils;
+import com.djcps.wms.inneruser.model.result.UserInfoPO;
+import com.djcps.wms.inneruser.model.result.UserInfoVO;
 import com.djcps.wms.warehouse.enums.WareHouseTypeEnum;
 import com.djcps.wms.warehouse.model.warehouse.*;
 import com.djcps.wms.warehouse.service.WarehouseService;
@@ -358,7 +361,39 @@ public class WarehouseController {
 			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
 		}
 	}
-	
+
+	/**
+	 * 获取用户关联仓库
+	 * @author Chengw
+	 * @since 2018/5/18  14:21
+	 * @param json
+	 * @param request
+	 * @param userInfoVO
+	 * @return
+	 */
+	@RequestMapping(name="获取用户关联仓库",value = "/getUserWarehouse", method = RequestMethod.POST, produces = "application/json")
+	public Map<String, Object> getUserWarehouse(@RequestBody(required = false) String json, HttpServletRequest request, @InnerUser UserInfoVO userInfoVO) {
+		try {
+			LOGGER.debug("json : " + json);
+			UserWarehouseBO param = gson.fromJson(json, UserWarehouseBO.class);
+			param.setUserId(userInfoVO.getId());
+			ComplexResult ret = FluentValidator.checkAll().failFast()
+					.on(param,
+							new HibernateSupportedValidator<UserWarehouseBO>()
+									.setHiberanteValidator(Validation.buildDefaultValidatorFactory().getValidator()))
+					.doValidate().result(ResultCollectors.toComplex());
+			if (!ret.isSuccess()) {
+				return MsgTemplate.failureMsg(ret);
+			}
+			return warehouseService.getUserWarehouse(param);
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error(e.getMessage());
+			return MsgTemplate.failureMsg(SysMsgEnum.SYS_EXCEPTION);
+		}
+	}
+
+
 	/**
 	 * 获取仓库编码
 	 * @param json

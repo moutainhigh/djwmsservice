@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * ORG获取职位信息列表
  * @author wzy
  * @date 2018/4/17
  **/
-public class OrgPositionPO {
+public class OrgPositionPO implements Serializable{
     /**
      * 职位id
      */

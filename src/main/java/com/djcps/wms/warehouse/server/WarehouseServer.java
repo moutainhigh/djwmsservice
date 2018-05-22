@@ -1,5 +1,6 @@
 package com.djcps.wms.warehouse.server;
 
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,7 @@ public class WarehouseServer {
 	}
 	
 	public HttpResult getAllWarehouseName(PartnerInfoBO partnerInfoBean) {
-		String json = gson.toJson(partnerInfoBean);
+		String json = JSONObject.toJSONString(partnerInfoBean);
 		//将请求参数转化为requestbody格式
 		okhttp3.RequestBody rb = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"),json);
 		//调用借口获取信息

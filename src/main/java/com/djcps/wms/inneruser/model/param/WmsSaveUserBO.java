@@ -2,12 +2,15 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * wms专用的用户信息保存参数
  * @author wzy
  * @date 2018/4/18
  **/
-public class WmsSaveUserBO {
+public class WmsSaveUserBO implements Serializable{
 
     private String operator;
 
@@ -26,7 +29,7 @@ public class WmsSaveUserBO {
     /**
      * 所属仓库id
      */
-    private String warehouseId;
+    private List<String> warehouseIds;
 
     private String warehouseName;
 
@@ -85,6 +88,9 @@ public class WmsSaveUserBO {
      */
     private String graduatSchool;
 
+    /**
+     * 公司id
+     */
     private String companyId;
 
     /**
@@ -196,13 +202,6 @@ public class WmsSaveUserBO {
         this.ip = ip;
     }
 
-    public String getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
-    }
 
     public String getWarehouseName() {
         return warehouseName;
@@ -332,6 +331,14 @@ public class WmsSaveUserBO {
         this.politicalOutlook = politicalOutlook;
     }
 
+    public List<String> getWarehouseIds() {
+        return warehouseIds;
+    }
+
+    public void setWarehouseIds(List<String> warehouseIds) {
+        this.warehouseIds = warehouseIds;
+    }
+
     @Override
     public String toString() {
         return "WmsSaveUserBO{" +
@@ -339,7 +346,7 @@ public class WmsSaveUserBO {
                 ", business='" + business + '\'' +
                 ", ip='" + ip + '\'' +
                 ", partnerId='" + partnerId + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
+                ", warehouseIds=" + warehouseIds +
                 ", warehouseName='" + warehouseName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", roleType='" + roleType + '\'' +

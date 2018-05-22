@@ -1,23 +1,25 @@
 package com.djcps.wms.inneruser.model.param;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.io.Serializable;
 
 /**
- * 新增用户仓库信息
- * @author  wzy
- * @param
- * @return
- * @date  2018/4/16 10:40
+ * 删除用户关联信息参数类
+ * @author wzy
+ * @date 2018/4/13
  **/
-public class AddUserWarehouseBO implements Serializable {
+public class UserBO implements Serializable{
+
     /**
      * 用户id
      */
+    @NotBlank
     private String userId;
 
     private String partnerId;
 
-    private String warehouseId;
+
 
     public String getUserId() {
         return userId;
@@ -35,20 +37,12 @@ public class AddUserWarehouseBO implements Serializable {
         this.partnerId = partnerId;
     }
 
-    public String getWarehouseId() {
-        return warehouseId;
-    }
-
-    public void setWarehouseId(String warehouseId) {
-        this.warehouseId = warehouseId;
-    }
 
     @Override
     public String toString() {
-        return "AddUserWarehouseBO{" +
+        return "UserBO{" +
                 "userId='" + userId + '\'' +
                 ", partnerId='" + partnerId + '\'' +
-                ", warehouseId='" + warehouseId + '\'' +
                 '}';
     }
 }

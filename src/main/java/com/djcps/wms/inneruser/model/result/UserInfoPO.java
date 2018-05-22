@@ -1,13 +1,24 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * 用户信息标准参数
+ * 用户信息标准 返回类
  * @author wzy
  * @date 2018/4/18
  **/
-public class UserInfoPO {
+public class UserInfoPO implements Serializable{
+
+    /**
+     * id
+     */
+    private String id;
+
+    /**
+     * 公司id
+     */
+    private String companyId;
     /**
      * 手机号码
      */
@@ -57,6 +68,11 @@ public class UserInfoPO {
      * 员工状态
      */
     private String userStatus;
+
+    /**
+     * 职位id
+     */
+    private String positionId;
 
     /**
      * 职位
@@ -119,16 +135,53 @@ public class UserInfoPO {
     private String graduateSchool;
 
     /**
-     * 仓库id列表
+     * 所属仓库ids
      */
-    private List<String> warehouseIdList;
+    private List<String> warehouseIds;
 
-    public List<String> getWarehouseIdList() {
-        return warehouseIdList;
+    /**
+     * 所属仓库集合
+     */
+    private List<WarehouseListPO> warehouseList;
+
+    public List<WarehouseListPO> getWarehouseList() {
+        return warehouseList;
     }
 
-    public void setWarehouseIdList(List<String> warehouseIdList) {
-        this.warehouseIdList = warehouseIdList;
+    public List<String> getWarehouseIds() {
+        return warehouseIds;
+    }
+
+    public void setWarehouseIds(List<String> warehouseIds) {
+        this.warehouseIds = warehouseIds;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public void setWarehouseList(List<WarehouseListPO> warehouseList) {
+        this.warehouseList = warehouseList;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 
     public String getPhone() {
@@ -307,10 +360,13 @@ public class UserInfoPO {
         this.registeredResidence = registeredResidence;
     }
 
+
     @Override
     public String toString() {
         return "UserInfoPO{" +
-                "phone='" + phone + '\'' +
+                "id='" + id + '\'' +
+                ", companyId='" + companyId + '\'' +
+                ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
                 ", userName='" + userName + '\'' +
                 ", induction='" + induction + '\'' +
@@ -320,6 +376,7 @@ public class UserInfoPO {
                 ", email='" + email + '\'' +
                 ", sex='" + sex + '\'' +
                 ", userStatus='" + userStatus + '\'' +
+                ", positionId='" + positionId + '\'' +
                 ", positionName='" + positionName + '\'' +
                 ", shortPhone='" + shortPhone + '\'' +
                 ", job='" + job + '\'' +
@@ -332,7 +389,7 @@ public class UserInfoPO {
                 ", registeredResidence='" + registeredResidence + '\'' +
                 ", homeAddress='" + homeAddress + '\'' +
                 ", graduateSchool='" + graduateSchool + '\'' +
-                ", warehouseIdList=" + warehouseIdList +
+                ", warehouseList=" + warehouseList +
                 '}';
     }
 }

@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
+
 /**
  * 保存用户信息
  * @author wzy
  * @date 2018/4/16
  **/
-public class SaveUserBO {
+public class SaveUserBO implements Serializable{
 
     private String operator;
 

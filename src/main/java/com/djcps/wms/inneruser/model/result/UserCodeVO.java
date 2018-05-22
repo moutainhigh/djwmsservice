@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 用户code返回类
  * @author Chengw
  * @since 2017/12/4 14:26.
  */
-public class UserCodeVO {
+public class UserCodeVO implements Serializable {
 
     /**
      * 用户code

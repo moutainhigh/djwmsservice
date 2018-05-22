@@ -126,6 +126,20 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
      */
     private String warehouseId;
     
+    
+    /**
+     * 修改提货数量model
+     */
+    private List<UpdateDeliveryAmoutBO> updateDeliveryAmoutBO;
+
+	public List<UpdateDeliveryAmoutBO> getUpdateDeliveryAmoutBO() {
+		return updateDeliveryAmoutBO;
+	}
+
+	public void setUpdateDeliveryAmoutBO(List<UpdateDeliveryAmoutBO> updateDeliveryAmoutBO) {
+		this.updateDeliveryAmoutBO = updateDeliveryAmoutBO;
+	}
+
 	public String getWarehouseId() {
         return warehouseId;
     }
@@ -303,7 +317,8 @@ public class VerifyAllocationBO extends BaseAddBO implements Serializable {
 				+ pickerName + ", pickerPhone=" + pickerPhone + ", plateNumber=" + plateNumber + ", deliveryIdEffect="
 				+ deliveryIdEffect + ", loadingPersonId=" + loadingPersonId + ", loadingPersonName=" + loadingPersonName
 				+ ", loadingPersonPhone=" + loadingPersonPhone + ", deliveryCreateTime=" + deliveryCreateTime
-				+ ", driverName=" + driverName + ", list=" + list + ", warehouseId=" + warehouseId + "]";
+				+ ", driverName=" + driverName + ", list=" + list + ", warehouseId=" + warehouseId
+				+ ", updateDeliveryAmoutBO=" + updateDeliveryAmoutBO + "]";
 	}
 
 }

@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 部门信息实体类
  * @author wzy
  * @date 2018/4/23
  **/
-public class DepartmentVO {
+public class DepartmentVO implements Serializable {
 
     /**
      * 部门名称

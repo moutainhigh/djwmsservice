@@ -2,12 +2,14 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+
 /**
  * 条件获取用户列表
  * @author wzy
  * @date 2018/4/13
  **/
-public class PageUserInfoBO {
+public class PageUserInfoBO implements Serializable{
     /**
      * 用户id
      */

@@ -2,12 +2,14 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+
 /**
  * org删除用户参数类
  * @author wzy
  * @date 2018/4/13
  **/
-public class OrgDeleteUserBO {
+public class OrgDeleteUserBO implements Serializable {
 
     /**
      * 给org的用户id

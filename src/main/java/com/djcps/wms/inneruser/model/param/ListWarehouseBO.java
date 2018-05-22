@@ -1,5 +1,6 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,18 +8,24 @@ import java.util.List;
  * @author wzy
  * @date 2018/4/23
  **/
-public class GetWarehouseListBO {
+public class ListWarehouseBO implements Serializable {
 
-    private List<String> list;
+    /**
+     * 用户id集合
+     */
+    private List<String> userIds;
 
+    /**
+     * 合作方id
+     */
     private String partnerId;
 
-    public List<String> getList() {
-        return list;
+    public List<String> getUserIds() {
+        return userIds;
     }
 
-    public void setList(List<String> list) {
-        this.list = list;
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
     }
 
     public String getPartnerId() {
@@ -31,8 +38,8 @@ public class GetWarehouseListBO {
 
     @Override
     public String toString() {
-        return "GetWarehouseListBO{" +
-                "list=" + list +
+        return "ListWarehouseBO{" +
+                "userIds=" + userIds +
                 ", partnerId='" + partnerId + '\'' +
                 '}';
     }

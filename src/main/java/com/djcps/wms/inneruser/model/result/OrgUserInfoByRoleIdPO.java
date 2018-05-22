@@ -1,12 +1,14 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 根据roleId 返回用户信息
  * @author Chengw
  * @version 1.0.0
  * @since 2018/5/15 14:36.
  */
-public class OrgUserInfoByRoleIdPO {
+public class OrgUserInfoByRoleIdPO implements Serializable{
 
     /**
      * id

@@ -2,11 +2,13 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+
 /**
  * 获取部门信息
  * @author
  */
-public class OrgPositionBO {
+public class OrgPositionBO implements Serializable {
 
     @NotBlank
     private String operator;

@@ -1,12 +1,14 @@
 package com.djcps.wms.inneruser.model.param;
 
+import java.io.Serializable;
+
 /**
  * 获取org 用户信息
  * @author Chengw
  * @version 1.0.0
  * @since 2018/5/15 13:20.
  */
-public class OrgUserRoleBO {
+public class OrgUserRoleBO implements Serializable{
 
     /**
      * 角色id

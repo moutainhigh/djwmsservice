@@ -2,11 +2,13 @@ package com.djcps.wms.inneruser.model.param;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.io.Serializable;
+
 /**
  * ORG 获取用户信息
  * @author
  */
-public class GetOrgUserInfoBO {
+public class GetOrgUserInfoBO  implements Serializable {
 
     /**
      * 合作方id

@@ -1,23 +1,28 @@
 package com.djcps.wms.inneruser.model.param;
 
-import org.hibernate.validator.constraints.NotBlank;
+import java.io.Serializable;
 
 /**
- * 删除用户关联信息参数类
- * @author wzy
- * @date 2018/4/13
- **/
-public class DeleteUserBO {
+ * @author Chengw
+ * @version 1.0.0
+ * @since 2018/5/18 13:34.
+ */
+public class UpdateUserStatusBO implements Serializable {
 
     /**
      * 用户id
      */
-    @NotBlank
     private String userId;
 
+    /**
+     * 工作状态 空闲、忙碌、休息中
+     */
+    private Integer workStatus;
+
+    /**
+     * 合作方id
+     */
     private String partnerId;
-
-
 
     public String getUserId() {
         return userId;
@@ -25,6 +30,14 @@ public class DeleteUserBO {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Integer getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(Integer workStatus) {
+        this.workStatus = workStatus;
     }
 
     public String getPartnerId() {
@@ -35,11 +48,11 @@ public class DeleteUserBO {
         this.partnerId = partnerId;
     }
 
-
     @Override
     public String toString() {
-        return "DeleteUserBO{" +
+        return "UpdateUserStatusBO{" +
                 "userId='" + userId + '\'' +
+                ", workStatus=" + workStatus +
                 ", partnerId='" + partnerId + '\'' +
                 '}';
     }

@@ -99,7 +99,7 @@ public interface WarehouseService {
 	
 	/**
 	 * 获取仓库类型
-	 * @param partnerId
+	 * @param partnerInfoBean
 	 * @return
 	 * @author:zdx
 	 * @date:2017年12月8日
@@ -124,5 +124,12 @@ public interface WarehouseService {
 	 * @create  2017/12/22 13:33
 	 **/
 	Map<String,Object> getWarehouseCode(GetCodeBO getCodeBO);
+
+	/**
+	 * 获取用户关联仓库
+	 * @param userWarehouseBO
+	 * @return
+	 */
+	Map<String,Object> getUserWarehouse(UserWarehouseBO userWarehouseBO);
 
 }

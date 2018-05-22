@@ -1,11 +1,13 @@
 package com.djcps.wms.inneruser.model.result;
 
+import java.io.Serializable;
+
 /**
  * 内部用户信息
  * @author Chengw
  * @since 2017/12/4 16:09.
  */
-public class UserInfoVO {
+public class UserInfoVO implements Serializable{
 
     /**
      * 用户id，可用与用户权限
