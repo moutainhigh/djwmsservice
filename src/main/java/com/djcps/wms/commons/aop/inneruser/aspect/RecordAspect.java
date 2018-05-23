@@ -28,7 +28,7 @@ public class RecordAspect {
         String[] values = getStrings(pjp);
         Gson gson = new Gson();
         String jsonDate = gson.toJson(values);
-        amqpTemplate.convertAndSend("record", jsonDate);
+        amqpTemplate.convertAndSend("queueInsertOperateRecordsKey", jsonDate);
     }
 
 
